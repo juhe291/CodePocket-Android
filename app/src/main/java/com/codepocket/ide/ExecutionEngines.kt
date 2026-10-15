@@ -9,7 +9,7 @@ import java.io.IOException
 import kotlin.system.measureTimeMillis
 
 enum class RunKind(val label: String) {
-    SUCCESS("运行完成"), COMPILE("编译错误"), RUNTIME("运行错误"), NETWORK("网络错误"), TIMEOUT("运行超时"), SERVICE("服务错误")
+    CANCELLED("已中止"), SUCCESS("运行完成"), COMPILE("编译错误"), RUNTIME("运行错误"), NETWORK("网络错误"), TIMEOUT("运行超时"), SERVICE("服务错误")
 }
 
 data class RunResult(
@@ -21,14 +21,16 @@ data class RunResult(
     val engine: String = "",
     val kind: RunKind = if (exitCode == "0") RunKind.SUCCESS else RunKind.RUNTIME,
     val errorFile: String? = null,
-    val sourcePath: String? = null
+    val sourcePath: String? = null,
+    val projectRoot: String? = null,
+    val workspaceId: String? = null
 ) {
     val successful: Boolean get() = kind == RunKind.SUCCESS
 }
 
 object PythonEngine {
-    fun run(code: String, input: String, filename: String = "main.py", projectDir: String = ""): RunResult {
-        // PyApplication initializes CPython when the app starts.
+    fun run(context: android.content.Context, code: String, input: String, filename: String = "main.py", projectDir: String = ""): RunResult {
+        if (!Python.isStarted()) Python.start(com.chaquo.python.android.AndroidPlatform(context.applicationContext))
         val result = JSONObject(
             Python.getInstance().getModule("runner")
                 .callAttr("run_code", code, input, filename, projectDir).toString()
@@ -56,10 +58,11 @@ object WandboxEngine {
     @Volatile private var cachedCompiler: String? = null
 
     /** Discover a real C++ compiler. Compiler IDs can change. */
-    private fun chooseCompiler(): String {
+    private fun chooseCompiler(cancel: RunCancellation): String {
+        cancel.check()
         cachedCompiler?.let { return it }
-        val (status, content) = request("GET", "$BASE/list.json", null)
-        if (status !in 200..299) throw IOException("获取 C++ 编译器列表失败 (HTTP $status)")
+        val (status, content) = request("GET", "$BASE/list.json", null, cancel)
+        if (status !in 200..299) throw ServiceException(status, "获取 C++ 编译器列表失败 (HTTP $status)")
         val list = JSONArray(content)
         val candidates = (0 until list.length()).map { list.getJSONObject(it) }
             .filter { it.optString("language") == "C++" &&
@@ -81,21 +84,21 @@ object WandboxEngine {
         return chosen
     }
 
-    fun run(code: String, input: String): RunResult {
+    fun run(code: String, input: String, cancel: RunCancellation = RunCancellation()): RunResult {
         var response = JSONObject()
         val ms = measureTimeMillis {
-            val compiler = chooseCompiler()
+            val compiler = chooseCompiler(cancel)
             val payload = JSONObject()
                 .put("compiler", compiler)
                 .put("code", code)
                 .put("stdin", input)
                 .put("compiler-option-raw", "-std=c++17")
                 .put("save", false)
-            val (status, content) = request("POST", "$BASE/compile.json", payload.toString())
+            val (status, content) = request("POST", "$BASE/compile.json", payload.toString(), cancel)
             if (status !in 200..299) {
                 val detail = if (content.length > 500) content.take(500) else content
                 if (status == 400 || status == 404) cachedCompiler = null
-                throw IOException("云端服务失败 (HTTP $status)：$detail")
+                throw ServiceException(status, "云端服务失败 (HTTP $status)：$detail")
             }
             response = JSONObject(content)
             response.put("_chosen_compiler", compiler)
@@ -140,9 +143,11 @@ object WandboxEngine {
         )
     }
 
-    private fun request(method: String, endpoint: String, json: String?): Pair<Int, String> {
+    private fun request(method: String, endpoint: String, json: String?, cancel: RunCancellation): Pair<Int, String> {
+        cancel.check()
         val connection = URL(endpoint).openConnection() as HttpURLConnection
         try {
+        cancel.attach(connection)
         connection.apply {
             requestMethod = method
             connectTimeout = 10000
@@ -158,8 +163,10 @@ object WandboxEngine {
             val status = connection.responseCode
             val stream = if (status in 200..299) connection.inputStream else connection.errorStream
             val body = stream?.bufferedReader(Charsets.UTF_8)?.use { Workspace.readLimited(it, if (method == "GET") 2000000 else 250000) }.orEmpty()
+            cancel.check()
             return status to body
         } finally {
+            cancel.release(connection)
             connection.disconnect()
         }
     }

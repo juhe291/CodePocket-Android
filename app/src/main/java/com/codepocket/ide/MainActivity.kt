@@ -27,6 +27,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.WindowInsets
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
@@ -55,10 +57,19 @@ class MainActivity : Activity() {
     private var loadedPath: String? = null
     private var dirty = false
     private val handler = Handler(Looper.getMainLooper())
-    private val cursors = mutableMapOf<String, Int>()
+    private lateinit var sessions: EditorSessions
+    private var quietInput = false
+    private var panelVisible = true
+    private var imeVisible = false
+    private var lastFocus = "editor"
+    private lateinit var detailToolbar: HorizontalScrollView
+    private lateinit var suggestionScroll: HorizontalScrollView
+    private lateinit var keyboardToolbar: HorizontalScrollView
+    private val saveSession = Runnable { captureSession(); persistSessions() }
     private val autosave = Runnable { if (dirty) saveActive() }
     private val refreshEditor = Runnable {
         if (::editor.isInitialized) {
+            if (BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return@Runnable
             EditorFeatures.colorize(editor.text, isCpp(), dark)
             highlightBrackets()
             updateSuggestions()
@@ -69,6 +80,20 @@ class MainActivity : Activity() {
     private var explorerVisible = true
     private var exportContent: String? = null
     private var exportPath: String? = null
+    private lateinit var drafts: DraftStore
+    private var workspaceBusy = false
+        set(value) {
+            field = value
+            if (::editor.isInitialized) editor.isEnabled = !value
+            if (::input.isInitialized) input.isEnabled = !value
+        }
+    private var saving = false
+    private var afterSave: (() -> Unit)? = null
+    private var selectedTree: String? = null
+    private var editRevision = 0L
+    private var loadedVersion: String? = null
+    private val checkpointDraft = Runnable { queueDraft() }
+    private fun prefKey(name: String) = "$name:${workspace.identity}"
 
     private lateinit var root: LinearLayout
     private lateinit var editor: CodeEditor
@@ -99,37 +124,103 @@ class MainActivity : Activity() {
         dark = prefs.getBoolean("dark", true)
         setTheme(if (dark) R.style.Theme_CodePocket else R.style.Theme_CodePocket_Light)
         super.onCreate(savedInstanceState)
-        workspace = Workspace(this)
-        val first = prefs.getString("activeFile", "main.cpp") ?: "main.cpp"
-        activePath = if (runCatching { workspace.read(workspace.resolve(first)) }.isSuccess) first else ensureFallback()
-        currentDirectory = prefs.getString("directory", "") ?: ""
-        runCatching { JSONArray(prefs.getString("opened", "[]")) }.getOrNull()?.let { paths ->
-            for (i in 0 until paths.length()) {
-                val path = paths.getString(i)
-                if (runCatching { workspace.read(workspace.resolve(path)) }.isSuccess && path !in opened) opened.add(path)
+        drafts = DraftStore(File(filesDir, "drafts")) { a, b -> android.system.Os.rename(a.path, b.path) }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        setContentView(TextView(this).apply { text = "正在载入 CodePocket…"; setPadding(24, 36, 24, 24) })
+        startWorkspace(prefs.getString("selectedTree", null), savedInstanceState)
+    }
+
+    private fun startWorkspace(tree: String?, saved: Bundle? = null) {
+        if ((running && ::editor.isInitialized) || workspaceBusy || saving) return
+        explorerDialog?.dismiss(); explorerDialog = null
+        workspaceBusy = true
+        if (::editor.isInitialized) { captureSession(); persistSessions(); persistNavigation() }
+        handler.removeCallbacks(autosave); handler.removeCallbacks(checkpointDraft)
+        WorkspaceIo.executor.execute {
+            val prepared = runCatching {
+                saved?.getString("draft")?.let { text -> saved.getString("draftKey")?.let { key ->
+                    drafts.put(key, saved.getString("draftPath").orEmpty(), text, saved.getString("draftBase"))
+                } }
+                val ws = if (tree == null) Workspace(this) else Workspace.fromTree(this, Uri.parse(tree))
+                fun get(name: String, legacy: String) = prefs.getString("$name:${ws.identity}",
+                    if (!ws.external) prefs.getString(name, legacy) else legacy) ?: legacy
+                val paths = mutableListOf<String>()
+                runCatching { JSONArray(get("opened", "[]")) }.getOrNull()?.let { a ->
+                    for (i in 0 until a.length()) {
+                        val path = a.optString(i)
+                        if (runCatching { ws.resolve(path).isFile }.getOrDefault(false) && path !in paths) paths.add(path)
+                    }
+                }
+                var active = get("activeFile", "main.cpp")
+                if (!runCatching { ws.resolve(active).isFile }.getOrDefault(false)) {
+                    active = ws.folders().asSequence().flatMap { ws.children(it).asSequence() }
+                        .firstOrNull { it.isFile && it.extension.lowercase() in setOf("py", "cpp", "h", "hpp") }?.let(ws::path)
+                        ?: ws.create(ws.root, "main.cpp", false).let { ws.write(it, Workspace.CPP_SAMPLE); ws.path(it) }
+                }
+                if (active !in paths) paths.add(active)
+                val state = EditorSessions(ws.identity, prefs.getString("sessions:${ws.identity}", "[]") ?: "[]")
+                if (!ws.external && !prefs.contains("sessions:internal")) {
+                    state.file(active).stdin = prefs.getString("stdin", "3 5") ?: ""
+                    state.file(active).view = EditorViewState(prefs.getInt("caret", 0), prefs.getInt("caret", 0))
+                }
+                val code = ws.read(ws.resolve(active))
+                val draft = drafts.read(state.key(active))
+                PreparedWorkspace(ws, state, paths, active, code, draft)
+            }
+            runOnUiThread {
+                if (isDestroyed) return@runOnUiThread
+                workspaceBusy = false
+                prepared.onSuccess { ready ->
+                    workspace = ready.workspace; sessions = ready.sessions
+                    selectedTree = tree
+                    opened.clear(); opened.addAll(ready.paths)
+                    activePath = ready.active; loadedPath = null; dirty = false
+                    currentDirectory = prefs.getString(prefKey("directory"), "") ?: ""
+                    expanded.clear(); expanded.add("")
+                    explorerVisible = prefs.getBoolean("explorerVisible", true)
+                    panelVisible = prefs.getBoolean("panelVisible", true)
+                    wide = resources.configuration.screenWidthDp >= 720 && resources.configuration.screenHeightDp >= 480
+                    consoleSide = resources.configuration.screenWidthDp >= 600
+                    createUi(); loadActive(ready.code, ready.draft)
+                    saved?.getString("draft")?.takeIf { saved.getString("draftPath") == activePath }?.let {
+                        quietEdit = true; editor.setText(it); quietEdit = false; dirty = true
+                        restoreSession(); updateNumbers(); handler.post(refreshEditor); queueDraft()
+                    }
+                    exportContent = saved?.getString("exportSnapshot")?.let { name ->
+                        runCatching { File(filesDir, name).readText() }.getOrNull()
+                    }
+                    exportPath = saved?.getString("exportPath")
+                    prefs.edit().putString("selectedTree", tree).apply()
+                    if (tree != null) rememberWorkspace(tree, workspace.title)
+                    renderRunState()
+                }.onFailure { error ->
+                    if (!::root.isInitialized) {
+                        setContentView(TextView(this).apply { text = "工作区载入失败，请重新授权或打开内部项目。" })
+                    }
+                    AlertDialog.Builder(this).setTitle("工作区载入失败")
+                        .setMessage("${error.message}\n恢复草稿仍保留在应用内。请选择原目录重新授权。")
+                        .setPositiveButton("选择目录") { _, _ -> selectDirectory() }
+                        .setNegativeButton("内部项目") { _, _ -> startWorkspace(null) }.show()
+                }
             }
         }
-        if (activePath !in opened) opened.add(activePath)
-        cursors[activePath] = prefs.getInt("caret", 0)
-        explorerVisible = prefs.getBoolean("explorerVisible", true)
-        wide = resources.configuration.screenWidthDp >= 720 && resources.configuration.screenHeightDp >= 480
-        consoleSide = resources.configuration.screenWidthDp >= 600
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        createUi()
-        loadActive()
-        savedInstanceState?.getString("draft")?.takeIf { savedInstanceState.getString("draftPath") == activePath }?.let {
-            quietEdit = true
-            editor.setText(it)
-            quietEdit = false
-            dirty = true
-            updateNumbers(); handler.post(refreshEditor)
-            status.text = "已恢复尚未保存的编辑内容，请保存或导出"
+    }
+
+    private data class PreparedWorkspace(val workspace: Workspace, val sessions: EditorSessions,
+        val paths: List<String>, val active: String, val code: String, val draft: Draft?)
+
+    private fun <T> ioAction(message: String, work: () -> T, done: (T) -> Unit) {
+        if (workspaceBusy || saving) { if (::status.isInitialized) status.text = "请等待文件操作完成"; return }
+        workspaceBusy = true
+        status.text = message
+        WorkspaceIo.executor.execute {
+            val value = runCatching(work)
+            runOnUiThread {
+                if (isDestroyed) return@runOnUiThread
+                workspaceBusy = false
+                value.onSuccess(done).onFailure { alert("${it.message}\n未保存内容和恢复草稿会保留；可导出或重新选择目录。") }
+            }
         }
-        input.setText(prefs.getString("stdin", "3 5") ?: "")
-        exportContent = savedInstanceState?.getString("exportContent")
-        exportPath = savedInstanceState?.getString("exportPath")
-        result = RunSession.result
-        showOutput(0)
     }
 
     override fun onStart() {
@@ -145,11 +236,13 @@ class MainActivity : Activity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         persist()
-        outState.putString("exportContent", exportContent)
+        if (exportContent != null) outState.putString("exportSnapshot", "pending-export.txt")
         outState.putString("exportPath", exportPath)
         if (dirty) {
             outState.putString("draftPath", activePath)
             outState.putString("draft", editor.text.toString())
+            outState.putString("draftKey", sessions.key(activePath))
+            outState.putString("draftBase", loadedVersion)
         }
         super.onSaveInstanceState(outState)
     }
@@ -160,14 +253,16 @@ class MainActivity : Activity() {
     }
 
     private fun persist() {
-        if (::editor.isInitialized) saveActive()
-        prefs.edit().putString("activeFile", activePath).putString("directory", currentDirectory)
-            .putBoolean("dark", dark)
-            .putBoolean("explorerVisible", explorerVisible)
-            .putString("opened", JSONArray(opened).toString())
-            .putInt("caret", if (::editor.isInitialized) editor.selectionStart.coerceAtLeast(0) else 0)
-            .putString("stdin", if (::input.isInitialized) input.text.toString() else "")
-            .apply()
+        if (!::workspace.isInitialized || !::editor.isInitialized) return
+        captureSession(); persistSessions(); queueDraft(); saveActive()
+        persistNavigation()
+    }
+
+    private fun persistNavigation() {
+        prefs.edit().putString(prefKey("activeFile"), activePath).putString(prefKey("directory"), currentDirectory)
+            .putBoolean("dark", dark).putBoolean("explorerVisible", explorerVisible)
+            .putString(prefKey("opened"), JSONArray(opened).toString())
+            .putBoolean("panelVisible", panelVisible).apply()
     }
 
     override fun onDestroy() {
@@ -193,7 +288,10 @@ class MainActivity : Activity() {
         minHeight = dp(36)
         background = shape(surface, 5, border)
         isFocusable = true; isClickable = true
-        setOnClickListener { onClick() }
+        setOnClickListener {
+            if (!workspaceBusy || (running && value.contains("运行"))) onClick()
+            else if (::status.isInitialized) status.text = "文件操作中，请稍候"
+        }
     }
     private fun space(w: Int = 5) = View(this).apply { layoutParams = LinearLayout.LayoutParams(dp(w), 1) }
 
@@ -213,9 +311,16 @@ class MainActivity : Activity() {
         top.addView(button("☰ 文件") { showExplorer() })
         top.addView(space(8))
         top.addView(label("⌘ CodePocket", 16f, accent, true), LinearLayout.LayoutParams(0, dp(38), 1f))
+        top.addView(button("收键盘") { hideKeyboard() })
+        top.addView(space(3))
+        top.addView(button("结果") {
+            if (input.hasFocus()) { hideKeyboard(); editor.requestFocus() }
+            panelVisible = !panelVisible
+            updateImeLayout()
+        })
         top.addView(button(if (dark) "☀" else "☾") { toggleTheme() })
         top.addView(space(5))
-        runButton = button("▶ 运行") { runCode() }
+        runButton = button("▶ 运行") { if (running) RunSession.stop() else runCode() }
         runButton.setTextColor(Color.WHITE); runButton.background = shape(accent, 5)
         top.addView(runButton)
         root.addView(top)
@@ -224,15 +329,24 @@ class MainActivity : Activity() {
         val actions = LinearLayout(this).apply { setPadding(dp(8), dp(5), dp(8), dp(5)) }
         for ((name, command) in listOf<Pair<String, () -> Unit>>(
             "新建文件" to { askCreate(false) }, "新建文件夹" to { askCreate(true) },
-            "导入" to { importFile() }, "导出" to { exportFile() },
-            "保存  Ctrl+S" to { if (saveActive()) status.text = "✓ 已保存 $activePath" },
+            "工作区" to { workspaceMenu() }, "导入副本" to { importFile() }, "导出" to { exportFile() },
+            "重新载入文件" to { reloadActive() }, "恢复草稿" to { recoverDrafts() },
+            "保存  Ctrl+S" to { saveActive { status.text = "✓ 已保存 $activePath" } },
             "TAB" to { tab() }, "反缩进" to { indent(true) }, "{ }" to { insertText("{}", true) },
             "( )" to { insertText("()", true) }, "补全" to { requestCompletion() }
         )) {
             actions.addView(button(name, command)); actions.addView(space(5))
         }
+        detailToolbar = toolbar
         toolbar.addView(actions)
         root.addView(toolbar)
+        keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
+        val keyRow = LinearLayout(this)
+        listOf<Pair<String, () -> Unit>>("TAB" to { tab() }, "反缩进" to { indent(true) },
+            "{ }" to { insertText("{}", true) }, "( )" to { insertText("()", true) }).forEach { (name, action) ->
+            keyRow.addView(button(name, action)); keyRow.addView(space(3))
+        }
+        keyboardToolbar.addView(keyRow); root.addView(keyboardToolbar)
 
         val content = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
@@ -264,15 +378,83 @@ class MainActivity : Activity() {
             setPadding(dp(12), dp(5), dp(12), dp(5)); setBackgroundColor(surface)
         }
         root.addView(status)
-        // Preserve code editing room when the on-screen keyboard occupies the viewport.
+        if (Build.VERSION.SDK_INT >= 30) {
+            root.setOnApplyWindowInsetsListener { _, insets ->
+                updateImeLayout(insets.isVisible(WindowInsets.Type.ime()))
+                insets
+            }
+        }
         root.viewTreeObserver.addOnGlobalLayoutListener {
-            if (!::editor.isInitialized || !::outputRegion.isInitialized) return@addOnGlobalLayoutListener
-            val bounds = android.graphics.Rect()
-            root.getWindowVisibleDisplayFrame(bounds)
-            val keyboard = root.rootView.height - bounds.bottom > dp(130)
-            val editCode = keyboard && editor.hasFocus()
-            outputRegion.visibility = if (editCode) View.GONE else View.VISIBLE
-            status.visibility = if (keyboard) View.GONE else View.VISIBLE
+            if (Build.VERSION.SDK_INT >= 30) {
+                root.rootWindowInsets?.let { updateImeLayout(it.isVisible(WindowInsets.Type.ime())) }
+            } else {
+                val bounds = android.graphics.Rect()
+                window.decorView.getWindowVisibleDisplayFrame(bounds)
+                val systemBars = root.rootWindowInsets?.let { it.stableInsetTop + it.stableInsetBottom } ?: 0
+                updateImeLayout(window.decorView.height - bounds.height() - systemBars > dp(100))
+            }
+        }
+    }
+
+    private fun hideKeyboard() {
+        if (Build.VERSION.SDK_INT >= 30) window.insetsController?.hide(WindowInsets.Type.ime())
+        (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow((currentFocus ?: editor).windowToken, 0)
+    }
+
+    private fun updateImeLayout(visible: Boolean = imeVisible) {
+        if (!::input.isInitialized || !::status.isInitialized) return
+        val changed = visible != imeVisible
+        imeVisible = visible
+        val height = (root.height / resources.displayMetrics.density).toInt()
+        val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible)
+        outputRegion.visibility = if (layout.showPanel) View.VISIBLE else View.GONE
+        fileTitle.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
+        suggestionScroll.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
+        keyboardToolbar.visibility = if (visible && editor.hasFocus()) View.VISIBLE else View.GONE
+        editorRegion.visibility = if (layout.compactInput && height < 260) View.GONE else View.VISIBLE
+        detailToolbar.visibility = if (!visible) View.VISIBLE else View.GONE
+        status.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
+        if (!consoleSide) {
+            val target = dp(if (layout.compactInput) minOf(136, maxOf(116, height - 56)) else minOf(225, maxOf(136, height / 3)))
+            input.layoutParams?.let { params ->
+                val inputHeight = dp(if (layout.compactInput && height < 260) 44 else 57)
+                if (params.height != inputHeight) input.layoutParams = params.apply { this.height = inputHeight }
+            }
+            if (outputRegion.layoutParams.height != target) {
+                outputRegion.layoutParams = outputRegion.layoutParams.apply { this.height = target }
+            }
+        }
+        if (changed && visible) editor.post { if (editor.hasFocus()) editor.bringPointIntoView(editor.selectionEnd) }
+    }
+
+    private fun persistSessions() {
+        if (::sessions.isInitialized) prefs.edit().putString("sessions:${sessions.workspaceId}", sessions.toJson()).apply()
+    }
+
+    private fun captureSession() {
+        if (!::editor.isInitialized || !::input.isInitialized || loadedPath == null) return
+        sessions.file(loadedPath!!).apply {
+            stdin = input.text.toString()
+            view = EditorViewState(editor.selectionStart, editor.selectionEnd, editor.scrollX, editor.scrollY,
+                lastFocus, input.selectionStart, input.selectionEnd)
+        }
+    }
+
+    private fun restoreSession() {
+        val session = sessions.file(activePath)
+        quietInput = true
+        input.setText(session.stdin)
+        quietInput = false
+        val view = session.view.clamp(editor.length(), input.length())
+        editor.setSelection(view.start, view.end)
+        input.setSelection(view.inputStart, view.inputEnd)
+        lastFocus = view.focus
+        if (view.focus == "stdin" && panelVisible) input.requestFocus() else editor.requestFocus()
+        editor.post {
+            editor.scrollTo(view.scrollX, view.scrollY)
+            numbers.scrollY = editor.scrollY
+            updateImeLayout()
         }
     }
 
@@ -303,11 +485,13 @@ class MainActivity : Activity() {
             setBackgroundColor(Color.TRANSPARENT)
             setSelectAllOnFocus(false)
             includeFontPadding = false
+            isSaveEnabled = false
             filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS))
         }
         editorBody.addView(editor, LinearLayout.LayoutParams(0, -1, 1f))
         editorRegion.addView(editorBody, LinearLayout.LayoutParams(-1, 0, 1f))
         val suggestScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
+        suggestionScroll = suggestScroll
         suggestionRow = LinearLayout(this).apply { setPadding(dp(5), dp(2), dp(5), dp(2)); setBackgroundColor(surface) }
         suggestScroll.addView(suggestionRow)
         editorRegion.addView(suggestScroll, LinearLayout.LayoutParams(-1, dp(37)))
@@ -326,12 +510,16 @@ class MainActivity : Activity() {
                 val edit = change
                 change = null
                 if (edit != null && s != null && BaseInputConnection.getComposingSpanStart(s) < 0) applyChange(edit)
-                dirty = true
+                dirty = true; editRevision++
+                handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
                 updateNumbers()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
                 handler.removeCallbacks(autosave); handler.postDelayed(autosave, 700)
             }
         })
+        editor.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
+            if (focused) { lastFocus = "editor"; updateImeLayout() }
+        }
         editor.setOnClickListener { updateSuggestions() }
         editor.onCaretChanged = {
             if (!quietEdit) {
@@ -346,7 +534,10 @@ class MainActivity : Activity() {
         outputTabs = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         outputRegion.addView(outputTabs)
         val stdinCaption = label("标准输入 stdin", 11f, muted).apply { setPadding(dp(10), dp(3), 0, dp(3)) }
-        outputRegion.addView(stdinCaption)
+        val inputHeading = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+        inputHeading.addView(stdinCaption, LinearLayout.LayoutParams(0, -2, 1f))
+        inputHeading.addView(button("清空输入") { input.setText("") })
+        outputRegion.addView(inputHeading)
         input = EditText(this).apply {
             typeface = Typeface.MONOSPACE; textSize = 12f
             setTextColor(textForeground); setHintTextColor(muted)
@@ -355,6 +546,20 @@ class MainActivity : Activity() {
             background = shape(editorBackground, 4, border)
             setPadding(dp(7), dp(5), dp(7), dp(5))
         }
+        input.isSaveEnabled = false
+        input.filters = arrayOf(InputFilter.LengthFilter(20000))
+        input.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
+            if (focused) { lastFocus = "stdin"; updateImeLayout() }
+        }
+        input.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: Editable?) {
+                if (quietInput || !::sessions.isInitialized || loadedPath == null) return
+                sessions.file(loadedPath!!).stdin = s.toString()
+                handler.removeCallbacks(saveSession); handler.postDelayed(saveSession, 200)
+            }
+        })
         outputRegion.addView(input, LinearLayout.LayoutParams(-1, dp(57)))
         val scroll = ScrollView(this)
         consoleText = label("", 12f, green).apply {
@@ -370,6 +575,7 @@ class MainActivity : Activity() {
         val panelView = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(surface) }
         val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(10), dp(7), dp(5), dp(7)) }
         row.addView(label("资源管理器", 12f, muted, true), LinearLayout.LayoutParams(0, dp(26), 1f))
+        row.addView(button("目录") { workspaceMenu() })
         row.addView(button("+文件") { askCreate(false) })
         row.addView(button("+目录") { askCreate(true) })
         panelView.addView(row)
@@ -382,6 +588,7 @@ class MainActivity : Activity() {
     }
 
     private fun showExplorer() {
+        if (workspaceBusy) return
         if (wide) {
             explorerVisible = !explorerVisible
             explorerPane?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
@@ -400,13 +607,13 @@ class MainActivity : Activity() {
     private fun renderExplorer() {
         if (!::explorerList.isInitialized) return
         explorerList.removeAllViews()
-        val rootLabel = label("▾  CODEPOCKET", 12f, muted, true).apply {
+        val rootLabel = label("▾  ${workspace.title}", 12f, muted, true).apply {
             setPadding(dp(10), dp(8), 0, dp(8))
             setOnClickListener { currentDirectory = ""; status.text = "新建位置：项目根目录" }
         }
         explorerList.addView(rootLabel)
         fun visit(directory: File, level: Int) {
-            if (level > 18) return
+            if (level > 20) return
             workspace.children(directory).forEach { file ->
                 val relative = workspace.path(file)
                 val folder = file.isDirectory
@@ -417,6 +624,7 @@ class MainActivity : Activity() {
                     if (relative == activePath) background = shape(editorBackground, 3)
                     isClickable = true; isFocusable = true
                     setOnClickListener {
+                        if (workspaceBusy) return@setOnClickListener
                         if (folder) {
                             currentDirectory = relative
                             if (open) expanded.remove(relative) else expanded.add(relative)
@@ -471,39 +679,45 @@ class MainActivity : Activity() {
         if (!allowFileOperation()) return
         val parent = runCatching { workspace.resolve(currentDirectory) }.getOrDefault(workspace.root)
             .let { if (it.isDirectory) it else workspace.root }
-        nameDialog(if (directory) "在 ${workspace.path(parent).ifBlank { "项目根目录" }} 新建文件夹" else "新建代码文件",
+        nameDialog(if (directory) "新建文件夹" else "新建代码文件",
             if (directory) "" else "untitled.${if (isCpp()) "cpp" else "py"}") { name ->
-            if (!saveActive()) return@nameDialog
-            val item = workspace.create(parent, name, directory)
-            if (directory) { expanded.add(workspace.path(item)); currentDirectory = workspace.path(item) }
-            else switchFile(workspace.path(item))
-            expanded.add(workspace.path(parent)); renderExplorer()
+            saveActive {
+                ioAction("正在创建…", { workspace.create(parent, name, directory) }) { item ->
+                    if (directory) { expanded.add(workspace.path(item)); currentDirectory = workspace.path(item) }
+                    else switchFile(workspace.path(item))
+                    expanded.add(workspace.path(parent)); renderExplorer()
+                }
+            }
         }
     }
 
     private fun askRename(file: File) = nameDialog("重命名", file.name) { newName ->
-        if (!allowFileOperation() || !saveActive()) return@nameDialog
-        val oldPath = workspace.path(file)
-        val renamed = workspace.rename(file, newName)
-        rebasePaths(oldPath, workspace.path(renamed))
-        renderExplorer(); refreshTabs(); loadActive()
+        if (!allowFileOperation()) return@nameDialog
+        saveActive {
+            captureSession()
+            val old = workspace.path(file)
+            ioAction("正在重命名…", { workspace.rename(file, newName) }) { renamed ->
+                rebasePaths(old, workspace.path(renamed)); loadedPath = activePath
+                renderExplorer(); refreshTabs(); fileTitle.text = "${workspace.title} / $activePath"
+            }
+        }
     }
 
     private fun askMove(file: File) {
         if (!allowFileOperation()) return
         val folders = workspace.folders().filter { dest ->
-            !(file.isDirectory && (dest == file || dest.canonicalPath.startsWith(file.canonicalPath + File.separator)))
+            !(file.isDirectory && (dest == file || dest.path.startsWith(file.path + File.separator)))
         }
         AlertDialog.Builder(this).setTitle("移动到文件夹")
             .setItems(folders.map { workspace.path(it).ifBlank { "/ 工作区" } }.toTypedArray()) { _, which ->
-                try {
-                    if (!allowFileOperation() || !saveActive()) return@setItems
+                saveActive {
+                    captureSession()
                     val old = workspace.path(file)
-                    val moved = workspace.move(file, folders[which])
-                    rebasePaths(old, workspace.path(moved))
-                    expanded.add(workspace.path(folders[which]))
-                    renderExplorer(); refreshTabs(); loadActive()
-                } catch (e: Exception) { alert(e.message ?: "移动失败") }
+                    ioAction("正在移动…", { workspace.move(file, folders[which]) }) { moved ->
+                        rebasePaths(old, workspace.path(moved)); loadedPath = activePath
+                        expanded.add(workspace.path(folders[which])); renderExplorer(); refreshTabs()
+                    }
+                }
             }.show()
     }
 
@@ -512,19 +726,20 @@ class MainActivity : Activity() {
         AlertDialog.Builder(this).setTitle("确认删除？")
             .setMessage("将永久删除 ${file.name}${if (file.isDirectory) " 及其全部子文件" else ""}。此操作不可撤销。")
             .setNegativeButton("取消", null).setPositiveButton("删除") { _, _ ->
-                try {
+                saveActive {
                     val path = workspace.path(file)
-                    if (!allowFileOperation() || !saveActive()) return@setPositiveButton
-                    workspace.delete(file)
-                    if (currentDirectory == path || currentDirectory.startsWith("$path/")) currentDirectory = ""
-                    opened.removeAll { it == path || it.startsWith("$path/") }
-                    if (activePath == path || activePath.startsWith("$path/")) {
-                        if (opened.isEmpty()) opened.add(ensureFallback())
-                        activePath = opened.last()
+                    ioAction("正在删除…", { workspace.delete(file); ensureFallback() }) { fallback ->
+                        sessions.removeTree(path); persistSessions()
+                        if (currentDirectory == path || currentDirectory.startsWith("$path/")) currentDirectory = ""
+                        opened.removeAll { it == path || it.startsWith("$path/") }
+                        if (activePath == path || activePath.startsWith("$path/")) {
+                            if (opened.isEmpty()) opened.add(fallback)
+                            activePath = opened.last(); loadedPath = null; loadActive()
+                        }
+                        expanded.removeAll { it == path || it.startsWith("$path/") }
+                        renderExplorer(); refreshTabs()
                     }
-                    expanded.removeAll { it == path || it.startsWith("$path/") }
-                    renderExplorer(); refreshTabs(); loadActive()
-                } catch (e: Exception) { alert(e.message ?: "删除失败") }
+                }
             }.show()
     }
 
@@ -543,30 +758,43 @@ class MainActivity : Activity() {
     private fun rebasePaths(previous: String, next: String) {
         fun rebase(path: String): String = if (path == previous) next
             else if (path.startsWith("$previous/")) next + path.removePrefix(previous) else path
+        sessions.removeTree(next)
+        sessions.rebase(previous, next); persistSessions()
         activePath = rebase(activePath)
         for (i in opened.indices) opened[i] = rebase(opened[i])
         val oldExpanded = expanded.toList(); expanded.clear(); expanded.addAll(oldExpanded.map(::rebase))
         currentDirectory = rebase(currentDirectory)
     }
 
-    private fun switchFile(relative: String): Boolean {
-        if (relative == activePath && loadedPath == activePath) return true
-        val content = try { workspace.read(workspace.resolve(relative)) }
-            catch (e: Exception) { alert("打开文件失败：${e.message}"); return false }
-        if (!saveActive()) return false
-        cursors[activePath] = editor.selectionStart.coerceAtLeast(0)
-        activePath = relative
-        if (!opened.contains(relative)) opened.add(relative)
-        loadActive(content); refreshTabs(); renderExplorer()
-        return true
+    private fun switchFile(relative: String, after: (() -> Unit)? = null): Boolean {
+        if (workspaceBusy) return false
+        if (relative == activePath && loadedPath == activePath) { after?.invoke(); return true }
+        saveActive {
+            captureSession(); persistSessions()
+            val key = sessions.key(relative)
+            ioAction("正在打开 $relative…", {
+                workspace.read(workspace.resolve(relative)) to drafts.read(key)
+            }) { (content, draft) ->
+                activePath = relative
+                if (relative !in opened) opened.add(relative)
+                loadActive(content, draft); refreshTabs(); renderExplorer(); after?.invoke()
+            }
+        }
+        return false
     }
 
     private fun closeTab(relative: String) {
-        if (!saveActive()) return
-        opened.remove(relative)
-        if (opened.isEmpty()) opened.add(ensureFallback())
-        if (relative == activePath) { activePath = opened.last(); loadActive() }
-        refreshTabs(); renderExplorer()
+        if (workspaceBusy) return
+        saveActive {
+            captureSession(); persistSessions()
+            opened.remove(relative)
+            if (relative == activePath) {
+                val next = opened.lastOrNull()
+                if (next != null) switchFile(next)
+                else ioAction("正在打开项目…", { ensureFallback() }) { path -> opened.add(path); switchFile(path); refreshTabs() }
+            }
+            refreshTabs(); renderExplorer()
+        }
     }
 
     private fun refreshTabs() {
@@ -575,7 +803,7 @@ class MainActivity : Activity() {
         opened.toList().forEach { path ->
             if (!workspace.resolve(path).isFile) { opened.remove(path); return@forEach }
             val one = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; background = shape(if (path == activePath) editorBackground else surface, 0) }
-            val name = label(" ${if (path.endsWith(".py")) "🐍" else "◇"} ${path.substringAfterLast('/')} ", 12f,
+            val name = label(" ${if (path == activePath && dirty) "● " else ""}${if (path.endsWith(".py")) "🐍" else "◇"} ${path.substringAfterLast('/')} ", 12f,
                 if (path == activePath) accent else textForeground).apply {
                 setPadding(dp(8), 0, dp(4), 0); setOnClickListener { switchFile(path) }
             }
@@ -587,37 +815,76 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun loadActive(content: String? = null) {
-        try {
-            val code = content ?: workspace.read(workspace.resolve(activePath))
-            quietEdit = true
-            editor.setText(code)
-            loadedPath = activePath
-            dirty = false
-            editor.setSelection((cursors[activePath] ?: 0).coerceIn(0, editor.length()))
-            quietEdit = false
-            EditorFeatures.colorize(editor.text, isCpp(), dark)
-            updateNumbers(); updateSuggestions()
-            fileTitle.text = "工作区 / $activePath"
-            status.text = if (isCpp()) "C++17 · Wandbox 云端运行" else "Python 3.13 · 本地离线运行"
-        } catch (e: Exception) { quietEdit = false; alert("打开文件失败：${e.message}") }
+    private fun loadActive(content: String? = null, restored: Draft? = null) {
+        if (content == null) {
+            val path = activePath; val key = sessions.key(path)
+            ioAction("正在载入…", { workspace.read(workspace.resolve(path)) to drafts.read(key) }) { (text, draft) ->
+                loadActive(text, draft)
+            }
+            return
+        }
+        quietEdit = true
+        editor.setText(restored?.text ?: content)
+        loadedPath = activePath
+        loadedVersion = restored?.baseHash ?: DocumentTree.digest(content)
+        dirty = restored != null && restored.text != content
+        restoreSession(); quietEdit = false
+        EditorFeatures.colorize(editor.text, isCpp(), dark)
+        updateNumbers(); updateSuggestions()
+        fileTitle.text = "${workspace.title} / $activePath"
+        status.text = if (dirty) "已恢复未写回草稿，请保存或导出" else if (isCpp()) "C++17 · Wandbox 云端" else "Python 3.13 · 本地"
+        refreshTabs()
     }
 
-    private fun saveActive(): Boolean {
-        if (!::editor.isInitialized || loadedPath == null) return true
-        if (loadedPath != activePath) { status.text = "保存已阻止：文件与编辑缓冲区不匹配"; return false }
-        if (!dirty) return true
-        return try {
-            workspace.write(workspace.resolve(activePath), editor.text.toString())
-            dirty = false
-            true
-        } catch (e: Exception) {
-            if (::status.isInitialized) status.text = "保存失败，内容仍在编辑器中：${e.message}"
-            false
+    private fun queueDraft() {
+        if (!dirty || loadedPath != activePath || !::drafts.isInitialized) return
+        val key = sessions.key(activePath); val path = activePath; val text = editor.text.toString(); val base = loadedVersion
+        persistSessions()
+        WorkspaceIo.executor.execute {
+            runCatching { drafts.put(key, path, text, base) }.onFailure { error ->
+                runOnUiThread { if (!isDestroyed) status.text = "恢复草稿写入失败：${error.message}，请立即导出" }
+            }
         }
     }
 
+    private fun saveActive(onSaved: (() -> Unit)? = null): Boolean {
+        if (!::editor.isInitialized || loadedPath == null) return false
+        if (workspaceBusy) { status.text = "正在处理文件，请稍候"; return false }
+        if (loadedPath != activePath) { status.text = "保存已阻止：文件身份与缓冲区不匹配"; return false }
+        if (saving) { if (onSaved != null) afterSave = onSaved; return false }
+        if (!dirty) { onSaved?.invoke(); return true }
+        saving = true; afterSave = onSaved
+        val path = activePath; val key = sessions.key(path); val text = editor.text.toString(); val revision = editRevision
+        val base = loadedVersion
+        captureSession(); persistSessions()
+        status.text = "正在保存…"
+        WorkspaceIo.executor.execute {
+            val saved = runCatching {
+                drafts.put(key, path, text, base)
+                workspace.write(workspace.resolve(path), text, base)
+                drafts.removeIfMatches(key, text)
+            }
+            runOnUiThread {
+                if (isDestroyed) return@runOnUiThread
+                saving = false
+                val next = afterSave; afterSave = null
+                saved.onSuccess {
+                    loadedVersion = DocumentTree.digest(text)
+                    if (loadedPath == path && revision == editRevision && editor.text.toString() == text) dirty = false
+                    status.text = if (dirty) "已保存上一版，正在保留新编辑" else "✓ 已保存 $path"
+                    refreshTabs()
+                    if (next != null) saveActive(next)
+                }.onFailure { error ->
+                    status.text = "保存失败，编辑内容和恢复草稿仍保留：${error.message}"
+                    if (next != null) alert("${error.message}\n已阻止切换/关闭/运行。可导出当前草稿，或重新授权后重试。")
+                }
+            }
+        }
+        return false
+    }
+
     private fun allowFileOperation(): Boolean {
+        if (workspaceBusy || saving) { status.text = "请等待文件操作完成"; return false }
         if (!running) return true
         alert("程序运行中，请结束后再新建、导入、移动、重命名或删除文件。")
         return false
@@ -643,11 +910,13 @@ class MainActivity : Activity() {
         }
     }
     private fun requestCompletion() {
+        if (workspaceBusy) return
         updateSuggestions()
         if (!showingSuggestion) status.text = "键入词语前缀后，使用 Tab 或点击候选词补全"
         editor.requestFocus()
     }
     private fun acceptSuggestion(value: String) {
+        if (workspaceBusy) return
         val start = minOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(0)
         val end = maxOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(start)
         val prefix = EditorFeatures.prefix(editor.text.toString(), start)
@@ -656,12 +925,14 @@ class MainActivity : Activity() {
         editor.setSelection((begin + value.length).coerceAtMost(editor.length()))
     }
     private fun insertText(snippet: String, caretInside: Boolean = false) {
+        if (workspaceBusy) return
         val start = minOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(0)
         val end = maxOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(start)
         quietEdit = true
         editor.text.replace(start, end, snippet)
         quietEdit = false
-        dirty = true
+        dirty = true; editRevision++
+        handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
         updateNumbers(); handler.post(refreshEditor)
         handler.removeCallbacks(autosave); handler.postDelayed(autosave, 700)
         editor.setSelection((start + snippet.length - if (caretInside) 1 else 0).coerceAtMost(editor.length()))
@@ -670,8 +941,10 @@ class MainActivity : Activity() {
 
     /** Shift+Tab removes one indent. Tab indents selection or accepts a suggestion. */
     private fun indent(reverse: Boolean) {
+        if (workspaceBusy) return
         applyChange(EditorActions.indent(editor.text.toString(), editor.selectionStart, editor.selectionEnd, reverse))
-        dirty = true
+        dirty = true; editRevision++
+        handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
         updateNumbers(); handler.post(refreshEditor)
         handler.removeCallbacks(autosave); handler.postDelayed(autosave, 700)
         editor.requestFocus()
@@ -701,7 +974,8 @@ class MainActivity : Activity() {
     }
 
     private fun toggleTheme() {
-        if (!saveActive()) return
+        if (dirty || saving) { saveActive { toggleTheme() }; return }
+        if (workspaceBusy) return
         persist()
         dark = !dark
         prefs.edit().putBoolean("dark", dark).apply()
@@ -717,7 +991,7 @@ class MainActivity : Activity() {
         }
         if (event.action == KeyEvent.ACTION_DOWN && event.isCtrlPressed) {
             when (event.keyCode) {
-                KeyEvent.KEYCODE_S -> { if (saveActive()) status.text = "✓ 已保存 $activePath"; return true }
+                KeyEvent.KEYCODE_S -> { saveActive { status.text = "✓ 已保存 $activePath" }; return true }
                 KeyEvent.KEYCODE_N -> { askCreate(false); return true }
                 KeyEvent.KEYCODE_O -> { importFile(); return true }
                 KeyEvent.KEYCODE_B -> { showExplorer(); return true }
@@ -730,19 +1004,112 @@ class MainActivity : Activity() {
     }
 
     private fun importFile() {
-        if (!allowFileOperation() || !saveActive()) return
-        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE); type = "*/*"
-        }, 201)
+        if (!allowFileOperation()) return
+        saveActive {
+            startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE); type = "*/*"
+            }, 201)
+        }
     }
+
     private fun exportFile() {
-        if (!saveActive()) return
-        exportContent = editor.text.toString()
-        exportPath = activePath
-        startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "text/plain"; putExtra(Intent.EXTRA_TITLE, activePath.substringAfterLast('/'))
-        }, 202)
+        // Export must remain available even when saving to the original provider fails.
+        if (workspaceBusy || loadedPath != activePath) return
+        exportContent = editor.text.toString(); exportPath = activePath
+        ioAction("准备导出草稿…", { File(filesDir, "pending-export.txt").writeText(exportContent!!) }) {
+            startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE); type = "text/plain"
+                putExtra(Intent.EXTRA_TITLE, activePath.substringAfterLast('/'))
+            }, 202)
+        }
+    }
+
+    private fun reloadActive() {
+        if (workspaceBusy || saving || loadedPath != activePath) return
+        AlertDialog.Builder(this).setTitle("重新载入原文件？")
+            .setMessage("当前内容将先保留为恢复草稿，然后读取原文件。恢复入口可以导出此前的草稿。")
+            .setNegativeButton("取消", null).setPositiveButton("保留草稿并载入") { _, _ ->
+                handler.removeCallbacks(autosave); handler.removeCallbacks(checkpointDraft)
+                val path = activePath; val key = sessions.key(path); val text = editor.text.toString(); val base = loadedVersion
+                ioAction("正在保留草稿并载入…", {
+                    drafts.put("$key:backup:${System.currentTimeMillis()}", path, text, base)
+                    val fresh = workspace.read(workspace.resolve(path))
+                    drafts.removeIfMatches(key, text)
+                    fresh
+                }) { fresh -> loadActive(fresh) }
+            }.show()
+    }
+
+    private fun recoverDrafts() {
+        if (workspaceBusy || saving) return
+        ioAction("读取恢复草稿与原文…", {
+            val saved = drafts.list("")
+            val originals = File(filesDir, "provider-recovery").walkTopDown().filter {
+                it.isFile && it.name.endsWith(".before.txt") && it.length() <= 1_000_000
+            }.take(1000).mapNotNull { file -> runCatching {
+                val info = org.json.JSONObject(File(file.parentFile, file.name.removeSuffix(".before.txt") + ".meta.json").readText())
+                Draft(file.name, "${info.getString("project")}（原文备份）/${info.getString("path")}", file.readText())
+            }.getOrNull() }.toList()
+            saved + originals
+        }) { entries ->
+            if (entries.isEmpty()) { alert("没有恢复草稿"); return@ioAction }
+            AlertDialog.Builder(this).setTitle("导出恢复草稿")
+                .setItems(entries.mapIndexed { index, draft -> "${index + 1}. ${draft.path}" }.toTypedArray()) { _, which ->
+                    val draft = entries[which]
+                    exportContent = draft.text; exportPath = draft.path
+                    ioAction("准备恢复导出…", { File(filesDir, "pending-export.txt").writeText(draft.text) }) {
+                        startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE); type = "text/plain"
+                            putExtra(Intent.EXTRA_TITLE, draft.path.substringAfterLast('/'))
+                        }, 202)
+                    }
+                }.show()
+        }
+    }
+
+    private fun workspaceMenu() {
+        if (!allowFileOperation()) return
+        val recent = runCatching { JSONArray(prefs.getString("recentTrees", "[]")) }.getOrDefault(JSONArray())
+        val names = mutableListOf("选择手机目录…", "内部项目（卸载会清除）", "重新载入当前目录")
+        for (i in 0 until recent.length()) names.add("最近：" + recent.getJSONObject(i).optString("name"))
+        AlertDialog.Builder(this).setTitle(workspace.title).setItems(names.toTypedArray()) { _, which ->
+                when (which) {
+                    0 -> AlertDialog.Builder(this).setTitle("选择真实项目目录")
+                        .setMessage("编辑器保存会写回所选目录；权限只限该目录。外部文件卸载后仍由提供方保留。Python 使用私有运行镜像，运行代码产生的文件不会自动同步回外部目录。")
+                        .setPositiveButton("选择目录") { _, _ -> selectDirectory() }.setNegativeButton("取消", null).show()
+                    1 -> requestWorkspace(null)
+                    2 -> requestWorkspace(selectedTree)
+                    else -> requestWorkspace(recent.getJSONObject(which - 3).getString("uri"))
+                }
+        }.show()
+    }
+
+    private fun requestWorkspace(tree: String?) {
+        if (!::editor.isInitialized || !dirty) { startWorkspace(tree); return }
+        if (workspaceBusy || saving) return
+        AlertDialog.Builder(this).setTitle("切换工作区")
+            .setMessage("当前内容尚未写回。可以先保存，或保留应用内草稿后切换；授权失效时可选择保留草稿。")
+            .setPositiveButton("保存后切换") { _, _ -> saveActive { startWorkspace(tree) } }
+            .setNeutralButton("保留草稿后切换") { _, _ ->
+                handler.removeCallbacks(autosave); handler.removeCallbacks(checkpointDraft)
+                val key = sessions.key(activePath); val path = activePath; val text = editor.text.toString(); val base = loadedVersion
+                captureSession(); persistSessions()
+                ioAction("正在保留恢复草稿…", { drafts.put(key, path, text, base) }) { startWorkspace(tree) }
+            }.setNegativeButton("取消", null).show()
+    }
+
+    private fun selectDirectory() {
+        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+        }, 203)
+    }
+
+    private fun rememberWorkspace(uri: String, name: String) {
+        val old = runCatching { JSONArray(prefs.getString("recentTrees", "[]")) }.getOrDefault(JSONArray())
+        val recent = JSONArray().put(org.json.JSONObject().put("uri", uri).put("name", name))
+        for (i in 0 until old.length()) if (recent.length() < 8 && old.getJSONObject(i).getString("uri") != uri) recent.put(old.getJSONObject(i))
+        prefs.edit().putString("recentTrees", recent.toString()).apply()
     }
 
     @Deprecated("Compatible with Android API 24 without AndroidX dependencies")
@@ -750,39 +1117,43 @@ class MainActivity : Activity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != RESULT_OK) return
         val uri = data?.data ?: return
-        try {
-            when (requestCode) {
-                201 -> {
-                    if (!allowFileOperation() || !saveActive()) return
-                    val content = contentResolver.openInputStream(uri)?.let(Workspace::utf8Reader)?.use {
-                        Workspace.readLimited(it, Workspace.MAX_CHARS)
-                    }?.removePrefix("\uFEFF") ?: error("无法读取文件")
-                    require(content.length <= 200000) { "文件过大" }
-                    require(!content.contains('\u0000')) { "仅支持 UTF-8 文本文件" }
-                    val rawName = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use {
-                        if (it.moveToFirst()) it.getString(0) else null
-                    } ?: "import.cpp"
-                    val name = rawName.substringAfterLast('/').substringAfterLast('\\')
+        when (requestCode) {
+            203 -> try {
+                val flags = data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                require(flags and Intent.FLAG_GRANT_READ_URI_PERMISSION != 0 && flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION != 0) { "请选择可读写目录" }
+                contentResolver.takePersistableUriPermission(uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                requestWorkspace(uri.toString())
+            } catch (e: Exception) { alert("目录授权失败：${e.message}") }
+            201 -> {
+                if (!allowFileOperation()) return
+                saveActive {
                     val parent = workspace.resolve(currentDirectory).let { if (it.isDirectory) it else workspace.root }
-                    val item = workspace.create(parent, name, false)
-                    try { workspace.write(item, content) }
-                    catch (e: Exception) { workspace.delete(item); throw e }
-                    switchFile(workspace.path(item))
-                    renderExplorer(); status.text = "✓ 已导入 ${item.name}"
-                }
-                202 -> {
-                    val output = contentResolver.openOutputStream(uri, "wt") ?: error("无法写入")
-                    output.use { it.write((exportContent ?: error("导出快照已失效，请重新导出")).toByteArray(Charsets.UTF_8)) }
-                    status.text = "✓ 已导出 $exportPath"
-                    exportContent = null; exportPath = null
+                    ioAction("正在导入副本…", {
+                        val content = contentResolver.openInputStream(uri)?.let(Workspace::utf8Reader)?.use { Workspace.readLimited(it, Workspace.MAX_CHARS) }
+                            ?.removePrefix("\uFEFF") ?: error("无法读取文件")
+                        require(!content.contains('\u0000')) { "仅支持 UTF-8 文本" }
+                        val rawName = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { if (it.moveToFirst()) it.getString(0) else null } ?: "import.cpp"
+                        val item = workspace.create(parent, rawName.substringAfterLast('/').substringAfterLast('\\'), false)
+                        workspace.write(item, content)
+                        workspace.path(item)
+                    }) { path -> switchFile(path) }
                 }
             }
-        } catch (e: Exception) { alert("导入/导出失败：${e.message}") }
+            202 -> {
+                val snapshot = exportContent ?: runCatching { File(filesDir, "pending-export.txt").readText() }.getOrNull()
+                if (snapshot == null) { alert("导出快照已失效，请重新导出"); return }
+                ioAction("正在导出…", {
+                    contentResolver.openOutputStream(uri, "wt")?.use { it.write(snapshot.toByteArray(Charsets.UTF_8)) } ?: error("无法写入导出文件")
+                }) { status.text = "✓ 已导出 $exportPath"; exportContent = null; exportPath = null }
+            }
+        }
     }
 
     private fun runCode(consented: Boolean = false) {
-        if (running) return
-        if (!saveActive() || loadedPath != activePath) return
+        if (running || workspaceBusy) return
+        if (dirty || saving) { saveActive { runCode(consented) }; return }
+        if (loadedPath != activePath) return
         val code = editor.text.toString()
         if (code.isBlank()) { alert("请先输入代码"); return }
         if (code.length > 100000 || input.length() > 20000) { alert("代码最多 10 万字符；输入最多 2 万字符"); return }
@@ -798,13 +1169,24 @@ class MainActivity : Activity() {
         }
         val runningFile = workspace.resolve(activePath).absolutePath
         val projectRoot = workspace.root.absolutePath
-        RunSession.start(code, stdin, cpp, runningFile, projectRoot)
+        if (!cpp && workspace.external) {
+            val path = activePath
+            ioAction("正在同步 Python 源码与运行资源…", {
+                val snapshot = workspace.preparePythonRun()
+                val entry = File(snapshot, path)
+                entry.writeText(code)
+                snapshot to entry
+            }) { (snapshot, entry) ->
+                RunSession.start(applicationContext, code, stdin, false, runningFile, snapshot.absolutePath,
+                    workspace.identity, entry.absolutePath)
+            }
+        } else RunSession.start(applicationContext, code, stdin, cpp, runningFile, projectRoot, workspace.identity)
     }
 
     private fun renderRunState() {
         if (!::runButton.isInitialized) return
-        runButton.text = if (running) "运行中…" else "▶ 运行"
-        runButton.isEnabled = !running
+        runButton.text = if (running) "■ 停止" else "▶ 运行"
+        runButton.isEnabled = true
         result = RunSession.result
         if (running) {
             showOutput(0)
@@ -848,18 +1230,30 @@ class MainActivity : Activity() {
     private fun gotoError() {
         val line = result?.errorLine ?: return
         val file = result?.errorFile ?: result?.sourcePath
+        val jump = {
+            val src = editor.text.toString(); var position = 0
+            for (i in 1 until line) {
+                val next = src.indexOf('\n', position)
+                if (next < 0) break
+                position = next + 1
+            }
+            editor.requestFocus(); editor.setSelection(position.coerceAtMost(editor.length()))
+        }
         if (file != null) {
-            val relative = runCatching { workspace.path(File(file)) }.getOrNull()
-            if (relative == null) { alert("错误位置不在项目工作区中"); return }
-            if (!switchFile(relative)) return
-        }
-        val src = editor.text.toString(); var position = 0
-        for (i in 1 until line) {
-            val next = src.indexOf('\n', position)
-            if (next < 0) break
-            position = next + 1
-        }
-        editor.requestFocus(); editor.setSelection(position.coerceAtMost(editor.length()))
+            if (result?.workspaceId != null && result?.workspaceId != workspace.identity) {
+                alert("请先打开运行时的原工作区，再定位错误"); return
+            }
+            val relative = runCatching { workspace.path(File(file)) }.getOrNull() ?: runCatching {
+                val oldRoot = File(result?.projectRoot ?: error("缺少运行目录")).canonicalPath
+                val location = File(file).canonicalPath
+                require(location.startsWith(oldRoot + File.separator))
+                location.removePrefix(oldRoot + File.separator).replace(File.separatorChar, '/')
+                    .also { require(workspace.resolve(it).isFile) }
+            }.getOrNull()
+            if (relative == null) { alert("错误位置不在当前工作区；请打开运行时的原工作区"); return }
+            switchFile(relative, jump)
+        } else jump()
     }
+
     private fun alert(message: String) { AlertDialog.Builder(this).setMessage(message).setPositiveButton("确定", null).show() }
 }

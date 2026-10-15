@@ -4,9 +4,22 @@ import android.content.Context
 import java.io.File
 import java.io.FileOutputStream
 
-/** Files are private to CodePocket and don't require storage permissions. */
-class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) {
-    constructor(context: Context) : this(File(context.filesDir, "workspace"), { source, target ->
+/** Existing private files or SAF documents backed by a private execution mirror. */
+class Workspace private constructor(directory: File, seedSamples: Boolean, private val replaceFile: (File, File) -> Unit) {
+    constructor(directory: File, replaceFile: (File, File) -> Unit) : this(directory, true, replaceFile)
+    private var documents: DocumentTree? = null
+    var identity: String = "internal"
+        private set
+    var title: String = "内部项目（卸载会清除，请导出备份）"
+        private set
+    val external get() = documents != null
+    fun preparePythonRun(): File {
+        val tree = documents ?: return root
+        val destination = File(root.parentFile, "run-" + java.util.UUID.randomUUID())
+        tree.copyForRun(destination)
+        return destination
+    }
+    constructor(context: Context) : this(File(context.filesDir, "workspace"), true, { source, target ->
         // POSIX rename atomically replaces the target on all supported Android versions (API 21+).
         android.system.Os.rename(source.path, target.path)
     })
@@ -18,7 +31,7 @@ class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) 
     init {
         val sampleCpp = File(root, "main.cpp")
         val samplePy = File(root, "main.py")
-        if (root.listFiles().isNullOrEmpty()) {
+        if (seedSamples && root.listFiles().isNullOrEmpty()) {
             sampleCpp.writeText(CPP_SAMPLE)
             samplePy.writeText(PY_SAMPLE)
         }
@@ -45,14 +58,11 @@ class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) 
         return canonical
     }
 
-    private fun validName(name: String) {
-        require(name.isNotBlank() && name == name.trim() && name != "." && name != ".." &&
-            name.length <= 120 && !name.contains('/') && !name.contains('\\') &&
-            name.none { it.isISOControl() }) { "文件名不能为空或包含 /、\\、控制字符等非法字符" }
-    }
+    private fun validName(name: String) = validateName(name)
+
 
     fun children(dir: File): List<File> = safe(dir).listFiles()?.filter {
-        runCatching { safe(it) }.isSuccess
+        runCatching { safe(it) }.isSuccess && (documents == null || path(it) in documents!!.children(path(dir)))
     }?.sortedWith(
         compareBy<File>({ !it.isDirectory }, { it.name.lowercase() })
     ) ?: emptyList()
@@ -60,7 +70,7 @@ class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) 
     fun folders(): List<File> {
         val output = mutableListOf(root)
         fun scan(folder: File, depth: Int) {
-            if (depth > 18) return
+            if (depth >= 20) return
             children(folder).filter { it.isDirectory }.forEach { output.add(it); scan(it, depth + 1) }
         }
         scan(root, 0)
@@ -73,6 +83,7 @@ class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) 
         require(location.isDirectory) { "父目录不存在" }
         val child = safe(File(location, name))
         require(!child.exists()) { "同名文件或文件夹已经存在" }
+        documents?.create(path(location), name, directory)
         if (directory) require(child.mkdir()) { "创建文件夹失败" }
         else require(child.createNewFile()) { "创建文件失败" }
         return child
@@ -84,6 +95,7 @@ class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) 
         require(old != root && old.exists()) { "无法重命名此项目" }
         val target = safe(File(old.parentFile, name))
         require(!target.exists()) { "目标名称已存在" }
+        documents?.relocate(path(old), path(old.parentFile!!), name, false)
         require(old.renameTo(target)) { "重命名失败" }
         return target
     }
@@ -97,6 +109,7 @@ class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) 
         }
         val target = safe(File(parent, original.name))
         require(!target.exists()) { "目标目录已有同名项" }
+        documents?.relocate(path(original), path(parent), original.name, true)
         require(original.renameTo(target)) { "移动失败" }
         return target
     }
@@ -110,21 +123,36 @@ class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) 
             if (entry.isDirectory) entry.listFiles()?.forEach(::checkTree)
         }
         checkTree(item)
+        documents?.delete(path(item))
         require(item.deleteRecursively()) { "删除失败" }
     }
 
     fun read(file: File): String {
         val item = safe(file)
+        documents?.let { tree ->
+            val content = tree.read(path(item))
+            require(content.length <= MAX_CHARS) { "文件过大" }
+            writeLocal(item, content)
+            return content
+        }
         require(item.isFile && item.length() <= 1024 * 1024) { "仅支持打开最大 1 MB 的文本文件" }
         return item.inputStream().use { stream ->
             utf8Reader(stream).use { readLimited(it, MAX_CHARS) }
         }.also { require(!it.contains('\u0000')) { "仅支持 UTF-8 文本文件" } }.removePrefix("\uFEFF")
     }
 
-    fun write(file: File, content: String) {
+    fun write(file: File, content: String, expectedBase: String? = null) {
         require(content.length <= MAX_CHARS) { "文件内容超过 20 万字符" }
         val item = safe(file)
         require(item.isFile) { "文件不存在" }
+        if (documents == null && expectedBase != null) require(DocumentTree.digest(read(item)) == expectedBase) {
+            "文件已在编辑器之外改变；草稿已保留，请重新载入比较或导出"
+        }
+        documents?.write(path(item), content, expectedBase)
+        writeLocal(item, content)
+    }
+
+    private fun writeLocal(item: File, content: String) {
         // Write and sync a sibling first. A failed replacement preserves the old file.
         val temporary = File.createTempFile(".codepocket-save-", ".tmp", item.parentFile)
         try {
@@ -139,6 +167,26 @@ class Workspace(directory: File, private val replaceFile: (File, File) -> Unit) 
     }
 
     companion object {
+        fun validateName(name: String) {
+            require(name.isNotBlank() && name == name.trim() && name != "." && name != ".." &&
+                name.length <= 120 && !name.contains('/') && !name.contains('\\') &&
+                name.none { it.isISOControl() }) { "文件名不能为空或包含斜杠、控制字符等非法字符" }
+        }
+
+        fun fromTree(context: Context, tree: android.net.Uri): Workspace {
+            val id = "saf:" + DocumentTree.digest(tree.toString())
+            // A fresh mirror prevents deleted/renamed modules surviving from an older provider snapshot.
+            val directory = File(context.cacheDir, "workspaces/" + id.removePrefix("saf:") + "/" + java.util.UUID.randomUUID())
+            val ws = Workspace(directory, false) { a, b -> android.system.Os.rename(a.path, b.path) }
+            val gateway = SafGateway(context.contentResolver, tree)
+            val documents = DocumentTree(gateway, File(context.filesDir, "provider-recovery/" + id.removePrefix("saf:")))
+            documents.scan(ws.root)
+            ws.documents = documents
+            ws.identity = id
+            ws.title = gateway.root.name + " · 系统目录" + documents.warning.takeIf { it.isNotBlank() }?.let { " · $it" }.orEmpty()
+            return ws
+        }
+
         const val MAX_CHARS = 200000
 
         fun utf8Reader(stream: java.io.InputStream): java.io.Reader = java.io.InputStreamReader(stream,
