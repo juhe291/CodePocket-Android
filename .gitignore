@@ -1,0 +1,14 @@
+.gradle/
+.idea/
+build/
+**/build/
+local.properties
+*.iml
+.DS_Store
+*.apk
+__pycache__/
+*.pyc
+.tools/
+verification/*.zip
+verification/*.log
+dist/
