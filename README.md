@@ -7,6 +7,7 @@
 - [P0 修改与真实验证结果](docs/P0_VERIFICATION.md)
 - [P0 设备验收清单](docs/P0_DEVICE_TESTS.md)
 - [完整开发需求](docs/DEVELOPMENT_REQUIREMENTS.md)
+- [动画与智能补全增补计划（P1/P2，待实现，与原需求共同生效）](docs/P1_P2_ANIMATION_COMPLETION_PLAN.md)
 - [阶段 0 审查基线](docs/STAGE0_AUDIT_2026-10-15.md)
 - [第三方依赖初步清单](docs/THIRD_PARTY_INVENTORY.md)
 
@@ -93,5 +94,6 @@ Linux/macOS 使用 bash ./gradlew。构建 Python 不在 PATH 时可传 -Pcodepo
 - Python 不是安全沙箱，独立进程仍具有本 App 的 UID 权限；不保证后台长期常驻。运行后继续编辑可能使历史错误行号偏移。
 - 外部项目结构被其他应用改变后须重新载入。C++ 仍为单文件，不上传本地头文件或链接多个 cpp；本地 C++ 方案和批量用例属于 P2。
 - 设置、查找替换、独立语法主题、可拖动面板和程序终端属于 P1，尚未实施。第三方许可证完整通知包仍待完善。
+- 2026-10-15 增补：动画系统和 VS Code 风格补全界面归入 P1；C++ / Python 深度语义补全归入 P2。Sora、clangd、Jedi 等仅列为待评估候选，尚未集成；当前仍为基础词法补全。动画须尊重系统减少动画及 App 开关，60 FPS/高刷新率与输入法、光标、弹窗配合均待实测。
 
 后续先完成 P0 设备验收与缺陷回修；进入 P1 前等待用户确认。历史构建和阶段 0 审查保留在 docs 和 verification 中。
