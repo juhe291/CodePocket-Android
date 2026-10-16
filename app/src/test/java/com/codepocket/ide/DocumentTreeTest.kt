@@ -103,4 +103,30 @@ class DocumentTreeTest {
         val next = java.io.File(temp.root, "run-snapshot-next"); tree.copyForRun(next)
         assertEquals("new external value", java.io.File(next, "data.txt").readText())
     }
+
+    @Test fun matchingRecoveryCheckpointUsesCurrentProviderVersion() {
+        val p = Provider()
+        val file = p.create(p.root.id, "main.py", false)
+        p.content[file.id] = "print('already saved')"
+        val tree = DocumentTree(p, temp.newFolder()); tree.scan(temp.newFolder())
+        val checkpoint = Draft("saf:file1", "main.py", "print('already saved')", DocumentTree.digest("old content"))
+        val restored = DraftRecovery.restore(tree.read("main.py"), checkpoint)
+        assertFalse(restored.dirty)
+        tree.write("main.py", "print('next edit')", restored.baseHash)
+        assertEquals("print('next edit')", p.content[file.id])
+        assertEquals(1, p.writes)
+    }
+
+    @Test fun recoveryDoesNotAdoptAnExternalProvidersVersionForDifferentText() {
+        val p = Provider()
+        val file = p.create(p.root.id, "main.py", false)
+        p.content[file.id] = "external edit"
+        val tree = DocumentTree(p, temp.newFolder()); tree.scan(temp.newFolder())
+        val checkpoint = Draft("saf:file1", "main.py", "my unsaved edit", DocumentTree.digest("original content"))
+        val restored = DraftRecovery.restore(tree.read("main.py"), checkpoint)
+        assertTrue(restored.dirty)
+        assertThrows(IllegalArgumentException::class.java) { tree.write("main.py", restored.text, restored.baseHash) }
+        assertEquals("external edit", p.content[file.id])
+        assertEquals(0, p.writes)
+    }
 }

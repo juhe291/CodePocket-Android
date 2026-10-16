@@ -2,9 +2,10 @@
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**2026-10-15 P0 本地构建与主机回归通过，设备验收尚未完成。** [本轮 Debug APK](dist/CodePocket-P0-debug.apk) 为 20.73 MiB，Android 7.0+ / arm64-v8a。Kotlin 35 项中 34 通过、1 跳过；Python 源码和 APK 字节码各 13 项通过；Lint 0 错误、14 警告。未在 Android 手机、平板或鸿蒙卓易通中安装运行，不能据此宣称实机适配通过。
+**2026-10-16 P0 回修主机验证通过，实机验收尚未完成。** [最新 Debug APK](dist/CodePocket-P0-resume-2026-10-16-debug.apk) 为 20.73 MiB，Android 7.0+ / arm64-v8a。Kotlin 41 项中 40 通过、1 跳过；Python 源码和 APK 字节码各 13 项通过；Lint 0 错误、14 警告。上轮 Android 16 单台手机已有安装、Python/独立输入和自动保存的部分实测；本轮 APK 的恢复/导航回修待实机复测，不能宣称全设备适配通过。
 
-- [P0 修改与真实验证结果](docs/P0_VERIFICATION.md)
+- [P0 后续回修、最新构建及实机接续点](docs/P0_FOLLOWUP_2026-10-16.md)
+- [初轮 P0 修改与验证结果](docs/P0_VERIFICATION.md)
 - [P0 设备验收清单](docs/P0_DEVICE_TESTS.md)
 - [完整开发需求](docs/DEVELOPMENT_REQUIREMENTS.md)
 - [动画与智能补全增补计划（P1/P2，待实现，与原需求共同生效）](docs/P1_P2_ANIMATION_COMPLETION_PLAN.md)
@@ -13,7 +14,7 @@
 
 ## 使用
 
-1. 安装本轮 Debug APK，首次可以继续原有内部项目；旧内部目录未迁移或删除。覆盖安装和旧数据保留仍需实机验证，升级前先导出重要内容。
+1. 安装本轮 Debug APK，首次可以继续原有内部项目；旧内部目录未迁移或删除。上一轮在单台 Android 16 上覆盖安装、旧内部项目读取和冷启动通过；本轮 APK 待复测，升级前先导出重要内容。
 2. 工具栏“工作区”可选择真实手机目录、打开最近目录、回到内部项目或重新载入。目录由系统 SAF 授权，编辑器保存会写回该目录。“导入副本”与系统工作区是不同操作：副本保存不会覆盖导入来源。
 3. 文件树可展开嵌套目录、打开多个标签；长按或右键管理文件/目录。支持新建、重命名、移动与确认删除；提供方不支持的操作会说明原因。
 4. 每个文件分别保存 stdin，“清空输入”只清当前文件。“收键盘”主动隐藏 IME；“结果”切换运行面板，编辑代码时提供紧凑 Tab/反缩进/括号工具条。
@@ -59,7 +60,7 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 | EditorFeatures / EditorActions | 词法高亮、补全、括号、可测试的缩进及编辑规则 |
 | EditorSessions | 每工作区文件身份、stdin、选区、滚动和焦点 |
 | Workspace / DocumentTree / SafGateway | 保留内部文件实现，连接 SAF 文档操作、版本核对与执行快照 |
-| DraftStore / WorkspaceIo | 持久恢复草稿、串行后台文件操作 |
+| DraftStore / DraftRecovery / WorkspaceIo | 持久恢复草稿、与已保存内容核对版本、串行后台文件操作 |
 | ExecutionEngines / RunSession / RunControl | Chaquopy 桥接、Wandbox HTTP、取消、会话状态和错误分类 |
 | PythonExecutionService / runner.py | 独立 :python 进程、按需初始化 CPython、输入输出捕获、模块刷新与 traceback |
 
@@ -86,7 +87,7 @@ Linux/macOS 使用 bash ./gradlew。构建 Python 不在 PATH 时可传 -Pcodepo
 
 ## 已知边界与后续
 
-- 设备交互、真实 SAF 提供方、独立 Python 进程启动/停止、Android 原生库与鸿蒙卓易通均未验收。
+- 上轮单台 Android 16 已完成部分交互与 Python 本地运行；本轮导航/草稿回修待复测。真实 SAF、进程停止、中文组合、实体蓝牙键鼠、平板和鸿蒙卓易通均未完整验收。
 - stdin 预填，输出结束后展示；没有实时交互、ANSI 终端、流式输出或 Shell。
 - Python 字节码尽力限时 6 秒，父级会话总限时 10 秒含初始化；C++ 连接 10 秒/读取 30 秒，父级等待 45 秒。云端取消不代表服务器任务已终止，未知退出码显示“—”。
 - 文本最多 20 万字符，运行代码最多 10 万字符，stdin 最多 2 万字符；超过 45000 字符停用高亮/括号匹配。SAF 最多 1000 项、20 层目录；Python 快照单资源 1 MB、总计 8 MB。

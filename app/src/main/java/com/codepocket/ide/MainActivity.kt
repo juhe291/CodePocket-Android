@@ -182,15 +182,11 @@ class MainActivity : Activity() {
                     wide = resources.configuration.screenWidthDp >= 720 && resources.configuration.screenHeightDp >= 480
                     consoleSide = resources.configuration.screenWidthDp >= 600
                     createUi(); loadActive(ready.code, ready.draft)
-                    saved?.getString("draft")?.takeIf { saved.getString("draftPath") == activePath }?.let {
-                        quietEdit = true; editor.setText(it); quietEdit = false; dirty = true
-                        restoreSession(); updateNumbers(); handler.post(refreshEditor); queueDraft()
-                    }
+                    // Bundle checkpoints are merged before reading; loadActive reconciles them once.
                     exportContent = saved?.getString("exportSnapshot")?.let { name ->
                         runCatching { File(filesDir, name).readText() }.getOrNull()
                     }
                     exportPath = saved?.getString("exportPath")
-                    prefs.edit().putString("selectedTree", tree).apply()
                     if (tree != null) rememberWorkspace(tree, workspace.title)
                     renderRunState()
                 }.onFailure { error ->
@@ -259,7 +255,11 @@ class MainActivity : Activity() {
     }
 
     private fun persistNavigation() {
-        prefs.edit().putString(prefKey("activeFile"), activePath).putString(prefKey("directory"), currentDirectory)
+        // Keep navigation and the stable file IDs in the same preference update.
+        // Do not rely on onPause: an abrupt process stop may never deliver it.
+        prefs.edit().putString("selectedTree", selectedTree)
+            .putString("sessions:${sessions.workspaceId}", sessions.toJson())
+            .putString(prefKey("activeFile"), activePath).putString(prefKey("directory"), currentDirectory)
             .putBoolean("dark", dark).putBoolean("explorerVisible", explorerVisible)
             .putString(prefKey("opened"), JSONArray(opened).toString())
             .putBoolean("panelVisible", panelVisible).apply()
@@ -316,7 +316,7 @@ class MainActivity : Activity() {
         top.addView(button("结果") {
             if (input.hasFocus()) { hideKeyboard(); editor.requestFocus() }
             panelVisible = !panelVisible
-            updateImeLayout()
+            updateImeLayout(); persistNavigation()
         })
         top.addView(button(if (dark) "☀" else "☾") { toggleTheme() })
         top.addView(space(5))
@@ -609,7 +609,7 @@ class MainActivity : Activity() {
         explorerList.removeAllViews()
         val rootLabel = label("▾  ${workspace.title}", 12f, muted, true).apply {
             setPadding(dp(10), dp(8), 0, dp(8))
-            setOnClickListener { currentDirectory = ""; status.text = "新建位置：项目根目录" }
+            setOnClickListener { currentDirectory = ""; persistNavigation(); status.text = "新建位置：项目根目录" }
         }
         explorerList.addView(rootLabel)
         fun visit(directory: File, level: Int) {
@@ -628,7 +628,7 @@ class MainActivity : Activity() {
                         if (folder) {
                             currentDirectory = relative
                             if (open) expanded.remove(relative) else expanded.add(relative)
-                            renderExplorer()
+                            persistNavigation(); renderExplorer()
                         } else { switchFile(relative); explorerDialog?.dismiss(); explorerDialog = null }
                     }
                     setOnLongClickListener { fileMenu(file); true }
@@ -683,7 +683,9 @@ class MainActivity : Activity() {
             if (directory) "" else "untitled.${if (isCpp()) "cpp" else "py"}") { name ->
             saveActive {
                 ioAction("正在创建…", { workspace.create(parent, name, directory) }) { item ->
-                    if (directory) { expanded.add(workspace.path(item)); currentDirectory = workspace.path(item) }
+                    if (directory) {
+                        expanded.add(workspace.path(item)); currentDirectory = workspace.path(item); persistNavigation()
+                    }
                     else switchFile(workspace.path(item))
                     expanded.add(workspace.path(parent)); renderExplorer()
                 }
@@ -735,7 +737,7 @@ class MainActivity : Activity() {
                         if (activePath == path || activePath.startsWith("$path/")) {
                             if (opened.isEmpty()) opened.add(fallback)
                             activePath = opened.last(); loadedPath = null; loadActive()
-                        }
+                        } else persistNavigation()
                         expanded.removeAll { it == path || it.startsWith("$path/") }
                         renderExplorer(); refreshTabs()
                     }
@@ -764,6 +766,7 @@ class MainActivity : Activity() {
         for (i in opened.indices) opened[i] = rebase(opened[i])
         val oldExpanded = expanded.toList(); expanded.clear(); expanded.addAll(oldExpanded.map(::rebase))
         currentDirectory = rebase(currentDirectory)
+        persistNavigation()
     }
 
     private fun switchFile(relative: String, after: (() -> Unit)? = null): Boolean {
@@ -792,7 +795,7 @@ class MainActivity : Activity() {
                 val next = opened.lastOrNull()
                 if (next != null) switchFile(next)
                 else ioAction("正在打开项目…", { ensureFallback() }) { path -> opened.add(path); switchFile(path); refreshTabs() }
-            }
+            } else persistNavigation()
             refreshTabs(); renderExplorer()
         }
     }
@@ -823,17 +826,18 @@ class MainActivity : Activity() {
             }
             return
         }
+        val recovered = DraftRecovery.restore(content, restored)
         quietEdit = true
-        editor.setText(restored?.text ?: content)
+        editor.setText(recovered.text)
         loadedPath = activePath
-        loadedVersion = restored?.baseHash ?: DocumentTree.digest(content)
-        dirty = restored != null && restored.text != content
+        loadedVersion = recovered.baseHash
+        dirty = recovered.dirty
         restoreSession(); quietEdit = false
         EditorFeatures.colorize(editor.text, isCpp(), dark)
         updateNumbers(); updateSuggestions()
         fileTitle.text = "${workspace.title} / $activePath"
         status.text = if (dirty) "已恢复未写回草稿，请保存或导出" else if (isCpp()) "C++17 · Wandbox 云端" else "Python 3.13 · 本地"
-        refreshTabs()
+        refreshTabs(); persistNavigation()
     }
 
     private fun queueDraft() {
