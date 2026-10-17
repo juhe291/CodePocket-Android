@@ -1,6 +1,18 @@
 # CodePocket 当前交接状态
 
-## 当前：Sora隔离原型已做主机验证（2026-10-17）
+## 最新：P1-C 生产编辑事务与历史入口首批（2026-10-17）
+
+- 基于 `f366ed1` 增量开发；[本批报告](P1_EDITOR_TRANSACTIONS.md)。默认原生编辑器接入统一显式事务，覆盖候选/片段、缩进、符号插入、查找替换及键入后的自动修正；只读分析接口保留，Sora仍是独立实验。
+- 修复超限缩进被拒后仍标脏、无变化操作增加版本的问题；事务核对文档/版本/内容/选区/组合状态、20万字符与UTF-16/CRLF边界。查找替换提交原始快照，全部替换允许仅光标移动。原查找的长度预检保留，并非本轮才实现。
+- 系统撤销/重做统一保护入口；独立stdin保留自己的历史。增加原生历史来源标识，历史恢复不再被重新自动补括号/缩进。新CRLF边界门控同时配套调整多行缩进，避免拒绝正常Windows换行文件。
+- 最终构建 **1m 10s**，62 actionable tasks: 18 executed, 44 up-to-date；Kotlin196中195通过/1 Windows符号链接跳过，新增23全部通过，原173项和状态保留。Python源码/真实APK字节码各13/13，实际生成模板Python/主机C++17各7/7，Lint0错误/11既有警告。
+- [最新APK](../dist/CodePocket-editor-transactions-debug.apk)，22,101,433字节，SHA256 `6c84eda6c3bc92966af33b732ec10750050d74fe8304444fdb291465bab48689`；CRC、v2签名、16KB ZIP对齐、ABI及新类定义检查通过，上一默认APK的全部类定义保留。证据`verification/editor-transactions-2026-10-17/results.json`，首轮/最终日志和旧APK保留。
+- 原文件/SAF/草稿/运行模块、Gradle/Manifest/Actions、配置和原需求未改；不增加依赖或权限，无push/发布。更新README、进度与接续说明，本地阶段提交；`.tools`/设备备份不清理。
+- **仍需接续**：生产Port的独立选区/视口/诊断及完整会话、组件适配；当前不能称完整Port/默认Sora迁移完成。然后继续编辑手势/完整动画、设置与真实Python流式会话，P2/P3不丢失。
+- **实机统一后置**；本轮没有Android运行时、原生UndoManager、IME/键鼠/截图/FPS/卓易通、新Wandbox或远端Actions验证。纯事务和历史规则测试不等于真实系统历史/输入法联合验收。
+- 实际仓库`C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`；配置OneDrive cwd不存在。操作指定真实workdir，按需沙箱升级，不改Git配置。
+
+## 历史：Sora隔离原型已做主机验证（2026-10-17）
 
 - 基线`ffe8249`；[报告](P1_EDITOR_LAB.md)。同一Gradle工程的可选`editor-lab`模块，仅`-Pcodepocket.editorLab=true`启用；独立包名/临时草稿，原生/Sora基础编辑、主题和光标动画比较。默认IDE代码/编辑器/文件/SAF/运行与依赖保留。
 - 实验固定Sora0.23.7；真实Content/Indexer/UndoManager14/14，Gradle 27s，Lint0错误/6警告。0.24.4直接接入出现Kotlin2.2/1.9元数据失败，Java原型下旧Lint也有不兼容日志，已弃选；没有屏蔽元数据检查或升级全项目。

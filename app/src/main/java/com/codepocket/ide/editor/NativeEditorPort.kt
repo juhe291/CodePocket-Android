@@ -12,15 +12,16 @@ import android.text.style.ForegroundColorSpan
 import android.view.inputmethod.BaseInputConnection
 import com.codepocket.ide.CodeEditor
 import com.codepocket.ide.EditorSnapshot
+import com.codepocket.ide.Workspace
 
-/** Native adapter: owns only its own decoration spans; the platform continues to own editing and IME. */
+/** Native adapter: guards explicit edits; platform typing, history and IME remain native. */
 class NativeEditorPort(
     private val editor: CodeEditor,
     private val document: () -> Pair<String, Long>?,
     private val cpp: () -> Boolean,
     private val dark: () -> Boolean,
     private val compositionEnded: () -> Unit
-) : EditorPort, AutoCloseable {
+) : EditingEditorPort, AutoCloseable {
     private class SyntaxSpan(color: Int) : ForegroundColorSpan(color), NoCopySpan
     private class BracketSpan(color: Int) : BackgroundColorSpan(color), NoCopySpan
     private var closed = false
@@ -68,6 +69,20 @@ class NativeEditorPort(
         val (key, revision) = document() ?: return null
         return EditorFrame(EditorSnapshot(key, revision, editor.text.toString(), editor.selectionStart,
             editor.selectionEnd), cpp(), dark(), BaseInputConnection.getComposingSpanStart(editor.text) >= 0)
+    }
+
+    override fun applyEdit(transaction: EditorTransaction): EditResult =
+        EditorTransactions.apply(snapshot(), transaction, Workspace.MAX_CHARS) { change, changesText ->
+            editor.beginBatchEdit()
+            try {
+                if (changesText) editor.text.replace(change.start, change.end, change.text)
+                editor.setSelection(change.selectionStart, change.selectionEnd)
+            } finally { editor.endBatchEdit() }
+        }
+
+    override fun performHistory(source: EditorSnapshot, action: HistoryAction): Boolean {
+        if (EditorTransactions.sourceFailure(snapshot(), source) != null || !editor.hasFocus()) return false
+        return editor.onTextContextMenuItem(if (action == HistoryAction.UNDO) android.R.id.undo else android.R.id.redo)
     }
 
     override fun applyDecorations(analysis: EditorAnalysis): Boolean {

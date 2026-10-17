@@ -18,7 +18,8 @@ object EditorActions {
             return TextChange(lineStart, lineStart + count, "", (start - count).coerceAtLeast(lineStart))
         }
         // A selection ending at the next line's start does not include that line.
-        val segmentEnd = if (end > start && code.getOrNull(end - 1) == '\n') end - 1 else end
+        val segmentEnd = if (end > start && code.getOrNull(end - 1) == '\n')
+            end - if (end > 1 && code[end - 2] == '\r') 2 else 1 else end
         val old = code.substring(lineStart, segmentEnd)
         fun trim(line: String): String = if (line.startsWith('\t')) line.drop(1)
             else line.drop(line.takeWhile { it == ' ' }.length.coerceAtMost(width))
@@ -28,8 +29,9 @@ object EditorActions {
 
     /** Called after a single typed character; indices of the result refer to the changed text. */
     fun typed(before: String, start: Int, removed: Int, inserted: String, cpp: Boolean, tabWidth: Int = 4, useSpaces: Boolean = true,
-        autoIndent: Boolean = true, autoPairs: Boolean = true): TextChange? {
-        if (inserted.length != 1) return null
+        autoIndent: Boolean = true, autoPairs: Boolean = true, fromHistory: Boolean = false): TextChange? {
+        // History restores an exact prior buffer; do not treat it as newly typed code.
+        if (fromHistory || inserted.length != 1) return null
         val ch = inserted[0]
         if ((ch == '\n' && !autoIndent) || (ch != '\n' && !autoPairs)) return null
         val width = tabWidth.takeIf { it in listOf(2, 4, 8) } ?: 4

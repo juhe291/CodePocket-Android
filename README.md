@@ -1,10 +1,10 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-17：已完成Sora隔离原型及默认IDE回归。** 现有工程增加显式启用的独立实验模块，实际验证Sora文本/索引/撤销；日常IDE继续保留原生编辑器、项目和运行路径。见[本批结果](docs/P1_EDITOR_LAB.md)，前批[后台分析与稳定性](docs/P1_EDITOR_ANALYSIS.md)继续保留。
+**2026-10-17：已接入生产编辑事务与系统历史入口首批。** 保留现有原生编辑器，补全/片段、缩进、符号和替换共用文档版本、选区、组合输入及字符边界校验；修复超限/无变化标脏和历史恢复再次自动修正的问题。见[本批结果](docs/P1_EDITOR_TRANSACTIONS.md)。[Sora隔离原型](docs/P1_EDITOR_LAB.md)继续保留，尚未迁移默认编辑器。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [默认IDE Debug APK](dist/CodePocket-editor-native-debug.apk)** 20.85MiB，Android7.0+ / arm64-v8a。强制重跑62/62构建任务，Kotlin173中172通过/1跳过，Python源码/字节码各13/13，模板各7/7，Lint0错误/11警告；签名/CRC/对齐通过。
+**最新 [默认IDE Debug APK](dist/CodePocket-editor-transactions-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。最终构建1m 10s；Kotlin196中195通过/1跳过，新增23通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
 
 另有[Sora实验APK](dist/CodePocket-Sora-editor-lab-debug.apk)和[实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)，使用独立包名/临时草稿；14项真实库测试通过，尚未接入IDE功能。实机按要求统一后置，未验收UI/键鼠/IME/FPS。
 
@@ -87,6 +87,7 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |
 | terminal/AnsiParser / TerminalView | 受限SGR样式与只读结束后输出，保留原生文字选择 |
 | ui/DesignTokens / IdeIcons / IdeControls | 外壳配色/尺寸、原创线性图标和原生触控组件 |
+| editor/EditorPort / EditingEditorPort / EditorTransactions / NativeEditorPort | 后台分析快照、原生装饰、显式事务/历史门控；独立视口/诊断与完整组件适配待做 |
 | MainActivity / CodeEditor | 原生界面、触摸/键鼠入口、IME、编辑与会话联动 |
 | AppSettings / SettingsDialog | 持久化设置、边界校验与原生设置页面 |
 | EditorSearch / SearchDialog | 字面查找/替换/跳转、换行行号及后台请求校验 |

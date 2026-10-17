@@ -3,7 +3,7 @@ package com.codepocket.ide.editor
 import com.codepocket.ide.EditorFeatures
 import com.codepocket.ide.EditorSnapshot
 
-/** First, read/decorate slice of the editor boundary. All offsets are UTF-16, like EditText. */
+/** Read/decorate boundary; EditingEditorPort adds guarded edits/history. Offsets are UTF-16. */
 interface EditorPort {
     // Called only on the UI thread. A missing frame means that a document is being switched.
     fun snapshot(): EditorFrame?

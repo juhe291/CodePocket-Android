@@ -36,6 +36,9 @@ import android.widget.TextView
 import com.codepocket.ide.animation.Animations
 import com.codepocket.ide.editor.EditorAnalysisController
 import com.codepocket.ide.editor.NativeEditorPort
+import com.codepocket.ide.editor.EditorTransaction
+import com.codepocket.ide.editor.EditResult
+import com.codepocket.ide.editor.HistoryAction
 import com.codepocket.ide.search.ProjectSearch
 import com.codepocket.ide.ui.*
 import com.codepocket.ide.terminal.TerminalView
@@ -613,8 +616,9 @@ class MainActivity : Activity() {
             IdeCommand.GOTO_LINE -> showGoToLine()
             IdeCommand.UNDO, IdeCommand.REDO -> {
                 clearSnippet(); hideCompletion()
-                val target = if (input.hasFocus()) input else editor
-                target.onTextContextMenuItem(if (command == IdeCommand.UNDO) android.R.id.undo else android.R.id.redo)
+                val action = if (command == IdeCommand.UNDO) HistoryAction.UNDO else HistoryAction.REDO
+                if (input.hasFocus()) input.onTextContextMenuItem(if (action == HistoryAction.UNDO) android.R.id.undo else android.R.id.redo)
+                else editorPort?.let { port -> port.snapshot()?.let { port.performHistory(it.buffer, action) } }
             }
             IdeCommand.TAB -> tab()
             IdeCommand.UNINDENT -> if (!moveSnippet(true)) indent(true)
@@ -923,9 +927,9 @@ class MainActivity : Activity() {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, beforeCount: Int, count: Int) {
                 if (!quietEdit) {
-                    trackSnippetEdit(start, beforeCount, count)
+                    if (editor.isHistoryEdit) clearSnippet() else trackSnippetEdit(start, beforeCount, count)
                     change = EditorActions.typed(before, start, beforeCount, s.toString().substring(start, start + count), isCpp(),
-                        settings.tabWidth, settings.useSpaces, settings.autoIndent, settings.autoPairs)
+                        settings.tabWidth, settings.useSpaces, settings.autoIndent, settings.autoPairs, editor.isHistoryEdit)
                 }
             }
             override fun afterTextChanged(s: Editable?) {
@@ -1482,10 +1486,11 @@ class MainActivity : Activity() {
     private fun acceptCompletion(index: Int = completionPopup?.selectedIndex ?: 0): Boolean {
         if (workspaceBusy || !editor.hasFocus() || completionPopup?.isShowing != true ||
             BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return false
-        val insertion = completionBatch?.insertion(completionRequest(), index, settings, Workspace.MAX_CHARS) ?: run {
+        val source = completionRequest()
+        val insertion = completionBatch?.insertion(source, index, settings, Workspace.MAX_CHARS) ?: run {
             hideCompletion(); return false
         }
-        return applyCompletionInsertion(insertion)
+        return applyCompletionInsertion(insertion, source)
     }
 
     private fun updateSnippetHint() {
@@ -1527,18 +1532,12 @@ class MainActivity : Activity() {
         return true
     }
 
-    private fun applyCompletionInsertion(insertion: CompletionEdit): Boolean {
+    private fun applyCompletionInsertion(insertion: CompletionEdit, source: CompletionRequest): Boolean {
         hideCompletion()
-        editor.beginBatchEdit()
-        try { applyChange(insertion.change, keepSnippet = insertion.snippet == null) } finally { editor.endBatchEdit() }
-        dirty = true; editRevision++
-        snippetSession = insertion.snippet?.session(sessions.key(activePath), editRevision, editor.length())
-            ?: snippetSession?.copy(revision = editRevision)
-        validSnippet(); updateSnippetHint()
+        val result = applyChange(insertion.change, keepSnippet = insertion.snippet == null,
+            source = EditorSnapshot(source.document, source.revision, source.code, source.caret, source.end))
+        if (!finishEditorChange(result, insertion.snippet)) return false
         completionSuppressed = completionRequest()
-        handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
-        handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
-        updateNumbers(); handler.removeCallbacks(refreshEditor); handler.post(refreshEditor); refreshTabs()
         return true
     }
 
@@ -1558,7 +1557,7 @@ class MainActivity : Activity() {
                     BaseInputConnection.getComposingSpanStart(editor.text) < 0) {
                     val expanded = CodeSnippets.expand(descriptor.id, snapshot, settings, Workspace.MAX_CHARS)
                     if (expanded == null) status.setText(R.string.snippet_cannot_insert)
-                    else applyCompletionInsertion(CompletionEdit(expanded.change, expanded))
+                    else applyCompletionInsertion(CompletionEdit(expanded.change, expanded), snapshot)
                 }
                 Unit
             })
@@ -1574,44 +1573,61 @@ class MainActivity : Activity() {
 
     private fun insertText(snippet: String, caretInside: Boolean = false) {
         if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
-        val start = minOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(0)
-        val end = maxOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(start)
-        if (editor.length().toLong() - (end - start) + snippet.length > Workspace.MAX_CHARS) return
-        trackSnippetEdit(start, end - start, snippet.length)
-        quietEdit = true
-        editor.text.replace(start, end, snippet)
-        quietEdit = false
-        dirty = true; editRevision++
-        snippetSession = snippetSession?.copy(revision = editRevision)
-        handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
-        updateNumbers(); handler.post(refreshEditor)
-        handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
-        editor.setSelection((start + snippet.length - if (caretInside) 1 else 0).coerceAtMost(editor.length()))
-        editor.requestFocus()
+        val source = editorPort?.snapshot()?.buffer ?: return
+        val start = minOf(source.start, source.end)
+        val end = maxOf(source.start, source.end)
+        val caret = start + snippet.length - if (caretInside) 1 else 0
+        if (finishEditorChange(applyChange(TextChange(start, end, snippet, caret), keepSnippet = true, source = source)))
+            editor.requestFocus()
     }
 
     /** Shift+Tab removes one indent. Tab indents selection or accepts a suggestion. */
     private fun indent(reverse: Boolean) {
         if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
         if (reverse && moveSnippet(true)) return
-        applyChange(EditorActions.indent(editor.text.toString(), editor.selectionStart, editor.selectionEnd, reverse, settings.tabWidth, settings.useSpaces))
-        dirty = true; editRevision++
-        handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
-        updateNumbers(); handler.post(refreshEditor)
-        handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
-        editor.requestFocus()
+        val source = editorPort?.snapshot()?.buffer ?: return
+        val change = EditorActions.indent(source.text, source.start, source.end, reverse, settings.tabWidth, settings.useSpaces)
+        if (finishEditorChange(applyChange(change, source = source))) editor.requestFocus()
     }
 
-    private fun applyChange(change: TextChange, keepSnippet: Boolean = false) {
-        if (editor.length().toLong() - (change.end - change.start) + change.text.length > Workspace.MAX_CHARS) {
-            clearSnippet(); return
-        }
-        if (keepSnippet) trackSnippetEdit(change.start, change.end - change.start, change.text.length) else clearSnippet()
+    private fun applyChange(change: TextChange, keepSnippet: Boolean = false, source: EditorSnapshot? = null,
+        matchSelection: Boolean = true): EditResult {
+        val port = editorPort ?: return EditResult.NO_DOCUMENT
+        val expected = source ?: port.snapshot()?.buffer ?: return EditResult.NO_DOCUMENT
+        val previousQuiet = quietEdit
         quietEdit = true
-        try {
-            editor.text.replace(change.start, change.end, change.text)
-            editor.setSelection(change.selectionStart.coerceIn(0, editor.length()), change.selectionEnd.coerceIn(0, editor.length()))
-        } finally { quietEdit = false }
+        val result = try { port.applyEdit(EditorTransaction(expected, change, matchSelection)) }
+            finally { quietEdit = previousQuiet }
+        // Rejected requests must not invalidate a valid snippet or mark an unchanged buffer dirty.
+        if (result.changesText) {
+            if (keepSnippet) trackSnippetEdit(change.start, change.end - change.start, change.text.length) else clearSnippet()
+        } else if (result == EditResult.SELECTION_ONLY && !keepSnippet) clearSnippet()
+        return result
+    }
+
+    /** Used only for explicit edits. Native typing/history have their own TextWatcher revision path. */
+    private fun finishEditorChange(result: EditResult, expansion: SnippetExpansion? = null): Boolean {
+        if (!result.accepted) {
+            status.setText(when (result) {
+                EditResult.LIMIT_EXCEEDED -> R.string.editor_edit_limit
+                EditResult.STALE, EditResult.NO_DOCUMENT -> R.string.editor_edit_stale
+                EditResult.COMPOSING -> R.string.editor_edit_composing
+                else -> R.string.editor_edit_invalid
+            })
+            return false
+        }
+        if (result.changesText) {
+            dirty = true; editRevision++
+            snippetSession = expansion?.session(sessions.key(activePath), editRevision, editor.length())
+                ?: snippetSession?.copy(revision = editRevision)
+            handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
+            handler.removeCallbacks(autosave)
+            if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
+            updateNumbers(); refreshTabs()
+        }
+        validSnippet(); updateSnippetHint()
+        handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
+        return true
     }
 
     private fun tab() {
@@ -1785,13 +1801,11 @@ class MainActivity : Activity() {
         clearSnippet()
         toolDialog = SearchDialog.show(this, replace, ::searchSnapshot, { start, end ->
             editor.setSelection(start, end); editor.bringPointIntoView(start)
-        }, { change ->
-            if (workspaceBusy || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) false
-            else { applyChange(change); dirty = true; editRevision++; queueDraft()
-                updateNumbers(); handler.post(refreshEditor)
-                handler.removeCallbacks(autosave)
-                if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
-                refreshTabs(); true }
+        }, { source, change, matchSelection ->
+            val result = applyChange(change, source = source, matchSelection = matchSelection)
+            val accepted = finishEditorChange(result)
+            if (result.changesText) queueDraft()
+            accepted
         })
     }
 
@@ -1857,7 +1871,13 @@ class MainActivity : Activity() {
             }
         }
         if (event.action == KeyEvent.ACTION_DOWN && event.isCtrlPressed) {
-            if (event.keyCode in listOf(KeyEvent.KEYCODE_Z, KeyEvent.KEYCODE_Y)) clearSnippet()
+            if (event.keyCode in listOf(KeyEvent.KEYCODE_Z, KeyEvent.KEYCODE_Y) &&
+                !event.isAltPressed && !event.isMetaPressed && event.flags and KeyEvent.FLAG_SOFT_KEYBOARD == 0 &&
+                (editor.hasFocus() || input.hasFocus())) {
+                dispatchCommand(if (event.keyCode == KeyEvent.KEYCODE_Y || event.isShiftPressed) IdeCommand.REDO else IdeCommand.UNDO)
+                completionConsumedKeys.add(event.keyCode)
+                return true
+            }
             when (event.keyCode) {
                 KeyEvent.KEYCODE_F -> { if (event.isShiftPressed) showProjectSearch() else showSearch(false); return true }
                 KeyEvent.KEYCODE_H -> { showSearch(true); return true }
