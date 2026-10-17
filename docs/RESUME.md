@@ -1,6 +1,15 @@
 # CodePocket 当前交接状态
 
-## 当前：P1-A 外壳主机验证完成（2026-10-17）
+## 当前：P1-B 响应式布局主机验证完成（2026-10-17）
+
+用户确认继续 P1-B 开发。已实现响应式布局策略、Activity Bar、可调宽 Explorer、底部优先面板和简洁状态栏，保留原编辑器与运行/文件实现。
+
+- 基线 `07e089f`（P1-A）；本批 [P1B_RESPONSIVE.md](P1B_RESPONSIVE.md)：基于净可用宽高的响应式策略、Activity Bar、可调宽 Explorer、底部优先面板、简洁状态栏接入。
+- Kotlin 131 项中 130 通过/1 跳过（17 项新增响应式布局测试全部通过），Lint 0 错误/11 警告。
+- [最新 APK](../verification/p1b-responsive-2026-10-17/CodePocket-P1B-responsive-debug.apk)，20.79 MiB，SHA256 `ff404d3066eb9af5314cc171b479621425fd6a7e67791548c18dab384ff1e661`。
+- 响应式布局、Activity Bar、Explorer 拖动、状态栏实时更新尚未设备验证；手机/平板多方向、IME 联合验收统一后置。
+
+## 历史：P1-A 外壳主机验证完成（2026-10-17 早前）
 
 用户在新完整需求审查后回复“继续”，已确认并执行 P1-A；不要再停在待确认状态，也不要重做阶段 0。全部实机测试按用户要求统一后置，不请求设备。
 
