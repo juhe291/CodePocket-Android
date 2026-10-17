@@ -54,7 +54,14 @@ class MainActivity : Activity() {
     private val running get() = RunSession.running
     private var result: RunResult? = null
     private var selectedOutput = 0
-    private var showingSuggestion = false
+    private var completionPopup: CompletionPopup? = null
+    private var completionBatch: CompletionBatch? = null
+    private var completionSuppressed: CompletionRequest? = null
+    private var completionExplicit = false
+    private var completionGeneration = 0L
+    private val completionExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
+    private var completionTask: java.util.concurrent.Future<*>? = null
+    private val completionConsumedKeys = mutableSetOf<Int>()
     private var quietEdit = false
     private var explorerDialog: AlertDialog? = null
     private var wide = false
@@ -74,7 +81,7 @@ class MainActivity : Activity() {
     private val autosave = Runnable { if (dirty && settings.autoSave) saveActive() }
     private val refreshEditor = Runnable {
         if (::editor.isInitialized) {
-            if (BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return@Runnable
+            if (BaseInputConnection.getComposingSpanStart(editor.text) >= 0) { hideCompletion(); return@Runnable }
             EditorFeatures.colorize(editor.text, isCpp(), syntaxDark)
             highlightBrackets()
             updateTabStops()
@@ -90,7 +97,7 @@ class MainActivity : Activity() {
     private var workspaceBusy = false
         set(value) {
             field = value
-            if (::editor.isInitialized) editor.isEnabled = !value
+            if (::editor.isInitialized) { editor.isEnabled = !value; if (value) hideCompletion() }
             if (::input.isInitialized) input.isEnabled = !value
         }
     private var saving = false
@@ -252,7 +259,13 @@ class MainActivity : Activity() {
 
     override fun onPause() {
         super.onPause()
+        handler.removeCallbacks(refreshEditor); hideCompletion(); completionConsumedKeys.clear()
         persist()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (!hasFocus) { hideCompletion(); completionConsumedKeys.clear() }
     }
 
     private fun persist() {
@@ -276,6 +289,7 @@ class MainActivity : Activity() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
         toolDialog?.dismiss()
+        hideCompletion(); completionExecutor.shutdownNow(); completionConsumedKeys.clear()
         listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
             if (::outputRegion.isInitialized) outputRegion else null).forEach { it.animate().cancel() }
         explorerDialog?.dismiss()
@@ -306,6 +320,7 @@ class MainActivity : Activity() {
     private fun space(w: Int = 5) = View(this).apply { layoutParams = LinearLayout.LayoutParams(dp(w), 1) }
 
     private fun createUi() {
+        hideCompletion(); completionPopup = null
         window.statusBarColor = surface
         window.navigationBarColor = panel
         val lightNavigationBar = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -359,7 +374,7 @@ class MainActivity : Activity() {
         keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
         val keyRow = LinearLayout(this)
         listOf<Pair<String, () -> Unit>>("TAB" to { tab() }, "反缩进" to { indent(true) },
-            "{ }" to { insertText("{}", true) }, "( )" to { insertText("()", true) }).forEach { (name, action) ->
+            "补全" to { requestCompletion() }, "{ }" to { insertText("{}", true) }, "( )" to { insertText("()", true) }).forEach { (name, action) ->
             keyRow.addView(button(name, action)); keyRow.addView(space(3))
         }
         keyboardToolbar.addView(keyRow); root.addView(keyboardToolbar)
@@ -422,6 +437,7 @@ class MainActivity : Activity() {
     private fun updateImeLayout(visible: Boolean = imeVisible) {
         if (!::input.isInitialized || !::status.isInitialized) return
         val changed = visible != imeVisible
+        if (changed) completionPopup?.dismiss()
         imeVisible = visible
         val height = (root.height / resources.displayMetrics.density).toInt()
         val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible, settings.collapsePanelOnIme)
@@ -513,8 +529,13 @@ class MainActivity : Activity() {
         suggestionRow = LinearLayout(this).apply { setPadding(dp(5), dp(2), dp(5), dp(2)); setBackgroundColor(surface) }
         suggestScroll.addView(suggestionRow)
         editorRegion.addView(suggestScroll, LinearLayout.LayoutParams(-1, dp(37)))
-        editor.viewTreeObserver.addOnScrollChangedListener { numbers.scrollY = editor.scrollY }
-        editor.viewTreeObserver.addOnGlobalLayoutListener { if (settings.wordWrap) updateNumbers() }
+        editor.viewTreeObserver.addOnScrollChangedListener {
+            numbers.scrollY = editor.scrollY; completionPopup?.let { if (it.isShowing) it.reposition() }
+        }
+        editor.viewTreeObserver.addOnGlobalLayoutListener {
+            if (settings.wordWrap) updateNumbers()
+            completionPopup?.let { if (it.isShowing) it.reposition() }
+        }
         editor.addTextChangedListener(object : TextWatcher {
             private var before = ""
             private var change: TextChange? = null
@@ -527,6 +548,7 @@ class MainActivity : Activity() {
             }
             override fun afterTextChanged(s: Editable?) {
                 if (quietEdit) return
+                hideCompletion()
                 val edit = change
                 change = null
                 if (edit != null && s != null && BaseInputConnection.getComposingSpanStart(s) < 0) applyChange(edit)
@@ -538,11 +560,13 @@ class MainActivity : Activity() {
             }
         })
         editor.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
-            if (focused) { lastFocus = "editor"; updateImeLayout() }
+            if (focused) { lastFocus = "editor"; updateImeLayout() } else hideCompletion()
         }
         editor.setOnClickListener { updateSuggestions() }
+        suggestionRow.addView(label(getString(R.string.completion_hint), 11f, muted))
         editor.onCaretChanged = {
             if (!quietEdit) {
+                hideCompletion()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
             }
         }
@@ -840,6 +864,7 @@ class MainActivity : Activity() {
     }
 
     private fun loadActive(content: String? = null, restored: Draft? = null) {
+        hideCompletion(); editRevision++
         if (content == null) {
             val path = activePath; val key = sessions.key(path)
             ioAction("正在载入…", { workspace.read(workspace.resolve(path)) to drafts.read(key) }) { (text, draft) ->
@@ -927,33 +952,82 @@ class MainActivity : Activity() {
         if (numbers.text.toString() != labels) numbers.text = labels
     }
 
-    private fun suggestionOptions(): List<String> = EditorFeatures.suggestions(editor.text.toString(), editor.selectionStart, isCpp())
+    private fun completionRequest() = CompletionRequest(sessions.key(activePath), editRevision,
+        editor.text.toString(), editor.selectionStart, editor.selectionEnd, isCpp())
+
+    private fun hideCompletion(suppress: Boolean = false) {
+        if (suppress && ::sessions.isInitialized && ::editor.isInitialized) completionSuppressed = completionRequest()
+        completionGeneration++; completionTask?.cancel(true); completionTask = null
+        completionBatch = null
+        completionPopup?.dismiss()
+    }
+
     private fun updateSuggestions(force: Boolean = false) {
-        if (!::suggestionRow.isInitialized || !::editor.isInitialized) return
-        val items = if (force || settings.autoCompletion) suggestionOptions() else emptyList()
-        showingSuggestion = items.isNotEmpty()
-        suggestionRow.removeAllViews()
-        if (items.isEmpty()) suggestionRow.addView(label("Tab = ${settings.tabWidth} 列缩进   ·   Ctrl+Space = 基础补全   ·   Ctrl+S = 保存", 11f, muted))
-        else {
-            suggestionRow.addView(label("提示  ", 11f, muted))
-            items.forEach { value -> suggestionRow.addView(button(value) { acceptSuggestion(value) }) }
+        if (!::editor.isInitialized || !::sessions.isInitialized) return
+        if (isFinishing || !hasWindowFocus() || workspaceBusy || loadedPath != activePath || !editor.hasFocus() || !editor.isShown ||
+            toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
+            BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || editor.selectionStart != editor.selectionEnd ||
+            (!force && (!settings.autoCompletion || editor.length() > 45000))) { hideCompletion(); return }
+        val request = completionRequest()
+        if (force) completionSuppressed = null
+        if (!force && completionSuppressed == request) return
+        if (completionBatch?.request == request && completionPopup?.isShowing == true) {
+            if (force) completionExplicit = true
+            completionPopup?.reposition(); return
+        }
+        hideCompletion()
+        val generation = completionGeneration
+        completionTask = completionExecutor.submit {
+            val batch = LexicalCompletion.complete(request)
+            if (Thread.currentThread().isInterrupted || isDestroyed) return@submit
+            runOnUiThread {
+                if (isDestroyed || isFinishing || !hasWindowFocus() || generation != completionGeneration || workspaceBusy ||
+                    request != completionRequest() || !editor.hasFocus() || !editor.isShown ||
+                    BaseInputConnection.getComposingSpanStart(editor.text) >= 0 ||
+                    toolDialog?.isShowing == true || explorerDialog?.isShowing == true) return@runOnUiThread
+                if (batch == null) {
+                    if (force) status.setText(if (LexicalCompletion.memberContext(request))
+                        R.string.completion_members_pending else R.string.completion_empty)
+                    return@runOnUiThread
+                }
+                completionBatch = batch; completionExplicit = force
+                val popup = completionPopup ?: CompletionPopup(this, editor, surface, textForeground, muted, accent,
+                    { index -> acceptCompletion(index) }, {
+                        completionBatch?.let { completionSuppressed = it.request }
+                        completionBatch = null; completionGeneration++; completionTask?.cancel(true)
+                    }).also { completionPopup = it }
+                if (!popup.show(batch, motionEnabled())) {
+                    hideCompletion()
+                    if (force) status.setText(R.string.completion_no_space)
+                }
+            }
         }
     }
+
     private fun requestCompletion() {
-        if (workspaceBusy) return
+        // Requests from stdin must not steal its focus or change the code buffer.
+        if (workspaceBusy || !editor.hasFocus()) return
+        handler.removeCallbacks(refreshEditor)
         updateSuggestions(true)
-        if (!showingSuggestion) status.text = "键入词语前缀后，使用 Tab 或点击候选词补全"
-        editor.requestFocus()
     }
-    private fun acceptSuggestion(value: String) {
-        if (workspaceBusy) return
-        val start = minOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(0)
-        val end = maxOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(start)
-        val prefix = EditorFeatures.prefix(editor.text.toString(), start)
-        val begin = (start - prefix.length).coerceAtLeast(0)
-        editor.text.replace(begin, end, value)
-        editor.setSelection((begin + value.length).coerceAtMost(editor.length()))
+
+    private fun acceptCompletion(index: Int = completionPopup?.selectedIndex ?: 0): Boolean {
+        if (workspaceBusy || !editor.hasFocus() || completionPopup?.isShowing != true ||
+            BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return false
+        val change = completionBatch?.edit(completionRequest(), index, Workspace.MAX_CHARS) ?: run {
+            hideCompletion(); return false
+        }
+        hideCompletion()
+        editor.beginBatchEdit()
+        try { applyChange(change) } finally { editor.endBatchEdit() }
+        dirty = true; editRevision++
+        completionSuppressed = completionRequest()
+        handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
+        handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
+        updateNumbers(); handler.removeCallbacks(refreshEditor); handler.post(refreshEditor); refreshTabs()
+        return true
     }
+
     private fun insertText(snippet: String, caretInside: Boolean = false) {
         if (workspaceBusy) return
         val start = minOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(0)
@@ -989,9 +1063,9 @@ class MainActivity : Activity() {
     }
 
     private fun tab() {
-        val options = if (showingSuggestion) suggestionOptions() else emptyList()
-        if (editor.selectionStart == editor.selectionEnd && options.isNotEmpty()) acceptSuggestion(options.first())
-        else indent(false)
+        if (!editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+        if (settings.completionTab && acceptCompletion()) return
+        hideCompletion(); indent(false)
     }
 
     private fun highlightBrackets() {
@@ -1010,6 +1084,7 @@ class MainActivity : Activity() {
 
     private fun showSettings() {
         toolDialog?.dismiss()
+        hideCompletion(true)
         toolDialog = SettingsDialog.show(this, settings, ::applySettings)
     }
 
@@ -1017,6 +1092,7 @@ class MainActivity : Activity() {
         if (workspaceBusy) return
         val themeChanged = next.isDark(isSystemDark()) != dark
         if (themeChanged && (dirty || saving)) { saveActive { applySettings(next) }; return }
+        hideCompletion()
         captureSession(); persistSessions()
         settings = next.normalized()
         dark = settings.isDark(isSystemDark())
@@ -1054,14 +1130,18 @@ class MainActivity : Activity() {
     private fun animateDecoration(view: View?) {
         if (view == null) return
         view.animate().cancel(); view.alpha = 1f
-        val scale = runCatching { android.provider.Settings.Global.getFloat(contentResolver,
-            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) }.getOrDefault(0f)
-        val powerSave = (getSystemService(POWER_SERVICE) as android.os.PowerManager).isPowerSaveMode
-        if (!imeVisible && MotionPolicy.enabled(settings.animations, scale, powerSave) &&
-            (Build.VERSION.SDK_INT < 26 || android.animation.ValueAnimator.areAnimatorsEnabled())) {
+        if (motionEnabled()) {
             view.alpha = .88f
             view.animate().alpha(1f).setDuration(120).start()
         }
+    }
+
+    private fun motionEnabled(): Boolean {
+        val scale = runCatching { android.provider.Settings.Global.getFloat(contentResolver,
+            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) }.getOrDefault(0f)
+        val powerSave = (getSystemService(POWER_SERVICE) as android.os.PowerManager).isPowerSaveMode
+        return !imeVisible && MotionPolicy.enabled(settings.animations, scale, powerSave) &&
+            (Build.VERSION.SDK_INT < 26 || android.animation.ValueAnimator.areAnimatorsEnabled())
     }
 
     private fun searchSnapshot() = EditorSnapshot(sessions.key(activePath), editRevision,
@@ -1070,6 +1150,7 @@ class MainActivity : Activity() {
     private fun showSearch(replace: Boolean) {
         if (workspaceBusy || loadedPath != activePath) return
         toolDialog?.dismiss()
+        hideCompletion(true)
         toolDialog = SearchDialog.show(this, replace, ::searchSnapshot, { start, end ->
             editor.setSelection(start, end); editor.bringPointIntoView(start)
         }, { change ->
@@ -1084,6 +1165,7 @@ class MainActivity : Activity() {
 
     private fun showGoToLine() {
         if (workspaceBusy || loadedPath != activePath) return
+        hideCompletion(true)
         val field = EditText(this).apply { inputType = InputType.TYPE_CLASS_NUMBER; hint = "从 1 开始的行号" }
         val dialog = AlertDialog.Builder(this).setTitle("跳转行").setView(field)
             .setNegativeButton("取消", null).setPositiveButton("跳转", null).create()
@@ -1097,11 +1179,34 @@ class MainActivity : Activity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_TAB &&
-            ::editor.isInitialized && editor.hasFocus()) {
-            if (event.isShiftPressed) indent(true)
-            else tab()
-            return true
+        if (!::editor.isInitialized || toolDialog?.isShowing == true || explorerDialog?.isShowing == true)
+            return super.dispatchKeyEvent(event)
+        if (event.action == KeyEvent.ACTION_UP && completionConsumedKeys.remove(event.keyCode)) return true
+        if (event.action == KeyEvent.ACTION_DOWN && editor.hasFocus()) {
+            val key = when (event.keyCode) {
+                KeyEvent.KEYCODE_TAB -> CompletionKey.TAB
+                KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER -> CompletionKey.ENTER
+                KeyEvent.KEYCODE_DPAD_UP -> CompletionKey.UP
+                KeyEvent.KEYCODE_DPAD_DOWN -> CompletionKey.DOWN
+                KeyEvent.KEYCODE_ESCAPE -> CompletionKey.ESC
+                else -> CompletionKey.OTHER
+            }
+            val composing = BaseInputConnection.getComposingSpanStart(editor.text) >= 0
+            val action = CompletionKeys.action(key, settings, completionPopup?.isShowing == true, completionExplicit,
+                completionPopup?.explicitSelection == true, composing, editor.selectionStart != editor.selectionEnd,
+                event.isCtrlPressed || event.isAltPressed || event.isShiftPressed || event.isMetaPressed,
+                event.flags and KeyEvent.FLAG_SOFT_KEYBOARD != 0)
+            val handled = when (action) {
+                CompletionAction.ACCEPT -> acceptCompletion()
+                CompletionAction.NEXT -> { completionPopup?.move(1); true }
+                CompletionAction.PREVIOUS -> { completionPopup?.move(-1); true }
+                CompletionAction.DISMISS -> { hideCompletion(true); true }
+                CompletionAction.PASS -> false
+            }
+            if (handled) { completionConsumedKeys.add(event.keyCode); return true }
+            if (key == CompletionKey.TAB && !composing && event.flags and KeyEvent.FLAG_SOFT_KEYBOARD == 0 && !event.isCtrlPressed && !event.isAltPressed && !event.isMetaPressed) {
+                hideCompletion(); indent(event.isShiftPressed); completionConsumedKeys.add(event.keyCode); return true
+            }
         }
         if (event.action == KeyEvent.ACTION_DOWN && event.isCtrlPressed) {
             when (event.keyCode) {
@@ -1112,7 +1217,7 @@ class MainActivity : Activity() {
                 KeyEvent.KEYCODE_N -> { askCreate(false); return true }
                 KeyEvent.KEYCODE_O -> { importFile(); return true }
                 KeyEvent.KEYCODE_B -> { showExplorer(); return true }
-                KeyEvent.KEYCODE_SPACE -> { requestCompletion(); return true }
+                KeyEvent.KEYCODE_SPACE -> { if (editor.hasFocus()) { requestCompletion(); return true } }
                 KeyEvent.KEYCODE_ENTER -> { runCode(); return true }
             }
         }

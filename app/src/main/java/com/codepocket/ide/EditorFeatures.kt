@@ -68,6 +68,17 @@ object EditorFeatures {
 
     fun prefix(code: String, caret: Int): String = token.find(code.substring(0, caret.coerceIn(0, code.length)))?.value.orEmpty()
 
+    fun completionWords(cpp: Boolean): List<String> = if (cpp)
+        (cppWords + cppTypes + cppFunctions + listOf("std", "iostream", "algorithm")).distinct()
+        else (pythonWords + pythonFunctions).distinct()
+
+    fun completionKind(value: String, cpp: Boolean): CompletionKind = when {
+        cpp && value in cppTypes -> CompletionKind.TYPE
+        value in (if (cpp) cppWords else pythonWords) -> CompletionKind.KEYWORD
+        value in completionWords(cpp) -> CompletionKind.BUILTIN
+        else -> CompletionKind.IDENTIFIER
+    }
+
     fun suggestions(code: String, caret: Int, cpp: Boolean): List<String> {
         val partial = prefix(code, caret)
         if (partial.isBlank()) return emptyList()

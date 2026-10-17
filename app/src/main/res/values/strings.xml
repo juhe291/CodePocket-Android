@@ -1,4 +1,14 @@
 <resources>
     <string name="search_replaced_count">已替换 %1$d 项</string>
     <string name="settings_save_help">关闭停顿保存后，Ctrl+S/保存按钮仍可使用；离开页面仍会保存，恢复草稿始终保留。\n\n运行说明：Python 本地运行；C++ 源码与 stdin 发往 Wandbox。当前使用预填 stdin、结束后输出，不提供系统 Shell。</string>
+    <string name="completion_lexical">基础词法补全</string>
+    <string name="completion_close">关闭补全</string>
+    <string name="completion_item">%1$s  %2$s</string>
+    <string name="completion_accessibility">%1$s，%2$s</string>
+    <string name="completion_detail">%1$s · %2$s</string>
+    <string name="completion_members_pending">成员语义补全尚未接入（P2）；当前为基础词法补全</string>
+    <string name="completion_empty">没有词法候选；请先输入名称前缀</string>
+    <string name="completion_no_space">光标附近空间不足，已收起补全；可收起面板或调整窗口</string>
+    <string name="completion_hint">基础词法 · Ctrl+Space 补全 · Tab 接受/缩进 · Esc 关闭</string>
+    <string name="completion_key_help">Enter 默认换行；开启接受后仍须先用方向键选中候选。Shift+Tab 反缩进，Esc 关闭。中文组合输入时不接受候选，不改写组合区；软键盘保留原生确认/换行。点击候选可直接插入。</string>
 </resources>
