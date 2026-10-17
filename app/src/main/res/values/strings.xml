@@ -10,7 +10,7 @@
     <string name="completion_empty">没有词法候选；请先输入名称前缀</string>
     <string name="completion_no_space">光标附近空间不足，已收起补全；可收起面板或调整窗口</string>
     <string name="completion_hint">基础词法 · Ctrl+Space 补全 · Tab 接受/缩进 · Esc 关闭</string>
-    <string name="completion_key_help">Enter 默认换行；开启接受后仍须先用方向键选中候选。Shift+Tab 反缩进，Esc 关闭。中文组合输入时不接受候选，不改写组合区；软键盘保留原生确认/换行。点击候选可直接插入。</string>
+    <string name="completion_key_help">Enter 默认换行；开启接受后仍须先用方向键选中候选。Shift+Tab 反缩进，Esc 关闭。中文组合输入时不接受候选，不改写组合区；软键盘保留原生确认/换行。点击候选可直接插入。片段中 Tab/Shift+Tab 跳转，Esc 结束；主动补全候选优先。片段菜单提供触屏导航；编辑离开当前字段会结束导航。</string>
     <string name="panel_title">运行面板</string>
     <string name="panel_size_symbol">↕</string>
     <string name="panel_width_symbol">↔</string>
@@ -27,4 +27,12 @@
     <string name="panel_maximize">最大化运行面板</string>
     <string name="panel_restore">恢复编辑区与运行面板</string>
     <string name="panel_close">收起运行面板</string>
+    <string name="snippet_title">内置代码片段</string>
+    <string name="snippet_cancel">取消</string>
+    <string name="snippet_previous">上一占位符（Shift+Tab）</string>
+    <string name="snippet_next">下一占位符（Tab）</string>
+    <string name="snippet_finish">结束片段导航（Esc）</string>
+    <string name="snippet_progress">片段 %1$d/%2$d：%3$s · Tab 下一项 · Shift+Tab 上一项 · Esc 结束</string>
+    <string name="snippet_cannot_insert">片段无法插入：请检查代码行、选区和文件长度上限</string>
+    <string name="snippet_line_help">在独立代码行输入前缀或留空后选择片段；注释、字符串、复杂选区和大文件不展开模板</string>
 </resources>

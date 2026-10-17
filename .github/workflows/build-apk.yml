@@ -45,6 +45,14 @@ jobs:
       - name: Run Kotlin regression tests and Android lint
         run: bash ./gradlew :app:testDebugUnitTest :app:lintDebug --stacktrace --no-daemon
 
+      - name: Verify generated snippets on the host
+        run: |
+          if ! command -v g++ > /dev/null; then
+            sudo apt-get update
+            sudo apt-get install --yes g++
+          fi
+          python scripts/verify_snippets.py --junit app/build/test-results/testDebugUnitTest --output verification/snippet-inspection.json --cpp-compiler g++
+
       - name: Build debug APK
         run: bash ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
@@ -74,4 +82,7 @@ jobs:
             app/build/reports/tests/
             app/build/reports/lint-results-debug.*
             verification/apk-inspection.json
+            verification/snippet-inspection.json
+            verification/snippet-fixtures/*.cpp
+            verification/snippet-fixtures/*.py
           if-no-files-found: warn

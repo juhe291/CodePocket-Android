@@ -1,17 +1,25 @@
 package com.codepocket.ide
 
 enum class CompletionKind(val icon: String, val title: String) {
-    KEYWORD("K", "关键字"), TYPE("T", "类型名称"), BUILTIN("ƒ", "内置/常用名称"), IDENTIFIER("abc", "文件中出现的名称")
+    KEYWORD("K", "关键字"), TYPE("T", "类型名称"), BUILTIN("ƒ", "内置/常用名称"), IDENTIFIER("abc", "文件中出现的名称"), SNIPPET("{}", "内置代码片段")
 }
 enum class CompletionArrows { EXPLICIT, WHEN_VISIBLE, OFF }
-data class CompletionItem(val label: String, val kind: CompletionKind, val detail: String)
+data class CompletionItem(val label: String, val kind: CompletionKind, val detail: String, val snippetId: String? = null)
+data class CompletionEdit(val change: TextChange, val snippet: SnippetExpansion? = null)
 data class CompletionRequest(val document: String, val revision: Long, val code: String, val caret: Int, val end: Int, val cpp: Boolean)
 data class CompletionBatch(val request: CompletionRequest, val start: Int, val end: Int, val items: List<CompletionItem>) {
-    fun edit(current: CompletionRequest, index: Int, maxChars: Int = 200000): TextChange? {
+    fun edit(current: CompletionRequest, index: Int, maxChars: Int = 200000): TextChange? =
+        insertion(current, index, AppSettings(), maxChars)?.change
+
+    fun insertion(current: CompletionRequest, index: Int, settings: AppSettings, maxChars: Int = 200000): CompletionEdit? {
         if (request != current || current.caret != current.end) return null
         val item = items.getOrNull(index) ?: return null
+        if (item.snippetId != null) {
+            val expanded = CodeSnippets.expand(item.snippetId, current, settings, maxChars) ?: return null
+            return CompletionEdit(expanded.change, expanded)
+        }
         if (current.code.length.toLong() - (end - start) + item.label.length > maxChars) return null
-        return TextChange(start, end, item.label, start + item.label.length)
+        return CompletionEdit(TextChange(start, end, item.label, start + item.label.length))
     }
 }
 
@@ -35,7 +43,7 @@ object LexicalCompletion {
         return before.endsWith('.') || (request.cpp && (before.endsWith("->") || before.endsWith("::")))
     }
 
-    fun complete(request: CompletionRequest): CompletionBatch? {
+    fun complete(request: CompletionRequest, includeSnippets: Boolean = true): CompletionBatch? {
         val code = request.code
         if (request.caret != request.end || request.caret !in 0..code.length || memberContext(request)) return null
         var start = request.caret
@@ -61,13 +69,16 @@ object LexicalCompletion {
                 val kind = EditorFeatures.completionKind(name, request.cpp)
                 val detail = if (!request.cpp) pythonHelp[name] else null
                 CompletionItem(name, kind, detail ?: when (kind) {
+                    CompletionKind.SNIPPET -> "内置代码模板；不是语义分析结果。"
                     CompletionKind.IDENTIFIER -> "当前文件中出现过此名称；未分析作用域、类型或成员。"
                     CompletionKind.TYPE -> "常用 C++ 类型名称；未验证头文件、命名空间或声明。"
                     CompletionKind.KEYWORD -> "语言关键字参考；当前为基础词法补全。"
                     CompletionKind.BUILTIN -> "常用名称参考；未进行类型分析或校验当前作用域。"
                 })
             }.toList()
-        return items.takeIf { it.isNotEmpty() }?.let { CompletionBatch(request, start, end, it) }
+        val snippets = if (includeSnippets) CodeSnippets.candidates(request, prefix) else emptyList()
+        val combined = if (snippets.isEmpty()) items else items.take(24) + snippets
+        return combined.takeIf { it.isNotEmpty() }?.let { CompletionBatch(request, start, end, it) }
     }
 }
 

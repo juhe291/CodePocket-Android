@@ -63,6 +63,9 @@ class MainActivity : Activity() {
     private var completionTask: java.util.concurrent.Future<*>? = null
     private val completionConsumedKeys = mutableSetOf<Int>()
     private var quietEdit = false
+    private var snippetSession: SnippetSession? = null
+    private var snippetTextChanging = false
+    private lateinit var completionHint: TextView
     private var explorerDialog: AlertDialog? = null
     private var wide = false
     private var loadedPath: String? = null
@@ -104,7 +107,7 @@ class MainActivity : Activity() {
     private var workspaceBusy = false
         set(value) {
             field = value
-            if (::editor.isInitialized) { editor.isEnabled = !value; if (value) hideCompletion() }
+            if (::editor.isInitialized) { editor.isEnabled = !value; if (value) { hideCompletion(); clearSnippet() } }
             if (::input.isInitialized) input.isEnabled = !value
             if (::panelResize.isInitialized) panelResize.isEnabled = !value && panelLayout?.resizable == true
         }
@@ -269,7 +272,7 @@ class MainActivity : Activity() {
     override fun onPause() {
         super.onPause()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
-        handler.removeCallbacks(refreshEditor); hideCompletion(); completionConsumedKeys.clear()
+        handler.removeCallbacks(refreshEditor); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
         persist()
     }
 
@@ -332,7 +335,7 @@ class MainActivity : Activity() {
     private fun space(w: Int = 5) = View(this).apply { layoutParams = LinearLayout.LayoutParams(dp(w), 1) }
 
     private fun createUi() {
-        hideCompletion(); completionPopup = null
+        hideCompletion(); clearSnippet(); completionPopup = null
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null; panelLayout = null
         window.statusBarColor = surface
@@ -373,7 +376,7 @@ class MainActivity : Activity() {
             "重新载入文件" to { reloadActive() }, "恢复草稿" to { recoverDrafts() },
             "保存  Ctrl+S" to { saveActive { status.text = "✓ 已保存 $activePath" } },
             "TAB" to { tab() }, "反缩进" to { indent(true) }, "{ }" to { insertText("{}", true) },
-            "( )" to { insertText("()", true) }, "补全" to { requestCompletion() }
+            "( )" to { insertText("()", true) }, "补全" to { requestCompletion() }, "片段" to { showSnippetMenu() }
         )) {
             actions.addView(button(name, command)); actions.addView(space(5))
         }
@@ -383,7 +386,7 @@ class MainActivity : Activity() {
         keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
         val keyRow = LinearLayout(this)
         listOf<Pair<String, () -> Unit>>("TAB" to { tab() }, "反缩进" to { indent(true) },
-            "补全" to { requestCompletion() }, "{ }" to { insertText("{}", true) }, "( )" to { insertText("()", true) }).forEach { (name, action) ->
+            "补全" to { requestCompletion() }, "片段" to { showSnippetMenu() }, "{ }" to { insertText("{}", true) }, "( )" to { insertText("()", true) }).forEach { (name, action) ->
             keyRow.addView(button(name, action)); keyRow.addView(space(3))
         }
         keyboardToolbar.addView(keyRow); root.addView(keyboardToolbar)
@@ -519,6 +522,7 @@ class MainActivity : Activity() {
         if (workspaceBusy) return
         panelResize.cancelGesture(); hideCompletion()
         val stamp = capturePanelViewport()
+        if (maximized) clearSnippet()
         if (maximized && !input.hasFocus()) { hideKeyboard(); outputRegion.requestFocus() }
         panelVisible = true; panelState = panelState.copy(maximized = maximized)
         updateImeLayout(); persistPanel()
@@ -683,19 +687,24 @@ class MainActivity : Activity() {
             private var before = ""
             private var change: TextChange? = null
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                if (!quietEdit) before = s.toString()
+                if (!quietEdit) { before = s.toString(); snippetTextChanging = true }
             }
             override fun onTextChanged(s: CharSequence?, start: Int, beforeCount: Int, count: Int) {
-                if (!quietEdit) change = EditorActions.typed(before, start, beforeCount, s.toString().substring(start, start + count), isCpp(),
-                    settings.tabWidth, settings.useSpaces, settings.autoIndent, settings.autoPairs)
+                if (!quietEdit) {
+                    trackSnippetEdit(start, beforeCount, count)
+                    change = EditorActions.typed(before, start, beforeCount, s.toString().substring(start, start + count), isCpp(),
+                        settings.tabWidth, settings.useSpaces, settings.autoIndent, settings.autoPairs)
+                }
             }
             override fun afterTextChanged(s: Editable?) {
                 if (quietEdit) return
                 hideCompletion()
                 val edit = change
                 change = null
-                if (edit != null && s != null && BaseInputConnection.getComposingSpanStart(s) < 0) applyChange(edit)
+                if (edit != null && s != null && BaseInputConnection.getComposingSpanStart(s) < 0) applyChange(edit, keepSnippet = true)
                 dirty = true; editRevision++
+                snippetSession = snippetSession?.copy(revision = editRevision)
+                snippetTextChanging = false; validSnippet(); updateSnippetHint()
                 handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
                 updateNumbers()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
@@ -706,9 +715,11 @@ class MainActivity : Activity() {
             if (focused) { lastFocus = "editor"; updateImeLayout() } else hideCompletion()
         }
         editor.setOnClickListener { updateSuggestions() }
-        suggestionRow.addView(label(getString(R.string.completion_hint), 11f, muted))
+        completionHint = label(getString(R.string.completion_hint), 11f, muted)
+        suggestionRow.addView(completionHint)
         editor.onCaretChanged = {
             if (!quietEdit) {
+                if (!snippetTextChanging) { validSnippet(); updateSnippetHint() }
                 hideCompletion()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
             }
@@ -751,7 +762,7 @@ class MainActivity : Activity() {
         input.isSaveEnabled = false
         input.filters = arrayOf(InputFilter.LengthFilter(20000))
         input.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
-            if (focused) { lastFocus = "stdin"; updateImeLayout() }
+            if (focused) { clearSnippet(); lastFocus = "stdin"; updateImeLayout() }
         }
         input.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -1023,7 +1034,7 @@ class MainActivity : Activity() {
     }
 
     private fun loadActive(content: String? = null, restored: Draft? = null) {
-        hideCompletion(); editRevision++
+        hideCompletion(); clearSnippet(); editRevision++
         if (content == null) {
             val path = activePath; val key = sessions.key(path)
             ioAction("正在载入…", { workspace.read(workspace.resolve(path)) to drafts.read(key) }) { (text, draft) ->
@@ -1126,7 +1137,7 @@ class MainActivity : Activity() {
         if (isFinishing || !hasWindowFocus() || workspaceBusy || loadedPath != activePath || !editor.hasFocus() || !editor.isShown ||
             toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
             BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || editor.selectionStart != editor.selectionEnd ||
-            (!force && (!settings.autoCompletion || editor.length() > 45000))) { hideCompletion(); return }
+            (!force && (snippetSession != null || !settings.autoCompletion || editor.length() > 45000))) { hideCompletion(); return }
         val request = completionRequest()
         if (force) completionSuppressed = null
         if (!force && completionSuppressed == request) return
@@ -1136,8 +1147,9 @@ class MainActivity : Activity() {
         }
         hideCompletion()
         val generation = completionGeneration
+        val includeSnippets = snippetSession == null
         completionTask = completionExecutor.submit {
-            val batch = LexicalCompletion.complete(request)
+            val batch = LexicalCompletion.complete(request, includeSnippets)
             if (Thread.currentThread().isInterrupted || isDestroyed) return@submit
             runOnUiThread {
                 if (isDestroyed || isFinishing || !hasWindowFocus() || generation != completionGeneration || workspaceBusy ||
@@ -1173,13 +1185,57 @@ class MainActivity : Activity() {
     private fun acceptCompletion(index: Int = completionPopup?.selectedIndex ?: 0): Boolean {
         if (workspaceBusy || !editor.hasFocus() || completionPopup?.isShowing != true ||
             BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return false
-        val change = completionBatch?.edit(completionRequest(), index, Workspace.MAX_CHARS) ?: run {
+        val insertion = completionBatch?.insertion(completionRequest(), index, settings, Workspace.MAX_CHARS) ?: run {
             hideCompletion(); return false
         }
+        return applyCompletionInsertion(insertion)
+    }
+
+    private fun updateSnippetHint() {
+        if (!::completionHint.isInitialized) return
+        val session = snippetSession
+        val text = if (session == null) getString(R.string.completion_hint)
+            else getString(R.string.snippet_progress, session.index + 1, session.stops.size, session.active.label)
+        if (completionHint.text.toString() != text) completionHint.text = text
+    }
+
+    private fun clearSnippet() { snippetSession = null; updateSnippetHint() }
+
+    private fun validSnippet(): Boolean {
+        val session = snippetSession ?: return false
+        val valid = loadedPath == activePath && session.length == editor.length() &&
+            session.matches(sessions.key(activePath), editRevision, editor.selectionStart, editor.selectionEnd)
+        if (!valid) clearSnippet()
+        return valid
+    }
+
+    private fun trackSnippetEdit(start: Int, removed: Int, inserted: Int) {
+        val session = snippetSession ?: return
+        snippetSession = if (loadedPath == activePath)
+            session.edited(sessions.key(activePath), editRevision, start, removed, inserted) else null
+    }
+
+    private fun moveSnippet(reverse: Boolean): Boolean {
+        if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || !validSnippet()) return false
+        hideCompletion()
+        val navigation = snippetSession!!.move(reverse)
+        snippetSession = navigation.session
+        quietEdit = true
+        try { editor.setSelection(navigation.start, navigation.end) } finally { quietEdit = false }
+        completionSuppressed = completionRequest()
+        updateSnippetHint(); editor.bringPointIntoView(navigation.start)
+        handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
+        return true
+    }
+
+    private fun applyCompletionInsertion(insertion: CompletionEdit): Boolean {
         hideCompletion()
         editor.beginBatchEdit()
-        try { applyChange(change) } finally { editor.endBatchEdit() }
+        try { applyChange(insertion.change, keepSnippet = insertion.snippet == null) } finally { editor.endBatchEdit() }
         dirty = true; editRevision++
+        snippetSession = insertion.snippet?.session(sessions.key(activePath), editRevision, editor.length())
+            ?: snippetSession?.copy(revision = editRevision)
+        validSnippet(); updateSnippetHint()
         completionSuppressed = completionRequest()
         handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
         handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
@@ -1187,14 +1243,47 @@ class MainActivity : Activity() {
         return true
     }
 
+    private fun showSnippetMenu() {
+        if (workspaceBusy || !editor.hasFocus() || loadedPath != activePath ||
+            BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+        val snapshot = completionRequest()
+        val options = mutableListOf<Pair<String, () -> Unit>>()
+        if (validSnippet()) {
+            options.add(getString(R.string.snippet_previous) to { moveSnippet(true); Unit })
+            options.add(getString(R.string.snippet_next) to { moveSnippet(false); Unit })
+            options.add(getString(R.string.snippet_finish) to { clearSnippet() })
+        }
+        if (CodeSnippets.replacement(snapshot) != null) CodeSnippets.all(isCpp()).forEach { descriptor ->
+            options.add("${descriptor.trigger} · ${descriptor.title}" to {
+                if (!workspaceBusy && snapshot == completionRequest() &&
+                    BaseInputConnection.getComposingSpanStart(editor.text) < 0) {
+                    val expanded = CodeSnippets.expand(descriptor.id, snapshot, settings, Workspace.MAX_CHARS)
+                    if (expanded == null) status.setText(R.string.snippet_cannot_insert)
+                    else applyCompletionInsertion(CompletionEdit(expanded.change, expanded))
+                }
+                Unit
+            })
+        }
+        if (options.isEmpty()) { status.setText(R.string.snippet_line_help); return }
+        toolDialog?.dismiss(); hideCompletion(true)
+        toolDialog = AlertDialog.Builder(this).setTitle(R.string.snippet_title)
+            .setItems(options.map { it.first }.toTypedArray()) { dialog, which ->
+                dialog.dismiss()
+                if (snapshot.document == completionRequest().document && snapshot.revision == editRevision) options[which].second()
+            }.setNegativeButton(R.string.snippet_cancel, null).show()
+    }
+
     private fun insertText(snippet: String, caretInside: Boolean = false) {
-        if (workspaceBusy) return
+        if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
         val start = minOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(0)
         val end = maxOf(editor.selectionStart, editor.selectionEnd).coerceAtLeast(start)
+        if (editor.length().toLong() - (end - start) + snippet.length > Workspace.MAX_CHARS) return
+        trackSnippetEdit(start, end - start, snippet.length)
         quietEdit = true
         editor.text.replace(start, end, snippet)
         quietEdit = false
         dirty = true; editRevision++
+        snippetSession = snippetSession?.copy(revision = editRevision)
         handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
         updateNumbers(); handler.post(refreshEditor)
         handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
@@ -1204,7 +1293,8 @@ class MainActivity : Activity() {
 
     /** Shift+Tab removes one indent. Tab indents selection or accepts a suggestion. */
     private fun indent(reverse: Boolean) {
-        if (workspaceBusy) return
+        if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+        if (reverse && moveSnippet(true)) return
         applyChange(EditorActions.indent(editor.text.toString(), editor.selectionStart, editor.selectionEnd, reverse, settings.tabWidth, settings.useSpaces))
         dirty = true; editRevision++
         handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
@@ -1213,7 +1303,11 @@ class MainActivity : Activity() {
         editor.requestFocus()
     }
 
-    private fun applyChange(change: TextChange) {
+    private fun applyChange(change: TextChange, keepSnippet: Boolean = false) {
+        if (editor.length().toLong() - (change.end - change.start) + change.text.length > Workspace.MAX_CHARS) {
+            clearSnippet(); return
+        }
+        if (keepSnippet) trackSnippetEdit(change.start, change.end - change.start, change.text.length) else clearSnippet()
         quietEdit = true
         try {
             editor.text.replace(change.start, change.end, change.text)
@@ -1224,6 +1318,7 @@ class MainActivity : Activity() {
     private fun tab() {
         if (!editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
         if (settings.completionTab && acceptCompletion()) return
+        if (moveSnippet(false)) return
         hideCompletion(); indent(false)
     }
 
@@ -1244,6 +1339,7 @@ class MainActivity : Activity() {
     private fun showSettings() {
         toolDialog?.dismiss()
         hideCompletion(true)
+        clearSnippet()
         toolDialog = SettingsDialog.show(this, settings, ::applySettings)
     }
 
@@ -1311,6 +1407,7 @@ class MainActivity : Activity() {
         toolDialog?.dismiss()
         hideCompletion(true)
         revealEditor()
+        clearSnippet()
         toolDialog = SearchDialog.show(this, replace, ::searchSnapshot, { start, end ->
             editor.setSelection(start, end); editor.bringPointIntoView(start)
         }, { change ->
@@ -1327,6 +1424,7 @@ class MainActivity : Activity() {
         if (workspaceBusy || loadedPath != activePath) return
         hideCompletion(true)
         revealEditor()
+        clearSnippet()
         val field = EditText(this).apply { inputType = InputType.TYPE_CLASS_NUMBER; hint = "从 1 开始的行号" }
         val dialog = AlertDialog.Builder(this).setTitle("跳转行").setView(field)
             .setNegativeButton("取消", null).setPositiveButton("跳转", null).create()
@@ -1365,11 +1463,21 @@ class MainActivity : Activity() {
                 CompletionAction.PASS -> false
             }
             if (handled) { completionConsumedKeys.add(event.keyCode); return true }
+            val snippetAction = SnippetKeys.action(key, event.isShiftPressed, validSnippet(), handled, composing,
+                event.flags and KeyEvent.FLAG_SOFT_KEYBOARD != 0, event.isCtrlPressed || event.isAltPressed || event.isMetaPressed)
+            val snippetHandled = when (snippetAction) {
+                SnippetKeyAction.NEXT -> moveSnippet(false)
+                SnippetKeyAction.PREVIOUS -> moveSnippet(true)
+                SnippetKeyAction.END -> { hideCompletion(true); clearSnippet(); true }
+                SnippetKeyAction.PASS -> false
+            }
+            if (snippetHandled) { completionConsumedKeys.add(event.keyCode); return true }
             if (key == CompletionKey.TAB && !composing && event.flags and KeyEvent.FLAG_SOFT_KEYBOARD == 0 && !event.isCtrlPressed && !event.isAltPressed && !event.isMetaPressed) {
                 hideCompletion(); indent(event.isShiftPressed); completionConsumedKeys.add(event.keyCode); return true
             }
         }
         if (event.action == KeyEvent.ACTION_DOWN && event.isCtrlPressed) {
+            if (event.keyCode in listOf(KeyEvent.KEYCODE_Z, KeyEvent.KEYCODE_Y)) clearSnippet()
             when (event.keyCode) {
                 KeyEvent.KEYCODE_F -> { showSearch(false); return true }
                 KeyEvent.KEYCODE_H -> { showSearch(true); return true }

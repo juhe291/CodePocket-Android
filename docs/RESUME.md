@@ -1,6 +1,18 @@
 # CodePocket 当前交接状态
 
-## 当前：P1 第三批运行面板已完成（2026-10-17）
+## 当前：P1 第四批内置片段已完成（2026-10-17）
+
+继续按 P1 → P2 → P3 分批推进，实机统一后置，不重建项目。前一批提交 `57eb82b`；本批详见 [P1_SNIPPETS.md](P1_SNIPPETS.md) 和 [进度表](DEVELOPMENT_PROGRESS.md)。
+
+- C++ / Python 各 6 个内置片段、Tab/Shift+Tab 字段导航、Esc 结束、触屏菜单；实际编辑追踪 UTF-16，守住文档/版本、输入法组合与 stdin 焦点边界。普通候选优先，片段明确不是语义补全。
+- 最终构建 55s，Kotlin 83 项中 82 通过、1 跳过（新增片段 12 项通过）；实际 Kotlin 展开模板通过真实 Python 执行器 7 个、主机 C++17 编译执行 7 个；源码/APK 字节码各 13 项；Lint 0 错误、13 警告。
+- [本批 APK](../dist/CodePocket-P1-snippets-debug.apk)，21,817,451 字节，SHA256 `c285ced69595ba4f3537bcecadb20e04f7df3a805433da84f655ebe9e839ed1f`；签名/CRC/ABI/对齐和关键类打包通过。证据 `verification/p1-snippets-2026-10-17/results.json`。
+- GitHub Actions 增加相同主机模板回归，Debug 下载步骤保留；没有远端 Actions 或 push。主机 g++ 没有打包进 App，C++ 仍走 Wandbox，本批没有在线请求。
+- 未进行设备/ADB、原生撤销、中文 IME、popup/键鼠联合或 60 FPS 验收；不能据模型/主机测试写成设备适配通过。原生 CodeEditor、Gradle、Manifest、runner 与文件保存实现未修改。
+- 下一批继续可靠来源的内置函数调用参数提示，其后推进其它 P1 余项。完整动画、项目搜索、流式终端、P2 真实语义/本地与多文件 C++、P3 仍待做；保持先修 P0 缺陷。
+
+
+## P1 第三批运行面板记录（2026-10-17，历史）
 
 继续开发、统一后置实机；不重建项目或重做阶段 0。前一批补全提交 `f7a57e8` 保留；本批见 [P1_RUN_PANEL.md](P1_RUN_PANEL.md) 和 [进度表](DEVELOPMENT_PROGRESS.md)。
 
