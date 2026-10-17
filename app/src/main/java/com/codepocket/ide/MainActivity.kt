@@ -17,7 +17,6 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.text.InputFilter
 import android.text.Spanned
-import android.text.style.BackgroundColorSpan
 import android.text.style.ClickableSpan
 import android.text.method.LinkMovementMethod
 import android.view.inputmethod.BaseInputConnection
@@ -35,6 +34,8 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import com.codepocket.ide.animation.Animations
+import com.codepocket.ide.editor.EditorAnalysisController
+import com.codepocket.ide.editor.NativeEditorPort
 import com.codepocket.ide.search.ProjectSearch
 import com.codepocket.ide.ui.*
 import com.codepocket.ide.terminal.TerminalView
@@ -67,6 +68,8 @@ class MainActivity : Activity() {
     private var completionTask: java.util.concurrent.Future<*>? = null
     private val completionConsumedKeys = mutableSetOf<Int>()
     private var quietEdit = false
+    private var editorPort: NativeEditorPort? = null
+    private var editorAnalysis: EditorAnalysisController? = null
     private var snippetSession: SnippetSession? = null
     private var snippetTextChanging = false
     private lateinit var completionHint: TextView
@@ -106,8 +109,7 @@ class MainActivity : Activity() {
     private val refreshEditor = Runnable {
         if (::editor.isInitialized) {
             if (BaseInputConnection.getComposingSpanStart(editor.text) >= 0) { hideCompletion(); return@Runnable }
-            EditorFeatures.colorize(editor.text, isCpp(), syntaxDark)
-            highlightBrackets()
+            editorAnalysis?.request()
             updateTabStops()
             updateSuggestions()
             updateSignatureHelp()
@@ -122,6 +124,7 @@ class MainActivity : Activity() {
     private var workspaceBusy = false
         set(value) {
             field = value
+            if (value) editorAnalysis?.cancel()
             if (::editor.isInitialized) { editor.isEnabled = !value; if (value) { hideCompletion(); clearSnippet() } }
             if (::input.isInitialized) input.isEnabled = !value
             if (::panelResize.isInitialized) panelResize.isEnabled = !value && panelLayout?.resizable == true
@@ -297,19 +300,25 @@ class MainActivity : Activity() {
         super.onSaveInstanceState(outState)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (::editor.isInitialized) { handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
+    }
+
     override fun onPause() {
         super.onPause()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         explorerResizeHandle?.cancelGesture(); projectSearch?.cancel()
         listOfNotNull(explorerPane, activityBar).forEach(Animations::cancel)
-        handler.removeCallbacks(refreshEditor); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
+        handler.removeCallbacks(refreshEditor); editorAnalysis?.cancel(); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
         currentGeometry?.let { updateExplorerLayout(ExplorerLayout.resolve(it, explorerWidth)) }
         persist()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (!hasFocus) { hideCompletion(); completionConsumedKeys.clear() }
+        if (!hasFocus) { editorAnalysis?.cancel(); hideCompletion(); completionConsumedKeys.clear() }
+        else if (::editor.isInitialized) { handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
     }
 
     private fun persist() {
@@ -334,6 +343,7 @@ class MainActivity : Activity() {
         super.onDestroy()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null
+        editorAnalysis?.close(); editorPort?.close()
         handler.removeCallbacksAndMessages(null)
         projectSearch?.cancel(); explorerResizeHandle?.cancelGesture()
         toolDialog?.dismiss(); commandMenu?.dismiss(); commandMenu = null
@@ -866,6 +876,7 @@ class MainActivity : Activity() {
             setPadding(dp(3), dp(9), dp(6), 0); setLineSpacing(dp(3).toFloat(), 1f)
         }
         editorBody.addView(numbers, LinearLayout.LayoutParams(dp(42), -1))
+        editorAnalysis?.close(); editorPort?.close()
         editor = CodeEditor(this).apply {
             textSize = 13.5f; typeface = Typeface.MONOSPACE; setTextColor(textForeground)
             setHintTextColor(muted); hint = "在这里输入 C++ 或 Python…"
@@ -880,6 +891,14 @@ class MainActivity : Activity() {
             isSaveEnabled = false
             filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS))
         }
+        editorPort = NativeEditorPort(editor,
+            { if (workspaceBusy || loadedPath != activePath || !::sessions.isInitialized) null
+                else sessions.key(activePath) to editRevision }, ::isCpp, { syntaxDark }) {
+            if (!isDestroyed && !isFinishing && hasWindowFocus()) {
+                handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
+            }
+        }
+        editorAnalysis = EditorAnalysisController(editorPort!!, { handler.post(it) })
         editorBody.addView(editor, LinearLayout.LayoutParams(0, -1, 1f))
         editorRegion.addView(editorBody, LinearLayout.LayoutParams(-1, 0, 1f))
         val suggestScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
@@ -911,6 +930,7 @@ class MainActivity : Activity() {
             }
             override fun afterTextChanged(s: Editable?) {
                 if (quietEdit) return
+                editorAnalysis?.cancel()
                 hideCompletion()
                 val edit = change
                 change = null
@@ -933,6 +953,7 @@ class MainActivity : Activity() {
         editor.onCaretChanged = {
             updateStatusBar()
             if (!quietEdit) {
+                editorAnalysis?.cancel()
                 if (!snippetTextChanging) { validSnippet(); updateSnippetHint() }
                 hideCompletion()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
@@ -1205,6 +1226,7 @@ class MainActivity : Activity() {
         for (i in opened.indices) opened[i] = rebase(opened[i])
         val oldExpanded = expanded.toList(); expanded.clear(); expanded.addAll(oldExpanded.map(::rebase))
         currentDirectory = rebase(currentDirectory)
+        handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
         persistNavigation()
     }
 
@@ -1262,6 +1284,7 @@ class MainActivity : Activity() {
     }
 
     private fun loadActive(content: String? = null, restored: Draft? = null) {
+        editorAnalysis?.cancel()
         hideCompletion(); clearSnippet(); editRevision++
         if (content == null) {
             val path = activePath; val key = sessions.key(path)
@@ -1277,7 +1300,7 @@ class MainActivity : Activity() {
         loadedVersion = recovered.baseHash
         dirty = recovered.dirty
         restoreSession(); quietEdit = false
-        EditorFeatures.colorize(editor.text, isCpp(), syntaxDark)
+        handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
         updateNumbers(); updateSuggestions()
         updateShellTitle()
         status.text = if (dirty) "已恢复未写回草稿，请保存或导出" else if (isCpp()) "C++17 · Wandbox 云端" else "Python 3.13 · 本地"
@@ -1596,15 +1619,6 @@ class MainActivity : Activity() {
         if (settings.completionTab && acceptCompletion()) return
         if (moveSnippet(false)) return
         hideCompletion(); indent(false)
-    }
-
-    private fun highlightBrackets() {
-        val text = editor.text
-        text.getSpans(0, text.length, BackgroundColorSpan::class.java).forEach { text.removeSpan(it) }
-        val match = EditorFeatures.matchingBrackets(text.toString(), editor.selectionStart, isCpp()) ?: return
-        for (position in listOf(match.first, match.second)) {
-            text.setSpan(BackgroundColorSpan(if (syntaxDark) 0xFF3A3D41.toInt() else 0xFFD6EBFF.toInt()), position, position + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
     }
 
     private fun toggleTheme() = applySettings(settings.copy(theme = if (dark) UiTheme.LIGHT else UiTheme.DARK))

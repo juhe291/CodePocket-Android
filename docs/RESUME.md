@@ -1,6 +1,17 @@
 # CodePocket 当前交接状态
 
-## 当前：UI 与操作逻辑接续已验证（2026-10-17）
+## 当前：P1-C 编辑分析首批已验证（2026-10-17）
+
+- 用户继续开发，基于 `62c3750` 接续；[本批报告](P1_EDITOR_ANALYSIS.md)。保留原生 CodeEditor，已实际接入只读快照/装饰 EditorPort、后台高亮/括号扫描、缓存和迟到结果保护，补组合区结束监听，修复已测试复现的长字符串栈溢出。
+- 新增20项Kotlin全部通过；完整173项中172通过/1 Windows符号链接跳过。构建1m 8s，62任务19执行/43未变化；Python源码/实际APK字节码各13/13、生成模板各7/7，Lint0错误/11警告；CRC/ABI/v2签名/16KB ZIP对齐及关键Dex类定义通过。
+- [最新 APK](../dist/CodePocket-editor-analysis-debug.apk)，22,033,627字节，SHA256 `3ee15564b1bd745d786cde8af8318f5b04ba80c602204504029a3d0f7bb1001c`。证据 `verification/editor-analysis-2026-10-17/results.json`；首次失败日志保留，前后源码及保护输入哈希已记录。上批APK和证据保留。
+- 文件/SAF/草稿/独立stdin/运行控制、候选/片段/参数核心、Gradle/Manifest/Actions及三份需求未变；无新依赖/权限/迁移/push/发布。颜色最多45000字符/6000span，超限正文降级；仍为词法扫描。
+- **P1-C整体未完成**：目前Port只有读快照/装饰；完整事务/历史/视口/诊断契约及固定Sora制品/隔离页面待接续，不称已迁移或已验证组件兼容。然后继续手势/完整动画、设置与真实Python流式后端，P2/P3原需求保留，P0缺陷优先。
+- 实机统一后置，不再请求设备。本轮没有Android运行时/IME回调/原生历史/截图/FPS/新Wandbox网络/远端Actions证据。不要把纯状态机/工作线程测试当作设备输入体验验收。
+- 实际仓库 `C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`；配置OneDrive cwd不存在。显式指定实际workdir，需要沙箱升级时正常使用，不修改Git配置；保留.tools/dist/verification及设备备份。
+
+
+## 历史：UI 与操作逻辑接续已验证（2026-10-17）
 
 用户因 Claude 额度中断返回，要求继续；网络中断后已恢复。本批在 `a6eaec1` 和原未提交修改上完成接续，未重建项目。实机统一后置仍有效，不请求手机。
 

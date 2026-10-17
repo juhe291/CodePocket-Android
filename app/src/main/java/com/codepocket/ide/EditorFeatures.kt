@@ -1,10 +1,5 @@
 package com.codepocket.ide
 
-import android.graphics.Color
-import android.text.Editable
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-
 /** Lexical highlighting, not a full semantic language server. */
 object EditorFeatures {
     private val cppWords = "int long short double float bool void char auto return for while do if else break continue class struct const using namespace public private protected template typename new delete true false include switch case default static nullptr virtual override final constexpr noexcept try catch throw enum union unsigned signed typedef sizeof volatile mutable inline friend this operator decltype".split(' ')
@@ -12,7 +7,8 @@ object EditorFeatures {
     private val pythonWords = "def class return for while if elif else break continue import from as with try except finally raise lambda in and or not True False None pass yield async await global nonlocal assert del is".split(' ')
     private val cppFunctions = "main cout cin endl printf scanf size push_back emplace_back begin end sort reverse max min swap".split(' ')
     private val pythonFunctions = "print input range len int str float list dict set tuple enumerate zip map filter sum min max sorted open type isinstance".split(' ')
-    private val strings = "\\\"(?:\\\\.|[^\\\"\\\\\\n])*\\\"?|'(?:\\\\.|[^'\\\\\\n])*'?"
+    // Possessive repetition prevents Java regex recursion on long quoted literals.
+    private val strings = "\\\"(?:\\\\.|[^\\\"\\\\\\n])*+\\\"?|'(?:\\\\.|[^'\\\\\\n])*+'?"
     private val numeric = "\\b(?:0[xX][0-9a-fA-F]+|0[bB][01]+|\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)[uUlLfF]*\\b"
     private val cppPattern = Regex("(?m)//[^\\n]*|/\\*[\\s\\S]*?(?:\\*/|\\z)|^[ \\t]*#[^\\n]*|$strings|$numeric|\\b[A-Za-z_][A-Za-z_0-9]*\\b")
     private val pythonPattern = Regex("(?m)#[^\\n]*|\"\"\"[\\s\\S]*?(?:\"\"\"|\\z)|'''[\\s\\S]*?(?:'''|\\z)|$strings|$numeric|\\b[A-Za-z_][A-Za-z_0-9]*\\b")
@@ -44,8 +40,13 @@ object EditorFeatures {
 
     fun matchingBrackets(code: String, caret: Int, cpp: Boolean): Pair<Int, Int>? {
         if (code.length > 45000) return null
+        return matchingBrackets(code, caret, tokens(code, cpp))
+    }
+
+    fun matchingBrackets(code: String, caret: Int, tokens: List<Token>): Pair<Int, Int>? {
+        if (code.length > 45000) return null
         val ignored = BooleanArray(code.length)
-        tokens(code, cpp).filter { it.kind in setOf("string", "comment", "preprocessor") }.forEach { token ->
+        tokens.filter { it.kind in setOf("string", "comment", "preprocessor") }.forEach { token ->
             for (i in token.start until token.end) ignored[i] = true
         }
         val pairs = "()[]{}"
@@ -89,33 +90,4 @@ object EditorFeatures {
             .sortedWith(compareBy<String> { !common.contains(it) }.thenBy { it.length }).take(6)
     }
 
-    fun colorize(editable: Editable?, cpp: Boolean, dark: Boolean) {
-        if (editable == null) return
-        val length = editable.length
-        editable.getSpans(0, length, ForegroundColorSpan::class.java)
-            .forEach { editable.removeSpan(it) }
-        if (length > 45000) return
-        val code = editable.toString()
-        val keywordColor = Color.parseColor(if (dark) "#569CD6" else "#0000FF")
-        val typeColor = Color.parseColor(if (dark) "#4EC9B0" else "#267F99")
-        val functionColor = Color.parseColor(if (dark) "#DCDCAA" else "#795E26")
-        val stringColor = Color.parseColor(if (dark) "#CE9178" else "#A31515")
-        val numberColor = Color.parseColor(if (dark) "#B5CEA8" else "#098658")
-        val commentColor = Color.parseColor(if (dark) "#6A9955" else "#008000")
-        val preprocessorColor = Color.parseColor(if (dark) "#C586C0" else "#AF00DB")
-        for (token in tokens(code, cpp)) {
-            val selectedColor = when (token.kind) {
-                "comment" -> commentColor
-                "preprocessor" -> preprocessorColor
-                "string" -> stringColor
-                "number" -> numberColor
-                "type" -> typeColor
-                "keyword" -> keywordColor
-                "function" -> functionColor
-                else -> null
-            }
-            if (selectedColor != null) editable.setSpan(ForegroundColorSpan(selectedColor),
-                token.start, token.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-    }
 }
