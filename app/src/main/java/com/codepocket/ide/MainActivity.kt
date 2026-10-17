@@ -34,6 +34,8 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import com.codepocket.ide.animation.Animations
+import com.codepocket.ide.search.ProjectSearch
 import com.codepocket.ide.ui.*
 import java.io.File
 import org.json.JSONArray
@@ -87,6 +89,7 @@ class MainActivity : Activity() {
     private lateinit var panelResize: PanelResizeHandle
     private var activityBar: ActivityBar? = null
     private var explorerResizeHandle: ExplorerResizeHandle? = null
+    private var projectSearch: ProjectSearch? = null
     private lateinit var panelToolbar: PanelToolbar
     private var presetInputExpanded = false
     private var commandMenu: android.widget.PopupMenu? = null
@@ -461,6 +464,7 @@ class MainActivity : Activity() {
 
     private fun updateExplorerLayout(layout: ExplorerLayout) {
         val content = root.getChildAt(2) as? LinearLayout ?: return
+        val animationsEnabled = settings.animations
 
         when (layout.mode) {
             ExplorerMode.SIDEBAR -> {
@@ -469,6 +473,10 @@ class MainActivity : Activity() {
                     val bar = ActivityBar(this, palette) { dispatchCommand(IdeCommand.EXPLORER) }
                     activityBar = bar
                     content.addView(bar, 0, LinearLayout.LayoutParams(dp(ExplorerLayout.ACTIVITY_BAR_WIDTH), -1))
+
+                    if (animationsEnabled) {
+                        Animations.fadeIn(bar, Animations.DURATION_SHORT, true)
+                    }
                 }
 
                 if (explorerPane == null) {
@@ -478,6 +486,10 @@ class MainActivity : Activity() {
 
                     val insertIndex = if (activityBar != null) 1 else 0
                     content.addView(explorer, insertIndex, LinearLayout.LayoutParams(dp(layout.width), -1))
+
+                    if (explorerVisible && animationsEnabled) {
+                        Animations.slideIn(explorer, -dp(layout.width).toFloat(), Animations.DURATION_MEDIUM, true)
+                    }
 
                     // Add resize handle
                     if (layout.resizable) {
@@ -493,8 +505,14 @@ class MainActivity : Activity() {
                 }
             }
             ExplorerMode.OVERLAY -> {
-                // Remove activity bar and sidebar in narrow mode
-                activityBar?.let { content.removeView(it) }
+                // Remove activity bar and sidebar in narrow mode with animation
+                activityBar?.let {
+                    if (animationsEnabled) {
+                        Animations.fadeOut(it, Animations.DURATION_SHORT, true, true)
+                    } else {
+                        content.removeView(it)
+                    }
+                }
                 activityBar = null
                 explorerResizeHandle?.let { content.removeView(it) }
                 explorerResizeHandle = null
@@ -1007,9 +1025,24 @@ class MainActivity : Activity() {
     private fun showExplorer() {
         if (workspaceBusy) return
         val geometry = currentGeometry
+        val animationsEnabled = settings.animations
+
         if (geometry != null && geometry.showExplorerSidebar) {
             explorerVisible = !explorerVisible
-            explorerPane?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
+            explorerPane?.let { pane ->
+                if (explorerVisible) {
+                    pane.visibility = View.VISIBLE
+                    if (animationsEnabled) {
+                        Animations.slideIn(pane, -pane.width.toFloat(), Animations.DURATION_MEDIUM, true)
+                    }
+                } else {
+                    if (animationsEnabled) {
+                        Animations.slideOut(pane, -pane.width.toFloat(), Animations.DURATION_MEDIUM, true, true)
+                    } else {
+                        pane.visibility = View.GONE
+                    }
+                }
+            }
             explorerResizeHandle?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
             if (explorerVisible && explorerPane != null) animateDecoration(explorerPane)
             activityBar?.setExplorerActive(explorerVisible)
