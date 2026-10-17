@@ -1,0 +1,15 @@
+{
+  "configured_limit_ms": 40,
+  "wall_ms": 253,
+  "result": {
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app/src/main/python\\runner.py\", line 106, in _run_code\n    exec(compiled, {\"__name__\": \"__main__\", \"__file__\": filename})\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"main.py\", line 3, in <module>\n  File \"C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app/src/main/python\\runner.py\", line 88, in watchdog\n    raise TimeoutError(\"运行超过 6 秒，已中止（仅限制 Python 字节码）\")\nTimeoutError: 运行超过 6 秒，已中止（仅限制 Python 字节码）\n",
+    "exit_code": 1,
+    "error_line": 3,
+    "error_file": "main.py",
+    "error_kind": "timeout",
+    "elapsed_ms": 252
+  },
+  "conclusion": "Native sleep is not interrupted at the configured bytecode deadline.",
+  "device_execution": false
+}

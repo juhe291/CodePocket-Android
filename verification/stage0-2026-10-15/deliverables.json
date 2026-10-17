@@ -1,0 +1,30 @@
+[
+  {
+    "path": "README.md",
+    "sha256": "1ed3d6aa497b47ecc12a844e0763cd9191d54e45448b7056f994f61056485d2f"
+  },
+  {
+    "path": "docs/RESUME.md",
+    "sha256": "f004040c925d423d8e7897af599e975fd42e7377e3bae73a578ac535ae25ed3c"
+  },
+  {
+    "path": "docs/DEVELOPMENT_REQUIREMENTS.md",
+    "sha256": "55f5e64f6fbae4057ebe4fc30fa5d2501025230ec641976e885879e7d06657b8"
+  },
+  {
+    "path": "docs/STAGE0_AUDIT_2026-10-15.md",
+    "sha256": "fb46c462f5fcb20127b77dd7206bfed370476bdd05ee0354873332ce87500352"
+  },
+  {
+    "path": "docs/THIRD_PARTY_INVENTORY.md",
+    "sha256": "e8d7950cb6aa23a4c3623410dc3d96c1eb46db0ff17a97f75ca0723f8ac803ae"
+  },
+  {
+    "path": "dist/CodePocket-stage0-2026-10-15-debug.apk",
+    "sha256": "d85e032b975a9f779fe79b34be39fa680e0b19bf8ed85ea7326b24178f93a824"
+  },
+  {
+    "path": "dist/CodePocket-stage0-2026-10-15-debug.apk.sha256",
+    "sha256": "a7a0f61dea9bd788cf2d2576843f241cfd728ee6f2305b691a7954d7fa6c7504"
+  }
+]

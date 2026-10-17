@@ -1,0 +1,72 @@
+{"case": "stdin_stl", "compiler": "gcc-13.2.0", "response": {"status": "0", "signal": "", "compiler_output": "", "compiler_error": "", "compiler_message": "", "program_output": "8\n", "program_error": "", "program_message": "8\n", "permlink": "", "url": ""}}
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\urllib\request.py", line 1319, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\http\client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\http\client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\http\client.py", line 1479, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+                                          server_hostname=server_hostname)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLEOFError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\check_wandbox.py", line 44, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\check_wandbox.py", line 32, in main
+    result = request('compile.json', {'compiler': compiler, 'code': code, 'stdin': stdin,
+                                     'compiler-option-raw': '-std=c++17', 'save': False})
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\check_wandbox.py", line 18, in request
+    with opener.open(req, timeout=40) as response:
+         ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\urllib\request.py", line 489, in open
+    response = self._open(req, data)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\urllib\request.py", line 506, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\urllib\request.py", line 466, in _call_chain
+    result = func(*args)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\urllib\request.py", line 1367, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        context=self._context)
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\urllib\request.py", line 1322, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)>

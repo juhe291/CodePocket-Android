@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.DraftRecoveryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-17T03:02:06" hostname="JUHE" time="0.132">
+  <properties/>
+  <testcase name="alreadySavedCheckpointDoesNotCauseFalseConflictOnNextEdit" classname="com.codepocket.ide.DraftRecoveryTest" time="0.055"/>
+  <testcase name="unwrittenCheckpointStillSavesAgainstItsOriginalVersion" classname="com.codepocket.ide.DraftRecoveryTest" time="0.033"/>
+  <testcase name="realExternalConflictKeepsDraftAndDoesNotOverwriteTheFile" classname="com.codepocket.ide.DraftRecoveryTest" time="0.033"/>
+  <testcase name="noCheckpointStartsFromCurrentFileWithoutDirtyState" classname="com.codepocket.ide.DraftRecoveryTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

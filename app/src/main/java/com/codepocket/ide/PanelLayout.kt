@@ -48,9 +48,16 @@ data class PanelLayout(
 /** All values in dp; depends on the measured work area, not device orientation. */
 object PanelLayoutPolicy {
     const val HANDLE = 24
+
+    /**
+     * Resolve panel layout with bottom-first strategy.
+     * Panel defaults to bottom; only uses side dock when explicitly configured and width allows.
+     * @param preferSide User preference for side docking (default false = bottom priority)
+     */
     fun resolve(state: PanelState, visible: Boolean, width: Int, height: Int,
-        ime: Boolean, inputFocused: Boolean, collapseOnIme: Boolean): PanelLayout {
-        val dock = if (width >= 600) PanelDock.SIDE else PanelDock.BOTTOM
+        ime: Boolean, inputFocused: Boolean, collapseOnIme: Boolean, preferSide: Boolean = false): PanelLayout {
+        // Bottom-first strategy: only dock to side if user explicitly prefers it AND there's room
+        val dock = if (preferSide && width >= 840) PanelDock.SIDE else PanelDock.BOTTOM
         val available = (if (dock == PanelDock.SIDE) width else height).coerceAtLeast(0)
         fun hidden() = PanelLayout(dock, false, true, 0, available)
         if (width <= 0 || height <= 0 || !visible) return hidden()

@@ -73,7 +73,8 @@ class MainActivity : Activity() {
     private val signatureExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
     private var signatureTask: java.util.concurrent.Future<*>? = null
     private var explorerDialog: AlertDialog? = null
-    private var wide = false
+    private var currentGeometry: WorkspaceGeometry? = null
+    private var explorerWidth = 240 // User's explorer width preference in dp
     private var loadedPath: String? = null
     private var dirty = false
     private val handler = Handler(Looper.getMainLooper())
@@ -84,6 +85,8 @@ class MainActivity : Activity() {
     private var panelLayout: PanelLayout? = null
     private lateinit var splitHost: LinearLayout
     private lateinit var panelResize: PanelResizeHandle
+    private var activityBar: ActivityBar? = null
+    private var explorerResizeHandle: ExplorerResizeHandle? = null
     private lateinit var panelToolbar: PanelToolbar
     private var presetInputExpanded = false
     private var commandMenu: android.widget.PopupMenu? = null
@@ -91,6 +94,7 @@ class MainActivity : Activity() {
     private lateinit var panelOutputScroll: HorizontalScrollView
     private var imeVisible = false
     private var lastFocus = "editor"
+    private lateinit var statusBarComponent: StatusBar
     private lateinit var suggestionScroll: HorizontalScrollView
     private lateinit var keyboardToolbar: HorizontalScrollView
     private val saveSession = Runnable { captureSession(); persistSessions() }
@@ -216,7 +220,7 @@ class MainActivity : Activity() {
                     presetInputExpanded = prefs.getBoolean(prefKey("presetInputExpanded"), false)
                     panelState = PanelState.fromJson(prefs.getString("panelLayout", null))
                         .let { if (panelVisible) it else it.copy(maximized = false) }
-                    wide = resources.configuration.screenWidthDp >= 720 && resources.configuration.screenHeightDp >= 480
+                    explorerWidth = prefs.getInt("explorerWidth", 240)
                     createUi(); loadActive(ready.code, ready.draft)
                     // Bundle checkpoints are merged before reading; loadActive reconciles them once.
                     exportContent = saved?.getString("exportSnapshot")?.let { name ->
@@ -379,14 +383,8 @@ class MainActivity : Activity() {
 
         val content = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
-        if (wide) {
-            val explorer = makeExplorerPane()
-            explorerPane = explorer
-            explorer.visibility = if (explorerVisible) View.VISIBLE else View.GONE
-            content.addView(explorer, LinearLayout.LayoutParams(dp(if (resources.configuration.screenWidthDp >= 1000) 242 else 205), -1))
-            explorerDivider = View(this).apply { setBackgroundColor(border); visibility = explorer.visibility }
-            content.addView(explorerDivider, LinearLayout.LayoutParams(dp(1), -1))
-        }
+
+        // Responsive layout will be determined after measurement
         val work = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         content.addView(work, LinearLayout.LayoutParams(0, -1, 1f))
         buildEditor(work)
@@ -405,10 +403,20 @@ class MainActivity : Activity() {
         splitHost.addView(panelResize, LinearLayout.LayoutParams(-1, dp(PanelLayoutPolicy.HANDLE)))
         splitHost.addView(console, LinearLayout.LayoutParams(-1, dp(225)))
         work.addView(splitHost, LinearLayout.LayoutParams(-1, 0, 1f))
-        status = label("就绪", 11f, muted).apply {
-            setPadding(dp(12), dp(5), dp(12), dp(5)); setBackgroundColor(surface)
+
+        statusBarComponent = StatusBar(this, palette)
+        statusBarComponent.setText("就绪")
+        root.addView(statusBarComponent, LinearLayout.LayoutParams(-1, -2))
+
+        // Keep TextView reference for backward compatibility with existing code
+        status = TextView(this).apply {
+            text = "就绪"
+            textSize = 11f
+            setTextColor(muted)
+            setPadding(dp(12), dp(5), dp(12), dp(5))
+            setBackgroundColor(surface)
+            visibility = View.GONE // Hidden, statusBarComponent is used instead
         }
-        root.addView(status)
         applyEditorPreferences()
         if (Build.VERSION.SDK_INT >= 30) {
             root.setOnApplyWindowInsetsListener { _, insets ->
@@ -425,7 +433,119 @@ class MainActivity : Activity() {
                 val systemBars = root.rootWindowInsets?.let { it.stableInsetTop + it.stableInsetBottom } ?: 0
                 updateImeLayout(window.decorView.height - bounds.height() - systemBars > dp(100))
             }
+            // Update responsive layout on size changes
+            updateResponsiveLayout()
         }
+    }
+
+    private fun updateResponsiveLayout() {
+        if (!::root.isInitialized) return
+
+        val contentWidth = root.width
+        val contentHeight = root.height
+        if (contentWidth <= 0 || contentHeight <= 0) return
+
+        val widthDp = (contentWidth / resources.displayMetrics.density).toInt()
+        val heightDp = (contentHeight / resources.displayMetrics.density).toInt()
+
+        val geometry = WorkspaceGeometry(widthDp, heightDp, imeVisible)
+        currentGeometry = geometry
+
+        // Update explorer layout based on geometry
+        val explorerLayout = ExplorerLayout.resolve(geometry, explorerWidth)
+        updateExplorerLayout(explorerLayout)
+
+        // Update status bar with current file info
+        updateStatusBar()
+    }
+
+    private fun updateExplorerLayout(layout: ExplorerLayout) {
+        val content = root.getChildAt(2) as? LinearLayout ?: return
+
+        when (layout.mode) {
+            ExplorerMode.SIDEBAR -> {
+                // Show activity bar and sidebar if not already present
+                if (activityBar == null && layout.mode == ExplorerMode.SIDEBAR) {
+                    val bar = ActivityBar(this, palette) { dispatchCommand(IdeCommand.EXPLORER) }
+                    activityBar = bar
+                    content.addView(bar, 0, LinearLayout.LayoutParams(dp(ExplorerLayout.ACTIVITY_BAR_WIDTH), -1))
+                }
+
+                if (explorerPane == null) {
+                    val explorer = makeExplorerPane()
+                    explorerPane = explorer
+                    explorer.visibility = if (explorerVisible) View.VISIBLE else View.GONE
+
+                    val insertIndex = if (activityBar != null) 1 else 0
+                    content.addView(explorer, insertIndex, LinearLayout.LayoutParams(dp(layout.width), -1))
+
+                    // Add resize handle
+                    if (layout.resizable) {
+                        val handle = ExplorerResizeHandle(this)
+                        handle.setCallbacks(::resizeExplorer, ::finishExplorerResize)
+                        handle.setBackgroundColor(border)
+                        explorerResizeHandle = handle
+                        content.addView(handle, insertIndex + 1, LinearLayout.LayoutParams(dp(4), -1))
+                    }
+                } else {
+                    // Update existing explorer width
+                    explorerPane?.layoutParams = LinearLayout.LayoutParams(dp(layout.width), -1)
+                }
+            }
+            ExplorerMode.OVERLAY -> {
+                // Remove activity bar and sidebar in narrow mode
+                activityBar?.let { content.removeView(it) }
+                activityBar = null
+                explorerResizeHandle?.let { content.removeView(it) }
+                explorerResizeHandle = null
+            }
+        }
+    }
+
+    private fun resizeExplorer(delta: Float) {
+        val geometry = currentGeometry ?: return
+        val newWidth = WorkspaceLayoutPolicy.resizeExplorer(explorerWidth, delta, geometry.contentWidth, resources.displayMetrics.density)
+        newWidth?.let {
+            explorerWidth = it
+            explorerPane?.layoutParams = LinearLayout.LayoutParams(dp(it), -1)
+            explorerPane?.requestLayout()
+        }
+    }
+
+    private fun finishExplorerResize() {
+        // Persist explorer width
+        prefs.edit().putInt("explorerWidth", explorerWidth).apply()
+    }
+
+    private fun updateStatusBar() {
+        if (!::statusBarComponent.isInitialized || !::editor.isInitialized) return
+
+        val language = when {
+            activePath.endsWith(".cpp") || activePath.endsWith(".h") || activePath.endsWith(".hpp") -> "C++"
+            activePath.endsWith(".py") -> "Python"
+            else -> ""
+        }
+
+        val line = editor.layout?.getLineForOffset(editor.selectionStart)?.let { it + 1 } ?: 0
+        val lineStart = editor.layout?.getLineStart(maxOf(0, line - 1)) ?: 0
+        val column = editor.selectionStart - lineStart + 1
+
+        val indent = "Tab ${settings.tabWidth}"
+        val encoding = "UTF-8"
+
+        val state = when {
+            running -> "运行中"
+            workspaceBusy -> "文件操作中"
+            saving -> "保存中"
+            dirty -> "未保存"
+            else -> "就绪"
+        }
+
+        val layout = StatusBarLayout(language, line, column, indent, encoding, state)
+        statusBarComponent.setStatus(layout)
+
+        // Also update legacy status TextView for any remaining code that uses it
+        status.text = layout.format()
     }
 
     private fun decorateFileLabel(view: TextView, icon: IdeIcon, fullPath: String) {
@@ -656,7 +776,7 @@ class MainActivity : Activity() {
         // Before first measure, hiding stdin would make restoreSession.requestFocus() silently fail.
         if (width <= 0 || height <= 0) return
         val spec = PanelLayoutPolicy.resolve(panelState, panelVisible, width, height,
-            imeVisible, input.hasFocus(), settings.collapsePanelOnIme)
+            imeVisible, input.hasFocus(), settings.collapsePanelOnIme, settings.panelPreferSide)
         val previous = panelLayout
         val stamp = if (previous != null && previous.dock != spec.dock) capturePanelViewport() else null
         panelLayout = spec
@@ -755,6 +875,7 @@ class MainActivity : Activity() {
             includeFontPadding = false
             isSaveEnabled = false
             filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS))
+            onCaretChanged = { updateStatusBar() }
         }
         editorBody.addView(editor, LinearLayout.LayoutParams(0, -1, 1f))
         editorRegion.addView(editorBody, LinearLayout.LayoutParams(-1, 0, 1f))
@@ -885,11 +1006,13 @@ class MainActivity : Activity() {
 
     private fun showExplorer() {
         if (workspaceBusy) return
-        if (wide) {
+        val geometry = currentGeometry
+        if (geometry != null && geometry.showExplorerSidebar) {
             explorerVisible = !explorerVisible
             explorerPane?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
-            explorerDivider?.visibility = explorerPane?.visibility ?: View.GONE
-            if (explorerVisible) animateDecoration(explorerPane)
+            explorerResizeHandle?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
+            if (explorerVisible && explorerPane != null) animateDecoration(explorerPane)
+            activityBar?.setExplorerActive(explorerVisible)
             prefs.edit().putBoolean("explorerVisible", explorerVisible).apply()
             return
         }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.DocumentTreeTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-17T03:31:46" hostname="JUHE" time="0.153">
+  <properties/>
+  <testcase name="recoveryDoesNotAdoptAnExternalProvidersVersionForDifferentText" classname="com.codepocket.ide.DocumentTreeTest" time="0.034"/>
+  <testcase name="pythonModuleReadFailureAbortsInsteadOfRunningAnEmptyPlaceholder" classname="com.codepocket.ide.DocumentTreeTest" time="0.007"/>
+  <testcase name="traversalNamesCollisionsAndRecursiveMovesAreRejected" classname="com.codepocket.ide.DocumentTreeTest" time="0.007"/>
+  <testcase name="matchingRecoveryCheckpointUsesCurrentProviderVersion" classname="com.codepocket.ide.DocumentTreeTest" time="0.022"/>
+  <testcase name="partialProviderWritePreservesOriginalAndRevocationDoesNotWrite" classname="com.codepocket.ide.DocumentTreeTest" time="0.015"/>
+  <testcase name="runSnapshotContainsActualDataAndBinaryResourcesNotEditorPlaceholders" classname="com.codepocket.ide.DocumentTreeTest" time="0.03"/>
+  <testcase name="externalChangesAndRestoredDraftBaseCannotBeOverwritten" classname="com.codepocket.ide.DocumentTreeTest" time="0.016"/>
+  <testcase name="cyclicProviderTreeIsRejectedBeforeCreatingAnyChild" classname="com.codepocket.ide.DocumentTreeTest" time="0.003"/>
+  <testcase name="editsWriteToRealProviderAndNestedCrudKeepsOpaqueIds" classname="com.codepocket.ide.DocumentTreeTest" time="0.017"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

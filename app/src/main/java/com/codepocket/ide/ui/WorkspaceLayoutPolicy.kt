@@ -25,4 +25,32 @@ object WorkspaceLayoutPolicy {
     fun restorePreset(expanded: Boolean, focus: String, panelVisible: Boolean) =
         expanded || (focus == "stdin" && panelVisible)
     fun showSnippet(active: Boolean, ime: Boolean, height: Int) = active && !ime && height >= 360
+
+    /**
+     * Determines explorer layout based on actual measured content dimensions.
+     * Returns null when explorer should be hidden or use overlay mode.
+     */
+    fun explorerSidebar(width: Int, height: Int): Int? {
+        return if (width >= 600 && height >= 360) {
+            val maxWidth = (width * 0.4).toInt()
+            240.coerceIn(180, maxWidth)
+        } else null
+    }
+
+    /**
+     * Calculates constrained explorer width during resize.
+     * @param currentWidth The explorer's current width in dp
+     * @param delta The drag delta in pixels
+     * @param contentWidth Total available content width in dp
+     * @return New explorer width in dp, or null if not resizable
+     */
+    fun resizeExplorer(currentWidth: Int, delta: Float, contentWidth: Int, density: Float): Int? {
+        if (contentWidth < 600) return null
+        val minWidth = 180
+        val maxWidth = (contentWidth * 0.4).toInt()
+        if (maxWidth <= minWidth) return null
+
+        val deltaDp = (delta / density).toInt()
+        return (currentWidth + deltaDp).coerceIn(minWidth, maxWidth)
+    }
 }

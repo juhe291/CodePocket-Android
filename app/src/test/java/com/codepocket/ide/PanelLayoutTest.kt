@@ -5,18 +5,27 @@ import org.junit.Test
 
 class PanelLayoutTest {
     private fun layout(state: PanelState = PanelState(), width: Int = 400, height: Int = 700,
-        visible: Boolean = true, ime: Boolean = false, stdin: Boolean = false, collapse: Boolean = true) =
-        PanelLayoutPolicy.resolve(state, visible, width, height, ime, stdin, collapse)
+        visible: Boolean = true, ime: Boolean = false, stdin: Boolean = false, collapse: Boolean = true,
+        preferSide: Boolean = false) =
+        PanelLayoutPolicy.resolve(state, visible, width, height, ime, stdin, collapse, preferSide)
 
     @Test fun dockingUsesMeasuredWorkspaceWidthAndKeepsIndependentPreferences() {
         val state = PanelState(bottomFraction = .6f, sideFraction = .3f)
+        // P1-B: Bottom-first strategy - width < 840 uses bottom by default
         val bottom = layout(state, width = 599)
         assertEquals(PanelDock.BOTTOM, bottom.dock); assertEquals(420, bottom.extent)
-        val side = layout(state, width = 1000)
+        // Even 1000dp uses bottom unless preferSide is true
+        val bottomWide = layout(state, width = 1000)
+        assertEquals(PanelDock.BOTTOM, bottomWide.dock); assertEquals(420, bottomWide.extent)
+        // With preferSide and width >= 840, uses side
+        val side = layout(state, width = 1000, preferSide = true)
         assertEquals(PanelDock.SIDE, side.dock); assertEquals(300, side.extent)
-        // A 768dp window with a 205dp explorer has only 563dp for the split.
+        // A 768dp window: bottom (< 840)
         assertEquals(PanelDock.BOTTOM, layout(state, width = 768 - 205).dock)
-        assertEquals(PanelDock.SIDE, layout(state, width = 600).dock)
+        // 600dp: bottom by default
+        assertEquals(PanelDock.BOTTOM, layout(state, width = 600).dock)
+        // 600dp with preferSide: still bottom (< 840)
+        assertEquals(PanelDock.BOTTOM, layout(state, width = 600, preferSide = true).dock)
     }
 
     @Test fun visibilityAndImeRulesRespectExplicitMaximizeAndStdin() {
@@ -50,8 +59,11 @@ class PanelLayoutTest {
         assertEquals(700, layout(state, height = 1000).extent)
         layout(state, height = 200, ime = true, stdin = true)
         assertEquals(700, layout(state, height = 1000).extent)
-        val side = layout(state, width = 700)
-        assertEquals(436, side.extent)
+        // P1-B: 900dp width with preferSide uses side dock
+        val side = layout(state, width = 900, preferSide = true)
+        assertEquals(PanelDock.SIDE, side.dock)
+        // 900 * .75 = 675, but clamped by maximum (900 - HANDLE - editorMinimum = 900 - 24 - 240 = 636)
+        assertEquals(636, side.extent)
         assertEquals(.75f, state.sideFraction, .0001f)
     }
 

@@ -1,0 +1,79 @@
+{
+  "client_date": "2026-10-16",
+  "phase": "P0 follow-up; P1 not started",
+  "kotlin": {
+    "tests": 41,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "passed": 40
+  },
+  "python_source_passed": 13,
+  "apk_bytecode_passed": 13,
+  "lint": {
+    "errors": 0,
+    "warnings": 14
+  },
+  "build_seconds": 54,
+  "apk": {
+    "apk": "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+    "size_bytes": 21738146,
+    "sha256": "04f9be7a951a0ecf370e96e190810a9a8a2339b531c7219d32fde7b2779af83b",
+    "zip_crc_passed": true,
+    "abis": [
+      "arm64-v8a"
+    ],
+    "python_archives_checked": [
+      "assets/chaquopy/app.imy",
+      "assets/chaquopy/bootstrap.imy",
+      "assets/chaquopy/requirements-arm64-v8a.imy",
+      "assets/chaquopy/requirements-common.imy",
+      "assets/chaquopy/stdlib-arm64-v8a.imy",
+      "assets/chaquopy/stdlib-common.imy"
+    ],
+    "bundled_runner": "runner.pyc",
+    "bundled_runner_tests": 13,
+    "test_failures": 0,
+    "test_errors": 0,
+    "device_execution": false
+  },
+  "device_this_run": "No ADB device; user selected host tests first",
+  "previous_device_results": "../p0-followup/device-core-results.json",
+  "previous_device_failure": "../p0-followup/device-checkpoint-restored.xml",
+  "source_sha256": {
+    "app/src/main/AndroidManifest.xml": "213536c8d450cd9291d61f5a5519f3dc2cea8caf0b9359b58d9cd1aa312806f6",
+    "app/src/main/java/com/codepocket/ide/CodeEditor.kt": "a61773286092f524cfb51cf02b14dd710206e00da0cccc65b73468daa73f003b",
+    "app/src/main/java/com/codepocket/ide/DocumentTree.kt": "54c4aae1fd78f6ef360aeb0e338a525c74f3dfdb7d5c4a950178de94b81cc90d",
+    "app/src/main/java/com/codepocket/ide/DraftRecovery.kt": "982f6ce6cc40ac42e30d4e8df969e64f783e3bc9f974d0e72188becfc734438d",
+    "app/src/main/java/com/codepocket/ide/DraftStore.kt": "dc0375ea32c8b91023c160c8958e108f2e62fc92c84f8c1f7e143317ce89c1f5",
+    "app/src/main/java/com/codepocket/ide/EditorActions.kt": "3365d706f4449199ccd92452043ee3bd32a4a28de974fdce4b0dbad955204d03",
+    "app/src/main/java/com/codepocket/ide/EditorFeatures.kt": "6121ba2e0214f1913c4cd2f436d741c930e765caffe234bbb3cd5b74f62f6031",
+    "app/src/main/java/com/codepocket/ide/EditorSessions.kt": "d780b0613ff8dc188c2b6c2ee7863e96271e7cb64c5a6578420a3416bad01fb1",
+    "app/src/main/java/com/codepocket/ide/ExecutionEngines.kt": "2e3fddc8e6524c132fb1709724a8634a582021c585d7f0042c2cbb5d11f76f61",
+    "app/src/main/java/com/codepocket/ide/MainActivity.kt": "c349c25ebc73f7f02018e48403f86409ad052e8d36fa85ca0830cf3d45c70349",
+    "app/src/main/java/com/codepocket/ide/PythonExecutionService.kt": "4d28d09ae5a7fff1a10bc8d0227e8d759b0ac29a070983eb7a48a3ba50832c6c",
+    "app/src/main/java/com/codepocket/ide/RunControl.kt": "c79742b353e13b6ecd206e6d8823bc7ad762cd7466c9148a23362e857356a90f",
+    "app/src/main/java/com/codepocket/ide/RunSession.kt": "a27a80b62469fb1b59fee92363191ac466f35f552f37e3a232859c789dca6f71",
+    "app/src/main/java/com/codepocket/ide/SafGateway.kt": "5a19da8d6ea62ca81f2293b87eca0d62e9dedc658fa79dc97177bbb33a02ecde",
+    "app/src/main/java/com/codepocket/ide/Workspace.kt": "7d0460840ddb604c30ae2af52a5776ad91f3ce27ee0cc2a51358a16669ed5d6e",
+    "app/src/main/java/com/codepocket/ide/WorkspaceIo.kt": "1fc34351bd59376f763a9d77c97f7b3aa436d220cad3fed90b30f6bb4e4519a9",
+    "app/src/main/python/runner.py": "2dc0569b2ceacb2f3e44951114585a0def59ead13d8fe7d1c4336457ddce71fc",
+    "app/src/main/res/drawable/ic_app.xml": "5641b4df802385666a008fe14ee17c2303d25585d5404012a1e672d781dc6c12",
+    "app/src/main/res/values/styles.xml": "2536677908ad7749fe26ab668ab96742673745017c026ef65536591926a58bde",
+    "app/src/test/java/com/codepocket/ide/DocumentTreeTest.kt": "a48a4341a7156840b100e4dca25f0b389f5dabfe2794cdb7fd6a6f1385a8129d",
+    "app/src/test/java/com/codepocket/ide/DraftRecoveryTest.kt": "52f2d046a4556138879a3aed4d29354278f6340d9b5257029ae0485a63d7ce55",
+    "app/src/test/java/com/codepocket/ide/DraftStoreTest.kt": "f5e8c55d064c6c201157f17dabf7f384ba3a52c620dc6e2af14a474a80b682ca",
+    "app/src/test/java/com/codepocket/ide/EditorFeaturesTest.kt": "ac3e477a7cbe6ef74fc7cfb223677387fef4f6e96d221306fca7538657e45f7f",
+    "app/src/test/java/com/codepocket/ide/EditorSessionsTest.kt": "1bc94661d248987c4e3cba7334996f606bb42e0ed462a2a61939becc9a6683fa",
+    "app/src/test/java/com/codepocket/ide/RunControlTest.kt": "f9edc3b3cf54169c88649109b1362df9e94fd9f5ce4dec762eb81f61322b976c",
+    "app/src/test/java/com/codepocket/ide/WandboxEngineTest.kt": "fd92f53ca7103867be916c948de5c14976ce4d3c18ce09be265766d9931eb519",
+    "app/src/test/java/com/codepocket/ide/WorkspaceTest.kt": "5a1052a5eca5fa32fb7d951973e9f7dbc7ada7bcb3542430f08e8f49992d1fa6"
+  },
+  "protected_files_sha256": {
+    "docs/DEVELOPMENT_REQUIREMENTS.md": "55f5e64f6fbae4057ebe4fc30fa5d2501025230ec641976e885879e7d06657b8",
+    "app/build.gradle.kts": "e3fe4c40645b5df431906c3b5c6bf2fb02530681a38758b52707f081383c24b3",
+    "app/src/main/AndroidManifest.xml": "213536c8d450cd9291d61f5a5519f3dc2cea8caf0b9359b58d9cd1aa312806f6",
+    ".github/workflows/build-apk.yml": "b8606394f5f8fdddcc5b5a9814626b51c96abd46cf69aea1edd57e639b2f896b",
+    "app/src/main/python/runner.py": "2dc0569b2ceacb2f3e44951114585a0def59ead13d8fe7d1c4336457ddce71fc"
+  }
+}

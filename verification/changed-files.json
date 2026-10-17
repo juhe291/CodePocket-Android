@@ -1,0 +1,35 @@
+{
+  "modified": [
+    ".github/workflows/build-apk.yml",
+    ".gitignore",
+    "README.md",
+    "app/build.gradle.kts",
+    "app/src/main/AndroidManifest.xml",
+    "app/src/main/java/com/codepocket/ide/EditorFeatures.kt",
+    "app/src/main/java/com/codepocket/ide/ExecutionEngines.kt",
+    "app/src/main/java/com/codepocket/ide/MainActivity.kt",
+    "app/src/main/java/com/codepocket/ide/Workspace.kt",
+    "app/src/main/python/runner.py",
+    "app/src/main/res/values/styles.xml",
+    "tests/test_runner.py"
+  ],
+  "added": [
+    "app/src/main/java/com/codepocket/ide/CodeEditor.kt",
+    "app/src/main/java/com/codepocket/ide/EditorActions.kt",
+    "app/src/main/java/com/codepocket/ide/RunSession.kt",
+    "app/src/test/java/com/codepocket/ide/EditorFeaturesTest.kt",
+    "app/src/test/java/com/codepocket/ide/WandboxEngineTest.kt",
+    "app/src/test/java/com/codepocket/ide/WorkspaceTest.kt",
+    "docs/DEVICE_TESTS.md",
+    "docs/RESUME.md",
+    "docs/VERIFICATION.md",
+    "gradle/wrapper/gradle-wrapper.jar",
+    "gradle/wrapper/gradle-wrapper.properties",
+    "gradlew",
+    "gradlew.bat",
+    "scripts/build-local.ps1",
+    "scripts/check_wandbox.py",
+    "scripts/verify_apk.py"
+  ],
+  "deleted": []
+}
