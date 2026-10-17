@@ -1,6 +1,19 @@
 # CodePocket 当前交接状态
 
-## 当前：P1-C 编辑分析首批已验证（2026-10-17）
+## 当前：Sora隔离原型已做主机验证（2026-10-17）
+
+- 基线`ffe8249`；[报告](P1_EDITOR_LAB.md)。同一Gradle工程的可选`editor-lab`模块，仅`-Pcodepocket.editorLab=true`启用；独立包名/临时草稿，原生/Sora基础编辑、主题和光标动画比较。默认IDE代码/编辑器/文件/SAF/运行与依赖保留。
+- 实验固定Sora0.23.7；真实Content/Indexer/UndoManager14/14，Gradle 27s，Lint0错误/6警告。0.24.4直接接入出现Kotlin2.2/1.9元数据失败，Java原型下旧Lint也有不兼容日志，已弃选；没有屏蔽元数据检查或升级全项目。
+- 默认IDE强制构建1m 56s、62/62任务执行；173项Kotlin中172通过/1 Windows符号链接跳过、Python源码/实际APK字节码各13/13、模板各7/7，Lint0错误/11警告。两个APK的CRC/v2签名/16KB ZIP对齐/关键类定义、依赖/源码保护已核对。
+- [默认APK](../dist/CodePocket-editor-native-debug.apk)：21,861,894字节，SHA256 `7408f728e5ada1a0b07208d314ea15b31e73cfa06b506e6d8f33cebf7c0ec4a2`；[实验APK](../dist/CodePocket-Sora-editor-lab-debug.apk)：1,650,202字节，SHA256 `15ad39d0969a186b8f67582bbbc9cb798e86b93480604cf78afb1a27e4e44e01`。另有[实验源码与许可材料包](../dist/CodePocket-Sora-editor-lab-bundle.zip)；证据`verification/editor-lab-2026-10-17/results.json`，原失败/中间日志保留。
+- App的83项原输入哈希未改；默认runtime为Kotlin1.9.25/无Sora，实验为Sora0.23.7/Kotlin2.1.21。原Actions未改，新增手动实验workflow通过YAML解析，没有远端执行/push/发布。原需求与工具/设备备份继续保留。
+- 默认APK强制重编译后Dex分片重排，少一个已验证无引用的synthetic枚举辅助类；其他类定义保留。Python bytecode payload相同，仅头部8/9/10及构建元数据不同；不是删除功能或体积优化。
+- **下一批继续完整生产EditorPort事务/历史/视口/诊断契约，再接语言适配与现有候选/片段/参数/SAF会话。** 隔离原型已做，但尚未接生产Port/语言包/LSP或默认迁移；再继续其他P1手势/动画/设置/真实Python流式会话，P0缺陷优先，P2/P3保留。
+- 实机统一后置，不请求设备；本轮无Android运行时/截图/IME/蓝牙键鼠/FPS/新Wandbox证据。实验只有临时草稿，未运行用户项目。源码材料含Maven sources.jar，完整上游仓库归档下载未取得，正式许可/对应源码/重链接交付仍需核验。
+- 实际仓库`C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`；配置的OneDrive cwd不存在，操作指定实际workdir并按需沙箱升级，保留.tools/dist/verification，不改Git配置。
+
+
+## 历史：P1-C 编辑分析首批已验证（2026-10-17）
 
 - 用户继续开发，基于 `62c3750` 接续；[本批报告](P1_EDITOR_ANALYSIS.md)。保留原生 CodeEditor，已实际接入只读快照/装饰 EditorPort、后台高亮/括号扫描、缓存和迟到结果保护，补组合区结束监听，修复已测试复现的长字符串栈溢出。
 - 新增20项Kotlin全部通过；完整173项中172通过/1 Windows符号链接跳过。构建1m 8s，62任务19执行/43未变化；Python源码/实际APK字节码各13/13、生成模板各7/7，Lint0错误/11警告；CRC/ABI/v2签名/16KB ZIP对齐及关键Dex类定义通过。

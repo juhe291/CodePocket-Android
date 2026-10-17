@@ -1,0 +1,14 @@
+CodePocket Editor Lab (experimental, separate application)
+
+Sora Editor 0.23.7 - https://github.com/Rosemoe/sora-editor/tree/0.23.7
+Copyright (C) 2020-2024 Rosemoe
+License: GNU Lesser General Public License v2.1 or later. Full LGPL 2.1 is included in this APK.
+The Sora AAR is used unmodified.
+Exact sources: https://repo.maven.apache.org/maven2/io/github/rosemoe/editor/0.23.7/editor-0.23.7-sources.jar
+The matching sources, POM, metadata and license are also provided with the local experiment bundle.
+AndroidX annotation 1.9.1 / collection 1.5.0: Apache License 2.0.
+Kotlin stdlib 2.1.21: Apache License 2.0; JetBrains annotations 13.0: Apache License 2.0.
+Embedded dependency license resources are retained. This experiment does not decide CodePocket's own license.
+
+临时草稿不读写 CodePocket 的项目、SAF、运行器或设置。切换组件只传递文本与归一化选区，组件间撤销历史不迁移；旋转保留文本，进程结束后草稿清空。
+当前仅比较原生 EditText 与 Sora 的基础编辑/光标；未接语言包、生产 EditorPort、语义补全或运行后端。触屏/键鼠/IME/卓易通/FPS 仍待统一设备验收。

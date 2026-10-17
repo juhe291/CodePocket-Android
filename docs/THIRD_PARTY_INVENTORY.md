@@ -26,3 +26,8 @@ POM 原文快照及机器可读索引位于 [license-metadata.json](../verificat
 
 
 2026-10-17 新需求审查仅复核候选官方资料，**没有加入新依赖或资源**。详见 [编辑器/终端评估](UI_AUDIT_2026-10-17.md) 与 [计划](UI_REDESIGN_PLAN_2026-10-17.md)。Sora 上游声明 LGPL-2.1-or-later，发布页 0.24.6 为 Pre-release，不能直接称稳定或许可证组合已通过；Tree-sitter 核心、Jedi、xterm.js 的上游许可为 MIT，但 Android binding/语法包/传递依赖仍需按精确制品另核。Codicons 当前根许可证为 CC BY 4.0，不能默认所有图标都是 MIT。原项目自身 LICENSE/完整第三方通知仍未补齐，本轮不替项目所有者选择许可证。
+
+
+2026-10-17 P1-C：新增显式启用的独立 `editor-lab`，默认App依赖和原APK入口不变。实验固定 `io.github.rosemoe:editor:0.23.7`（LGPL-2.1-or-later，上游版权头），真实AAR minSdk21/Java17/Kotlin元数据2.1.0/无原生.so，精确制品哈希与Maven module一致。实验runtime为AndroidX annotation1.9.1/collection1.5.0/Kotlin stdlib2.1.21及annotations13.0；POM与原内包许可资源指向Apache2.0，未把外层Sora许可套用于所有依赖。
+
+实验APK含LGPL2.1正文、Sora版权/精确源码链接、依赖说明和原AndroidX许可资源；本地材料包提供AAR/POM/module/sources.jar及当前工程源。未取得完整上游Git仓库归档，正式分发的完整对应源码/重链接/通知仍需核验；项目自身许可证未替所有者选择。0.24.4曾因Kotlin编译/Lint元数据不兼容弃选，未分发为本批实验版本。详见[P1_EDITOR_LAB.md](P1_EDITOR_LAB.md)及verification/editor-lab-2026-10-17/results.json。

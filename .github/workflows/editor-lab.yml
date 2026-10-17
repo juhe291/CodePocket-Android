@@ -1,0 +1,44 @@
+name: Build Editor Lab (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  editor-lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - uses: android-actions/setup-android@v3
+      - name: Install SDK 35
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Test and build isolated editor experiment
+        run: bash ./gradlew :editor-lab:testDebugUnitTest :editor-lab:lintDebug :editor-lab:assembleDebug -Pcodepocket.editorLab=true --stacktrace --no-daemon
+      - name: Verify experiment APK
+        run: |
+          unzip -t editor-lab/build/outputs/apk/debug/editor-lab-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose editor-lab/build/outputs/apk/debug/editor-lab-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 editor-lab/build/outputs/apk/debug/editor-lab-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CodePocket-Sora-editor-lab-debug-apk
+          path: editor-lab/build/outputs/apk/debug/editor-lab-debug.apk
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: CodePocket-editor-lab-reports
+          path: |
+            editor-lab/build/reports/
+            editor-lab/build/test-results/
+          if-no-files-found: warn

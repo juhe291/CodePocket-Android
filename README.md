@@ -1,10 +1,12 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-17：继续完成编辑器后台分析与稳定性本批。** 高亮/括号扫描移到后台，补上结果过期与组合提交保护，修复长字符串正则栈溢出；原 UI 接续成果保留。见 [编辑器本批结果](docs/P1_EDITOR_ANALYSIS.md) 和 [上批 UI 结果](docs/UI_RESUME_2026-10-17.md)。完整 EditorPort/Sora 隔离验证仍在后续计划中。
+**2026-10-17：已完成Sora隔离原型及默认IDE回归。** 现有工程增加显式启用的独立实验模块，实际验证Sora文本/索引/撤销；日常IDE继续保留原生编辑器、项目和运行路径。见[本批结果](docs/P1_EDITOR_LAB.md)，前批[后台分析与稳定性](docs/P1_EDITOR_ANALYSIS.md)继续保留。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [Debug APK](dist/CodePocket-editor-analysis-debug.apk)** 21.01MiB，Android7.0+ / arm64-v8a。Kotlin173项中172通过、1跳过；Python源码/实际APK字节码各13/13，生成模板Python/C++17各7/7；Lint0错误/11警告，签名/CRC/ABI/对齐通过。实机按要求统一后置，未验收UI/键鼠/IME/帧率。
+**最新 [默认IDE Debug APK](dist/CodePocket-editor-native-debug.apk)** 20.85MiB，Android7.0+ / arm64-v8a。强制重跑62/62构建任务，Kotlin173中172通过/1跳过，Python源码/字节码各13/13，模板各7/7，Lint0错误/11警告；签名/CRC/对齐通过。
+
+另有[Sora实验APK](dist/CodePocket-Sora-editor-lab-debug.apk)和[实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)，使用独立包名/临时草稿；14项真实库测试通过，尚未接入IDE功能。实机按要求统一后置，未验收UI/键鼠/IME/FPS。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
 - [P1 内置函数参数参考与验证](docs/P1_SIGNATURE_HELP.md)
@@ -79,6 +81,7 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 
 | 模块 | 职责 |
 | --- | --- |
+| editor-lab（显式启用） | 同一工程的独立Sora/原生基础编辑比较；不连接项目或运行器 |
 | ui/MainToolbar / IdeCommandMenu / IdeCommands / WorkspaceLayoutPolicy | 实测宽度的单排主栏、原生命令入口与焦点/状态策略 |
 | ui/EditorToolbar / InteractionState | 上下文编辑入口、返回/状态/只清显示规则 |
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |
@@ -131,7 +134,9 @@ Kotlin 测试完成后，可用 `python scripts/verify_snippets.py --junit app/b
 - 草稿为约 200 ms 检查点；检查点写入前直接强杀/掉电仍可能丢失最后少量输入，不承诺每次按键即时落盘。
 - Python 不是安全沙箱，独立进程仍具有本 App 的 UID 权限；不保证后台长期常驻。运行后继续编辑可能使历史错误行号偏移。
 - 外部项目结构被其他应用改变后须重新载入。C++ 仍为单文件，不上传本地头文件或链接多个 cpp；本地 C++ 方案和批量用例属于 P2。
-- P1 第一批设置、独立词法主题和当前文件查找替换已实现；面板拖动/最大化/恢复和原生词法候选列表已接入；内置片段与占位符已接入；常用内置函数调用参数参考已接入；后台项目搜索已接入；完整 EditorPort/Sora 隔离、动画、语义签名和流式程序终端仍待开发。第三方许可证完整通知包仍待完善。
+- P1 第一批设置、独立词法主题和当前文件查找替换已实现；面板拖动/最大化/恢复和原生词法候选列表已接入；内置片段与占位符已接入；常用内置函数调用参数参考已接入；后台项目搜索已接入；Sora隔离原型已接入；完整生产EditorPort/迁移适配、语言包、动画、语义签名和流式程序终端仍待开发。第三方许可证完整通知包仍待完善。
 - 2026-10-15 增补：动画系统和 VS Code 风格补全界面归入 P1；C++ / Python 深度语义补全归入 P2。Sora、clangd、Jedi 等仅列为待评估候选，尚未集成；当前为原生候选列表上的基础词法补全，成员语义未实现。动画须尊重系统减少动画及 App 开关，60 FPS/高刷新率与输入法、光标、弹窗配合均待实测。
 
 2026-10-17 审查后用户已确认继续；P1-A 手机竖屏外壳已完成代码与主机验证，P1-B与本批UI接续均已开发并做主机验证，继续P1余项。继续按 P1 → P2 → P3 分批开发、主机验证和保存 APK，发现 P0 缺陷仍优先回修。依据 2026-10-16 最新指示，实机验收统一放到功能开发完成后，不作为继续开发的前置条件；历史记录保留。
+
+独立实验的手动构建工作流为 `.github/workflows/editor-lab.yml`；不改变原默认IDE的构建/上传流程。精确依赖和已验证范围见[P1实验报告](docs/P1_EDITOR_LAB.md)。
