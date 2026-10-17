@@ -39,7 +39,7 @@ class ShellUiTest {
         for (width in listOf(240, 320, 360, 393, 600, 840, 1200)) {
             val spec = WorkspaceLayoutPolicy.toolbar(width)
             assertTrue(spec.explorer); assertTrue(spec.run); assertTrue(spec.title)
-            assertEquals(48, spec.control); assertEquals(144, spec.controlsWidth)
+            assertEquals(48, spec.control); assertEquals(if (width >= 288) 192 else 144, spec.controlsWidth)
         }
     }
 
@@ -48,29 +48,38 @@ class ShellUiTest {
         assertFalse(mini.run); assertFalse(mini.explorer)
         val narrow = WorkspaceLayoutPolicy.toolbar(180)
         assertTrue(narrow.run); assertFalse(narrow.explorer); assertTrue(narrow.title)
-        assertTrue(IdeCommand.RUN_STOP in IdeCommands.menuCommands)
-        assertTrue(IdeCommand.EXPLORER in IdeCommands.menuCommands)
+        // Commands are now organized by context rather than all in one menu
+        val fallback = IdeCommands.globalMenu(mini, false)
+        assertTrue(IdeCommand.RUN_STOP in fallback)
+        assertTrue(IdeCommand.EXPLORER in fallback)
+        assertTrue(IdeCommand.SEARCH in fallback)
+        assertTrue(IdeCommand.PANEL in fallback)
     }
 
     @Test fun panelToolbarNeverOverflowsAndKeepsHiddenActionsInItsMenu() {
         for (width in 0..1000) {
             val spec = WorkspaceLayoutPolicy.panelToolbar(width)
-            val controls = 1 + (if (spec.preset) 1 else 0) + (if (spec.maximize) 1 else 0) + (if (spec.close) 1 else 0)
+            val controls = 1 + (if (spec.preset) 1 else 0) + (if (spec.maximize) 1 else 0) + (if (spec.close) 1 else 0) + (if (spec.clear) 1 else 0)
             assertTrue(controls * minOf(width, 48) <= width)
         }
         assertFalse(WorkspaceLayoutPolicy.panelToolbar(140).preset)
         assertTrue(WorkspaceLayoutPolicy.panelToolbar(240).maximize)
     }
 
-    @Test fun allLegacyTwentyOneActionsRemainReachableExactlyOnce() {
+    @Test fun allLegacyActionsAndNewCommandsHaveRealTouchSurfaces() {
+        // Validate actual collections used by native entry points, not just enum membership.
         val legacy = listOf(IdeCommand.SETTINGS, IdeCommand.FIND, IdeCommand.REPLACE, IdeCommand.GOTO_LINE,
             IdeCommand.THEME, IdeCommand.HELP, IdeCommand.NEW_FILE, IdeCommand.NEW_FOLDER, IdeCommand.WORKSPACE,
             IdeCommand.IMPORT_COPY, IdeCommand.EXPORT, IdeCommand.RELOAD, IdeCommand.RECOVER, IdeCommand.SAVE,
             IdeCommand.TAB, IdeCommand.UNINDENT, IdeCommand.BRACES, IdeCommand.PARENS, IdeCommand.COMPLETE,
             IdeCommand.SIGNATURE, IdeCommand.SNIPPET)
-        for (command in legacy) assertEquals(command.name, 1, IdeCommands.menuCommands.count { it == command })
-        assertEquals(IdeCommand.entries.toSet(), IdeCommands.menuCommands.toSet())
-        assertEquals(IdeCommand.entries.size, IdeCommands.menuCommands.size)
+        val surfaces = listOf(IdeCommands.settingsMenuItems, IdeCommands.editorToolbarItems, IdeCommands.editorMenuItems,
+            IdeCommands.explorerToolbarItems, IdeCommands.explorerMenuItems, IdeCommands.terminalToolbarItems,
+            IdeCommands.terminalMenuItems, IdeCommands.symbolBarItems,
+            IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(0), false))
+        assertEquals(IdeCommand.entries.toSet(), surfaces.flatten().toSet())
+        assertTrue(legacy.all { it in surfaces.flatten() })
+        for (surface in surfaces) assertEquals(surface.size, surface.distinct().size)
         assertTrue(IdeCommand.IMPORT_COPY.title.contains("副本"))
     }
 
@@ -84,7 +93,7 @@ class ShellUiTest {
 
     @Test fun unloadedBufferCannotRunExportOrMutateFiles() {
         val unloaded = editing.copy(loaded = false)
-        assertEquals(setOf(IdeCommand.SETTINGS, IdeCommand.HELP), IdeCommand.entries.filter { IdeCommands.enabled(it, unloaded) }.toSet())
+        assertEquals(setOf(IdeCommand.THEME, IdeCommand.SETTINGS, IdeCommand.SHORTCUTS, IdeCommand.HELP), IdeCommand.entries.filter { IdeCommands.enabled(it, unloaded) }.toSet())
     }
 
     @Test fun editorOnlyCommandsCannotStealStdinFocusOrModifySource() {

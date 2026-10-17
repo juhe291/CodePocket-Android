@@ -2,79 +2,63 @@ package com.codepocket.ide.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.PointerIcon
 import android.view.View
 import android.view.ViewConfiguration
-import android.view.accessibility.AccessibilityEvent
+import kotlin.math.abs
 
-/**
- * Vertical drag handle for resizing the explorer sidebar.
- * Placed between explorer and editor, dragging left/right adjusts width.
- */
+/** Owns only its 24dp divider; total deltas are measured from a stable gesture start. */
 @SuppressLint("ClickableViewAccessibility")
 class ExplorerResizeHandle(context: Context) : View(context) {
-
-    private var dragStart: Pair<Float, Int>? = null
-    private var onDrag: ((delta: Float) -> Unit)? = null
-    private var onFinish: (() -> Unit)? = null
-
+    private var origin: Float? = null
+    private val slop = ViewConfiguration.get(context).scaledTouchSlop
+    private var moved = false
+    private var begin: () -> Unit = {}
+    private var drag: (Float) -> Unit = {}
+    private var finish: () -> Unit = {}
+    private val pen = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF777777.toInt() }
     init {
-        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
-        contentDescription = "拖动调整资源管理器宽度"
-
-        setOnTouchListener { _, event ->
-            when (event.actionMasked) {
-                MotionEvent.ACTION_DOWN -> {
-                    dragStart = event.rawX to width
-                    parent?.requestDisallowInterceptTouchEvent(true)
-                    sendAccessibilityEvent(AccessibilityEvent.TYPE_TOUCH_INTERACTION_START)
-                    true
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    dragStart?.let { (startX, _) ->
-                        val delta = event.rawX - startX
-                        onDrag?.invoke(delta)
-                    }
-                    true
-                }
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    if (dragStart != null) {
-                        dragStart = null
-                        parent?.requestDisallowInterceptTouchEvent(false)
-                        onFinish?.invoke()
-                        sendAccessibilityEvent(AccessibilityEvent.TYPE_TOUCH_INTERACTION_END)
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
-
-        // Increase touch target for dragging
-        val slop = ViewConfiguration.get(context).scaledTouchSlop
-        setOnHoverListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_HOVER_ENTER -> {
-                    // Could show visual feedback
-                    true
-                }
-                MotionEvent.ACTION_HOVER_EXIT -> {
-                    true
-                }
-                else -> false
-            }
-        }
+        isFocusable = true; isClickable = true
+        contentDescription = "调整资源管理器宽度；左右方向键调整，点击恢复默认"
+        pointerIcon = PointerIcon.getSystemIcon(context, PointerIcon.TYPE_HORIZONTAL_DOUBLE_ARROW)
     }
-
-    fun setCallbacks(onDrag: (delta: Float) -> Unit, onFinish: () -> Unit) {
-        this.onDrag = onDrag
-        this.onFinish = onFinish
+    fun setCallbacks(onDrag: (Float) -> Unit, onFinish: () -> Unit, onBegin: () -> Unit = {}) {
+        cancelGesture(); drag = onDrag; finish = onFinish; begin = onBegin
     }
-
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        pen.strokeWidth = resources.displayMetrics.density * if (isPressed || hasFocus()) 3f else 1f
+        canvas.drawLine(width / 2f, 0f, width / 2f, height.toFloat(), pen)
+    }
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isEnabled) { cancelGesture(); return false }
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> { origin = event.rawX; moved = false; begin(); isPressed = true
+                parent?.requestDisallowInterceptTouchEvent(true); invalidate(); return true }
+            MotionEvent.ACTION_MOVE -> { val start = origin ?: return false
+                val delta = event.rawX - start
+                if (abs(delta) > slop) moved = true
+                if (moved) drag(delta)
+                return true }
+            MotionEvent.ACTION_UP -> { val click = origin != null && !moved; cancelGesture(); if (click) performClick(); return true }
+            MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_POINTER_DOWN -> { cancelGesture(); return true }
+        }
+        return super.onTouchEvent(event)
+    }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (isEnabled && keyCode in listOf(KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT)) {
+            begin(); drag(IdeControls.dp(context, if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) -24 else 24).toFloat()); finish(); return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
     fun cancelGesture() {
-        if (dragStart != null) {
-            dragStart = null
-            parent?.requestDisallowInterceptTouchEvent(false)
-        }
+        if (origin != null) { origin = null; finish() }
+        isPressed = false; parent?.requestDisallowInterceptTouchEvent(false); invalidate()
     }
+    override fun performClick(): Boolean { super.performClick(); return true }
+    override fun onDetachedFromWindow() { cancelGesture(); super.onDetachedFromWindow() }
 }

@@ -37,6 +37,7 @@ import android.widget.TextView
 import com.codepocket.ide.animation.Animations
 import com.codepocket.ide.search.ProjectSearch
 import com.codepocket.ide.ui.*
+import com.codepocket.ide.terminal.TerminalView
 import java.io.File
 import org.json.JSONArray
 
@@ -124,6 +125,7 @@ class MainActivity : Activity() {
             if (::editor.isInitialized) { editor.isEnabled = !value; if (value) { hideCompletion(); clearSnippet() } }
             if (::input.isInitialized) input.isEnabled = !value
             if (::panelResize.isInitialized) panelResize.isEnabled = !value && panelLayout?.resizable == true
+            explorerResizeHandle?.isEnabled = !value
             updateMainToolbarState()
         }
     private var saving = false
@@ -140,10 +142,16 @@ class MainActivity : Activity() {
     private lateinit var input: EditText
     private lateinit var numbers: TextView
     private lateinit var status: TextView
-    private lateinit var consoleText: TextView
+    private lateinit var consoleText: TerminalView
     private lateinit var tabsRow: LinearLayout
     private lateinit var suggestionRow: LinearLayout
-    private lateinit var explorerList: LinearLayout
+    private var sidebarExplorerList: LinearLayout? = null
+    private var overlayExplorerList: LinearLayout? = null
+    private lateinit var contentHost: LinearLayout
+    private lateinit var editorToolbar: EditorToolbar
+    private var explorerDragStartWidth = 240
+    private var explorerDragViewport: PanelViewport? = null
+    private val outputDisplay = OutputDisplayState()
     private lateinit var mainToolbar: MainToolbar
     private lateinit var outputTabs: LinearLayout
     private lateinit var outputRegion: LinearLayout
@@ -257,7 +265,10 @@ class MainActivity : Activity() {
             runOnUiThread {
                 if (isDestroyed) return@runOnUiThread
                 workspaceBusy = false
-                value.onSuccess(done).onFailure { alert("${it.message}\n未保存内容和恢复草稿会保留；可导出或重新选择目录。") }
+                value.onSuccess(done).onFailure { error ->
+                    status.text = getString(R.string.file_operation_failed, error.message.orEmpty())
+                    alert("${error.message}\n未保存内容和恢复草稿会保留；可导出或重新选择目录。")
+                }
             }
         }
     }
@@ -289,7 +300,10 @@ class MainActivity : Activity() {
     override fun onPause() {
         super.onPause()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
+        explorerResizeHandle?.cancelGesture(); projectSearch?.cancel()
+        listOfNotNull(explorerPane, activityBar).forEach(Animations::cancel)
         handler.removeCallbacks(refreshEditor); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
+        currentGeometry?.let { updateExplorerLayout(ExplorerLayout.resolve(it, explorerWidth)) }
         persist()
     }
 
@@ -321,6 +335,7 @@ class MainActivity : Activity() {
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null
         handler.removeCallbacksAndMessages(null)
+        projectSearch?.cancel(); explorerResizeHandle?.cancelGesture()
         toolDialog?.dismiss(); commandMenu?.dismiss(); commandMenu = null
         hideCompletion(); completionExecutor.shutdownNow(); signatureExecutor.shutdownNow(); completionConsumedKeys.clear()
         listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
@@ -356,6 +371,10 @@ class MainActivity : Activity() {
         commandMenu?.dismiss(); commandMenu = null
         hideCompletion(); clearSnippet(); completionPopup = null; signaturePopup = null
         if (::panelResize.isInitialized) panelResize.cancelGesture()
+        explorerResizeHandle?.cancelGesture()
+        listOfNotNull(activityBar, explorerPane).forEach(Animations::cancel)
+        activityBar = null; explorerPane = null; explorerResizeHandle = null
+        sidebarExplorerList = null; overlayExplorerList = null; currentGeometry = null
         panelDragViewport = null; panelLayout = null
         window.statusBarColor = surface
         window.navigationBarColor = panel
@@ -368,23 +387,32 @@ class MainActivity : Activity() {
 
         mainToolbar = MainToolbar(this, palette,
             { dispatchCommand(IdeCommand.EXPLORER) }, { dispatchCommand(IdeCommand.RUN_STOP) },
-            ::showCommandMenu, { alert("${workspace.title} / $activePath") })
+            ::showCommandMenu, { dispatchCommand(IdeCommand.WORKSPACE) }, { dispatchCommand(IdeCommand.SEARCH) })
         root.addView(mainToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         updateShellTitle()
         keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
         val keyRow = LinearLayout(this).apply { setBackgroundColor(surface) }
-        listOf("Tab" to IdeCommand.TAB, "⇤" to IdeCommand.UNINDENT,
-            "{}" to IdeCommand.BRACES, "[]" to IdeCommand.BRACKETS, "()" to IdeCommand.PARENS,
-            ";" to IdeCommand.SEMICOLON, "=" to IdeCommand.EQUALS, ":" to IdeCommand.COLON,
-            "←" to IdeCommand.LEFT, "→" to IdeCommand.RIGHT, "补全" to IdeCommand.COMPLETE,
-            "参数" to IdeCommand.SIGNATURE, "片段" to IdeCommand.SNIPPET).forEach { (name, command) ->
+        IdeCommands.symbolBarItems.forEach { command ->
+            val name = when (command) {
+                IdeCommand.TAB -> "Tab"
+                IdeCommand.UNINDENT -> "⇤"
+                IdeCommand.BRACES -> "{}"
+                IdeCommand.BRACKETS -> "[]"
+                IdeCommand.PARENS -> "()"
+                IdeCommand.SEMICOLON -> ";"
+                IdeCommand.EQUALS -> "="
+                IdeCommand.COLON -> ":"
+                IdeCommand.LEFT -> "←"
+                IdeCommand.RIGHT -> "→"
+                else -> command.title.substringBefore("  ")
+            }
             keyRow.addView(IdeControls.key(this, palette, name, command.title) { dispatchCommand(command) },
                 LinearLayout.LayoutParams(-2, dp(DesignTokens.TOUCH)))
         }
         keyboardToolbar.addView(keyRow)
-        root.addView(keyboardToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
 
         val content = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        contentHost = content
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
 
         // Responsive layout will be determined after measurement
@@ -407,6 +435,7 @@ class MainActivity : Activity() {
         splitHost.addView(console, LinearLayout.LayoutParams(-1, dp(225)))
         work.addView(splitHost, LinearLayout.LayoutParams(-1, 0, 1f))
 
+        root.addView(keyboardToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         statusBarComponent = StatusBar(this, palette)
         statusBarComponent.setText("就绪")
         root.addView(statusBarComponent, LinearLayout.LayoutParams(-1, -2))
@@ -418,8 +447,13 @@ class MainActivity : Activity() {
             setTextColor(muted)
             setPadding(dp(12), dp(5), dp(12), dp(5))
             setBackgroundColor(surface)
-            visibility = View.GONE // Hidden, statusBarComponent is used instead
+            visibility = View.GONE // Message bridge; the visible status bar must retain save/IO errors.
         }
+        status.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: Editable?) { updateStatusBar() }
+        })
         applyEditorPreferences()
         if (Build.VERSION.SDK_INT >= 30) {
             root.setOnApplyWindowInsetsListener { _, insets ->
@@ -442,128 +476,71 @@ class MainActivity : Activity() {
     }
 
     private fun updateResponsiveLayout() {
-        if (!::root.isInitialized) return
-
-        val contentWidth = root.width
-        val contentHeight = root.height
-        if (contentWidth <= 0 || contentHeight <= 0) return
-
-        val widthDp = (contentWidth / resources.displayMetrics.density).toInt()
-        val heightDp = (contentHeight / resources.displayMetrics.density).toInt()
-
-        val geometry = WorkspaceGeometry(widthDp, heightDp, imeVisible)
+        if (!::contentHost.isInitialized || contentHost.width <= 0 || contentHost.height <= 0) return
+        val geometry = WorkspaceGeometry.measure(contentHost, imeVisible)
+        if (currentGeometry == geometry) return
         currentGeometry = geometry
-
-        // Update explorer layout based on geometry
-        val explorerLayout = ExplorerLayout.resolve(geometry, explorerWidth)
-        updateExplorerLayout(explorerLayout)
-
-        // Update status bar with current file info
-        updateStatusBar()
+        updateExplorerLayout(ExplorerLayout.resolve(geometry, explorerWidth))
     }
 
     private fun updateExplorerLayout(layout: ExplorerLayout) {
-        val content = root.getChildAt(2) as? LinearLayout ?: return
-        val animationsEnabled = settings.animations
-
-        when (layout.mode) {
-            ExplorerMode.SIDEBAR -> {
-                // Show activity bar and sidebar if not already present
-                if (activityBar == null && layout.mode == ExplorerMode.SIDEBAR) {
-                    val bar = ActivityBar(this, palette) { dispatchCommand(IdeCommand.EXPLORER) }
-                    activityBar = bar
-                    content.addView(bar, 0, LinearLayout.LayoutParams(dp(ExplorerLayout.ACTIVITY_BAR_WIDTH), -1))
-
-                    if (animationsEnabled) {
-                        Animations.fadeIn(bar, Animations.DURATION_SHORT, true)
-                    }
-                }
-
-                if (explorerPane == null) {
-                    val explorer = makeExplorerPane()
-                    explorerPane = explorer
-                    explorer.visibility = if (explorerVisible) View.VISIBLE else View.GONE
-
-                    val insertIndex = if (activityBar != null) 1 else 0
-                    content.addView(explorer, insertIndex, LinearLayout.LayoutParams(dp(layout.width), -1))
-
-                    if (explorerVisible && animationsEnabled) {
-                        Animations.slideIn(explorer, -dp(layout.width).toFloat(), Animations.DURATION_MEDIUM, true)
-                    }
-
-                    // Add resize handle
-                    if (layout.resizable) {
-                        val handle = ExplorerResizeHandle(this)
-                        handle.setCallbacks(::resizeExplorer, ::finishExplorerResize)
-                        handle.setBackgroundColor(border)
-                        explorerResizeHandle = handle
-                        content.addView(handle, insertIndex + 1, LinearLayout.LayoutParams(dp(4), -1))
-                    }
-                } else {
-                    // Update existing explorer width
-                    explorerPane?.layoutParams = LinearLayout.LayoutParams(dp(layout.width), -1)
+        if (layout.mode == ExplorerMode.SIDEBAR) {
+            if (activityBar == null) {
+                activityBar = ActivityBar(this, palette) { dispatchCommand(IdeCommand.EXPLORER) }.also {
+                    contentHost.addView(it, 0, LinearLayout.LayoutParams(dp(48), -1))
                 }
             }
-            ExplorerMode.OVERLAY -> {
-                // Remove activity bar and sidebar in narrow mode with animation
-                activityBar?.let {
-                    if (animationsEnabled) {
-                        Animations.fadeOut(it, Animations.DURATION_SHORT, true, true)
-                    } else {
-                        content.removeView(it)
+            if (explorerPane == null) {
+                explorerPane = makeExplorerPane(true).also { contentHost.addView(it, 1, LinearLayout.LayoutParams(dp(layout.width), -1)) }
+                explorerResizeHandle = ExplorerResizeHandle(this).also { handle ->
+                    handle.setCallbacks(::resizeExplorer, ::finishExplorerResize) {
+                        explorerDragStartWidth = ((explorerPane?.layoutParams?.width ?: dp(explorerWidth)) / resources.displayMetrics.density).toInt()
+                        explorerDragViewport = capturePanelViewport(); hideCompletion()
                     }
+                    handle.setOnClickListener { explorerWidth = 240; finishExplorerResize(); updateExplorerLayout(ExplorerLayout.resolve(currentGeometry!!, explorerWidth)) }
+                    handle.setBackgroundColor(surface)
+                    contentHost.addView(handle, 2, LinearLayout.LayoutParams(dp(24), -1))
                 }
-                activityBar = null
-                explorerResizeHandle?.let { content.removeView(it) }
-                explorerResizeHandle = null
             }
+            activityBar?.visibility = View.VISIBLE
+            activityBar?.setExplorerActive(explorerVisible)
+            explorerPane?.let { pane ->
+                if (pane.layoutParams.width != dp(layout.width)) pane.layoutParams = LinearLayout.LayoutParams(dp(layout.width), -1)
+                Animations.cancel(pane); pane.visibility = if (explorerVisible) View.VISIBLE else View.GONE
+            }
+            explorerResizeHandle?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
+            explorerResizeHandle?.isEnabled = !workspaceBusy
+            if (explorerDialog?.isShowing == true) { explorerDialog?.dismiss(); explorerDialog = null }
+        } else {
+            // Keep a single attached instance. GONE is not removal: never lose the reference and create duplicates.
+            explorerResizeHandle?.cancelGesture()
+            listOfNotNull(activityBar, explorerPane, explorerResizeHandle).forEach { Animations.cancel(it); it.visibility = View.GONE }
         }
     }
 
     private fun resizeExplorer(delta: Float) {
+        if (workspaceBusy) return
         val geometry = currentGeometry ?: return
-        val newWidth = WorkspaceLayoutPolicy.resizeExplorer(explorerWidth, delta, geometry.contentWidth, resources.displayMetrics.density)
-        newWidth?.let {
-            explorerWidth = it
-            explorerPane?.layoutParams = LinearLayout.LayoutParams(dp(it), -1)
-            explorerPane?.requestLayout()
-        }
+        val width = WorkspaceLayoutPolicy.resizeExplorer(explorerDragStartWidth, delta, geometry.contentWidth, resources.displayMetrics.density) ?: return
+        explorerWidth = width
+        explorerPane?.let { if (it.layoutParams.width != dp(width)) it.layoutParams = LinearLayout.LayoutParams(dp(width), -1) }
     }
 
     private fun finishExplorerResize() {
-        // Persist explorer width
         prefs.edit().putInt("explorerWidth", explorerWidth).apply()
+        val viewport = explorerDragViewport; explorerDragViewport = null
+        restorePanelViewport(viewport)
     }
 
     private fun updateStatusBar() {
         if (!::statusBarComponent.isInitialized || !::editor.isInitialized) return
 
-        val language = when {
-            activePath.endsWith(".cpp") || activePath.endsWith(".h") || activePath.endsWith(".hpp") -> "C++"
-            activePath.endsWith(".py") -> "Python"
-            else -> ""
-        }
-
-        val line = editor.layout?.getLineForOffset(editor.selectionStart)?.let { it + 1 } ?: 0
-        val lineStart = editor.layout?.getLineStart(maxOf(0, line - 1)) ?: 0
-        val column = editor.selectionStart - lineStart + 1
-
-        val indent = "Tab ${settings.tabWidth}"
-        val encoding = "UTF-8"
-
-        val state = when {
-            running -> "运行中"
-            workspaceBusy -> "文件操作中"
-            saving -> "保存中"
-            dirty -> "未保存"
-            else -> "就绪"
-        }
-
-        val layout = StatusBarLayout(language, line, column, indent, encoding, state)
-        statusBarComponent.setStatus(layout)
-
-        // Also update legacy status TextView for any remaining code that uses it
-        status.text = layout.format()
+        val language = if (activePath.endsWith(".py", true)) "Python" else "C++"
+        val (line, column) = InteractionState.caret(editor.text.toString(), editor.selectionStart)
+        val state = InteractionState.status(running, workspaceBusy, saving, dirty, status.text.toString())
+        statusBarComponent.setStatus(StatusBarLayout(language, line, column,
+            if (settings.useSpaces) "空格 ${settings.tabWidth}" else "Tab ${settings.tabWidth}", "UTF-8", state))
+        if (::editorToolbar.isInitialized) editorToolbar.setState(commandContext())
     }
 
     private fun decorateFileLabel(view: TextView, icon: IdeIcon, fullPath: String) {
@@ -596,7 +573,13 @@ class MainActivity : Activity() {
 
     private fun showCommandMenu(anchor: View) {
         commandMenu?.dismiss()
-        commandMenu = IdeCommandMenu.show(anchor, commandContext(), ::dispatchCommand)
+        val width = (mainToolbar.width / resources.displayMetrics.density).toInt()
+        showContextCommands(anchor, IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(width), panelLayout?.showPanel == true))
+    }
+
+    private fun showContextCommands(anchor: View, commands: List<IdeCommand>) {
+        commandMenu?.dismiss()
+        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands, ::dispatchCommand)
     }
 
     private fun dispatchCommand(command: IdeCommand) {
@@ -604,15 +587,18 @@ class MainActivity : Activity() {
         when (command) {
             IdeCommand.RUN_STOP -> if (running) RunSession.stop() else runCode()
             IdeCommand.EXPLORER -> showExplorer()
+            IdeCommand.SEARCH -> showProjectSearch()
+            IdeCommand.FIND -> showSearch(false)
             IdeCommand.NEW_FILE -> askCreate(false)
             IdeCommand.NEW_FOLDER -> askCreate(true)
+            IdeCommand.RENAME -> askRename(workspace.resolve(activePath))
+            IdeCommand.DELETE -> askDelete(workspace.resolve(activePath))
             IdeCommand.WORKSPACE -> workspaceMenu()
             IdeCommand.IMPORT_COPY -> importFile()
             IdeCommand.EXPORT -> exportFile()
             IdeCommand.SAVE -> saveActive { status.text = "✓ 已保存 $activePath" }
             IdeCommand.RELOAD -> reloadActive()
             IdeCommand.RECOVER -> recoverDrafts()
-            IdeCommand.FIND -> showSearch(false)
             IdeCommand.REPLACE -> showSearch(true)
             IdeCommand.GOTO_LINE -> showGoToLine()
             IdeCommand.UNDO, IdeCommand.REDO -> {
@@ -637,11 +623,16 @@ class MainActivity : Activity() {
             IdeCommand.SIGNATURE -> requestSignatureHelp()
             IdeCommand.SNIPPET -> showSnippetMenu()
             IdeCommand.PANEL -> togglePanel()
+            IdeCommand.CLEAR_TERMINAL -> { outputDisplay.clear(); showOutput(selectedOutput) }
+            IdeCommand.MAXIMIZE_TERMINAL -> setPanelMaximized(!panelState.maximized)
+            IdeCommand.CLOSE_TERMINAL -> closePanel()
             IdeCommand.PRESET_INPUT -> setPresetInputExpanded(true)
+            IdeCommand.CLEAR_INPUT -> input.setText("")
             IdeCommand.PANEL_SIZE -> showPanelSizeMenu(if (panelToolbar.isShown) panelToolbar.menuAnchor else mainToolbar.menuAnchor)
             IdeCommand.HIDE_KEYBOARD -> hideKeyboard()
             IdeCommand.THEME -> toggleTheme()
             IdeCommand.SETTINGS -> showSettings()
+            IdeCommand.SHORTCUTS -> alert(getString(R.string.shortcuts_help))
             IdeCommand.HELP -> alert(getString(R.string.shell_help))
         }
     }
@@ -659,10 +650,11 @@ class MainActivity : Activity() {
         imeVisible = visible
         val height = (root.height / resources.displayMetrics.density).toInt()
         val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible, settings.collapsePanelOnIme)
-        if (visible) listOfNotNull(explorerPane, tabsRow, outputRegion).forEach { it.animate().cancel(); it.alpha = 1f }
+        if (visible) listOfNotNull(explorerPane, tabsRow, outputRegion).forEach(Animations::cancel)
         suggestionScroll.visibility = if (WorkspaceLayoutPolicy.showSnippet(snippetSession != null, visible, height)) View.VISIBLE else View.GONE
         keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
-        status.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
+        statusBarComponent.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
+        editorToolbar.visibility = if (keyboardToolbar.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         applyPanelLayout()
         if (changed && visible) editor.post { if (editor.hasFocus()) editor.bringPointIntoView(editor.selectionEnd) }
     }
@@ -743,17 +735,9 @@ class MainActivity : Activity() {
         menu.menu.add(0, 1, 0, R.string.panel_smaller).isEnabled = panelLayout?.resizable == true
         menu.menu.add(0, 2, 1, R.string.panel_larger).isEnabled = panelLayout?.resizable == true
         menu.menu.add(0, 3, 2, R.string.panel_reset)
-        menu.menu.add(0, 4, 3, R.string.panel_clear_input)
-        menu.menu.add(0, 5, 4, if (presetInputExpanded) "收起预设输入" else "编辑预设输入")
-        menu.menu.add(0, 6, 5, if (panelState.maximized) "还原运行面板" else "最大化运行面板")
-        menu.menu.add(0, 7, 6, "收起运行面板")
         menu.setOnMenuItemClickListener { item ->
             anchor.post {
                 if (!isDestroyed && !workspaceBusy && anchor.isAttachedToWindow) when (item.itemId) {
-                    4 -> input.setText("")
-                    5 -> setPresetInputExpanded(!presetInputExpanded)
-                    6 -> setPanelMaximized(!panelState.maximized)
-                    7 -> closePanel()
                     else -> {
                         val stamp = capturePanelViewport(); hideCompletion()
                         if (item.itemId == 3) panelState = PanelState(maximized = panelState.maximized)
@@ -873,6 +857,8 @@ class MainActivity : Activity() {
         tabsRow = LinearLayout(this)
         tabs.addView(tabsRow)
         editorRegion.addView(tabs, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
+        editorToolbar = EditorToolbar(this, palette, ::dispatchCommand) { showContextCommands(it, IdeCommands.editorMenuItems) }
+        editorRegion.addView(editorToolbar, LinearLayout.LayoutParams(-1, dp(48)))
 
         val editorBody = LinearLayout(this).apply { setBackgroundColor(editorBackground); orientation = LinearLayout.HORIZONTAL }
         numbers = label("1", 13.5f, muted).apply {
@@ -893,7 +879,6 @@ class MainActivity : Activity() {
             includeFontPadding = false
             isSaveEnabled = false
             filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS))
-            onCaretChanged = { updateStatusBar() }
         }
         editorBody.addView(editor, LinearLayout.LayoutParams(0, -1, 1f))
         editorRegion.addView(editorBody, LinearLayout.LayoutParams(-1, 0, 1f))
@@ -934,7 +919,7 @@ class MainActivity : Activity() {
                 snippetSession = snippetSession?.copy(revision = editRevision)
                 snippetTextChanging = false; validSnippet(); updateSnippetHint()
                 handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
-                updateNumbers()
+                updateNumbers(); updateStatusBar()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
                 handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
             }
@@ -946,6 +931,7 @@ class MainActivity : Activity() {
         completionHint = label("", 11f, muted)
         suggestionRow.addView(completionHint)
         editor.onCaretChanged = {
+            updateStatusBar()
             if (!quietEdit) {
                 if (!snippetTextChanging) { validSnippet(); updateSnippetHint() }
                 hideCompletion()
@@ -960,7 +946,8 @@ class MainActivity : Activity() {
             orientation = LinearLayout.VERTICAL; setBackgroundColor(panel); isFocusableInTouchMode = true
         }
         panelToolbar = PanelToolbar(this, palette, { setPresetInputExpanded(!presetInputExpanded) },
-            { setPanelMaximized(!panelState.maximized) }, ::closePanel, ::showPanelSizeMenu)
+            { dispatchCommand(IdeCommand.MAXIMIZE_TERMINAL) }, { dispatchCommand(IdeCommand.CLOSE_TERMINAL) },
+            { showContextCommands(it, IdeCommands.terminalMenuItems) }, { dispatchCommand(IdeCommand.CLEAR_TERMINAL) })
         outputRegion.addView(panelToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         outputTabs = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         panelOutputScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(outputTabs) }
@@ -997,7 +984,8 @@ class MainActivity : Activity() {
         panelInputHeading.visibility = input.visibility
         outputRegion.addView(input, LinearLayout.LayoutParams(-1, dp(64)))
         val scroll = ScrollView(this)
-        consoleText = label("", 12f, green).apply {
+        consoleText = TerminalView(this).apply {
+            textSize = 12f; setTextColor(green)
             typeface = Typeface.MONOSPACE; gravity = Gravity.TOP or Gravity.START
             setPadding(dp(10), dp(8), dp(10), dp(8)); setTextIsSelectable(true)
         }
@@ -1006,17 +994,22 @@ class MainActivity : Activity() {
         return outputRegion
     }
 
-    private fun makeExplorerPane(): LinearLayout {
+    private fun makeExplorerPane(sidebar: Boolean): LinearLayout {
         val panelView = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(surface) }
         val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0) }
         row.addView(label("资源管理器", 12f, muted, true).apply { setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.END },
             LinearLayout.LayoutParams(0, dp(48), 1f))
-        row.addView(IdeControls.icon(this, palette, IdeIcon.MORE, "文件与工作区命令") { showCommandMenu(row) },
+        IdeCommands.explorerToolbarItems.forEach { command ->
+            row.addView(IdeControls.icon(this, palette, if (command == IdeCommand.NEW_FILE) IdeIcon.ADD_FILE else IdeIcon.ADD_FOLDER,
+                command.title) { dispatchCommand(command) }, LinearLayout.LayoutParams(dp(48), dp(48)))
+        }
+        row.addView(IdeControls.icon(this, palette, IdeIcon.MORE, "文件与工作区命令") { showContextCommands(row, IdeCommands.explorerMenuItems) },
             LinearLayout.LayoutParams(dp(48), dp(48)))
         panelView.addView(row)
         val scroll = ScrollView(this).apply { isFillViewport = true }
-        explorerList = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        scroll.addView(explorerList)
+        val fileList = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        if (sidebar) sidebarExplorerList = fileList else overlayExplorerList = fileList
+        scroll.addView(fileList)
         panelView.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         renderExplorer()
         return panelView
@@ -1024,41 +1017,31 @@ class MainActivity : Activity() {
 
     private fun showExplorer() {
         if (workspaceBusy) return
-        val geometry = currentGeometry
-        val animationsEnabled = settings.animations
-
-        if (geometry != null && geometry.showExplorerSidebar) {
+        if (currentGeometry?.showExplorerSidebar == true) {
             explorerVisible = !explorerVisible
-            explorerPane?.let { pane ->
-                if (explorerVisible) {
-                    pane.visibility = View.VISIBLE
-                    if (animationsEnabled) {
-                        Animations.slideIn(pane, -pane.width.toFloat(), Animations.DURATION_MEDIUM, true)
-                    }
-                } else {
-                    if (animationsEnabled) {
-                        Animations.slideOut(pane, -pane.width.toFloat(), Animations.DURATION_MEDIUM, true, true)
-                    } else {
-                        pane.visibility = View.GONE
-                    }
-                }
-            }
+            val pane = explorerPane ?: return
             explorerResizeHandle?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
-            if (explorerVisible && explorerPane != null) animateDecoration(explorerPane)
             activityBar?.setExplorerActive(explorerVisible)
+            if (explorerVisible) Animations.slideIn(pane, -pane.width.toFloat(), enabled = motionEnabled())
+            else Animations.slideOut(pane, -pane.width.toFloat(), enabled = motionEnabled())
             prefs.edit().putBoolean("explorerVisible", explorerVisible).apply()
             return
         }
         if (explorerDialog?.isShowing == true) { explorerDialog?.dismiss(); return }
-        val content = makeExplorerPane()
-        content.minimumHeight = dp(340)
-        explorerDialog = AlertDialog.Builder(this).setTitle("项目文件 · CodePocket")
-            .setView(content).setPositiveButton("完成", null).create().also { it.show() }
-        content.minimumHeight = dp(340)
+        val content = makeExplorerPane(false)
+        explorerDialog = AlertDialog.Builder(this).setTitle("项目文件 · CodePocket").setView(content)
+            .setPositiveButton("完成", null).create().also { dialog ->
+                dialog.setOnDismissListener { overlayExplorerList = null; if (explorerDialog === dialog) explorerDialog = null }
+                dialog.show()
+                dialog.window?.setLayout(-1, -1)
+            }
     }
 
     private fun renderExplorer() {
-        if (!::explorerList.isInitialized) return
+        listOfNotNull(sidebarExplorerList, overlayExplorerList).forEach(::renderExplorerList)
+    }
+
+    private fun renderExplorerList(explorerList: LinearLayout) {
         explorerList.removeAllViews()
         val rootLabel = label(workspace.title, 12f, muted, true).apply {
             decorateFileLabel(this, IdeIcon.FOLDER_OPEN, workspace.title)
@@ -1660,7 +1643,8 @@ class MainActivity : Activity() {
             val file = sessions.file(activePath); file.view = file.view.copy(scrollX = 0)
         }
         if (!settings.animations) listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
-            if (::outputRegion.isInitialized) outputRegion else null).forEach { it.animate().cancel(); it.alpha = 1f }
+            if (::outputRegion.isInitialized) outputRegion else null).forEach(Animations::cancel)
+        currentGeometry?.let { updateExplorerLayout(ExplorerLayout.resolve(it, explorerWidth)) }
         updateImeLayout(); updateNumbers(); refreshTabs()
         handler.removeCallbacks(autosave)
         if (dirty && settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
@@ -1694,6 +1678,90 @@ class MainActivity : Activity() {
 
     private fun searchSnapshot() = EditorSnapshot(sessions.key(activePath), editRevision,
         editor.text.toString(), editor.selectionStart.coerceAtLeast(0), editor.selectionEnd.coerceAtLeast(0))
+
+    private fun showProjectSearch() {
+        if (workspaceBusy || loadedPath != activePath) return
+        projectSearch?.cancel(); toolDialog?.dismiss(); hideCompletion(true); clearSnippet()
+        val targetWorkspace = workspace
+        val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(12), dp(8), dp(12), dp(8)) }
+        val query = EditText(this).apply {
+            setSingleLine(); hint = "项目文字搜索（含当前未保存缓冲区）"
+            filters = arrayOf(InputFilter.LengthFilter(256))
+        }
+        val case = android.widget.CheckBox(this).apply { text = "区分大小写" }
+        val message = TextView(this).apply { setTextColor(muted); text = getString(R.string.project_search_notice) }
+        val list = android.widget.ListView(this)
+        val search = android.widget.Button(this).apply { text = "搜索" }
+        layout.addView(query); layout.addView(case); layout.addView(search); layout.addView(message)
+        layout.addView(list, LinearLayout.LayoutParams(-1, dp(240)))
+        val dialog = AlertDialog.Builder(this).setTitle("项目搜索").setView(layout).setNegativeButton("关闭", null).create()
+        var request = 0L
+        var dialogSearch: ProjectSearch? = null
+        var hits = emptyList<ProjectSearch.SearchResult>()
+        search.setOnClickListener {
+            val needle = query.text.toString()
+            if (needle.isEmpty()) { query.error = "请输入搜索内容"; return@setOnClickListener }
+            projectSearch?.cancel()
+            val engine = ProjectSearch(targetWorkspace); projectSearch = engine; dialogSearch = engine
+            val generation = ++request
+            val caseSensitive = case.isChecked
+            val buffers = mapOf(activePath to editor.text.toString())
+            hits = emptyList(); list.adapter = null; message.text = "正在搜索，可修改条件后重新搜索或关闭取消…"
+            WorkspaceIo.executor.execute {
+                val response = runCatching { engine.search(needle, caseSensitive, 200, buffers) }
+                runOnUiThread {
+                    if (isDestroyed || !dialog.isShowing || toolDialog !== dialog || workspace !== targetWorkspace || generation != request) return@runOnUiThread
+                    response.onSuccess { found ->
+                        hits = found
+                        list.adapter = android.widget.ArrayAdapter(this, android.R.layout.simple_list_item_1,
+                            found.map { "${it.path}:${it.lineNumber}\n${it.lineContent.take(160)}" })
+                        message.text = if (engine.wasCancelled) getString(R.string.project_search_cancelled)
+                            else getString(R.string.project_search_summary, found.size, engine.skippedFiles,
+                                if (engine.limited) getString(R.string.project_search_limited) else "")
+                    }.onFailure { message.text = getString(R.string.project_search_failed, it.message.orEmpty()) }
+                }
+            }
+        }
+        list.setOnItemClickListener { _, _, index, _ ->
+            val hit = hits.getOrNull(index) ?: return@setOnItemClickListener
+            dialog.dismiss()
+            switchFile(hit.path) {
+                val source = editor.text.toString()
+                val offset = EditorSearch.lineOffset(source, hit.lineNumber)
+                if (offset == null || source.substring(offset).substringBefore('\n').trim() != hit.lineContent) {
+                    status.text = "搜索位置已变化，请重新搜索"; return@switchFile
+                }
+                revealEditor(); editor.requestFocus(); editor.setSelection(offset); editor.bringPointIntoView(offset)
+            }
+        }
+        dialog.setOnDismissListener {
+            request++; dialogSearch?.cancel()
+            if (projectSearch === dialogSearch) projectSearch = null
+            if (toolDialog === dialog) toolDialog = null
+        }
+        toolDialog = dialog; dialog.show()
+    }
+
+    @Deprecated("Native back handling retained for API 24; predictive-back UI still needs device verification")
+    override fun onBackPressed() {
+        if (!::editor.isInitialized) { super.onBackPressed(); return }
+        when (InteractionState.back(imeVisible, currentGeometry?.showExplorerSidebar == true && explorerVisible,
+            panelState.maximized && panelVisible, panelLayout?.showPanel == true)) {
+            BackAction.HIDE_IME -> hideKeyboard()
+            BackAction.CLOSE_EXPLORER -> showExplorer()
+            BackAction.RESTORE_PANEL -> setPanelMaximized(false)
+            BackAction.CLOSE_PANEL -> closePanel()
+            BackAction.EXIT -> {
+                if (workspaceBusy || saving) { status.text = "请等待文件操作完成后退出"; return }
+                if (!dirty) { finish(); return }
+                AlertDialog.Builder(this).setTitle("保存后退出？")
+                    .setMessage("当前修改尚未保存。保存失败时会保留编辑内容和恢复草稿，并留在编辑器。")
+                    .setPositiveButton("保存并退出") { _, _ -> saveActive { finish() } }
+                    .setNeutralButton("导出当前内容") { _, _ -> exportFile() }
+                    .setNegativeButton("取消", null).show()
+            }
+        }
+    }
 
     private fun showSearch(replace: Boolean) {
         if (workspaceBusy || loadedPath != activePath) return
@@ -1777,7 +1845,7 @@ class MainActivity : Activity() {
         if (event.action == KeyEvent.ACTION_DOWN && event.isCtrlPressed) {
             if (event.keyCode in listOf(KeyEvent.KEYCODE_Z, KeyEvent.KEYCODE_Y)) clearSnippet()
             when (event.keyCode) {
-                KeyEvent.KEYCODE_F -> { showSearch(false); return true }
+                KeyEvent.KEYCODE_F -> { if (event.isShiftPressed) showProjectSearch() else showSearch(false); return true }
                 KeyEvent.KEYCODE_H -> { showSearch(true); return true }
                 KeyEvent.KEYCODE_G -> { showGoToLine(); return true }
                 KeyEvent.KEYCODE_S -> { saveActive { status.text = "✓ 已保存 $activePath" }; return true }
@@ -1957,6 +2025,7 @@ class MainActivity : Activity() {
             return
         }
         val runningFile = workspace.resolve(activePath).absolutePath
+        if (!panelVisible) togglePanel()
         val projectRoot = workspace.root.absolutePath
         if (!cpp && workspace.external) {
             val path = activePath
@@ -1975,6 +2044,7 @@ class MainActivity : Activity() {
     private fun renderRunState() {
         if (!::mainToolbar.isInitialized) return
         updateMainToolbarState()
+        outputDisplay.synchronize(RunSession.result, running)
         result = RunSession.result
         if (result == null && !running) showOutput(selectedOutput)
         if (running) {
@@ -1998,15 +2068,16 @@ class MainActivity : Activity() {
         }
         outputTabs.addView(button("定位错误") { gotoError() }.apply { visibility = if (result?.errorLine != null) View.VISIBLE else View.GONE })
         val current = result
-        consoleText.text = when {
+        consoleText.setOutput(when {
+            outputDisplay.cleared && type != 2 -> "显示已清空；预设输入和运行结果仍保留，下次运行显示新输出。"
             current == null -> "运行程序后，这里显示输出、编译错误和状态。"
             type == 0 -> current.stdout.ifEmpty { "（没有标准输出）" }
             type == 1 -> current.stderr.ifEmpty { "（没有错误信息）" }
             else -> "执行引擎：${current.engine}\n结果：${current.kind.label}\n退出码：${current.exitCode}\n耗时：${current.elapsedMs}ms" +
                 (current.errorLine?.let { "\n错误行：$it" } ?: "")
-        }
+        })
         consoleText.setTextColor(if (type == 1) red else if (type == 0) green else textForeground)
-        if (type == 1 && current?.errorLine != null) {
+        if (!outputDisplay.cleared && consoleText.length() > 0 && type == 1 && current?.errorLine != null) {
             val clickable = android.text.SpannableString(consoleText.text)
             clickable.setSpan(object : ClickableSpan() {
                 override fun onClick(widget: View) { gotoError() }

@@ -21,10 +21,12 @@ data class WorkspaceGeometry(
     val preferBottomPanel get() = true // Always prefer bottom unless user explicitly configures side
 
     companion object {
+        fun fromPixels(width: Int, height: Int, density: Float, imeVisible: Boolean): WorkspaceGeometry {
+            val scale = if (density.isFinite() && density > 0f) density else 1f
+            return WorkspaceGeometry((width / scale).toInt().coerceAtLeast(0), (height / scale).toInt().coerceAtLeast(0), imeVisible)
+        }
         fun measure(view: android.view.View, imeVisible: Boolean): WorkspaceGeometry {
-            val width = view.width
-            val height = view.height
-            return WorkspaceGeometry(width, height, imeVisible)
+            return fromPixels(view.width, view.height, view.resources.displayMetrics.density, imeVisible)
         }
     }
 }

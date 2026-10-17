@@ -1,13 +1,20 @@
 # CodePocket 当前交接状态
 
-## 当前：P1-B 响应式布局主机验证完成（2026-10-17）
+## 当前：UI 与操作逻辑接续已验证（2026-10-17）
 
-用户确认继续 P1-B 开发。已实现响应式布局策略、Activity Bar、可调宽 Explorer、底部优先面板和简洁状态栏，保留原编辑器与运行/文件实现。
+用户因 Claude 额度中断返回，要求继续；网络中断后已恢复。本批在 `a6eaec1` 和原未提交修改上完成接续，未重建项目。实机统一后置仍有效，不请求手机。
 
-- 基线 `07e089f`（P1-A）；本批 [P1B_RESPONSIVE.md](P1B_RESPONSIVE.md)：基于净可用宽高的响应式策略、Activity Bar、可调宽 Explorer、底部优先面板、简洁状态栏接入。
-- Kotlin 131 项中 130 通过/1 跳过（17 项新增响应式布局测试全部通过），Lint 0 错误/11 警告。
-- [最新 APK](../verification/p1b-responsive-2026-10-17/CodePocket-P1B-responsive-debug.apk)，20.79 MiB，SHA256 `ff404d3066eb9af5314cc171b479621425fd6a7e67791548c18dab384ff1e661`。
-- 响应式布局、Activity Bar、Explorer 拖动、状态栏实时更新尚未设备验证；手机/平板多方向、IME 联合验收统一后置。
+- [本批报告](UI_RESUME_2026-10-17.md)：短全局/上下文菜单、文件与编辑入口、键盘上方符号栏、真实面板操作、返回保存保护、侧栏复用/拖动/消息状态修复、后台项目搜索与结果定位、结束后受限SGR输出。无“即将实现”占位动作。
+- 接手真实基线133项中2失败/1跳过；最终153项中152通过/1跳过，新增20项。构建1m 9s，62任务中24执行/38未变化；Python源码/真实APK字节码各13/13、模板各7/7，Lint0错误/11警告；APK签名/CRC/ABI/16KB对齐通过。
+- [最新APK](../dist/CodePocket-UI-resume-debug.apk)，22,033,037字节，SHA256 `65cea4b23f29d0664a0046f67e2354090bd379ccd878a16171e2d4233588765a`。证据 `verification/ui-resume-2026-10-17/results.json`；原未提交补丁、ANSI原型、设计、失败日志和逐项哈希已备份。
+- CodeEditor/编辑规则、保存/SAF/草稿、Python/Wandbox运行、候选/片段/参数核心、Gradle/Manifest/Actions与三份需求保留。没有新依赖/权限/存储迁移，没有远端Actions/push/发布。
+- 手机/平板/鸿蒙卓易通、IME/键鼠/原生撤销、焦点/拖动/返回与帧率未设备验收。当前是预填输入、结束后输出；SGR不是完整VT或流式运行。
+- 下一步继续P1：编辑器Port/Sora隔离评估、高亮/手势/完整动画、流式后端专项；P0问题优先。P2语义/本地多文件C++与P3仍待做。不要把旧P1-C报告的名称当成原路线全部完成。
+- 实际仓库仍是 `C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`；OneDrive配置路径不存在。保留.tools/dist/verification及设备备份。该路径在Codex当前沙箱下读Git工作树也需升级权限，不能误判为裸仓库或损坏后修改Git配置。
+
+## 历史：Claude P1-B / P1-C 接续前状态
+
+`92c399f` 开发响应式布局与状态栏；`a5825a3` 开发动画/搜索模块；`a6eaec1` 更新P1-C报告。原报告保留；当前测试结果以本批日志为准。P1-B记录见 [P1B_RESPONSIVE.md](P1B_RESPONSIVE.md)，P1-C记录见 [P1C_ANIMATIONS_SEARCH.md](P1C_ANIMATIONS_SEARCH.md)。
 
 ## 历史：P1-A 外壳主机验证完成（2026-10-17 早前）
 

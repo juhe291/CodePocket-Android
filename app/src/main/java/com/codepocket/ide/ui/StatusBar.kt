@@ -38,12 +38,14 @@ class StatusBar(
     }
 
     fun setStatus(layout: StatusBarLayout) {
-        statusText.text = layout.format()
+        val value = layout.format()
+        if (statusText.text.toString() != value) statusText.text = value
+        IdeControls.describe(statusText, value)
 
         // Apply color based on state
         statusText.setTextColor(when {
-            layout.state.contains("运行中") -> palette.accent
-            layout.state.contains("错误") -> palette.error
+            layout.state.contains("运行中") -> palette.accentText
+            (layout.state.contains("错误") || layout.state.contains("失败") || layout.state.startsWith("✕")) -> palette.error
             layout.state.contains("成功") -> palette.success
             else -> palette.muted
         })
