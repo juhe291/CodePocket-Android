@@ -2,6 +2,8 @@ package com.codepocket.ide.editor
 
 import android.os.Looper
 import android.text.Editable
+import android.text.Selection
+import android.view.ViewTreeObserver
 import android.text.NoCopySpan
 import android.text.Spannable
 import android.text.Spanned
@@ -21,10 +23,80 @@ class NativeEditorPort(
     private val cpp: () -> Boolean,
     private val dark: () -> Boolean,
     private val compositionEnded: () -> Unit
-) : EditingEditorPort, AutoCloseable {
+) : NavigatingEditorPort {
     private class SyntaxSpan(color: Int) : ForegroundColorSpan(color), NoCopySpan
     private class BracketSpan(color: Int) : BackgroundColorSpan(color), NoCopySpan
     private var closed = false
+    private var interaction = 0L
+    private val pendingNavigation = mutableSetOf<Pair<ViewTreeObserver, ViewTreeObserver.OnPreDrawListener>>()
+    private val navigation = EditorViewportQueue(::postNavigation, ::navigationSnapshot) { source, reveal ->
+        if (reveal) editor.bringPointIntoView(source.end) else editor.restoreViewport(source.x, source.y)
+    }
+    private val navigationInput: () -> Unit = { interaction++; cancelNavigation() }
+
+    private fun postNavigation(action: () -> Unit) {
+        val observer = editor.viewTreeObserver
+        lateinit var listener: ViewTreeObserver.OnPreDrawListener
+        listener = ViewTreeObserver.OnPreDrawListener {
+            removeNavigationListener(observer, listener)
+            pendingNavigation.remove(observer to listener)
+            action()
+            true
+        }
+        pendingNavigation.add(observer to listener)
+        observer.addOnPreDrawListener(listener)
+        editor.invalidate()
+    }
+
+    private fun removeNavigationListener(observer: ViewTreeObserver, listener: ViewTreeObserver.OnPreDrawListener) {
+        if (observer.isAlive) observer.removeOnPreDrawListener(listener)
+        val current = editor.viewTreeObserver
+        // Android merges a detached view's observer into the attached observer.
+        if (current !== observer && current.isAlive) current.removeOnPreDrawListener(listener)
+    }
+
+    override fun cancelNavigation() {
+        navigation.cancel()
+        pendingNavigation.forEach { (observer, listener) -> removeNavigationListener(observer, listener) }
+        pendingNavigation.clear()
+    }
+
+    override fun navigationSnapshot(): EditorViewportSnapshot? {
+        check(Looper.myLooper() == Looper.getMainLooper())
+        if (closed) return null
+        val (key, revision) = document() ?: return null
+        return EditorViewportSnapshot(key, revision, editor.selectionStart, editor.selectionEnd,
+            editor.scrollX, editor.scrollY, interaction, BaseInputConnection.getComposingSpanStart(editor.text) >= 0,
+            editor.isShown && editor.width > 0 && editor.height > 0 && editor.layout != null)
+    }
+
+    override fun select(request: EditorSelectionRequest): Boolean {
+        if (!EditorNavigation.canSelect(snapshot(), request)) return false
+        cancelNavigation()
+        editor.setSelection(request.start, request.end)
+        if (request.focus) editor.requestFocus()
+        if (request.reveal) revealCaret()
+        return true
+    }
+
+    override fun restoreViewport(snapshot: EditorViewportSnapshot): Boolean {
+        if (!snapshot.matches(navigationSnapshot(), false)) return false
+        cancelNavigation()
+        return navigation.submit(snapshot)
+    }
+
+    override fun revealCaret(): Boolean {
+        val snapshot = navigationSnapshot() ?: return false
+        cancelNavigation()
+        return navigation.submit(snapshot, reveal = true)
+    }
+
+    override fun locateDiagnostic(request: EditorDiagnostic): DiagnosticStatus {
+        val target = EditorDiagnostics.resolve(snapshot(), request)
+        val selection = target.selection ?: return target.status
+        return if (select(selection)) target.status else DiagnosticStatus.STALE
+    }
+
     private var observed: Editable? = null
     private var coloredText: Editable? = null
     private var coloredFrame: EditorFrame? = null
@@ -36,6 +108,7 @@ class NativeEditorPort(
     private val spanWatcher = object : SpanWatcher, NoCopySpan {
         private fun changed(text: Spannable, what: Any) {
             if (closed || what === this || what is SyntaxSpan || what is BracketSpan) return
+            if (what === Selection.SELECTION_START || what === Selection.SELECTION_END) interaction++
             if (composition.observe(BaseInputConnection.getComposingSpanStart(text) >= 0)) {
                 // Wait until the IME has finished its current transaction; never edit from a span callback.
                 editor.removeCallbacks(notifyCommit); editor.post(notifyCommit)
@@ -51,7 +124,10 @@ class NativeEditorPort(
         override fun afterTextChanged(s: Editable?) { observe(s) }
     }
 
-    init { editor.addTextChangedListener(textWatcher); observe(editor.text) }
+    init {
+        editor.onNavigationInput = navigationInput
+        editor.addTextChangedListener(textWatcher); observe(editor.text)
+    }
 
     private fun observe(text: Editable?) {
         if (closed || text == null) return
@@ -73,6 +149,7 @@ class NativeEditorPort(
 
     override fun applyEdit(transaction: EditorTransaction): EditResult =
         EditorTransactions.apply(snapshot(), transaction, Workspace.MAX_CHARS) { change, changesText ->
+            cancelNavigation()
             editor.beginBatchEdit()
             try {
                 if (changesText) editor.text.replace(change.start, change.end, change.text)
@@ -82,6 +159,7 @@ class NativeEditorPort(
 
     override fun performHistory(source: EditorSnapshot, action: HistoryAction): Boolean {
         if (EditorTransactions.sourceFailure(snapshot(), source) != null || !editor.hasFocus()) return false
+        cancelNavigation()
         return editor.onTextContextMenuItem(if (action == HistoryAction.UNDO) android.R.id.undo else android.R.id.redo)
     }
 
@@ -111,7 +189,9 @@ class NativeEditorPort(
     }
 
     override fun close() {
-        closed = true; editor.removeCallbacks(notifyCommit)
+        closed = true; cancelNavigation(); navigation.close()
+        if (editor.onNavigationInput === navigationInput) editor.onNavigationInput = null
+        editor.removeCallbacks(notifyCommit)
         editor.removeTextChangedListener(textWatcher); observed?.removeSpan(spanWatcher)
         observed = null; coloredText = null; coloredFrame = null; coloredFallback = null
     }

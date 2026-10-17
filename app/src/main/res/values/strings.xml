@@ -52,4 +52,9 @@
     <string name="editor_edit_stale">文件或选区已变化，请重新操作</string>
     <string name="editor_edit_composing">请先完成当前输入法组合，再操作代码</string>
     <string name="editor_edit_invalid">未应用修改：文本或选区范围无效</string>
+    <string name="editor_navigation_stale">文件、选区或操作已变化，请重新定位</string>
+    <string name="editor_diagnostic_verified">已定位运行时源码中的错误行</string>
+    <string name="editor_diagnostic_unverified">已按行定位；此文件的运行版本未记录，请核对源码</string>
+    <string name="editor_diagnostic_changed">源码或文件身份已变化，请重新运行后定位</string>
+    <string name="editor_diagnostic_line">错误行超出当前文件范围，未移动光标</string>
 </resources>

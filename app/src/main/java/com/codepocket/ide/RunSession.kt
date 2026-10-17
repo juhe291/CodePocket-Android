@@ -34,16 +34,18 @@ object RunSession {
     private var root = ""
     private var executionPath = ""
     private var workspaceId = ""
+    private var sourceKey: String? = null
+    private var sourceHash = ""
     private var cppRun = false
     private var deadline: Runnable? = null
 
     fun start(app: Context, code: String, input: String, cpp: Boolean, sourcePath: String, projectRoot: String, identity: String,
-        pythonEntry: String = sourcePath): Boolean {
+        pythonEntry: String = sourcePath, entryKey: String? = null): Boolean {
         check(Looper.myLooper() == Looper.getMainLooper())
         val id = tickets.begin() ?: return false
         running = true; result = null; application = app.applicationContext as android.app.Application
         began = System.nanoTime(); path = sourcePath; root = projectRoot; workspaceId = identity; cppRun = cpp
-        executionPath = pythonEntry
+        executionPath = pythonEntry; sourceKey = entryKey; sourceHash = DocumentTree.digest(code)
         listener?.invoke()
         deadline = Runnable { if (tickets.accepts(id)) finish(id, terminal(RunKind.TIMEOUT,
             if (cpp) "云端请求总时间超过 45 秒，已停止等待；服务端任务可能仍在运行。" else "Python 总时间超过 10 秒（含初始化），已停止执行会话。")) }
@@ -134,7 +136,7 @@ object RunSession {
         pythonPid = 0
         connection?.let { runCatching { application?.unbindService(it) } }; connection = null
         application = null
-        result = response.copy(sourcePath = path, projectRoot = root, workspaceId = workspaceId)
+        result = response.copy(sourcePath = path, projectRoot = root, workspaceId = workspaceId, sourceKey = sourceKey, sourceHash = sourceHash)
         running = false
         listener?.invoke()
     }

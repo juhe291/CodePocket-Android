@@ -14,7 +14,7 @@ import java.util.concurrent.Future
 /** Search work stays off the input thread; revision checks prevent edits being applied to another buffer. */
 object SearchDialog {
     fun show(activity: Activity, replace: Boolean, snapshot: () -> EditorSnapshot,
-        select: (Int, Int) -> Unit, apply: (EditorSnapshot, TextChange, Boolean) -> Boolean): AlertDialog {
+        select: (EditorSnapshot, Int, Int) -> Boolean, apply: (EditorSnapshot, TextChange, Boolean) -> Boolean): AlertDialog {
         val content = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL; setPadding(28, 8, 28, 8) }
         val query = EditText(activity).apply { hint = "查找文本（非正则）"; setSingleLine(); filters = arrayOf(InputFilter.LengthFilter(10000)) }
         val replacement = EditText(activity).apply { hint = "替换为"; setSingleLine(); filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS)) }
@@ -57,7 +57,7 @@ object SearchDialog {
                         feedback.text = "文件、选区或查找条件已变化，请重试"; return@runOnUiThread
                     }
                     answer.onSuccess { result -> when (result) {
-                        is IntRange -> { select(result.first, result.last + 1); feedback.text = "已定位；到末尾后会循环查找" }
+                        is IntRange -> { feedback.text = if (select(state, result.first, result.last + 1)) "已定位；到末尾后会循环查找" else activity.getString(R.string.editor_navigation_stale) }
                         is TextChange -> { if (apply(state, result, true)) feedback.text = "已替换选中项" else feedback.text = "当前无法编辑" }
                         is Replacement -> { if (apply(state, result.change, false)) feedback.text = activity.getString(R.string.search_replaced_count, result.count) else feedback.text = "当前无法编辑" }
                         else -> feedback.text = if (kind == 2) "请先查找并选中匹配项" else "未找到匹配项"

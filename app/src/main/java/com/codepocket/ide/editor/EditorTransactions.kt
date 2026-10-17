@@ -63,7 +63,7 @@ object EditorTransactions {
             else EditResult.UNCHANGED
     }
 
-    private fun boundary(text: String, at: Int): Boolean = at == 0 || at == text.length || !split(text[at - 1], text[at])
+    internal fun boundary(text: String, at: Int): Boolean = at == 0 || at == text.length || !split(text[at - 1], text[at])
     private fun split(left: Char, right: Char): Boolean =
         (Character.isHighSurrogate(left) && Character.isLowSurrogate(right)) || (left == '\r' && right == '\n')
 

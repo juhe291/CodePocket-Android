@@ -39,6 +39,13 @@ import com.codepocket.ide.editor.NativeEditorPort
 import com.codepocket.ide.editor.EditorTransaction
 import com.codepocket.ide.editor.EditResult
 import com.codepocket.ide.editor.HistoryAction
+import com.codepocket.ide.editor.NavigatingEditorPort
+import com.codepocket.ide.editor.EditorSelectionRequest
+import com.codepocket.ide.editor.EditorViewportSnapshot
+import com.codepocket.ide.editor.EditorNavigation
+import com.codepocket.ide.editor.EditorDiagnostic
+import com.codepocket.ide.editor.DiagnosticStatus
+import com.codepocket.ide.editor.DiagnosticFiles
 import com.codepocket.ide.search.ProjectSearch
 import com.codepocket.ide.ui.*
 import com.codepocket.ide.terminal.TerminalView
@@ -71,7 +78,7 @@ class MainActivity : Activity() {
     private var completionTask: java.util.concurrent.Future<*>? = null
     private val completionConsumedKeys = mutableSetOf<Int>()
     private var quietEdit = false
-    private var editorPort: NativeEditorPort? = null
+    private var editorPort: NavigatingEditorPort? = null
     private var editorAnalysis: EditorAnalysisController? = null
     private var snippetSession: SnippetSession? = null
     private var snippetTextChanging = false
@@ -156,7 +163,7 @@ class MainActivity : Activity() {
     private lateinit var contentHost: LinearLayout
     private lateinit var editorToolbar: EditorToolbar
     private var explorerDragStartWidth = 240
-    private var explorerDragViewport: PanelViewport? = null
+    private var explorerDragViewport: EditorViewportSnapshot? = null
     private val outputDisplay = OutputDisplayState()
     private lateinit var mainToolbar: MainToolbar
     private lateinit var outputTabs: LinearLayout
@@ -313,7 +320,7 @@ class MainActivity : Activity() {
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         explorerResizeHandle?.cancelGesture(); projectSearch?.cancel()
         listOfNotNull(explorerPane, activityBar).forEach(Animations::cancel)
-        handler.removeCallbacks(refreshEditor); editorAnalysis?.cancel(); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
+        handler.removeCallbacks(refreshEditor); editorAnalysis?.cancel(); editorPort?.cancelNavigation(); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
         currentGeometry?.let { updateExplorerLayout(ExplorerLayout.resolve(it, explorerWidth)) }
         persist()
     }
@@ -670,27 +677,26 @@ class MainActivity : Activity() {
         statusBarComponent.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
         editorToolbar.visibility = if (keyboardToolbar.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         applyPanelLayout()
-        if (changed && visible) editor.post { if (editor.hasFocus()) editor.bringPointIntoView(editor.selectionEnd) }
+        if (changed && visible && editor.hasFocus()) editorPort?.revealCaret()
     }
 
-    private var panelDragViewport: PanelViewport? = null
+    private var panelDragViewport: EditorViewportSnapshot? = null
 
-    private fun capturePanelViewport(): PanelViewport? {
+    private fun capturePanelViewport(): EditorViewportSnapshot? {
         if (!::sessions.isInitialized || loadedPath != activePath || !::editorRegion.isInitialized) return null
         captureSession()
-        return PanelViewport(sessions.key(activePath), editRevision, sessions.file(activePath).view)
+        val stamp = editorPort?.navigationSnapshot() ?: return null
+        val saved = sessions.file(activePath).view
+        return stamp.copy(start = saved.start, end = saved.end, x = saved.scrollX, y = saved.scrollY)
     }
 
-    private fun restorePanelViewport(stamp: PanelViewport?, focusEditor: Boolean = false) {
-        if (stamp == null) return
-        editor.post {
-            if (isDestroyed || loadedPath != activePath || editorRegion.visibility != View.VISIBLE ||
-                !stamp.canRestore(sessions.key(activePath), editRevision, editor.selectionStart, editor.selectionEnd) ||
-                BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return@post
-            editor.scrollTo(stamp.view.scrollX, stamp.view.scrollY)
-            numbers.scrollY = editor.scrollY
-            if (focusEditor && !input.hasFocus()) editor.requestFocus()
-        }
+    private fun restorePanelViewport(stamp: EditorViewportSnapshot?, focusEditor: Boolean = false) {
+        if (stamp == null || isDestroyed || loadedPath != activePath || editorRegion.visibility != View.VISIBLE) return
+        val port = editorPort ?: return
+        if (!stamp.matches(port.navigationSnapshot(), false)) return
+        val focused = focusEditor && !input.hasFocus() && editor.requestFocus()
+        val current = port.navigationSnapshot() ?: return
+        port.restoreViewport(if (focused) stamp.copy(interaction = current.interaction) else stamp)
     }
 
     private fun persistPanel() {
@@ -849,7 +855,12 @@ class MainActivity : Activity() {
         input.setText(session.stdin)
         quietInput = false
         val view = session.view.clamp(editor.length(), input.length())
-        editor.setSelection(view.start, view.end)
+        val source = editorPort?.snapshot()?.buffer
+        if (source != null) {
+            val selection = EditorNavigation.restoredSelection(source.text, view.start, view.end)
+            if (editorPort?.select(EditorSelectionRequest(source, selection.start, selection.end, reveal = false)) == true)
+                session.view = view.copy(start = selection.start, end = selection.end)
+        }
         input.setSelection(view.inputStart, view.inputEnd)
         lastFocus = view.focus
         presetInputExpanded = WorkspaceLayoutPolicy.restorePreset(presetInputExpanded, view.focus, panelVisible)
@@ -857,11 +868,8 @@ class MainActivity : Activity() {
         if (view.focus == "stdin" && panelVisible) input.requestFocus()
         else if (panelState.maximized && panelVisible) outputRegion.requestFocus()
         else editor.requestFocus()
-        editor.post {
-            editor.scrollTo(view.scrollX, view.scrollY)
-            numbers.scrollY = editor.scrollY
-            updateImeLayout()
-        }
+        updateImeLayout()
+        editorPort?.navigationSnapshot()?.let { editorPort?.restoreViewport(it.copy(x = view.scrollX, y = view.scrollY)) }
     }
 
     private fun buildEditor(work: LinearLayout) {
@@ -1519,16 +1527,26 @@ class MainActivity : Activity() {
             session.edited(sessions.key(activePath), editRevision, start, removed, inserted) else null
     }
 
+    private fun selectEditor(request: EditorSelectionRequest, keepSnippet: Boolean = false): Boolean {
+        val previousQuiet = quietEdit
+        quietEdit = true
+        val accepted = try { editorPort?.select(request) == true } finally { quietEdit = previousQuiet }
+        if (!accepted) return false
+        hideCompletion()
+        if (!keepSnippet) clearSnippet()
+        updateStatusBar()
+        handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
+        return true
+    }
+
     private fun moveSnippet(reverse: Boolean): Boolean {
         if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || !validSnippet()) return false
-        hideCompletion()
+        val source = editorPort?.snapshot()?.buffer ?: return false
         val navigation = snippetSession!!.move(reverse)
+        if (!selectEditor(EditorSelectionRequest(source, navigation.start, navigation.end), keepSnippet = true)) return false
         snippetSession = navigation.session
-        quietEdit = true
-        try { editor.setSelection(navigation.start, navigation.end) } finally { quietEdit = false }
         completionSuppressed = completionRequest()
-        updateSnippetHint(); editor.bringPointIntoView(navigation.start)
-        handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
+        updateSnippetHint()
         return true
     }
 
@@ -1754,14 +1772,16 @@ class MainActivity : Activity() {
         }
         list.setOnItemClickListener { _, _, index, _ ->
             val hit = hits.getOrNull(index) ?: return@setOnItemClickListener
+            if (workspace !== targetWorkspace) return@setOnItemClickListener
             dialog.dismiss()
             switchFile(hit.path) {
-                val source = editor.text.toString()
-                val offset = EditorSearch.lineOffset(source, hit.lineNumber)
-                if (offset == null || source.substring(offset).substringBefore('\n').trim() != hit.lineContent) {
-                    status.text = "搜索位置已变化，请重新搜索"; return@switchFile
+                if (workspace !== targetWorkspace) return@switchFile
+                val source = editorPort?.snapshot()?.buffer ?: return@switchFile
+                val offset = EditorSearch.lineOffset(source.text, hit.lineNumber)
+                if (offset == null || source.text.substring(offset).substringBefore('\n').trim() != hit.lineContent ||
+                    !selectEditor(EditorSelectionRequest(source, offset, focus = true))) {
+                    status.setText(R.string.editor_navigation_stale)
                 }
-                revealEditor(); editor.requestFocus(); editor.setSelection(offset); editor.bringPointIntoView(offset)
             }
         }
         dialog.setOnDismissListener {
@@ -1799,8 +1819,8 @@ class MainActivity : Activity() {
         hideCompletion(true)
         revealEditor()
         clearSnippet()
-        toolDialog = SearchDialog.show(this, replace, ::searchSnapshot, { start, end ->
-            editor.setSelection(start, end); editor.bringPointIntoView(start)
+        toolDialog = SearchDialog.show(this, replace, ::searchSnapshot, { source, start, end ->
+            selectEditor(EditorSelectionRequest(source, start, end))
         }, { source, change, matchSelection ->
             val result = applyChange(change, source = source, matchSelection = matchSelection)
             val accepted = finishEditorChange(result)
@@ -1814,14 +1834,16 @@ class MainActivity : Activity() {
         hideCompletion(true)
         revealEditor()
         clearSnippet()
+        val source = editorPort?.snapshot()?.buffer ?: return
         val field = EditText(this).apply { inputType = InputType.TYPE_CLASS_NUMBER; hint = "从 1 开始的行号" }
         val dialog = AlertDialog.Builder(this).setTitle("跳转行").setView(field)
             .setNegativeButton("取消", null).setPositiveButton("跳转", null).create()
         dialog.setOnShowListener { dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val line = field.text.toString().toIntOrNull()
-            val offset = line?.let { EditorSearch.lineOffset(editor.text.toString(), it) }
+            val offset = line?.let { EditorSearch.lineOffset(source.text, it) }
             if (offset == null) field.error = "行号超出范围"
-            else { dialog.dismiss(); editor.requestFocus(); editor.setSelection(offset); editor.bringPointIntoView(offset) }
+            else if (!selectEditor(EditorSelectionRequest(source, offset))) field.error = getString(R.string.editor_navigation_stale)
+            else { dialog.dismiss(); editor.requestFocus() }
         } }
         toolDialog?.dismiss(); toolDialog = dialog; dialog.show()
     }
@@ -2070,9 +2092,10 @@ class MainActivity : Activity() {
                 snapshot to entry
             }) { (snapshot, entry) ->
                 RunSession.start(applicationContext, code, stdin, false, runningFile, snapshot.absolutePath,
-                    workspace.identity, entry.absolutePath)
+                    workspace.identity, entry.absolutePath, sessions.key(path))
             }
-        } else RunSession.start(applicationContext, code, stdin, cpp, runningFile, projectRoot, workspace.identity)
+        } else RunSession.start(applicationContext, code, stdin, cpp, runningFile, projectRoot, workspace.identity,
+            entryKey = sessions.key(activePath))
     }
 
     private fun renderRunState() {
@@ -2122,33 +2145,35 @@ class MainActivity : Activity() {
     }
 
     private fun gotoError() {
-        val line = result?.errorLine ?: return
-        val file = result?.errorFile ?: result?.sourcePath
-        val jump: () -> Unit = {
-            revealEditor()
-            val src = editor.text.toString(); var position = 0
-            for (i in 1 until line) {
-                val next = src.indexOf('\n', position)
-                if (next < 0) break
-                position = next + 1
-            }
-            editor.requestFocus(); editor.setSelection(position.coerceAtMost(editor.length()))
-            editor.bringPointIntoView(editor.selectionStart)
+        val origin = result ?: return
+        val line = origin.errorLine ?: return
+        val targetWorkspace = workspace
+        if (origin.workspaceId != null && origin.workspaceId != targetWorkspace.identity) {
+            alert("请先打开运行时的原工作区，再定位错误"); return
         }
-        if (file != null) {
-            if (result?.workspaceId != null && result?.workspaceId != workspace.identity) {
-                alert("请先打开运行时的原工作区，再定位错误"); return
+        val file = origin.errorFile ?: origin.sourcePath
+        val relative = if (file == null) activePath else DiagnosticFiles.relative(targetWorkspace, file, origin.projectRoot)
+        if (relative == null) { alert("错误位置不在当前工作区；请打开运行时的原工作区"); return }
+        val entry = origin.sourcePath?.let { DiagnosticFiles.relative(targetWorkspace, it, origin.projectRoot) }
+        val jump: () -> Unit = jump@{
+            if (result !== origin || workspace !== targetWorkspace) {
+                status.setText(R.string.editor_navigation_stale); return@jump
             }
-            val relative = runCatching { workspace.path(File(file)) }.getOrNull() ?: runCatching {
-                val oldRoot = File(result?.projectRoot ?: error("缺少运行目录")).canonicalPath
-                val location = File(file).canonicalPath
-                require(location.startsWith(oldRoot + File.separator))
-                location.removePrefix(oldRoot + File.separator).replace(File.separatorChar, '/')
-                    .also { require(workspace.resolve(it).isFile) }
-            }.getOrNull()
-            if (relative == null) { alert("错误位置不在当前工作区；请打开运行时的原工作区"); return }
-            switchFile(relative, jump)
-        } else jump()
+            val source = editorPort?.snapshot()?.buffer ?: return@jump
+            val located = editorPort?.locateDiagnostic(EditorDiagnostic(source, line,
+                if (relative == entry) origin.sourceKey else null, if (relative == entry) origin.sourceHash else null))
+                ?: DiagnosticStatus.NO_DOCUMENT
+            if (located.located) { hideCompletion(); clearSnippet() }
+            when (located) {
+                DiagnosticStatus.LOCATED -> status.setText(R.string.editor_diagnostic_verified)
+                DiagnosticStatus.LINE_ONLY -> status.setText(R.string.editor_diagnostic_unverified)
+                DiagnosticStatus.CHANGED_SOURCE -> status.setText(R.string.editor_diagnostic_changed)
+                DiagnosticStatus.INVALID_LINE -> status.setText(R.string.editor_diagnostic_line)
+                DiagnosticStatus.COMPOSING -> status.setText(R.string.editor_edit_composing)
+                else -> status.setText(R.string.editor_navigation_stale)
+            }
+        }
+        switchFile(relative, jump)
     }
 
     private fun alert(message: String) { AlertDialog.Builder(this).setMessage(message).setPositiveButton("确定", null).show() }

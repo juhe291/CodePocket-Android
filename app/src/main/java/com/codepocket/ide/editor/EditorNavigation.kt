@@ -1,0 +1,70 @@
+package com.codepocket.ide.editor
+
+import com.codepocket.ide.EditorSnapshot
+import com.codepocket.ide.TextChange
+import com.codepocket.ide.Workspace
+
+data class EditorSelectionRequest(val source: EditorSnapshot, val start: Int, val end: Int = start,
+    val reveal: Boolean = true, val focus: Boolean = false, val matchSelection: Boolean = true)
+data class EditorSelectionRange(val start: Int, val end: Int)
+
+/** Lightweight viewport stamp: never copies the document during panel resizing or scrolling. */
+data class EditorViewportSnapshot(val key: String, val revision: Long, val start: Int, val end: Int,
+    val x: Int, val y: Int, val interaction: Long, val composing: Boolean = false, val visible: Boolean = true) {
+    fun matches(current: EditorViewportSnapshot?, requireVisible: Boolean): Boolean = current != null &&
+        !composing && !current.composing && (!requireVisible || current.visible) &&
+        key == current.key && revision == current.revision && start == current.start && end == current.end &&
+        interaction == current.interaction
+}
+
+interface NavigatingEditorPort : EditingEditorPort, AutoCloseable {
+    fun navigationSnapshot(): EditorViewportSnapshot?
+    fun select(request: EditorSelectionRequest): Boolean
+    // Deferred until layout; never restores focus. Native reflow may change the current scroll meanwhile.
+    fun restoreViewport(snapshot: EditorViewportSnapshot): Boolean
+    fun revealCaret(): Boolean
+    fun locateDiagnostic(request: EditorDiagnostic): DiagnosticStatus
+    fun cancelNavigation()
+}
+
+object EditorNavigation {
+    fun canSelect(current: EditorFrame?, request: EditorSelectionRequest): Boolean =
+        EditorTransactions.check(current, EditorTransaction(request.source,
+            TextChange(0, 0, "", request.start, request.end), request.matchSelection), Workspace.MAX_CHARS).accepted
+
+    /** Saved offsets may predate an external edit. Preserve direction without splitting emoji/CRLF. */
+    fun restoredSelection(text: String, start: Int, end: Int): EditorSelectionRange {
+        val a = start.coerceIn(0, text.length)
+        val b = end.coerceIn(0, text.length)
+        fun floor(at: Int) = if (EditorTransactions.boundary(text, at)) at else at - 1
+        fun ceil(at: Int) = if (EditorTransactions.boundary(text, at)) at else at + 1
+        return when {
+            a == b -> EditorSelectionRange(floor(a), floor(a))
+            a < b -> EditorSelectionRange(floor(a), ceil(b))
+            else -> EditorSelectionRange(ceil(a), floor(b))
+        }
+    }
+}
+
+/** Latest navigation wins; interaction, edits, selection changes and disposal invalidate delayed work. */
+class EditorViewportQueue(private val post: (() -> Unit) -> Unit,
+    private val current: () -> EditorViewportSnapshot?,
+    private val commit: (EditorViewportSnapshot, Boolean) -> Unit) : AutoCloseable {
+    private var generation = 0L
+    private var closed = false
+
+    fun submit(source: EditorViewportSnapshot, reveal: Boolean = false): Boolean {
+        if (closed || source.x < 0 || source.y < 0 || !source.matches(current(), false)) return false
+        val ticket = ++generation
+        post {
+            if (!closed && ticket == generation) {
+                generation++ // Consume even a rejected callback; a native observer may be reattached.
+                if (source.matches(current(), true)) commit(source, reveal)
+            }
+        }
+        return true
+    }
+
+    fun cancel() { generation++ }
+    override fun close() { closed = true; cancel() }
+}

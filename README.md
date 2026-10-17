@@ -1,14 +1,15 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-17：已接入生产编辑事务与系统历史入口首批。** 保留现有原生编辑器，补全/片段、缩进、符号和替换共用文档版本、选区、组合输入及字符边界校验；修复超限/无变化标脏和历史恢复再次自动修正的问题。见[本批结果](docs/P1_EDITOR_TRANSACTIONS.md)。[Sora隔离原型](docs/P1_EDITOR_LAB.md)继续保留，尚未迁移默认编辑器。
+**2026-10-17：已接入生产选区、视口与错误导航保护。** 查找/跳行/片段/错误定位及会话与面板恢复共用版本、选区和组合输入保护；布局后的滚动不会覆盖后续用户操作。入口错误核对运行时文件身份与源码摘要，超范围行不再落到文件末尾。见[本批结果](docs/P1_EDITOR_NAVIGATION.md)。[事务与历史保护](docs/P1_EDITOR_TRANSACTIONS.md)、[Sora隔离原型](docs/P1_EDITOR_LAB.md)继续保留，默认仍为原生编辑器。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [默认IDE Debug APK](dist/CodePocket-editor-transactions-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。最终构建1m 10s；Kotlin196中195通过/1跳过，新增23通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
+**最新 [默认IDE Debug APK](dist/CodePocket-editor-navigation-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。最终构建48s；Kotlin226中225通过/1跳过，新增30通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
 
 另有[Sora实验APK](dist/CodePocket-Sora-editor-lab-debug.apk)和[实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)，使用独立包名/临时草稿；14项真实库测试通过，尚未接入IDE功能。实机按要求统一后置，未验收UI/键鼠/IME/FPS。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
+- [P1 生产选区、视口与错误导航验证](docs/P1_EDITOR_NAVIGATION.md)
 - [P1 内置函数参数参考与验证](docs/P1_SIGNATURE_HELP.md)
 - [P1 内置片段、占位符与真实模板验证](docs/P1_SNIPPETS.md)
 - [P1 可调运行面板与验证结果](docs/P1_RUN_PANEL.md)
@@ -52,7 +53,8 @@
 - SAF 真实目录授权、最近项目、提供方 CRUD；编辑器写回前核对版本、保存原文备份、写后读回验证；磁盘恢复草稿独立于提供方授权。
 - Python 本地标准库、工作区模块与资源、traceback；后台独立进程可中止，运行状态跨 Activity 重建。
 - C++17 云端真实编译执行，支持服务自带 STL/常用头文件和预填 stdin；编译/运行/网络/服务错误、超时、中止分别标记。
-- 重复运行保护、取消后迟到结果隔离；错误跳转回原工作区文件和首个识别出的行。
+- 重复运行保护、取消后迟到结果隔离；错误跳转回原工作区文件和首个识别出的有效行。入口文件核对运行时身份/源码摘要，修改后拒绝旧定位；导入模块缺少运行版本证明时明确提示仅按行定位。
+- 查找/跳行/片段选区及布局后视口恢复统一经过生产导航接口；文档/版本/选区/组合状态及后续触摸、键盘、鼠标操作使迟到恢复失效。保存选区避免拆分emoji/CRLF；原生输入与独立stdin保留。
 
 ## 键盘与鼠标
 
@@ -87,7 +89,8 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |
 | terminal/AnsiParser / TerminalView | 受限SGR样式与只读结束后输出，保留原生文字选择 |
 | ui/DesignTokens / IdeIcons / IdeControls | 外壳配色/尺寸、原创线性图标和原生触控组件 |
-| editor/EditorPort / EditingEditorPort / EditorTransactions / NativeEditorPort | 后台分析快照、原生装饰、显式事务/历史门控；独立视口/诊断与完整组件适配待做 |
+| editor/EditorPort / EditingEditorPort / NavigatingEditorPort / NativeEditorPort | 生产分析/装饰、显式事务/历史与选区/视口/行错误导航；完整文档会话与组件适配待做 |
+| editor/EditorNavigation / EditorDiagnostics | UTF-16选区校验、轻量视口队列、过期交互保护、入口源码证明和安全路径映射 |
 | MainActivity / CodeEditor | 原生界面、触摸/键鼠入口、IME、编辑与会话联动 |
 | AppSettings / SettingsDialog | 持久化设置、边界校验与原生设置页面 |
 | EditorSearch / SearchDialog | 字面查找/替换/跳转、换行行号及后台请求校验 |
@@ -133,10 +136,10 @@ Kotlin 测试完成后，可用 `python scripts/verify_snippets.py --junit app/b
 - Python 字节码尽力限时 6 秒，父级会话总限时 10 秒含初始化；C++ 连接 10 秒/读取 30 秒，父级等待 45 秒。云端取消不代表服务器任务已终止，未知退出码显示“—”。
 - 文本最多 20 万字符，运行代码最多 10 万字符，stdin 最多 2 万字符；超过 45000 字符停用高亮/括号匹配；最多应用 6000 个着色 span，超预算退回正文颜色。SAF 最多 1000 项、20 层目录；Python 快照单资源 1 MB、总计 8 MB。
 - 草稿为约 200 ms 检查点；检查点写入前直接强杀/掉电仍可能丢失最后少量输入，不承诺每次按键即时落盘。
-- Python 不是安全沙箱，独立进程仍具有本 App 的 UID 权限；不保证后台长期常驻。运行后继续编辑可能使历史错误行号偏移。
+- Python 不是安全沙箱，独立进程仍具有本 App 的 UID 权限；不保证后台长期常驻。入口文件编辑后会拒绝旧错误定位；导入模块仍只有明确提示的按行定位，不能证明对应运行时内容。
 - 外部项目结构被其他应用改变后须重新载入。C++ 仍为单文件，不上传本地头文件或链接多个 cpp；本地 C++ 方案和批量用例属于 P2。
 - P1 第一批设置、独立词法主题和当前文件查找替换已实现；面板拖动/最大化/恢复和原生词法候选列表已接入；内置片段与占位符已接入；常用内置函数调用参数参考已接入；后台项目搜索已接入；Sora隔离原型已接入；完整生产EditorPort/迁移适配、语言包、动画、语义签名和流式程序终端仍待开发。第三方许可证完整通知包仍待完善。
-- 2026-10-15 增补：动画系统和 VS Code 风格补全界面归入 P1；C++ / Python 深度语义补全归入 P2。Sora、clangd、Jedi 等仅列为待评估候选，尚未集成；当前为原生候选列表上的基础词法补全，成员语义未实现。动画须尊重系统减少动画及 App 开关，60 FPS/高刷新率与输入法、光标、弹窗配合均待实测。
+- 2026-10-15 增补：动画系统和 VS Code 风格补全界面归入 P1；C++ / Python 深度语义补全归入 P2。Sora已有隔离实验，尚未迁移默认IDE；clangd、Jedi语义服务仍待评估接入。当前为原生候选列表上的基础词法补全，成员语义未实现。动画须尊重系统减少动画及 App 开关，60 FPS/高刷新率与输入法、光标、弹窗配合均待实测。
 
 2026-10-17 审查后用户已确认继续；P1-A 手机竖屏外壳已完成代码与主机验证，P1-B与本批UI接续均已开发并做主机验证，继续P1余项。继续按 P1 → P2 → P3 分批开发、主机验证和保存 APK，发现 P0 缺陷仍优先回修。依据 2026-10-16 最新指示，实机验收统一放到功能开发完成后，不作为继续开发的前置条件；历史记录保留。
 
