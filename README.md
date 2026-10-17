@@ -4,7 +4,7 @@
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [Debug APK](verification/p1b-responsive-2026-10-17/CodePocket-P1B-responsive-debug.apk)** 20.79 MiB，Android 7.0+ / arm64-v8a。Kotlin 131 项中 130 通过、1 跳过；Python 源码/真实 APK 字节码各 13/13，生成模板 Python/C++17 各 7/7；Lint 0 错误、11 警告，签名/CRC/ABI/对齐通过。设备验收按要求统一后置，当前响应式布局/Activity Bar/状态栏尚未实机验证。
+**最新 [Debug APK](dist/CodePocket-P1B-responsive-debug.apk)** 20.79 MiB，Android 7.0+ / arm64-v8a。Kotlin 131 项中 130 通过、1 跳过；Python 源码/真实 APK 字节码各 13/13，生成模板 Python/C++17 各 7/7；Lint 0 错误、11 警告，签名/CRC/ABI/对齐通过。设备验收按要求统一后置，当前响应式布局/Activity Bar/状态栏尚未实机验证。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
 - [P1 内置函数参数参考与验证](docs/P1_SIGNATURE_HELP.md)
