@@ -1,0 +1,130 @@
+package com.codepocket.ide
+
+import org.junit.Assert.*
+import org.junit.Test
+
+class PanelLayoutTest {
+    private fun layout(state: PanelState = PanelState(), width: Int = 400, height: Int = 700,
+        visible: Boolean = true, ime: Boolean = false, stdin: Boolean = false, collapse: Boolean = true) =
+        PanelLayoutPolicy.resolve(state, visible, width, height, ime, stdin, collapse)
+
+    @Test fun dockingUsesMeasuredWorkspaceWidthAndKeepsIndependentPreferences() {
+        val state = PanelState(bottomFraction = .6f, sideFraction = .3f)
+        val bottom = layout(state, width = 599)
+        assertEquals(PanelDock.BOTTOM, bottom.dock); assertEquals(420, bottom.extent)
+        val side = layout(state, width = 1000)
+        assertEquals(PanelDock.SIDE, side.dock); assertEquals(300, side.extent)
+        // A 768dp window with a 205dp explorer has only 563dp for the split.
+        assertEquals(PanelDock.BOTTOM, layout(state, width = 768 - 205).dock)
+        assertEquals(PanelDock.SIDE, layout(state, width = 600).dock)
+    }
+
+    @Test fun visibilityAndImeRulesRespectExplicitMaximizeAndStdin() {
+        assertFalse(layout(ime = true).showPanel)
+        assertTrue(layout(ime = true, collapse = false).showPanel)
+        assertTrue(layout(ime = true, stdin = true).showPanel)
+        val maximum = layout(PanelState(maximized = true), ime = true)
+        assertTrue(maximum.showPanel); assertFalse(maximum.showEditor); assertFalse(maximum.resizable)
+        val closed = layout(PanelState(maximized = true), visible = false)
+        assertFalse(closed.showPanel); assertTrue(closed.showEditor)
+    }
+
+    @Test fun tinyInputWindowsKeepStdinReachableWithoutChangingRememberedMode() {
+        val state = PanelState(bottomFraction = .65f)
+        val input = layout(state, height = 190, ime = true, stdin = true)
+        assertTrue(input.showPanel); assertFalse(input.showEditor); assertEquals(190, input.extent)
+        assertFalse(input.resizable); assertFalse(state.maximized)
+        val code = layout(state, height = 190, ime = true, collapse = false)
+        assertFalse(code.showPanel); assertTrue(code.showEditor)
+        val smallWindow = layout(state, height = 190)
+        assertTrue(smallWindow.showEditor); assertFalse(smallWindow.showPanel)
+        val explicit = layout(state.copy(maximized = true), height = 190)
+        assertTrue(explicit.showPanel); assertFalse(explicit.showEditor)
+    }
+
+    @Test fun temporaryWindowClampsDoNotOverwriteSizeOrMaximizePreferences() {
+        val state = PanelState(.7f, .75f)
+        val clamped = layout(state, height = 400)
+        assertEquals(248, clamped.extent)
+        assertEquals(.7f, state.bottomFraction, .0001f)
+        assertEquals(700, layout(state, height = 1000).extent)
+        layout(state, height = 200, ime = true, stdin = true)
+        assertEquals(700, layout(state, height = 1000).extent)
+        val side = layout(state, width = 700)
+        assertEquals(436, side.extent)
+        assertEquals(.75f, state.sideFraction, .0001f)
+    }
+
+    @Test fun draggingMovesInTheExpectedDirectionAndCannotEraseTheEditor() {
+        assertEquals(280f, PanelLayoutPolicy.drag(240, -40f, 208, 500), .001f)
+        assertEquals(208f, PanelLayoutPolicy.drag(240, 1000f, 208, 500), .001f)
+        assertEquals(500f, PanelLayoutPolicy.drag(240, -1000f, 208, 500), .001f)
+        assertEquals(240f, PanelLayoutPolicy.drag(240, Float.NaN, 208, 500), .001f)
+        assertEquals(240f, PanelLayoutPolicy.drag(240, 1f, 500, 208), .001f)
+        val state = PanelState()
+        val spec = layout(state)
+        val resized = spec.resize(state, 400f)
+        assertEquals(400, layout(resized).extent)
+        assertEquals(state.sideFraction, resized.sideFraction, .001f)
+        val largest = layout(spec.resize(state, Float.MAX_VALUE))
+        assertEquals(spec.maximum, largest.extent)
+        assertTrue(largest.available - largest.extent - PanelLayoutPolicy.HANDLE >= 128)
+        assertEquals(state, spec.resize(state, Float.NaN))
+    }
+
+    @Test fun hiddenMaximizedAndUnmeasuredPanelsDoNotAcceptResize() {
+        val state = PanelState()
+        assertEquals(state, layout(visible = false).resize(state, 300f))
+        assertEquals(state, layout(state.copy(maximized = true)).resize(state, 300f))
+        for ((width, height) in listOf(0 to 700, 400 to 0, -1 to -1)) {
+            val spec = layout(width = width, height = height)
+            assertFalse(spec.showPanel); assertTrue(spec.showEditor); assertEquals(0, spec.extent)
+            assertEquals(state, spec.resize(state, 300f))
+        }
+    }
+
+    @Test fun corruptOrFuturePreferencesMigrateWithoutLosingOtherAxis() {
+        assertEquals(PanelState(), PanelState.fromJson(null))
+        assertEquals(PanelState(), PanelState.fromJson("not json"))
+        val state = PanelState(.42f, .63f, true)
+        assertEquals(state, PanelState.fromJson(state.toJson()))
+        val malformed = PanelState.fromJson("""{"version":99,"bottom":999,"side":-9,"maximized":true}""")
+        assertEquals(.9f, malformed.bottomFraction, .001f); assertEquals(.05f, malformed.sideFraction, .001f)
+        assertTrue(malformed.maximized)
+        assertEquals(.35f, PanelState(Float.NaN, Float.POSITIVE_INFINITY).normalized().bottomFraction, .001f)
+        assertEquals(.36f, PanelState(Float.NaN, Float.POSITIVE_INFINITY).normalized().sideFraction, .001f)
+    }
+
+    @Test fun hiddenEditorCaptureKeepsItsViewportWhileStdinSelectionStaysLive() {
+        val saved = EditorViewState(42, 9, 300, 800, "editor", 1, 2)
+        val live = EditorViewState(42, 9, 0, 0, "stdin", 7, 8)
+        assertEquals(saved.copy(focus = "stdin", inputStart = 7, inputEnd = 8), PanelViewport.capture(saved, live, false))
+        assertEquals(live, PanelViewport.capture(saved, live, true))
+        assertEquals(42, PanelViewport.capture(saved, live, false).start)
+        assertEquals(9, PanelViewport.capture(saved, live, false).end)
+    }
+
+    @Test fun viewportRestoreNeverMovesAnotherFileOrNewlyChangedSelection() {
+        val stamp = PanelViewport("project:file", 10, EditorViewState(7, 2, 30, 90, "stdin", 3, 4))
+        assertTrue(stamp.canRestore("project:file", 10, 7, 2))
+        assertFalse(stamp.canRestore("another:file", 10, 7, 2))
+        assertFalse(stamp.canRestore("project:file", 11, 7, 2))
+        assertFalse(stamp.canRestore("project:file", 10, 8, 2))
+        assertFalse(stamp.canRestore("project:file", 10, 2, 7))
+    }
+
+    @Test fun layoutInvariantsHoldAcrossWindowsImeAndRememberedSizes() {
+        for (width in listOf(0, 200, 599, 600, 800, 1400)) for (height in listOf(0, 90, 200, 368, 700, 1200))
+            for (fraction in listOf(.05f, .35f, .9f, Float.NaN)) for (flags in 0..31) {
+                val state = PanelState(fraction, fraction, flags and 1 != 0)
+                val spec = layout(state, width, height, flags and 2 != 0, flags and 4 != 0, flags and 8 != 0, flags and 16 != 0)
+                assertTrue(spec.showPanel || spec.showEditor)
+                assertTrue(spec.extent in 0..spec.available)
+                if (!spec.showPanel) { assertEquals(0, spec.extent); assertFalse(spec.resizable) }
+                if (spec.resizable) {
+                    assertTrue(spec.showEditor); assertTrue(spec.extent in spec.minimum..spec.maximum)
+                    assertTrue(spec.extent + PanelLayoutPolicy.HANDLE <= spec.available)
+                }
+            }
+    }
+}

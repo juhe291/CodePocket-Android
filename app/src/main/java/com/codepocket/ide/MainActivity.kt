@@ -65,13 +65,20 @@ class MainActivity : Activity() {
     private var quietEdit = false
     private var explorerDialog: AlertDialog? = null
     private var wide = false
-    private var consoleSide = false
     private var loadedPath: String? = null
     private var dirty = false
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var sessions: EditorSessions
     private var quietInput = false
     private var panelVisible = true
+    private var panelState = PanelState()
+    private var panelLayout: PanelLayout? = null
+    private lateinit var splitHost: LinearLayout
+    private lateinit var panelResize: PanelResizeHandle
+    private lateinit var panelMaxButton: TextView
+    private lateinit var panelSizeButton: TextView
+    private lateinit var panelInputHeading: LinearLayout
+    private lateinit var panelOutputScroll: HorizontalScrollView
     private var imeVisible = false
     private var lastFocus = "editor"
     private lateinit var detailToolbar: HorizontalScrollView
@@ -99,6 +106,7 @@ class MainActivity : Activity() {
             field = value
             if (::editor.isInitialized) { editor.isEnabled = !value; if (value) hideCompletion() }
             if (::input.isInitialized) input.isEnabled = !value
+            if (::panelResize.isInitialized) panelResize.isEnabled = !value && panelLayout?.resizable == true
         }
     private var saving = false
     private var afterSave: (() -> Unit)? = null
@@ -193,8 +201,9 @@ class MainActivity : Activity() {
                     expanded.clear(); expanded.add("")
                     explorerVisible = prefs.getBoolean("explorerVisible", true)
                     panelVisible = prefs.getBoolean("panelVisible", true)
+                    panelState = PanelState.fromJson(prefs.getString("panelLayout", null))
+                        .let { if (panelVisible) it else it.copy(maximized = false) }
                     wide = resources.configuration.screenWidthDp >= 720 && resources.configuration.screenHeightDp >= 480
-                    consoleSide = resources.configuration.screenWidthDp >= 600
                     createUi(); loadActive(ready.code, ready.draft)
                     // Bundle checkpoints are merged before reading; loadActive reconciles them once.
                     exportContent = saved?.getString("exportSnapshot")?.let { name ->
@@ -259,6 +268,7 @@ class MainActivity : Activity() {
 
     override fun onPause() {
         super.onPause()
+        if (::panelResize.isInitialized) panelResize.cancelGesture()
         handler.removeCallbacks(refreshEditor); hideCompletion(); completionConsumedKeys.clear()
         persist()
     }
@@ -282,11 +292,13 @@ class MainActivity : Activity() {
             .putString(prefKey("activeFile"), activePath).putString(prefKey("directory"), currentDirectory)
             .putBoolean("dark", dark).putBoolean("explorerVisible", explorerVisible)
             .putString(prefKey("opened"), JSONArray(opened).toString())
-            .putBoolean("panelVisible", panelVisible).apply()
+            .putBoolean("panelVisible", panelVisible).putString("panelLayout", panelState.toJson()).apply()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        if (::panelResize.isInitialized) panelResize.cancelGesture()
+        panelDragViewport = null
         handler.removeCallbacksAndMessages(null)
         toolDialog?.dismiss()
         hideCompletion(); completionExecutor.shutdownNow(); completionConsumedKeys.clear()
@@ -321,6 +333,8 @@ class MainActivity : Activity() {
 
     private fun createUi() {
         hideCompletion(); completionPopup = null
+        if (::panelResize.isInitialized) panelResize.cancelGesture()
+        panelDragViewport = null; panelLayout = null
         window.statusBarColor = surface
         window.navigationBarColor = panel
         val lightNavigationBar = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -340,12 +354,7 @@ class MainActivity : Activity() {
         }, LinearLayout.LayoutParams(0, dp(38), 1f))
         top.addView(button("收键盘") { hideKeyboard() })
         top.addView(space(3))
-        top.addView(button("结果") {
-            if (input.hasFocus()) { hideKeyboard(); editor.requestFocus() }
-            panelVisible = !panelVisible
-            updateImeLayout(); persistNavigation()
-            if (panelVisible) animateDecoration(outputRegion)
-        })
+        top.addView(button("结果") { togglePanel() })
         top.addView(button("⚙") { showSettings() }.apply { contentDescription = "设置" })
         top.addView(space(5))
         runButton = button("▶ 运行") { if (running) RunSession.stop() else runCode() }
@@ -394,17 +403,19 @@ class MainActivity : Activity() {
         buildEditor(work)
 
         val console = buildConsole()
-        if (consoleSide) {
-            // On large landscape tablets the console docks to the right of the editor.
-            val parent = editorRegion.parent as? ViewGroup
-            parent?.removeView(editorRegion)
-            val split = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            split.addView(editorRegion, LinearLayout.LayoutParams(0, -1, 1f))
-            split.addView(console, LinearLayout.LayoutParams(dp(if (resources.configuration.screenWidthDp < 960) 235 else 290), -1))
-            work.addView(split, LinearLayout.LayoutParams(-1, 0, 1f))
-        } else {
-            work.addView(console, LinearLayout.LayoutParams(-1, dp(225)))
+        (editorRegion.parent as? ViewGroup)?.removeView(editorRegion)
+        splitHost = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; layoutDirection = View.LAYOUT_DIRECTION_LTR }
+        panelResize = PanelResizeHandle(this).apply {
+            setCallbacks(muted, {
+                hideCompletion(); panelDragViewport = capturePanelViewport()
+            }, ::resizePanelFraction, ::finishPanelResize)
+            setBackgroundColor(surface)
+            setOnClickListener { showPanelSizeMenu(this) }
         }
+        splitHost.addView(editorRegion, LinearLayout.LayoutParams(-1, 0, 1f))
+        splitHost.addView(panelResize, LinearLayout.LayoutParams(-1, dp(PanelLayoutPolicy.HANDLE)))
+        splitHost.addView(console, LinearLayout.LayoutParams(-1, dp(225)))
+        work.addView(splitHost, LinearLayout.LayoutParams(-1, 0, 1f))
         status = label("就绪", 11f, muted).apply {
             setPadding(dp(12), dp(5), dp(12), dp(5)); setBackgroundColor(surface)
         }
@@ -442,24 +453,152 @@ class MainActivity : Activity() {
         val height = (root.height / resources.displayMetrics.density).toInt()
         val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible, settings.collapsePanelOnIme)
         if (visible) listOfNotNull(explorerPane, tabsRow, outputRegion).forEach { it.animate().cancel(); it.alpha = 1f }
-        outputRegion.visibility = if (layout.showPanel) View.VISIBLE else View.GONE
         fileTitle.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
         suggestionScroll.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
         keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
-        editorRegion.visibility = if (layout.compactInput && height < 260) View.GONE else View.VISIBLE
         detailToolbar.visibility = if (!visible) View.VISIBLE else View.GONE
         status.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
-        if (!consoleSide) {
-            val target = dp(if (layout.compactInput) minOf(136, maxOf(116, height - 56)) else minOf(225, maxOf(136, height / 3)))
-            input.layoutParams?.let { params ->
-                val inputHeight = dp(if (layout.compactInput && height < 260) 44 else 57)
-                if (params.height != inputHeight) input.layoutParams = params.apply { this.height = inputHeight }
-            }
-            if (outputRegion.layoutParams.height != target) {
-                outputRegion.layoutParams = outputRegion.layoutParams.apply { this.height = target }
-            }
-        }
+        applyPanelLayout()
         if (changed && visible) editor.post { if (editor.hasFocus()) editor.bringPointIntoView(editor.selectionEnd) }
+    }
+
+    private var panelDragViewport: PanelViewport? = null
+
+    private fun capturePanelViewport(): PanelViewport? {
+        if (!::sessions.isInitialized || loadedPath != activePath || !::editorRegion.isInitialized) return null
+        captureSession()
+        return PanelViewport(sessions.key(activePath), editRevision, sessions.file(activePath).view)
+    }
+
+    private fun restorePanelViewport(stamp: PanelViewport?, focusEditor: Boolean = false) {
+        if (stamp == null) return
+        editor.post {
+            if (isDestroyed || loadedPath != activePath || editorRegion.visibility != View.VISIBLE ||
+                !stamp.canRestore(sessions.key(activePath), editRevision, editor.selectionStart, editor.selectionEnd) ||
+                BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return@post
+            editor.scrollTo(stamp.view.scrollX, stamp.view.scrollY)
+            numbers.scrollY = editor.scrollY
+            if (focusEditor && !input.hasFocus()) editor.requestFocus()
+        }
+    }
+
+    private fun persistPanel() {
+        prefs.edit().putBoolean("panelVisible", panelVisible).putString("panelLayout", panelState.toJson()).apply()
+    }
+
+    private fun finishPanelResize() {
+        val stamp = panelDragViewport; panelDragViewport = null
+        persistPanel(); restorePanelViewport(stamp)
+    }
+
+    private fun resizePanelFraction(fraction: Float) {
+        if (workspaceBusy || !fraction.isFinite()) return
+        val spec = panelLayout ?: return
+        panelState = spec.resize(panelState, fraction * spec.available)
+        applyPanelLayout()
+    }
+
+    private fun closePanel() {
+        panelResize.cancelGesture(); hideCompletion()
+        val stamp = capturePanelViewport()
+        if (input.hasFocus()) { hideKeyboard(); editor.requestFocus() }
+        panelVisible = false; panelState = panelState.copy(maximized = false)
+        updateImeLayout(); persistPanel(); restorePanelViewport(stamp, true)
+    }
+
+    private fun togglePanel() {
+        if (panelVisible && panelLayout?.showPanel == true) { closePanel(); return }
+        panelVisible = true
+        updateImeLayout()
+        // A narrow/short window has room for one pane; explicit opening must still work.
+        if (panelLayout?.showPanel != true) setPanelMaximized(true)
+        else { persistPanel(); animateDecoration(outputRegion) }
+    }
+
+    private fun setPanelMaximized(maximized: Boolean) {
+        if (workspaceBusy) return
+        panelResize.cancelGesture(); hideCompletion()
+        val stamp = capturePanelViewport()
+        if (maximized && !input.hasFocus()) { hideKeyboard(); outputRegion.requestFocus() }
+        panelVisible = true; panelState = panelState.copy(maximized = maximized)
+        updateImeLayout(); persistPanel()
+        if (!maximized) restorePanelViewport(stamp, true)
+        animateDecoration(if (maximized) outputRegion else editorRegion)
+    }
+
+    private fun revealEditor() {
+        if (panelState.maximized) setPanelMaximized(false)
+        if (editorRegion.visibility != View.VISIBLE) closePanel()
+    }
+
+    private fun showPanelSizeMenu(anchor: View) {
+        panelResize.cancelGesture()
+        val menu = android.widget.PopupMenu(this, anchor)
+        menu.menu.add(0, 1, 0, R.string.panel_smaller).isEnabled = panelLayout?.resizable == true
+        menu.menu.add(0, 2, 1, R.string.panel_larger).isEnabled = panelLayout?.resizable == true
+        menu.menu.add(0, 3, 2, R.string.panel_reset)
+        menu.menu.add(0, 4, 3, R.string.panel_clear_input)
+        menu.setOnMenuItemClickListener { item ->
+            if (!workspaceBusy && item.itemId == 4) { input.setText(""); return@setOnMenuItemClickListener true }
+            if (!workspaceBusy) {
+                val stamp = capturePanelViewport(); hideCompletion()
+                if (item.itemId == 3) panelState = PanelState(maximized = panelState.maximized)
+                else panelLayout?.let { spec ->
+                    panelState = spec.resize(panelState, spec.extent + spec.available * if (item.itemId == 2) .05f else -.05f)
+                }
+                applyPanelLayout(); persistPanel(); restorePanelViewport(stamp)
+            }
+            true
+        }
+        menu.show()
+    }
+
+    private fun applyPanelLayout() {
+        if (!::splitHost.isInitialized || !::panelResize.isInitialized || !::input.isInitialized) return
+        val density = resources.displayMetrics.density
+        val width = (splitHost.width / density).toInt(); val height = (splitHost.height / density).toInt()
+        // Before first measure, hiding stdin would make restoreSession.requestFocus() silently fail.
+        if (width <= 0 || height <= 0) return
+        val spec = PanelLayoutPolicy.resolve(panelState, panelVisible, width, height,
+            imeVisible, input.hasFocus(), settings.collapsePanelOnIme)
+        val previous = panelLayout
+        val stamp = if (previous != null && previous.dock != spec.dock) capturePanelViewport() else null
+        panelLayout = spec
+        val side = spec.dock == PanelDock.SIDE
+        val orientation = if (side) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
+        if (splitHost.orientation != orientation) splitHost.orientation = orientation
+        fun params(view: View, width: Int, height: Int, weight: Float = 0f) {
+            val old = view.layoutParams as? LinearLayout.LayoutParams
+            if (old == null || old.width != width || old.height != height || old.weight != weight)
+                view.layoutParams = LinearLayout.LayoutParams(width, height, weight)
+        }
+        params(editorRegion, if (side) 0 else -1, if (side) -1 else 0, 1f)
+        params(panelResize, if (side) dp(PanelLayoutPolicy.HANDLE) else -1, if (side) -1 else dp(PanelLayoutPolicy.HANDLE))
+        val full = spec.showPanel && !spec.showEditor
+        params(outputRegion, if (side && !full) dp(spec.extent) else -1, if (!side && !full) dp(spec.extent) else -1)
+        outputRegion.visibility = if (spec.showPanel) View.VISIBLE else View.GONE
+        if (!spec.showEditor && editor.hasFocus()) outputRegion.requestFocus()
+        editorRegion.visibility = if (spec.showEditor) View.VISIBLE else View.GONE
+        panelResize.visibility = if (spec.resizable) View.VISIBLE else View.GONE
+        panelResize.configure(spec.dock, dp(spec.extent), dp(spec.minimum), dp(spec.maximum), dp(spec.available))
+        panelResize.isEnabled = spec.resizable && !workspaceBusy
+        val panelHeight = if (side || full) height else spec.extent
+        val compact = (imeVisible && input.hasFocus()) || panelHeight < 208
+        panelInputHeading.visibility = if (!compact) View.VISIBLE else View.GONE
+        panelOutputScroll.visibility = if (!compact || panelHeight >= 164) View.VISIBLE else View.GONE
+        input.layoutParams?.let { old ->
+            val target = dp(if (compact) 44 else 57)
+            if (old.height != target) input.layoutParams = old.apply { this.height = target }
+        }
+        // setText requests layout; only change it when the mode changes, not on every global layout.
+        val maxSymbol = getString(if (panelState.maximized) R.string.panel_restore_symbol else R.string.panel_maximize_symbol)
+        if (panelMaxButton.text.toString() != maxSymbol) panelMaxButton.text = maxSymbol
+        val sizeSymbol = getString(if (side) R.string.panel_width_symbol else R.string.panel_size_symbol)
+        if (panelSizeButton.text.toString() != sizeSymbol) panelSizeButton.text = sizeSymbol
+        panelMaxButton.contentDescription = getString(if (panelState.maximized) R.string.panel_restore else R.string.panel_maximize)
+        panelSizeButton.contentDescription = getString(R.string.panel_size_menu)
+        if (previous != spec) completionPopup?.dismiss()
+        restorePanelViewport(stamp)
     }
 
     private fun persistSessions() {
@@ -470,8 +609,10 @@ class MainActivity : Activity() {
         if (!::editor.isInitialized || !::input.isInitialized || loadedPath == null) return
         sessions.file(loadedPath!!).apply {
             stdin = input.text.toString()
-            view = EditorViewState(editor.selectionStart, editor.selectionEnd, editor.scrollX, editor.scrollY,
+            // A GONE editor can have its native scroll clamped during remeasure. Keep its saved viewport.
+            val live = EditorViewState(editor.selectionStart, editor.selectionEnd, editor.scrollX, editor.scrollY,
                 lastFocus, input.selectionStart, input.selectionEnd)
+            view = PanelViewport.capture(view, live, editorRegion.visibility == View.VISIBLE)
         }
     }
 
@@ -484,7 +625,9 @@ class MainActivity : Activity() {
         editor.setSelection(view.start, view.end)
         input.setSelection(view.inputStart, view.inputEnd)
         lastFocus = view.focus
-        if (view.focus == "stdin" && panelVisible) input.requestFocus() else editor.requestFocus()
+        if (view.focus == "stdin" && panelVisible) input.requestFocus()
+        else if (panelState.maximized && panelVisible) outputRegion.requestFocus()
+        else editor.requestFocus()
         editor.post {
             editor.scrollTo(view.scrollX, view.scrollY)
             numbers.scrollY = editor.scrollY
@@ -574,13 +717,28 @@ class MainActivity : Activity() {
     }
 
     private fun buildConsole(): LinearLayout {
-        outputRegion = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(panel) }
+        outputRegion = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; setBackgroundColor(panel); isFocusableInTouchMode = true
+        }
+        val panelHeading = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+        panelHeading.addView(label(getString(R.string.panel_title), 11f, muted).apply {
+            setPadding(dp(8), 0, 0, 0)
+        }, LinearLayout.LayoutParams(0, dp(36), 1f))
+        panelSizeButton = button(getString(R.string.panel_size_symbol)) { showPanelSizeMenu(panelSizeButton) }
+        panelMaxButton = button(getString(R.string.panel_maximize_symbol)) { setPanelMaximized(!panelState.maximized) }
+        panelHeading.addView(panelSizeButton); panelHeading.addView(panelMaxButton)
+        panelHeading.addView(button(getString(R.string.panel_close_symbol)) { closePanel() }.apply {
+            contentDescription = getString(R.string.panel_close)
+        })
+        outputRegion.addView(panelHeading, LinearLayout.LayoutParams(-1, dp(36)))
         outputTabs = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
-        outputRegion.addView(outputTabs)
+        panelOutputScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(outputTabs) }
+        outputRegion.addView(panelOutputScroll, LinearLayout.LayoutParams(-1, dp(36)))
         val stdinCaption = label("标准输入 stdin", 11f, muted).apply { setPadding(dp(10), dp(3), 0, dp(3)) }
         val inputHeading = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         inputHeading.addView(stdinCaption, LinearLayout.LayoutParams(0, -2, 1f))
         inputHeading.addView(button("清空输入") { input.setText("") })
+        panelInputHeading = inputHeading
         outputRegion.addView(inputHeading)
         input = EditText(this).apply {
             typeface = Typeface.MONOSPACE; textSize = 12f
@@ -816,6 +974,7 @@ class MainActivity : Activity() {
 
     private fun switchFile(relative: String, after: (() -> Unit)? = null): Boolean {
         if (workspaceBusy) return false
+        revealEditor()
         if (relative == activePath && loadedPath == activePath) { after?.invoke(); return true }
         saveActive {
             captureSession(); persistSessions()
@@ -1151,6 +1310,7 @@ class MainActivity : Activity() {
         if (workspaceBusy || loadedPath != activePath) return
         toolDialog?.dismiss()
         hideCompletion(true)
+        revealEditor()
         toolDialog = SearchDialog.show(this, replace, ::searchSnapshot, { start, end ->
             editor.setSelection(start, end); editor.bringPointIntoView(start)
         }, { change ->
@@ -1166,6 +1326,7 @@ class MainActivity : Activity() {
     private fun showGoToLine() {
         if (workspaceBusy || loadedPath != activePath) return
         hideCompletion(true)
+        revealEditor()
         val field = EditText(this).apply { inputType = InputType.TYPE_CLASS_NUMBER; hint = "从 1 开始的行号" }
         val dialog = AlertDialog.Builder(this).setTitle("跳转行").setView(field)
             .setNegativeButton("取消", null).setPositiveButton("跳转", null).create()
@@ -1410,6 +1571,7 @@ class MainActivity : Activity() {
         runButton.text = if (running) "■ 停止" else "▶ 运行"
         runButton.isEnabled = true
         result = RunSession.result
+        if (result == null && !running) showOutput(selectedOutput)
         if (running) {
             showOutput(0)
             status.text = "正在执行，请稍候…"
@@ -1452,7 +1614,8 @@ class MainActivity : Activity() {
     private fun gotoError() {
         val line = result?.errorLine ?: return
         val file = result?.errorFile ?: result?.sourcePath
-        val jump = {
+        val jump: () -> Unit = {
+            revealEditor()
             val src = editor.text.toString(); var position = 0
             for (i in 1 until line) {
                 val next = src.indexOf('\n', position)
@@ -1460,6 +1623,7 @@ class MainActivity : Activity() {
                 position = next + 1
             }
             editor.requestFocus(); editor.setSelection(position.coerceAtMost(editor.length()))
+            editor.bringPointIntoView(editor.selectionStart)
         }
         if (file != null) {
             if (result?.workspaceId != null && result?.workspaceId != workspace.identity) {
