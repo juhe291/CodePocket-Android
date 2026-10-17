@@ -1,17 +1,20 @@
 # CodePocket 当前交接状态
 
-## 当前：新完整需求审查完成，等待 UI 阶段确认（2026-10-17）
+## 当前：P1-A 外壳主机验证完成（2026-10-17）
 
-最新用户请求是粘贴附件中的完整要求，末尾明确“审查后先汇报，等待确认，不直接大规模重构”。**这一要求替代此前自动继续状态栏的下一步；在用户确认前不要改生产代码。** 本轮只归档新需求、审查/设计计划并更新说明。
+用户在新完整需求审查后回复“继续”，已确认并执行 P1-A；不要再停在待确认状态，也不要重做阶段 0。全部实机测试按用户要求统一后置，不请求设备。
 
-- 当前业务基线 `b935079`，app/src/构建/测试/脚本/Actions 等 61 项输入哈希未改；[新需求](DEVELOPMENT_REQUIREMENTS_UI_2026-10-17.md) 逐字节保留，旧需求不覆盖。
-- 详见 [客观审查](UI_AUDIT_2026-10-17.md) 与 [P1-A 具体计划](UI_REDESIGN_PLAN_2026-10-17.md)。顶部 21 项第二工具栏、37dp 常驻说明、1812 行 Activity、树/Tab UI 线程元数据和全量高亮是已确认问题；旧图标题换行不能冒充最新截图。
-- 强制重跑 `--rerun-tasks --offline`：`BUILD SUCCESSFUL in 1m 15s`，62 任务执行；Kotlin 99 中 98 通过/1 跳过，Python 源码/真实 APK 字节码各13/13，模板 Python/C++17各7/7，Lint0错误13警告；签名/CRC/ABI/对齐通过。
-- [无 UI 修改的审查基线 APK](../dist/CodePocket-UI-audit-baseline-debug.apk)，21,777,988字节，SHA256 `130eef58299f62aca33fb8c4f090f2706a5ff1bf164df3cee8e00fd687f4d2f7`。证据 `verification/ui-audit-2026-10-17/results.json`；与上批仅 Chaquopy 打包元数据不同，Dex/资源等未变。
-- 真实 Wandbox 小样例 STL/stdin 成功（gcc13.2，输出8），第二例 TLS EOF，第三例未执行；在线脚本退出1，不称全通过。此为主机 API 测试，不是 Android 端验证。
-- 设备统一后置仍有效；检查的 SDK 没有 emulator/system-images、默认 SDK 不存在，无新截图/ADB/帧率/卓易通证据。无远端 Actions 或 push。
-- 推荐下一步确认 P1-A 手机竖屏主栏/菜单/令牌，再扩展横屏/平板及状态；Sora 仅官方资料评估（LGPL、pre-release、LSP API26），先隔离原型，不贸然替换 EditText；真实终端/语义/本地 C++ 仍未实现。
+- 基线 `18bf61f`；本批 [P1A_SHELL.md](P1A_SHELL.md)：单排主栏、命令菜单、原创图标/令牌、收纳常驻说明/预设输入，保留原编辑器与运行/文件实现。命令在展示和执行时检查焦点/组合区/忙碌状态；Ctrl+O 仍导入副本。
+- 最终强制构建 1m 26s / 62 任务；Kotlin114中113通过/1跳过（15新增通过），Python源码/实际APK字节码各13/13，真实生成模板各7/7，Lint0错误/11警告；签名/CRC/ABI/16KB对齐/8个UI类打包检查通过。
+- [最新 APK](../dist/CodePocket-P1A-shell-debug.apk)，21,794,722 字节，SHA256 `44773506fbf7937d176e8eae3e4bb23a6fedd84c81fc59fbf6f46d7c2ac23ea9`；证据 `verification/p1a-shell-2026-10-17/results.json`。失败首轮与中间日志保留。
+- 原61项保护输入只改MainActivity/strings；CodeEditor、文件/SAF/草稿、runner、旧测试、Gradle/Manifest/Actions及三份需求原文保留。没有新依赖、设置schema或存储迁移。
+- 本批无设备/模拟器/截图/帧率/卓易通/新Wandbox请求；当前UI、原生撤销、菜单回焦、IME/键鼠与stdin/SAF联合行为尚未实机验证。不能把模型预算检查写成设备适配通过。
+- 下一批 P1-B：净可用尺寸/横屏平板、Activity Bar、可调Explorer、底部优先运行面板与简洁状态；P0问题优先穿插。P1整体、Sora、完整动画、项目搜索、真实流式终端、P2/P3仍未完成；无push/发布。
+- 实际仓库仍为 `C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`；配置cwd的OneDrive路径不存在，所有命令指定真实workdir。该路径写入/构建需工具沙箱升级。保留verification、dist和.tools，勿清理旧设备备份。
 
+## 2026-10-17 审查记录（历史）
+
+新需求按要求先审查，未修改业务代码；客观结论见 [审查](UI_AUDIT_2026-10-17.md)，原业务基线 `b935079`、[审查 APK](../dist/CodePocket-UI-audit-baseline-debug.apk) 保留。原99项Kotlin中98通过/1跳过，源码与字节码各13项、模板各7项通过。在线Wandbox仅第一例成功，第二例TLS EOF、第三例未执行；不是全通过。当前已获“继续”确认并完成P1-A主机阶段。
 
 ## P1 第五批内置参数参考记录（2026-10-17，历史）
 

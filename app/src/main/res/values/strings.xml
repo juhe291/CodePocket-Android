@@ -9,14 +9,8 @@
     <string name="completion_members_pending">成员语义补全尚未接入（P2）；当前为基础词法补全</string>
     <string name="completion_empty">没有词法候选；请先输入名称前缀</string>
     <string name="completion_no_space">光标附近空间不足，已收起补全；可收起面板或调整窗口</string>
-    <string name="completion_hint">基础词法 · Ctrl+Space 补全 · Tab 接受/缩进 · Esc 关闭</string>
     <string name="completion_key_help">Enter 默认换行；开启接受后仍须先用方向键选中候选。Shift+Tab 反缩进，Esc 关闭。中文组合输入时不接受候选，不改写组合区；软键盘保留原生确认/换行。点击候选可直接插入。片段中 Tab/Shift+Tab 跳转，Esc 结束；主动补全候选优先。片段菜单提供触屏导航；编辑离开当前字段会结束导航。</string>
-    <string name="panel_title">运行面板</string>
-    <string name="panel_size_symbol">↕</string>
-    <string name="panel_width_symbol">↔</string>
-    <string name="panel_maximize_symbol">□</string>
-    <string name="panel_restore_symbol">▣</string>
-    <string name="panel_close_symbol">×</string>
+    <string name="panel_title">运行输出</string>
     <string name="panel_size_menu">面板操作与尺寸</string>
     <string name="panel_clear_input">清空当前文件的标准输入</string>
     <string name="panel_resize_width">调整运行面板宽度；左方向键增大，右方向键减小；点击打开尺寸菜单</string>
@@ -46,4 +40,5 @@
     <string name="signature_unmapped">此形式无对应参数；不校验调用是否有效</string>
     <string name="signature_empty">当前没有内置签名参考；不支持的调用或复杂表达式不会猜测</string>
     <string name="signature_no_space">光标附近空间不足，已收起参数参考；可调整面板或窗口</string>
+    <string name="shell_help">Python 在设备本地运行；C++ 源码和 stdin 会发送至 Wandbox。当前为预设输入、结束后展示输出，不是系统 Shell。\n\n左上角管理文件，更多菜单提供文件、编辑、显示和设置命令。运行时原位置可停止；面板键盘图标展开当前文件预设输入，面板菜单可清空。\n\nCtrl+S 保存；Ctrl+N 新建；Ctrl+O 导入副本；Ctrl+B 文件管理器；F5 运行；Ctrl+F/H/G 查找、替换、跳转行；Ctrl+Space 词法补全；Ctrl+Shift+Space 内置参数参考。补全、参数和片段尚不具备语义分析能力。撤销/重做调用系统文本历史，仍待设备联合验收。</string>
 </resources>

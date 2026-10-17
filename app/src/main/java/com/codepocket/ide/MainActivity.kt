@@ -34,6 +34,7 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import com.codepocket.ide.ui.*
 import java.io.File
 import org.json.JSONArray
 
@@ -83,13 +84,13 @@ class MainActivity : Activity() {
     private var panelLayout: PanelLayout? = null
     private lateinit var splitHost: LinearLayout
     private lateinit var panelResize: PanelResizeHandle
-    private lateinit var panelMaxButton: TextView
-    private lateinit var panelSizeButton: TextView
+    private lateinit var panelToolbar: PanelToolbar
+    private var presetInputExpanded = false
+    private var commandMenu: android.widget.PopupMenu? = null
     private lateinit var panelInputHeading: LinearLayout
     private lateinit var panelOutputScroll: HorizontalScrollView
     private var imeVisible = false
     private var lastFocus = "editor"
-    private lateinit var detailToolbar: HorizontalScrollView
     private lateinit var suggestionScroll: HorizontalScrollView
     private lateinit var keyboardToolbar: HorizontalScrollView
     private val saveSession = Runnable { captureSession(); persistSessions() }
@@ -116,8 +117,10 @@ class MainActivity : Activity() {
             if (::editor.isInitialized) { editor.isEnabled = !value; if (value) { hideCompletion(); clearSnippet() } }
             if (::input.isInitialized) input.isEnabled = !value
             if (::panelResize.isInitialized) panelResize.isEnabled = !value && panelLayout?.resizable == true
+            updateMainToolbarState()
         }
     private var saving = false
+        set(value) { field = value; updateMainToolbarState() }
     private var afterSave: (() -> Unit)? = null
     private var selectedTree: String? = null
     private var editRevision = 0L
@@ -129,26 +132,26 @@ class MainActivity : Activity() {
     private lateinit var editor: CodeEditor
     private lateinit var input: EditText
     private lateinit var numbers: TextView
-    private lateinit var fileTitle: TextView
     private lateinit var status: TextView
     private lateinit var consoleText: TextView
     private lateinit var tabsRow: LinearLayout
     private lateinit var suggestionRow: LinearLayout
     private lateinit var explorerList: LinearLayout
-    private lateinit var runButton: TextView
+    private lateinit var mainToolbar: MainToolbar
     private lateinit var outputTabs: LinearLayout
     private lateinit var outputRegion: LinearLayout
     private lateinit var editorRegion: LinearLayout
 
-    private val editorBackground get() = Color.parseColor(if (dark) "#1E1E1E" else "#FFFFFF")
-    private val surface get() = Color.parseColor(if (dark) "#252526" else "#F3F3F3")
-    private val panel get() = Color.parseColor(if (dark) "#181818" else "#F8F8F8")
-    private val border get() = Color.parseColor(if (dark) "#414141" else "#D8D8D8")
-    private val textForeground get() = Color.parseColor(if (dark) "#D4D4D4" else "#242424")
-    private val muted get() = Color.parseColor(if (dark) "#9DA3AD" else "#636A74")
-    private val accent get() = Color.parseColor(if (dark) "#007ACC" else "#0067B8")
-    private val green get() = Color.parseColor(if (dark) "#89D185" else "#237A3B")
-    private val red get() = Color.parseColor(if (dark) "#F48771" else "#BA1A1A")
+    private val palette get() = DesignTokens.palette(dark)
+    private val editorBackground get() = palette.editor
+    private val surface get() = palette.surface
+    private val panel get() = palette.panel
+    private val border get() = palette.border
+    private val textForeground get() = palette.foreground
+    private val muted get() = palette.muted
+    private val accent get() = palette.accentText
+    private val green get() = palette.success
+    private val red get() = palette.error
 
     override fun onCreate(savedInstanceState: Bundle?) {
         settings = AppSettings.fromJson(prefs.getString("settings", null), prefs.getBoolean("dark", true))
@@ -210,6 +213,7 @@ class MainActivity : Activity() {
                     expanded.clear(); expanded.add("")
                     explorerVisible = prefs.getBoolean("explorerVisible", true)
                     panelVisible = prefs.getBoolean("panelVisible", true)
+                    presetInputExpanded = prefs.getBoolean(prefKey("presetInputExpanded"), false)
                     panelState = PanelState.fromJson(prefs.getString("panelLayout", null))
                         .let { if (panelVisible) it else it.copy(maximized = false) }
                     wide = resources.configuration.screenWidthDp >= 720 && resources.configuration.screenHeightDp >= 480
@@ -301,6 +305,7 @@ class MainActivity : Activity() {
             .putString(prefKey("activeFile"), activePath).putString(prefKey("directory"), currentDirectory)
             .putBoolean("dark", dark).putBoolean("explorerVisible", explorerVisible)
             .putString(prefKey("opened"), JSONArray(opened).toString())
+            .putBoolean(prefKey("presetInputExpanded"), presetInputExpanded)
             .putBoolean("panelVisible", panelVisible).putString("panelLayout", panelState.toJson()).apply()
     }
 
@@ -309,7 +314,7 @@ class MainActivity : Activity() {
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null
         handler.removeCallbacksAndMessages(null)
-        toolDialog?.dismiss()
+        toolDialog?.dismiss(); commandMenu?.dismiss(); commandMenu = null
         hideCompletion(); completionExecutor.shutdownNow(); signatureExecutor.shutdownNow(); completionConsumedKeys.clear()
         listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
             if (::outputRegion.isInitialized) outputRegion else null).forEach { it.animate().cancel() }
@@ -341,6 +346,7 @@ class MainActivity : Activity() {
     private fun space(w: Int = 5) = View(this).apply { layoutParams = LinearLayout.LayoutParams(dp(w), 1) }
 
     private fun createUi() {
+        commandMenu?.dismiss(); commandMenu = null
         hideCompletion(); clearSnippet(); completionPopup = null; signaturePopup = null
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null; panelLayout = null
@@ -353,49 +359,23 @@ class MainActivity : Activity() {
         root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(editorBackground) }
         setContentView(root)
 
-        val top = LinearLayout(this).apply {
-            gravity = Gravity.CENTER_VERTICAL; setPadding(dp(9), dp(5), dp(9), dp(5)); setBackgroundColor(surface)
-        }
-        top.addView(button("☰ 文件") { showExplorer() })
-        top.addView(space(8))
-        top.addView(label("⌘ CodePocket", 16f, accent, true).apply {
-            setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.END
-        }, LinearLayout.LayoutParams(0, dp(38), 1f))
-        top.addView(button("收键盘") { hideKeyboard() })
-        top.addView(space(3))
-        top.addView(button("结果") { togglePanel() })
-        top.addView(button("⚙") { showSettings() }.apply { contentDescription = "设置" })
-        top.addView(space(5))
-        runButton = button("▶ 运行") { if (running) RunSession.stop() else runCode() }
-        runButton.setTextColor(Color.WHITE); runButton.background = shape(accent, 5)
-        top.addView(runButton)
-        root.addView(top)
-
-        val toolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
-        val actions = LinearLayout(this).apply { setPadding(dp(8), dp(5), dp(8), dp(5)) }
-        for ((name, command) in listOf<Pair<String, () -> Unit>>(
-            "设置" to { showSettings() }, "查找" to { showSearch(false) }, "替换" to { showSearch(true) },
-            "跳转行" to { showGoToLine() }, "切换主题" to { toggleTheme() },
-            "使用说明" to { alert("Python 在设备本地运行；C++ 源码和 stdin 会发送至 Wandbox。当前使用预填 stdin，程序结束后展示输出；不支持系统 Shell。\n\nCtrl+F/H/G 查找/替换/跳行；Ctrl+S 保存；F5 运行。补全目前是基础词法提示。") },
-            "新建文件" to { askCreate(false) }, "新建文件夹" to { askCreate(true) },
-            "工作区" to { workspaceMenu() }, "导入副本" to { importFile() }, "导出" to { exportFile() },
-            "重新载入文件" to { reloadActive() }, "恢复草稿" to { recoverDrafts() },
-            "保存  Ctrl+S" to { saveActive { status.text = "✓ 已保存 $activePath" } },
-            "TAB" to { tab() }, "反缩进" to { indent(true) }, "{ }" to { insertText("{}", true) },
-            "( )" to { insertText("()", true) }, "补全" to { requestCompletion() }, "参数" to { requestSignatureHelp() }, "片段" to { showSnippetMenu() }
-        )) {
-            actions.addView(button(name, command)); actions.addView(space(5))
-        }
-        detailToolbar = toolbar
-        toolbar.addView(actions)
-        root.addView(toolbar)
+        mainToolbar = MainToolbar(this, palette,
+            { dispatchCommand(IdeCommand.EXPLORER) }, { dispatchCommand(IdeCommand.RUN_STOP) },
+            ::showCommandMenu, { alert("${workspace.title} / $activePath") })
+        root.addView(mainToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
+        updateShellTitle()
         keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
-        val keyRow = LinearLayout(this)
-        listOf<Pair<String, () -> Unit>>("TAB" to { tab() }, "反缩进" to { indent(true) },
-            "补全" to { requestCompletion() }, "参数" to { requestSignatureHelp() }, "片段" to { showSnippetMenu() }, "{ }" to { insertText("{}", true) }, "( )" to { insertText("()", true) }).forEach { (name, action) ->
-            keyRow.addView(button(name, action)); keyRow.addView(space(3))
+        val keyRow = LinearLayout(this).apply { setBackgroundColor(surface) }
+        listOf("Tab" to IdeCommand.TAB, "⇤" to IdeCommand.UNINDENT,
+            "{}" to IdeCommand.BRACES, "[]" to IdeCommand.BRACKETS, "()" to IdeCommand.PARENS,
+            ";" to IdeCommand.SEMICOLON, "=" to IdeCommand.EQUALS, ":" to IdeCommand.COLON,
+            "←" to IdeCommand.LEFT, "→" to IdeCommand.RIGHT, "补全" to IdeCommand.COMPLETE,
+            "参数" to IdeCommand.SIGNATURE, "片段" to IdeCommand.SNIPPET).forEach { (name, command) ->
+            keyRow.addView(IdeControls.key(this, palette, name, command.title) { dispatchCommand(command) },
+                LinearLayout.LayoutParams(-2, dp(DesignTokens.TOUCH)))
         }
-        keyboardToolbar.addView(keyRow); root.addView(keyboardToolbar)
+        keyboardToolbar.addView(keyRow)
+        root.addView(keyboardToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
 
         val content = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
@@ -448,6 +428,86 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun decorateFileLabel(view: TextView, icon: IdeIcon, fullPath: String) {
+        view.setSingleLine(); view.ellipsize = android.text.TextUtils.TruncateAt.END
+        val drawable = IdeIconDrawable(icon, muted, dp(DesignTokens.ICON)).apply { setBounds(0, 0, dp(20), dp(20)) }
+        view.setCompoundDrawablesRelative(drawable, null, null, null); view.compoundDrawablePadding = dp(6)
+        IdeControls.describe(view, fullPath)
+    }
+
+    private fun commandContext(): CommandContext {
+        val focused = when {
+            ::input.isInitialized && input.hasFocus() -> input
+            ::editor.isInitialized && editor.hasFocus() -> editor
+            else -> null
+        }
+        return CommandContext(workspaceBusy, ::editor.isInitialized && loadedPath == activePath,
+            ::editor.isInitialized && editor.hasFocus(), ::input.isInitialized && input.hasFocus(),
+            focused != null && BaseInputConnection.getComposingSpanStart(focused.text) >= 0, running, saving)
+    }
+
+    private fun updateMainToolbarState() {
+        if (::mainToolbar.isInitialized) mainToolbar.setRunState(running, IdeCommands.enabled(IdeCommand.RUN_STOP, commandContext()))
+    }
+
+    private fun updateShellTitle() {
+        if (!::mainToolbar.isInitialized) return
+        mainToolbar.setTitle("${if (dirty) "● " else ""}${activePath.substringAfterLast('/')}", "${workspace.title} / $activePath")
+        updateMainToolbarState()
+    }
+
+    private fun showCommandMenu(anchor: View) {
+        commandMenu?.dismiss()
+        commandMenu = IdeCommandMenu.show(anchor, commandContext(), ::dispatchCommand)
+    }
+
+    private fun dispatchCommand(command: IdeCommand) {
+        if (isDestroyed || !IdeCommands.enabled(command, commandContext())) return
+        when (command) {
+            IdeCommand.RUN_STOP -> if (running) RunSession.stop() else runCode()
+            IdeCommand.EXPLORER -> showExplorer()
+            IdeCommand.NEW_FILE -> askCreate(false)
+            IdeCommand.NEW_FOLDER -> askCreate(true)
+            IdeCommand.WORKSPACE -> workspaceMenu()
+            IdeCommand.IMPORT_COPY -> importFile()
+            IdeCommand.EXPORT -> exportFile()
+            IdeCommand.SAVE -> saveActive { status.text = "✓ 已保存 $activePath" }
+            IdeCommand.RELOAD -> reloadActive()
+            IdeCommand.RECOVER -> recoverDrafts()
+            IdeCommand.FIND -> showSearch(false)
+            IdeCommand.REPLACE -> showSearch(true)
+            IdeCommand.GOTO_LINE -> showGoToLine()
+            IdeCommand.UNDO, IdeCommand.REDO -> {
+                clearSnippet(); hideCompletion()
+                val target = if (input.hasFocus()) input else editor
+                target.onTextContextMenuItem(if (command == IdeCommand.UNDO) android.R.id.undo else android.R.id.redo)
+            }
+            IdeCommand.TAB -> tab()
+            IdeCommand.UNINDENT -> if (!moveSnippet(true)) indent(true)
+            IdeCommand.BRACES -> insertText("{}", true)
+            IdeCommand.BRACKETS -> insertText("[]", true)
+            IdeCommand.PARENS -> insertText("()", true)
+            IdeCommand.SEMICOLON -> insertText(";")
+            IdeCommand.EQUALS -> insertText("=")
+            IdeCommand.COLON -> insertText(":")
+            IdeCommand.LEFT, IdeCommand.RIGHT -> {
+                hideCompletion(); clearSnippet()
+                val key = if (command == IdeCommand.LEFT) KeyEvent.KEYCODE_DPAD_LEFT else KeyEvent.KEYCODE_DPAD_RIGHT
+                editor.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, key)); editor.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_UP, key))
+            }
+            IdeCommand.COMPLETE -> requestCompletion()
+            IdeCommand.SIGNATURE -> requestSignatureHelp()
+            IdeCommand.SNIPPET -> showSnippetMenu()
+            IdeCommand.PANEL -> togglePanel()
+            IdeCommand.PRESET_INPUT -> setPresetInputExpanded(true)
+            IdeCommand.PANEL_SIZE -> showPanelSizeMenu(if (panelToolbar.isShown) panelToolbar.menuAnchor else mainToolbar.menuAnchor)
+            IdeCommand.HIDE_KEYBOARD -> hideKeyboard()
+            IdeCommand.THEME -> toggleTheme()
+            IdeCommand.SETTINGS -> showSettings()
+            IdeCommand.HELP -> alert(getString(R.string.shell_help))
+        }
+    }
+
     private fun hideKeyboard() {
         if (Build.VERSION.SDK_INT >= 30) window.insetsController?.hide(WindowInsets.Type.ime())
         (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
@@ -462,10 +522,8 @@ class MainActivity : Activity() {
         val height = (root.height / resources.displayMetrics.density).toInt()
         val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible, settings.collapsePanelOnIme)
         if (visible) listOfNotNull(explorerPane, tabsRow, outputRegion).forEach { it.animate().cancel(); it.alpha = 1f }
-        fileTitle.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
-        suggestionScroll.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
+        suggestionScroll.visibility = if (WorkspaceLayoutPolicy.showSnippet(snippetSession != null, visible, height)) View.VISIBLE else View.GONE
         keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
-        detailToolbar.visibility = if (!visible) View.VISIBLE else View.GONE
         status.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
         applyPanelLayout()
         if (changed && visible) editor.post { if (editor.hasFocus()) editor.bringPointIntoView(editor.selectionEnd) }
@@ -542,25 +600,53 @@ class MainActivity : Activity() {
     }
 
     private fun showPanelSizeMenu(anchor: View) {
-        panelResize.cancelGesture()
+        panelResize.cancelGesture(); commandMenu?.dismiss()
         val menu = android.widget.PopupMenu(this, anchor)
         menu.menu.add(0, 1, 0, R.string.panel_smaller).isEnabled = panelLayout?.resizable == true
         menu.menu.add(0, 2, 1, R.string.panel_larger).isEnabled = panelLayout?.resizable == true
         menu.menu.add(0, 3, 2, R.string.panel_reset)
         menu.menu.add(0, 4, 3, R.string.panel_clear_input)
+        menu.menu.add(0, 5, 4, if (presetInputExpanded) "收起预设输入" else "编辑预设输入")
+        menu.menu.add(0, 6, 5, if (panelState.maximized) "还原运行面板" else "最大化运行面板")
+        menu.menu.add(0, 7, 6, "收起运行面板")
         menu.setOnMenuItemClickListener { item ->
-            if (!workspaceBusy && item.itemId == 4) { input.setText(""); return@setOnMenuItemClickListener true }
-            if (!workspaceBusy) {
-                val stamp = capturePanelViewport(); hideCompletion()
-                if (item.itemId == 3) panelState = PanelState(maximized = panelState.maximized)
-                else panelLayout?.let { spec ->
-                    panelState = spec.resize(panelState, spec.extent + spec.available * if (item.itemId == 2) .05f else -.05f)
+            anchor.post {
+                if (!isDestroyed && !workspaceBusy && anchor.isAttachedToWindow) when (item.itemId) {
+                    4 -> input.setText("")
+                    5 -> setPresetInputExpanded(!presetInputExpanded)
+                    6 -> setPanelMaximized(!panelState.maximized)
+                    7 -> closePanel()
+                    else -> {
+                        val stamp = capturePanelViewport(); hideCompletion()
+                        if (item.itemId == 3) panelState = PanelState(maximized = panelState.maximized)
+                        else panelLayout?.let { spec ->
+                            panelState = spec.resize(panelState, spec.extent + spec.available * if (item.itemId == 2) .05f else -.05f)
+                        }
+                        applyPanelLayout(); persistPanel(); restorePanelViewport(stamp)
+                    }
                 }
-                applyPanelLayout(); persistPanel(); restorePanelViewport(stamp)
             }
             true
         }
-        menu.show()
+        commandMenu = menu; menu.show()
+    }
+
+    private fun setPresetInputExpanded(expanded: Boolean) {
+        if (workspaceBusy || !::input.isInitialized) return
+        val stamp = capturePanelViewport(); hideCompletion()
+        presetInputExpanded = expanded
+        if (expanded) {
+            panelVisible = true; outputRegion.visibility = View.VISIBLE
+            input.visibility = View.VISIBLE
+            input.requestFocus() // Do not force an IME for a hardware-keyboard user.
+        } else if (input.hasFocus()) {
+            hideKeyboard(); lastFocus = "editor"
+            if (editorRegion.visibility == View.VISIBLE) editor.requestFocus() else outputRegion.requestFocus()
+        }
+        updateImeLayout()
+        // Collapsing an IME-only full panel may reveal the editor only after resolving layout.
+        if (!expanded && editorRegion.visibility == View.VISIBLE) editor.requestFocus()
+        captureSession(); persistNavigation(); restorePanelViewport(stamp)
     }
 
     private fun applyPanelLayout() {
@@ -593,20 +679,15 @@ class MainActivity : Activity() {
         panelResize.configure(spec.dock, dp(spec.extent), dp(spec.minimum), dp(spec.maximum), dp(spec.available))
         panelResize.isEnabled = spec.resizable && !workspaceBusy
         val panelHeight = if (side || full) height else spec.extent
-        val compact = (imeVisible && input.hasFocus()) || panelHeight < 208
-        panelInputHeading.visibility = if (!compact) View.VISIBLE else View.GONE
-        panelOutputScroll.visibility = if (!compact || panelHeight >= 164) View.VISIBLE else View.GONE
+        val preset = WorkspaceLayoutPolicy.preset(presetInputExpanded, imeVisible, input.hasFocus(), panelHeight)
+        panelInputHeading.visibility = if (preset.showCaption) View.VISIBLE else View.GONE
+        panelOutputScroll.visibility = if (preset.showTabs) View.VISIBLE else View.GONE
+        input.visibility = if (preset.showInput) View.VISIBLE else View.GONE
         input.layoutParams?.let { old ->
-            val target = dp(if (compact) 44 else 57)
+            val target = dp(preset.inputHeight)
             if (old.height != target) input.layoutParams = old.apply { this.height = target }
         }
-        // setText requests layout; only change it when the mode changes, not on every global layout.
-        val maxSymbol = getString(if (panelState.maximized) R.string.panel_restore_symbol else R.string.panel_maximize_symbol)
-        if (panelMaxButton.text.toString() != maxSymbol) panelMaxButton.text = maxSymbol
-        val sizeSymbol = getString(if (side) R.string.panel_width_symbol else R.string.panel_size_symbol)
-        if (panelSizeButton.text.toString() != sizeSymbol) panelSizeButton.text = sizeSymbol
-        panelMaxButton.contentDescription = getString(if (panelState.maximized) R.string.panel_restore else R.string.panel_maximize)
-        panelSizeButton.contentDescription = getString(R.string.panel_size_menu)
+        panelToolbar.setState(panelState.maximized, presetInputExpanded)
         if (previous != spec) { completionPopup?.dismiss(); hideSignatureHelp() }
         restorePanelViewport(stamp)
     }
@@ -635,6 +716,8 @@ class MainActivity : Activity() {
         editor.setSelection(view.start, view.end)
         input.setSelection(view.inputStart, view.inputEnd)
         lastFocus = view.focus
+        presetInputExpanded = WorkspaceLayoutPolicy.restorePreset(presetInputExpanded, view.focus, panelVisible)
+        input.visibility = if (presetInputExpanded) View.VISIBLE else View.GONE
         if (view.focus == "stdin" && panelVisible) input.requestFocus()
         else if (panelState.maximized && panelVisible) outputRegion.requestFocus()
         else editor.requestFocus()
@@ -651,9 +734,7 @@ class MainActivity : Activity() {
         val tabs = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; setBackgroundColor(surface) }
         tabsRow = LinearLayout(this)
         tabs.addView(tabsRow)
-        editorRegion.addView(tabs, LinearLayout.LayoutParams(-1, dp(39)))
-        fileTitle = label("main.cpp", 11f, muted).apply { setPadding(dp(9), dp(2), dp(6), dp(2)) }
-        editorRegion.addView(fileTitle)
+        editorRegion.addView(tabs, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
 
         val editorBody = LinearLayout(this).apply { setBackgroundColor(editorBackground); orientation = LinearLayout.HORIZONTAL }
         numbers = label("1", 13.5f, muted).apply {
@@ -677,11 +758,11 @@ class MainActivity : Activity() {
         }
         editorBody.addView(editor, LinearLayout.LayoutParams(0, -1, 1f))
         editorRegion.addView(editorBody, LinearLayout.LayoutParams(-1, 0, 1f))
-        val suggestScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
+        val suggestScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
         suggestionScroll = suggestScroll
         suggestionRow = LinearLayout(this).apply { setPadding(dp(5), dp(2), dp(5), dp(2)); setBackgroundColor(surface) }
         suggestScroll.addView(suggestionRow)
-        editorRegion.addView(suggestScroll, LinearLayout.LayoutParams(-1, dp(37)))
+        editorRegion.addView(suggestScroll, LinearLayout.LayoutParams(-1, dp(DesignTokens.SNIPPET_HINT)))
         editor.viewTreeObserver.addOnScrollChangedListener {
             numbers.scrollY = editor.scrollY; completionPopup?.let { if (it.isShowing) it.reposition() }
             signaturePopup?.let { if (it.isShowing) it.reposition() }
@@ -710,7 +791,7 @@ class MainActivity : Activity() {
                 val edit = change
                 change = null
                 if (edit != null && s != null && BaseInputConnection.getComposingSpanStart(s) < 0) applyChange(edit, keepSnippet = true)
-                dirty = true; editRevision++
+                if (!dirty) { dirty = true; updateShellTitle() }; editRevision++
                 snippetSession = snippetSession?.copy(revision = editRevision)
                 snippetTextChanging = false; validSnippet(); updateSnippetHint()
                 handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
@@ -723,7 +804,7 @@ class MainActivity : Activity() {
             if (focused) { lastFocus = "editor"; updateImeLayout() } else hideCompletion()
         }
         editor.setOnClickListener { updateSuggestions(); updateSignatureHelp() }
-        completionHint = label(getString(R.string.completion_hint), 11f, muted)
+        completionHint = label("", 11f, muted)
         suggestionRow.addView(completionHint)
         editor.onCaretChanged = {
             if (!quietEdit) {
@@ -739,17 +820,9 @@ class MainActivity : Activity() {
         outputRegion = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; setBackgroundColor(panel); isFocusableInTouchMode = true
         }
-        val panelHeading = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
-        panelHeading.addView(label(getString(R.string.panel_title), 11f, muted).apply {
-            setPadding(dp(8), 0, 0, 0)
-        }, LinearLayout.LayoutParams(0, dp(36), 1f))
-        panelSizeButton = button(getString(R.string.panel_size_symbol)) { showPanelSizeMenu(panelSizeButton) }
-        panelMaxButton = button(getString(R.string.panel_maximize_symbol)) { setPanelMaximized(!panelState.maximized) }
-        panelHeading.addView(panelSizeButton); panelHeading.addView(panelMaxButton)
-        panelHeading.addView(button(getString(R.string.panel_close_symbol)) { closePanel() }.apply {
-            contentDescription = getString(R.string.panel_close)
-        })
-        outputRegion.addView(panelHeading, LinearLayout.LayoutParams(-1, dp(36)))
+        panelToolbar = PanelToolbar(this, palette, { setPresetInputExpanded(!presetInputExpanded) },
+            { setPanelMaximized(!panelState.maximized) }, ::closePanel, ::showPanelSizeMenu)
+        outputRegion.addView(panelToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         outputTabs = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         panelOutputScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(outputTabs) }
         outputRegion.addView(panelOutputScroll, LinearLayout.LayoutParams(-1, dp(36)))
@@ -781,7 +854,9 @@ class MainActivity : Activity() {
                 handler.removeCallbacks(saveSession); handler.postDelayed(saveSession, 200)
             }
         })
-        outputRegion.addView(input, LinearLayout.LayoutParams(-1, dp(57)))
+        input.visibility = if (presetInputExpanded) View.VISIBLE else View.GONE
+        panelInputHeading.visibility = input.visibility
+        outputRegion.addView(input, LinearLayout.LayoutParams(-1, dp(64)))
         val scroll = ScrollView(this)
         consoleText = label("", 12f, green).apply {
             typeface = Typeface.MONOSPACE; gravity = Gravity.TOP or Gravity.START
@@ -794,11 +869,11 @@ class MainActivity : Activity() {
 
     private fun makeExplorerPane(): LinearLayout {
         val panelView = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(surface) }
-        val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(10), dp(7), dp(5), dp(7)) }
-        row.addView(label("资源管理器", 12f, muted, true), LinearLayout.LayoutParams(0, dp(26), 1f))
-        row.addView(button("目录") { workspaceMenu() })
-        row.addView(button("+文件") { askCreate(false) })
-        row.addView(button("+目录") { askCreate(true) })
+        val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0) }
+        row.addView(label("资源管理器", 12f, muted, true).apply { setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.END },
+            LinearLayout.LayoutParams(0, dp(48), 1f))
+        row.addView(IdeControls.icon(this, palette, IdeIcon.MORE, "文件与工作区命令") { showCommandMenu(row) },
+            LinearLayout.LayoutParams(dp(48), dp(48)))
         panelView.addView(row)
         val scroll = ScrollView(this).apply { isFillViewport = true }
         explorerList = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
@@ -829,7 +904,8 @@ class MainActivity : Activity() {
     private fun renderExplorer() {
         if (!::explorerList.isInitialized) return
         explorerList.removeAllViews()
-        val rootLabel = label("▾  ${workspace.title}", 12f, muted, true).apply {
+        val rootLabel = label(workspace.title, 12f, muted, true).apply {
+            decorateFileLabel(this, IdeIcon.FOLDER_OPEN, workspace.title)
             setPadding(dp(10), dp(8), 0, dp(8))
             setOnClickListener { currentDirectory = ""; persistNavigation(); status.text = "新建位置：项目根目录" }
         }
@@ -840,8 +916,10 @@ class MainActivity : Activity() {
                 val relative = workspace.path(file)
                 val folder = file.isDirectory
                 val open = relative in expanded
-                val glyph = if (folder) (if (open) "▾ 📁 " else "▸ 📁 ") else (if (file.extension == "py") "🐍 " else "◇ ")
-                val item = label(glyph + file.name, 13f, if (relative == activePath) accent else textForeground).apply {
+                val icon = if (folder) (if (open) IdeIcon.FOLDER_OPEN else IdeIcon.FOLDER) else IdeIconDrawable.file(relative)
+                val item = label(file.name, 13f, if (relative == activePath) accent else textForeground).apply {
+                    decorateFileLabel(this, icon, relative + if (folder) (if (open) "，已展开" else "，已折叠") else "")
+                    minHeight = dp(DesignTokens.TOUCH)
                     setPadding(dp(12 + level * 15), dp(8), dp(4), dp(8))
                     if (relative == activePath) background = shape(editorBackground, 3)
                     isClickable = true; isFocusable = true
@@ -922,7 +1000,7 @@ class MainActivity : Activity() {
             val old = workspace.path(file)
             ioAction("正在重命名…", { workspace.rename(file, newName) }) { renamed ->
                 rebasePaths(old, workspace.path(renamed)); loadedPath = activePath
-                renderExplorer(); refreshTabs(); fileTitle.text = "${workspace.title} / $activePath"
+                renderExplorer(); refreshTabs(); updateShellTitle()
             }
         }
     }
@@ -1025,18 +1103,21 @@ class MainActivity : Activity() {
 
     private fun refreshTabs() {
         if (!::tabsRow.isInitialized) return
+        updateShellTitle()
         tabsRow.removeAllViews()
         opened.toList().forEach { path ->
             if (!workspace.resolve(path).isFile) { opened.remove(path); return@forEach }
             val one = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; background = shape(if (path == activePath) editorBackground else surface, 0) }
-            val name = label(" ${if (path == activePath && dirty) "● " else ""}${if (path.endsWith(".py")) "🐍" else "◇"} ${path.substringAfterLast('/')} ", 12f,
+            val name = label("${if (path == activePath && dirty) "● " else ""}${path.substringAfterLast('/')}", 12f,
                 if (path == activePath) accent else textForeground).apply {
-                setPadding(dp(8), 0, dp(4), 0); setOnClickListener { switchFile(path) }
+                decorateFileLabel(this, IdeIconDrawable.file(path), path)
+                maxWidth = dp(240); setPadding(dp(8), 0, dp(4), 0)
+                setOnClickListener { switchFile(path) }
+                setOnLongClickListener { alert(path); true }
             }
-            one.addView(name, LinearLayout.LayoutParams(-2, dp(38)))
-            one.addView(label("×", 17f, muted).apply {
-                setPadding(dp(4), 0, dp(11), 0); setOnClickListener { closeTab(path) }
-            })
+            one.addView(name, LinearLayout.LayoutParams(-2, dp(DesignTokens.TOUCH)))
+            one.addView(IdeControls.icon(this, palette, IdeIcon.CLOSE, "关闭 $path") { closeTab(path) },
+                LinearLayout.LayoutParams(dp(DesignTokens.TOUCH), dp(DesignTokens.TOUCH)))
             tabsRow.addView(one)
         }
     }
@@ -1059,7 +1140,7 @@ class MainActivity : Activity() {
         restoreSession(); quietEdit = false
         EditorFeatures.colorize(editor.text, isCpp(), syntaxDark)
         updateNumbers(); updateSuggestions()
-        fileTitle.text = "${workspace.title} / $activePath"
+        updateShellTitle()
         status.text = if (dirty) "已恢复未写回草稿，请保存或导出" else if (isCpp()) "C++17 · Wandbox 云端" else "Python 3.13 · 本地"
         refreshTabs(); persistNavigation()
     }
@@ -1248,9 +1329,11 @@ class MainActivity : Activity() {
     private fun updateSnippetHint() {
         if (!::completionHint.isInitialized) return
         val session = snippetSession
-        val text = if (session == null) getString(R.string.completion_hint)
+        val text = if (session == null) ""
             else getString(R.string.snippet_progress, session.index + 1, session.stops.size, session.active.label)
         if (completionHint.text.toString() != text) completionHint.text = text
+        val height = (root.height / resources.displayMetrics.density).toInt()
+        suggestionScroll.visibility = if (WorkspaceLayoutPolicy.showSnippet(session != null, imeVisible, height)) View.VISIBLE else View.GONE
     }
 
     private fun clearSnippet() { snippetSession = null; updateSnippetHint() }
@@ -1734,9 +1817,8 @@ class MainActivity : Activity() {
     }
 
     private fun renderRunState() {
-        if (!::runButton.isInitialized) return
-        runButton.text = if (running) "■ 停止" else "▶ 运行"
-        runButton.isEnabled = true
+        if (!::mainToolbar.isInitialized) return
+        updateMainToolbarState()
         result = RunSession.result
         if (result == null && !running) showOutput(selectedOutput)
         if (running) {
