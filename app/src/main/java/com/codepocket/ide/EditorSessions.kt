@@ -62,8 +62,8 @@ class EditorSessions(val workspaceId: String, json: String = "[]") {
 
 data class ImeLayout(val showPanel: Boolean, val showDetails: Boolean, val compactInput: Boolean)
 object ImeLayoutPolicy {
-    fun resolve(ime: Boolean, inputFocused: Boolean, heightDp: Int, panelVisible: Boolean) = ImeLayout(
-        showPanel = panelVisible && (!ime || inputFocused),
+    fun resolve(ime: Boolean, inputFocused: Boolean, heightDp: Int, panelVisible: Boolean, collapsePanel: Boolean = true) = ImeLayout(
+        showPanel = panelVisible && (!ime || inputFocused || !collapsePanel),
         showDetails = !ime && heightDp >= 360,
         compactInput = ime && inputFocused
     )

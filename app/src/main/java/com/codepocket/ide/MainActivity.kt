@@ -42,6 +42,11 @@ class MainActivity : Activity() {
     private lateinit var workspace: Workspace
     private val prefs by lazy { getSharedPreferences("codepocket_v2", MODE_PRIVATE) }
     private var dark = true
+    private var settings = AppSettings()
+    private var toolDialog: AlertDialog? = null
+    private val syntaxDark get() = settings.syntaxIsDark(dark)
+    private val codeBackground get() = Color.parseColor(if (syntaxDark) "#1E1E1E" else "#FFFFFF")
+    private val codeForeground get() = Color.parseColor(if (syntaxDark) "#D4D4D4" else "#242424")
     private var activePath = "main.cpp"
     private var currentDirectory = ""
     private val expanded = mutableSetOf("")
@@ -66,12 +71,13 @@ class MainActivity : Activity() {
     private lateinit var suggestionScroll: HorizontalScrollView
     private lateinit var keyboardToolbar: HorizontalScrollView
     private val saveSession = Runnable { captureSession(); persistSessions() }
-    private val autosave = Runnable { if (dirty) saveActive() }
+    private val autosave = Runnable { if (dirty && settings.autoSave) saveActive() }
     private val refreshEditor = Runnable {
         if (::editor.isInitialized) {
             if (BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return@Runnable
-            EditorFeatures.colorize(editor.text, isCpp(), dark)
+            EditorFeatures.colorize(editor.text, isCpp(), syntaxDark)
             highlightBrackets()
+            updateTabStops()
             updateSuggestions()
         }
     }
@@ -121,7 +127,8 @@ class MainActivity : Activity() {
     private val red get() = Color.parseColor(if (dark) "#F48771" else "#BA1A1A")
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        dark = prefs.getBoolean("dark", true)
+        settings = AppSettings.fromJson(prefs.getString("settings", null), prefs.getBoolean("dark", true))
+        dark = settings.isDark(isSystemDark())
         setTheme(if (dark) R.style.Theme_CodePocket else R.style.Theme_CodePocket_Light)
         super.onCreate(savedInstanceState)
         drafts = DraftStore(File(filesDir, "drafts")) { a, b -> android.system.Os.rename(a.path, b.path) }
@@ -268,6 +275,9 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
+        toolDialog?.dismiss()
+        listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
+            if (::outputRegion.isInitialized) outputRegion else null).forEach { it.animate().cancel() }
         explorerDialog?.dismiss()
     }
 
@@ -310,15 +320,18 @@ class MainActivity : Activity() {
         }
         top.addView(button("☰ 文件") { showExplorer() })
         top.addView(space(8))
-        top.addView(label("⌘ CodePocket", 16f, accent, true), LinearLayout.LayoutParams(0, dp(38), 1f))
+        top.addView(label("⌘ CodePocket", 16f, accent, true).apply {
+            setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.END
+        }, LinearLayout.LayoutParams(0, dp(38), 1f))
         top.addView(button("收键盘") { hideKeyboard() })
         top.addView(space(3))
         top.addView(button("结果") {
             if (input.hasFocus()) { hideKeyboard(); editor.requestFocus() }
             panelVisible = !panelVisible
             updateImeLayout(); persistNavigation()
+            if (panelVisible) animateDecoration(outputRegion)
         })
-        top.addView(button(if (dark) "☀" else "☾") { toggleTheme() })
+        top.addView(button("⚙") { showSettings() }.apply { contentDescription = "设置" })
         top.addView(space(5))
         runButton = button("▶ 运行") { if (running) RunSession.stop() else runCode() }
         runButton.setTextColor(Color.WHITE); runButton.background = shape(accent, 5)
@@ -328,6 +341,9 @@ class MainActivity : Activity() {
         val toolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
         val actions = LinearLayout(this).apply { setPadding(dp(8), dp(5), dp(8), dp(5)) }
         for ((name, command) in listOf<Pair<String, () -> Unit>>(
+            "设置" to { showSettings() }, "查找" to { showSearch(false) }, "替换" to { showSearch(true) },
+            "跳转行" to { showGoToLine() }, "切换主题" to { toggleTheme() },
+            "使用说明" to { alert("Python 在设备本地运行；C++ 源码和 stdin 会发送至 Wandbox。当前使用预填 stdin，程序结束后展示输出；不支持系统 Shell。\n\nCtrl+F/H/G 查找/替换/跳行；Ctrl+S 保存；F5 运行。补全目前是基础词法提示。") },
             "新建文件" to { askCreate(false) }, "新建文件夹" to { askCreate(true) },
             "工作区" to { workspaceMenu() }, "导入副本" to { importFile() }, "导出" to { exportFile() },
             "重新载入文件" to { reloadActive() }, "恢复草稿" to { recoverDrafts() },
@@ -378,6 +394,7 @@ class MainActivity : Activity() {
             setPadding(dp(12), dp(5), dp(12), dp(5)); setBackgroundColor(surface)
         }
         root.addView(status)
+        applyEditorPreferences()
         if (Build.VERSION.SDK_INT >= 30) {
             root.setOnApplyWindowInsetsListener { _, insets ->
                 updateImeLayout(insets.isVisible(WindowInsets.Type.ime()))
@@ -407,11 +424,12 @@ class MainActivity : Activity() {
         val changed = visible != imeVisible
         imeVisible = visible
         val height = (root.height / resources.displayMetrics.density).toInt()
-        val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible)
+        val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible, settings.collapsePanelOnIme)
+        if (visible) listOfNotNull(explorerPane, tabsRow, outputRegion).forEach { it.animate().cancel(); it.alpha = 1f }
         outputRegion.visibility = if (layout.showPanel) View.VISIBLE else View.GONE
         fileTitle.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
         suggestionScroll.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
-        keyboardToolbar.visibility = if (visible && editor.hasFocus()) View.VISIBLE else View.GONE
+        keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
         editorRegion.visibility = if (layout.compactInput && height < 260) View.GONE else View.VISIBLE
         detailToolbar.visibility = if (!visible) View.VISIBLE else View.GONE
         status.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
@@ -496,6 +514,7 @@ class MainActivity : Activity() {
         suggestScroll.addView(suggestionRow)
         editorRegion.addView(suggestScroll, LinearLayout.LayoutParams(-1, dp(37)))
         editor.viewTreeObserver.addOnScrollChangedListener { numbers.scrollY = editor.scrollY }
+        editor.viewTreeObserver.addOnGlobalLayoutListener { if (settings.wordWrap) updateNumbers() }
         editor.addTextChangedListener(object : TextWatcher {
             private var before = ""
             private var change: TextChange? = null
@@ -503,7 +522,8 @@ class MainActivity : Activity() {
                 if (!quietEdit) before = s.toString()
             }
             override fun onTextChanged(s: CharSequence?, start: Int, beforeCount: Int, count: Int) {
-                if (!quietEdit) change = EditorActions.typed(before, start, beforeCount, s.toString().substring(start, start + count), isCpp())
+                if (!quietEdit) change = EditorActions.typed(before, start, beforeCount, s.toString().substring(start, start + count), isCpp(),
+                    settings.tabWidth, settings.useSpaces, settings.autoIndent, settings.autoPairs)
             }
             override fun afterTextChanged(s: Editable?) {
                 if (quietEdit) return
@@ -514,7 +534,7 @@ class MainActivity : Activity() {
                 handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
                 updateNumbers()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
-                handler.removeCallbacks(autosave); handler.postDelayed(autosave, 700)
+                handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
             }
         })
         editor.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
@@ -593,6 +613,7 @@ class MainActivity : Activity() {
             explorerVisible = !explorerVisible
             explorerPane?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
             explorerDivider?.visibility = explorerPane?.visibility ?: View.GONE
+            if (explorerVisible) animateDecoration(explorerPane)
             prefs.edit().putBoolean("explorerVisible", explorerVisible).apply()
             return
         }
@@ -628,7 +649,7 @@ class MainActivity : Activity() {
                         if (folder) {
                             currentDirectory = relative
                             if (open) expanded.remove(relative) else expanded.add(relative)
-                            persistNavigation(); renderExplorer()
+                            persistNavigation(); renderExplorer(); animateDecoration(explorerList)
                         } else { switchFile(relative); explorerDialog?.dismiss(); explorerDialog = null }
                     }
                     setOnLongClickListener { fileMenu(file); true }
@@ -780,7 +801,7 @@ class MainActivity : Activity() {
             }) { (content, draft) ->
                 activePath = relative
                 if (relative !in opened) opened.add(relative)
-                loadActive(content, draft); refreshTabs(); renderExplorer(); after?.invoke()
+                loadActive(content, draft); refreshTabs(); renderExplorer(); animateDecoration(tabsRow); after?.invoke()
             }
         }
         return false
@@ -833,7 +854,7 @@ class MainActivity : Activity() {
         loadedVersion = recovered.baseHash
         dirty = recovered.dirty
         restoreSession(); quietEdit = false
-        EditorFeatures.colorize(editor.text, isCpp(), dark)
+        EditorFeatures.colorize(editor.text, isCpp(), syntaxDark)
         updateNumbers(); updateSuggestions()
         fileTitle.text = "${workspace.title} / $activePath"
         status.text = if (dirty) "已恢复未写回草稿，请保存或导出" else if (isCpp()) "C++17 · Wandbox 云端" else "Python 3.13 · 本地"
@@ -897,17 +918,22 @@ class MainActivity : Activity() {
     private fun isCpp() = !activePath.lowercase().endsWith(".py")
     private fun updateNumbers() {
         if (!::numbers.isInitialized) return
-        val lines = editor.text.count { it == '\n' } + 1
-        numbers.text = (1..lines.coerceAtMost(10000)).joinToString("\n")
+        if (!settings.lineNumbers) return
+        val value = editor.text.toString()
+        val layout = editor.layout
+        val labels = if (settings.wordWrap && layout != null && layout.text.length == value.length)
+            EditorSearch.gutter(value, (0 until layout.lineCount.coerceAtMost(10000)).map { layout.getLineStart(it) })
+        else (1..(value.count { it == '\n' } + 1).coerceAtMost(10000)).joinToString("\n")
+        if (numbers.text.toString() != labels) numbers.text = labels
     }
 
     private fun suggestionOptions(): List<String> = EditorFeatures.suggestions(editor.text.toString(), editor.selectionStart, isCpp())
-    private fun updateSuggestions() {
+    private fun updateSuggestions(force: Boolean = false) {
         if (!::suggestionRow.isInitialized || !::editor.isInitialized) return
-        val items = suggestionOptions()
+        val items = if (force || settings.autoCompletion) suggestionOptions() else emptyList()
         showingSuggestion = items.isNotEmpty()
         suggestionRow.removeAllViews()
-        if (items.isEmpty()) suggestionRow.addView(label("TAB = 4 空格   ·   Ctrl+Space = 补全   ·   Ctrl+S = 保存", 11f, muted))
+        if (items.isEmpty()) suggestionRow.addView(label("Tab = ${settings.tabWidth} 列缩进   ·   Ctrl+Space = 基础补全   ·   Ctrl+S = 保存", 11f, muted))
         else {
             suggestionRow.addView(label("提示  ", 11f, muted))
             items.forEach { value -> suggestionRow.addView(button(value) { acceptSuggestion(value) }) }
@@ -915,7 +941,7 @@ class MainActivity : Activity() {
     }
     private fun requestCompletion() {
         if (workspaceBusy) return
-        updateSuggestions()
+        updateSuggestions(true)
         if (!showingSuggestion) status.text = "键入词语前缀后，使用 Tab 或点击候选词补全"
         editor.requestFocus()
     }
@@ -938,7 +964,7 @@ class MainActivity : Activity() {
         dirty = true; editRevision++
         handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
         updateNumbers(); handler.post(refreshEditor)
-        handler.removeCallbacks(autosave); handler.postDelayed(autosave, 700)
+        handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
         editor.setSelection((start + snippet.length - if (caretInside) 1 else 0).coerceAtMost(editor.length()))
         editor.requestFocus()
     }
@@ -946,11 +972,11 @@ class MainActivity : Activity() {
     /** Shift+Tab removes one indent. Tab indents selection or accepts a suggestion. */
     private fun indent(reverse: Boolean) {
         if (workspaceBusy) return
-        applyChange(EditorActions.indent(editor.text.toString(), editor.selectionStart, editor.selectionEnd, reverse))
+        applyChange(EditorActions.indent(editor.text.toString(), editor.selectionStart, editor.selectionEnd, reverse, settings.tabWidth, settings.useSpaces))
         dirty = true; editRevision++
         handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
         updateNumbers(); handler.post(refreshEditor)
-        handler.removeCallbacks(autosave); handler.postDelayed(autosave, 700)
+        handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
         editor.requestFocus()
     }
 
@@ -963,7 +989,7 @@ class MainActivity : Activity() {
     }
 
     private fun tab() {
-        val options = suggestionOptions()
+        val options = if (showingSuggestion) suggestionOptions() else emptyList()
         if (editor.selectionStart == editor.selectionEnd && options.isNotEmpty()) acceptSuggestion(options.first())
         else indent(false)
     }
@@ -973,17 +999,101 @@ class MainActivity : Activity() {
         text.getSpans(0, text.length, BackgroundColorSpan::class.java).forEach { text.removeSpan(it) }
         val match = EditorFeatures.matchingBrackets(text.toString(), editor.selectionStart, isCpp()) ?: return
         for (position in listOf(match.first, match.second)) {
-            text.setSpan(BackgroundColorSpan(if (dark) 0xFF3A3D41.toInt() else 0xFFD6EBFF.toInt()), position, position + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text.setSpan(BackgroundColorSpan(if (syntaxDark) 0xFF3A3D41.toInt() else 0xFFD6EBFF.toInt()), position, position + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 
-    private fun toggleTheme() {
-        if (dirty || saving) { saveActive { toggleTheme() }; return }
+    private fun toggleTheme() = applySettings(settings.copy(theme = if (dark) UiTheme.LIGHT else UiTheme.DARK))
+
+    private fun isSystemDark() = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK ==
+        android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+    private fun showSettings() {
+        toolDialog?.dismiss()
+        toolDialog = SettingsDialog.show(this, settings, ::applySettings)
+    }
+
+    private fun applySettings(next: AppSettings) {
         if (workspaceBusy) return
-        persist()
-        dark = !dark
-        prefs.edit().putBoolean("dark", dark).apply()
-        recreate()
+        val themeChanged = next.isDark(isSystemDark()) != dark
+        if (themeChanged && (dirty || saving)) { saveActive { applySettings(next) }; return }
+        captureSession(); persistSessions()
+        settings = next.normalized()
+        dark = settings.isDark(isSystemDark())
+        prefs.edit().putString("settings", settings.toJson()).putBoolean("dark", dark).apply()
+        if (themeChanged) { persist(); recreate() }
+        else { applyEditorPreferences(); restoreSession(); status.text = "设置已保存" }
+    }
+
+    private fun applyEditorPreferences() {
+        editor.textSize = settings.fontSize.toFloat(); numbers.textSize = settings.fontSize.toFloat()
+        consoleText.textSize = settings.terminalFontSize.toFloat()
+        numbers.visibility = if (settings.lineNumbers) View.VISIBLE else View.GONE
+        editor.setHorizontallyScrolling(!settings.wordWrap)
+        (editor.parent as? View)?.setBackgroundColor(codeBackground)
+        editor.setTextColor(codeForeground); numbers.setTextColor(if (syntaxDark) 0xFF9DA3AD.toInt() else 0xFF636A74.toInt())
+        if (::sessions.isInitialized && loadedPath == activePath && settings.wordWrap) {
+            val file = sessions.file(activePath); file.view = file.view.copy(scrollX = 0)
+        }
+        if (!settings.animations) listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
+            if (::outputRegion.isInitialized) outputRegion else null).forEach { it.animate().cancel(); it.alpha = 1f }
+        updateImeLayout(); updateNumbers(); refreshTabs()
+        handler.removeCallbacks(autosave)
+        if (dirty && settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
+        handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
+    }
+
+    private fun updateTabStops() {
+        val value = editor.text
+        value.getSpans(0, value.length, android.text.style.TabStopSpan::class.java).forEach { value.removeSpan(it) }
+        val width = editor.paint.measureText(" ") * settings.tabWidth
+        for (column in 1..64) value.setSpan(android.text.style.TabStopSpan.Standard((column * width).toInt().coerceAtLeast(1)),
+            0, value.length, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+    }
+
+    private fun animateDecoration(view: View?) {
+        if (view == null) return
+        view.animate().cancel(); view.alpha = 1f
+        val scale = runCatching { android.provider.Settings.Global.getFloat(contentResolver,
+            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) }.getOrDefault(0f)
+        val powerSave = (getSystemService(POWER_SERVICE) as android.os.PowerManager).isPowerSaveMode
+        if (!imeVisible && MotionPolicy.enabled(settings.animations, scale, powerSave) &&
+            (Build.VERSION.SDK_INT < 26 || android.animation.ValueAnimator.areAnimatorsEnabled())) {
+            view.alpha = .88f
+            view.animate().alpha(1f).setDuration(120).start()
+        }
+    }
+
+    private fun searchSnapshot() = EditorSnapshot(sessions.key(activePath), editRevision,
+        editor.text.toString(), editor.selectionStart.coerceAtLeast(0), editor.selectionEnd.coerceAtLeast(0))
+
+    private fun showSearch(replace: Boolean) {
+        if (workspaceBusy || loadedPath != activePath) return
+        toolDialog?.dismiss()
+        toolDialog = SearchDialog.show(this, replace, ::searchSnapshot, { start, end ->
+            editor.setSelection(start, end); editor.bringPointIntoView(start)
+        }, { change ->
+            if (workspaceBusy || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) false
+            else { applyChange(change); dirty = true; editRevision++; queueDraft()
+                updateNumbers(); handler.post(refreshEditor)
+                handler.removeCallbacks(autosave)
+                if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
+                refreshTabs(); true }
+        })
+    }
+
+    private fun showGoToLine() {
+        if (workspaceBusy || loadedPath != activePath) return
+        val field = EditText(this).apply { inputType = InputType.TYPE_CLASS_NUMBER; hint = "从 1 开始的行号" }
+        val dialog = AlertDialog.Builder(this).setTitle("跳转行").setView(field)
+            .setNegativeButton("取消", null).setPositiveButton("跳转", null).create()
+        dialog.setOnShowListener { dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val line = field.text.toString().toIntOrNull()
+            val offset = line?.let { EditorSearch.lineOffset(editor.text.toString(), it) }
+            if (offset == null) field.error = "行号超出范围"
+            else { dialog.dismiss(); editor.requestFocus(); editor.setSelection(offset); editor.bringPointIntoView(offset) }
+        } }
+        toolDialog?.dismiss(); toolDialog = dialog; dialog.show()
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -995,6 +1105,9 @@ class MainActivity : Activity() {
         }
         if (event.action == KeyEvent.ACTION_DOWN && event.isCtrlPressed) {
             when (event.keyCode) {
+                KeyEvent.KEYCODE_F -> { showSearch(false); return true }
+                KeyEvent.KEYCODE_H -> { showSearch(true); return true }
+                KeyEvent.KEYCODE_G -> { showGoToLine(); return true }
                 KeyEvent.KEYCODE_S -> { saveActive { status.text = "✓ 已保存 $activePath" }; return true }
                 KeyEvent.KEYCODE_N -> { askCreate(false); return true }
                 KeyEvent.KEYCODE_O -> { importFile(); return true }

@@ -1,0 +1,4 @@
+<resources>
+    <string name="search_replaced_count">已替换 %1$d 项</string>
+    <string name="settings_save_help">关闭停顿保存后，Ctrl+S/保存按钮仍可使用；离开页面仍会保存，恢复草稿始终保留。\n\n运行说明：Python 本地运行；C++ 源码与 stdin 发往 Wandbox。当前使用预填 stdin、结束后输出，不提供系统 Shell。</string>
+</resources>
