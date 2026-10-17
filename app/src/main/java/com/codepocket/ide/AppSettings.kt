@@ -25,19 +25,21 @@ data class AppSettings(
     val animations: Boolean = true,
     val completionTab: Boolean = true,
     val completionEnter: Boolean = false,
-    val completionArrows: CompletionArrows = CompletionArrows.EXPLICIT
+    val completionArrows: CompletionArrows = CompletionArrows.EXPLICIT,
+    val signatureHelp: Boolean = true
 ) {
     fun normalized() = copy(fontSize = fontSize.coerceIn(10, 28), terminalFontSize = terminalFontSize.coerceIn(10, 24),
         tabWidth = tabWidth.takeIf { it in listOf(2, 4, 8) } ?: 4, autoSaveDelayMs = autoSaveDelayMs.coerceIn(300, 10000))
     fun isDark(systemDark: Boolean) = when (theme) { UiTheme.DARK -> true; UiTheme.LIGHT -> false; UiTheme.SYSTEM -> systemDark }
     fun syntaxIsDark(uiDark: Boolean) = when (syntax) { SyntaxTheme.DARK -> true; SyntaxTheme.LIGHT -> false; SyntaxTheme.FOLLOW_UI -> uiDark }
     fun toJson(): String = normalized().let { s -> JSONObject().apply {
-        put("version", 2); put("theme", s.theme.name); put("syntax", s.syntax.name)
+        put("version", 3); put("theme", s.theme.name); put("syntax", s.syntax.name)
         put("fontSize", s.fontSize); put("terminalFontSize", s.terminalFontSize); put("tabWidth", s.tabWidth)
         put("useSpaces", s.useSpaces); put("lineNumbers", s.lineNumbers); put("wordWrap", s.wordWrap)
         put("autoIndent", s.autoIndent); put("autoPairs", s.autoPairs); put("autoCompletion", s.autoCompletion)
         put("symbolBar", s.symbolBar); put("collapsePanelOnIme", s.collapsePanelOnIme)
         put("autoSave", s.autoSave); put("autoSaveDelayMs", s.autoSaveDelayMs); put("animations", s.animations)
+        put("signatureHelp", s.signatureHelp)
         put("completionTab", s.completionTab); put("completionEnter", s.completionEnter); put("completionArrows", s.completionArrows.name)
     }.toString() }
     companion object {
@@ -55,6 +57,7 @@ data class AppSettings(
                 collapsePanelOnIme = j.optBoolean("collapsePanelOnIme", defaults.collapsePanelOnIme),
                 autoSave = j.optBoolean("autoSave", defaults.autoSave), autoSaveDelayMs = j.optInt("autoSaveDelayMs", defaults.autoSaveDelayMs),
                 animations = j.optBoolean("animations", defaults.animations),
+                signatureHelp = j.optBoolean("signatureHelp", defaults.signatureHelp),
                 completionTab = j.optBoolean("completionTab", defaults.completionTab),
                 completionEnter = j.optBoolean("completionEnter", defaults.completionEnter),
                 completionArrows = runCatching { CompletionArrows.valueOf(j.optString("completionArrows")) }.getOrDefault(defaults.completionArrows)

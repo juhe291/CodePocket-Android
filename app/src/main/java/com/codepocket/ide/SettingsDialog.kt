@@ -41,6 +41,7 @@ object SettingsDialog {
         val autoIndent = toggle("自动缩进", current.autoIndent)
         val pairs = toggle("自动补齐括号和引号", current.autoPairs)
         val completion = toggle("自动显示基础词法补全", current.autoCompletion)
+        val signatures = toggle(activity.getString(R.string.signature_setting), current.signatureHelp)
         heading("补全按键（实体键盘）")
         val completionTab = toggle("Tab 接受当前候选（关闭时缩进）", current.completionTab)
         val completionEnter = toggle("Enter 接受方向键明确选中的候选", current.completionEnter)
@@ -62,7 +63,7 @@ object SettingsDialog {
                     fontSize = sizes[font.selectedItemPosition], terminalFontSize = terminalSizes[terminal.selectedItemPosition],
                     tabWidth = tabs[indent.selectedItemPosition], useSpaces = spaces.isChecked, lineNumbers = numbers.isChecked,
                     wordWrap = wrap.isChecked, autoIndent = autoIndent.isChecked, autoPairs = pairs.isChecked,
-                    autoCompletion = completion.isChecked, symbolBar = symbols.isChecked, collapsePanelOnIme = collapse.isChecked,
+                    autoCompletion = completion.isChecked, signatureHelp = signatures.isChecked, symbolBar = symbols.isChecked, collapsePanelOnIme = collapse.isChecked,
                     autoSave = autoSave.isChecked, autoSaveDelayMs = delays[delay.selectedItemPosition], animations = animations.isChecked,
                     completionTab = completionTab.isChecked, completionEnter = completionEnter.isChecked,
                     completionArrows = CompletionArrows.values()[completionArrows.selectedItemPosition]).normalized())

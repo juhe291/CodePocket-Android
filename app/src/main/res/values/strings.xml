@@ -35,4 +35,15 @@
     <string name="snippet_progress">片段 %1$d/%2$d：%3$s · Tab 下一项 · Shift+Tab 上一项 · Esc 结束</string>
     <string name="snippet_cannot_insert">片段无法插入：请检查代码行、选区和文件长度上限</string>
     <string name="snippet_line_help">在独立代码行输入前缀或留空后选择片段；注释、字符串、复杂选区和大文件不展开模板</string>
+    <string name="signature_setting">自动显示内置函数参数参考（非语义分析）</string>
+    <string name="signature_heading">内置签名参考 %1$d/%2$d</string>
+    <string name="signature_previous">上一参考形式；不进行重载解析</string>
+    <string name="signature_next">下一参考形式；不进行重载解析</string>
+    <string name="signature_close">关闭参数参考</string>
+    <string name="signature_python_notice">Python 3.13 文档参考；同名绑定未验证</string>
+    <string name="signature_cpp_notice">C++17 N4659 参考；简化参数名，未验证类型或全部重载</string>
+    <string name="signature_accessibility">%1$s；当前参数：%2$s</string>
+    <string name="signature_unmapped">此形式无对应参数；不校验调用是否有效</string>
+    <string name="signature_empty">当前没有内置签名参考；不支持的调用或复杂表达式不会猜测</string>
+    <string name="signature_no_space">光标附近空间不足，已收起参数参考；可调整面板或窗口</string>
 </resources>

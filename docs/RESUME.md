@@ -1,6 +1,18 @@
 # CodePocket 当前交接状态
 
-## 当前：P1 第四批内置片段已完成（2026-10-17）
+## 当前：P1 第五批内置参数参考已完成（2026-10-17）
+
+前一批提交 `b688871`。本批在现有编辑器上增量开发，详见 [参数参考报告](P1_SIGNATURE_HELP.md) 和 [进度表](DEVELOPMENT_PROGRESS.md)，不重建项目；实机统一后置。
+
+- Python 7 项、C++17 5 项带来源的内置签名资料；光标括号内参数位置、参考切换、只读弹窗、Ctrl+Shift+Space/触屏入口、独立自动设置。没有语义类型/重载解析；复杂语法保守降级。
+- 初次构建颜色名与 View 属性遮蔽报错，已修正；最终 `BUILD SUCCESSFUL in 1m 3s`。Kotlin 99 项中 98 通过、1 跳过（新增 16 项通过）；Python 源码/APK 字节码各 13/13，既有真实生成模板 Python/C++17 各 7/7；Lint 0 错误、13 警告。
+- [本批 APK](../dist/CodePocket-P1-signatures-debug.apk)，21,835,664 字节，SHA256 `c3fd49ba556eb76e259d8c71f53333b76f9b0a77623ffbff747a69a1529db638`；签名/CRC/ABI/对齐和关键类打包通过，证据 `verification/p1-signatures-2026-10-17/results.json`。
+- 原需求、Gradle、Manifest、CodeEditor、文件/SAF/保存、runner、原片段/词法候选及 Actions 保持原哈希。配置 version 3，20 个字段；Actions 原 Kotlin 测试步骤包含新测试，未远端运行或 push。
+- 本批无设备/ADB、在线 Wandbox、帧率或卓易通测试；popup/中文组合/键鼠/保存和原生撤销需最终联合验收。主机模板编译不代表 Android 本地 C++ 或语义服务已实现。
+- 下一批继续 P1 状态栏与编程快捷键栏，其后继续高亮、文件树调宽、项目搜索、完整动画和流式程序终端；P2/P3 未开始。发现 P0 缺陷优先回修。
+
+
+## P1 第四批内置片段记录（2026-10-17，历史）
 
 继续按 P1 → P2 → P3 分批推进，实机统一后置，不重建项目。前一批提交 `57eb82b`；本批详见 [P1_SNIPPETS.md](P1_SNIPPETS.md) 和 [进度表](DEVELOPMENT_PROGRESS.md)。
 

@@ -66,6 +66,11 @@ class MainActivity : Activity() {
     private var snippetSession: SnippetSession? = null
     private var snippetTextChanging = false
     private lateinit var completionHint: TextView
+    private var signaturePopup: SignaturePopup? = null
+    private var signatureSuppressed: CompletionRequest? = null
+    private var signatureGeneration = 0L
+    private val signatureExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
+    private var signatureTask: java.util.concurrent.Future<*>? = null
     private var explorerDialog: AlertDialog? = null
     private var wide = false
     private var loadedPath: String? = null
@@ -96,6 +101,7 @@ class MainActivity : Activity() {
             highlightBrackets()
             updateTabStops()
             updateSuggestions()
+            updateSignatureHelp()
         }
     }
     private var explorerPane: View? = null
@@ -304,7 +310,7 @@ class MainActivity : Activity() {
         panelDragViewport = null
         handler.removeCallbacksAndMessages(null)
         toolDialog?.dismiss()
-        hideCompletion(); completionExecutor.shutdownNow(); completionConsumedKeys.clear()
+        hideCompletion(); completionExecutor.shutdownNow(); signatureExecutor.shutdownNow(); completionConsumedKeys.clear()
         listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
             if (::outputRegion.isInitialized) outputRegion else null).forEach { it.animate().cancel() }
         explorerDialog?.dismiss()
@@ -335,7 +341,7 @@ class MainActivity : Activity() {
     private fun space(w: Int = 5) = View(this).apply { layoutParams = LinearLayout.LayoutParams(dp(w), 1) }
 
     private fun createUi() {
-        hideCompletion(); clearSnippet(); completionPopup = null
+        hideCompletion(); clearSnippet(); completionPopup = null; signaturePopup = null
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null; panelLayout = null
         window.statusBarColor = surface
@@ -376,7 +382,7 @@ class MainActivity : Activity() {
             "重新载入文件" to { reloadActive() }, "恢复草稿" to { recoverDrafts() },
             "保存  Ctrl+S" to { saveActive { status.text = "✓ 已保存 $activePath" } },
             "TAB" to { tab() }, "反缩进" to { indent(true) }, "{ }" to { insertText("{}", true) },
-            "( )" to { insertText("()", true) }, "补全" to { requestCompletion() }, "片段" to { showSnippetMenu() }
+            "( )" to { insertText("()", true) }, "补全" to { requestCompletion() }, "参数" to { requestSignatureHelp() }, "片段" to { showSnippetMenu() }
         )) {
             actions.addView(button(name, command)); actions.addView(space(5))
         }
@@ -386,7 +392,7 @@ class MainActivity : Activity() {
         keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
         val keyRow = LinearLayout(this)
         listOf<Pair<String, () -> Unit>>("TAB" to { tab() }, "反缩进" to { indent(true) },
-            "补全" to { requestCompletion() }, "片段" to { showSnippetMenu() }, "{ }" to { insertText("{}", true) }, "( )" to { insertText("()", true) }).forEach { (name, action) ->
+            "补全" to { requestCompletion() }, "参数" to { requestSignatureHelp() }, "片段" to { showSnippetMenu() }, "{ }" to { insertText("{}", true) }, "( )" to { insertText("()", true) }).forEach { (name, action) ->
             keyRow.addView(button(name, action)); keyRow.addView(space(3))
         }
         keyboardToolbar.addView(keyRow); root.addView(keyboardToolbar)
@@ -451,7 +457,7 @@ class MainActivity : Activity() {
     private fun updateImeLayout(visible: Boolean = imeVisible) {
         if (!::input.isInitialized || !::status.isInitialized) return
         val changed = visible != imeVisible
-        if (changed) completionPopup?.dismiss()
+        if (changed) { completionPopup?.dismiss(); hideSignatureHelp() }
         imeVisible = visible
         val height = (root.height / resources.displayMetrics.density).toInt()
         val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible, settings.collapsePanelOnIme)
@@ -601,7 +607,7 @@ class MainActivity : Activity() {
         if (panelSizeButton.text.toString() != sizeSymbol) panelSizeButton.text = sizeSymbol
         panelMaxButton.contentDescription = getString(if (panelState.maximized) R.string.panel_restore else R.string.panel_maximize)
         panelSizeButton.contentDescription = getString(R.string.panel_size_menu)
-        if (previous != spec) completionPopup?.dismiss()
+        if (previous != spec) { completionPopup?.dismiss(); hideSignatureHelp() }
         restorePanelViewport(stamp)
     }
 
@@ -678,10 +684,12 @@ class MainActivity : Activity() {
         editorRegion.addView(suggestScroll, LinearLayout.LayoutParams(-1, dp(37)))
         editor.viewTreeObserver.addOnScrollChangedListener {
             numbers.scrollY = editor.scrollY; completionPopup?.let { if (it.isShowing) it.reposition() }
+            signaturePopup?.let { if (it.isShowing) it.reposition() }
         }
         editor.viewTreeObserver.addOnGlobalLayoutListener {
             if (settings.wordWrap) updateNumbers()
             completionPopup?.let { if (it.isShowing) it.reposition() }
+            signaturePopup?.let { if (it.isShowing) it.reposition() }
         }
         editor.addTextChangedListener(object : TextWatcher {
             private var before = ""
@@ -714,7 +722,7 @@ class MainActivity : Activity() {
         editor.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
             if (focused) { lastFocus = "editor"; updateImeLayout() } else hideCompletion()
         }
-        editor.setOnClickListener { updateSuggestions() }
+        editor.setOnClickListener { updateSuggestions(); updateSignatureHelp() }
         completionHint = label(getString(R.string.completion_hint), 11f, muted)
         suggestionRow.addView(completionHint)
         editor.onCaretChanged = {
@@ -1126,6 +1134,7 @@ class MainActivity : Activity() {
         editor.text.toString(), editor.selectionStart, editor.selectionEnd, isCpp())
 
     private fun hideCompletion(suppress: Boolean = false) {
+        hideSignatureHelp(suppress)
         if (suppress && ::sessions.isInitialized && ::editor.isInitialized) completionSuppressed = completionRequest()
         completionGeneration++; completionTask?.cancel(true); completionTask = null
         completionBatch = null
@@ -1161,6 +1170,7 @@ class MainActivity : Activity() {
                         R.string.completion_members_pending else R.string.completion_empty)
                     return@runOnUiThread
                 }
+                hideSignatureHelp()
                 completionBatch = batch; completionExplicit = force
                 val popup = completionPopup ?: CompletionPopup(this, editor, surface, textForeground, muted, accent,
                     { index -> acceptCompletion(index) }, {
@@ -1173,6 +1183,50 @@ class MainActivity : Activity() {
                 }
             }
         }
+    }
+
+    private fun hideSignatureHelp(suppress: Boolean = false) {
+        if (suppress && ::sessions.isInitialized && ::editor.isInitialized) signatureSuppressed = completionRequest()
+        signatureGeneration++; signatureTask?.cancel(true); signatureTask = null
+        signaturePopup?.dismiss()
+    }
+
+    private fun updateSignatureHelp(force: Boolean = false) {
+        if (!::editor.isInitialized || !::sessions.isInitialized) return
+        if (isFinishing || isDestroyed || !hasWindowFocus() || workspaceBusy || loadedPath != activePath ||
+            !editor.hasFocus() || !editor.isShown || editor.length() > 45000 ||
+            BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || editor.selectionStart != editor.selectionEnd ||
+            toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
+            completionPopup?.isShowing == true || (!force && !settings.signatureHelp)) { hideSignatureHelp(); return }
+        val request = completionRequest()
+        if (force) signatureSuppressed = null
+        if (!force && signatureSuppressed == request) return
+        hideSignatureHelp()
+        val generation = signatureGeneration
+        signatureTask = signatureExecutor.submit {
+            val found = SignatureHelp.find(request)
+            if (Thread.currentThread().isInterrupted || isDestroyed) return@submit
+            runOnUiThread {
+                if (isDestroyed || isFinishing || !hasWindowFocus() || generation != signatureGeneration || workspaceBusy ||
+                    request != completionRequest() || !editor.hasFocus() || !editor.isShown ||
+                    BaseInputConnection.getComposingSpanStart(editor.text) >= 0 ||
+                    toolDialog?.isShowing == true || explorerDialog?.isShowing == true || completionPopup?.isShowing == true) return@runOnUiThread
+                if (found == null || !found.matches(completionRequest())) {
+                    if (force) status.setText(R.string.signature_empty)
+                    return@runOnUiThread
+                }
+                val popup = signaturePopup ?: SignaturePopup(this, editor, surface, textForeground, muted, accent,
+                    { hideSignatureHelp(true) }).also { signaturePopup = it }
+                if (!popup.show(found, motionEnabled()) && force) status.setText(R.string.signature_no_space)
+            }
+        }
+    }
+
+    private fun requestSignatureHelp() {
+        if (workspaceBusy || !editor.hasFocus()) return
+        handler.removeCallbacks(refreshEditor)
+        hideCompletion()
+        updateSignatureHelp(true)
     }
 
     private fun requestCompletion() {
@@ -1472,6 +1526,11 @@ class MainActivity : Activity() {
                 SnippetKeyAction.PASS -> false
             }
             if (snippetHandled) { completionConsumedKeys.add(event.keyCode); return true }
+            if (SignatureKeys.dismiss(key == CompletionKey.ESC, signaturePopup?.isShowing == true, composing,
+                event.flags and KeyEvent.FLAG_SOFT_KEYBOARD != 0,
+                event.isCtrlPressed || event.isAltPressed || event.isShiftPressed || event.isMetaPressed)) {
+                hideSignatureHelp(true); completionConsumedKeys.add(event.keyCode); return true
+            }
             if (key == CompletionKey.TAB && !composing && event.flags and KeyEvent.FLAG_SOFT_KEYBOARD == 0 && !event.isCtrlPressed && !event.isAltPressed && !event.isMetaPressed) {
                 hideCompletion(); indent(event.isShiftPressed); completionConsumedKeys.add(event.keyCode); return true
             }
@@ -1486,7 +1545,7 @@ class MainActivity : Activity() {
                 KeyEvent.KEYCODE_N -> { askCreate(false); return true }
                 KeyEvent.KEYCODE_O -> { importFile(); return true }
                 KeyEvent.KEYCODE_B -> { showExplorer(); return true }
-                KeyEvent.KEYCODE_SPACE -> { if (editor.hasFocus()) { requestCompletion(); return true } }
+                KeyEvent.KEYCODE_SPACE -> { if (editor.hasFocus()) { if (event.isShiftPressed) requestSignatureHelp() else requestCompletion(); return true } }
                 KeyEvent.KEYCODE_ENTER -> { runCode(); return true }
             }
         }
