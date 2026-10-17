@@ -1,8 +1,10 @@
 # CodePocket · Android C++ / Python IDE
 
+**2026-10-17 新需求审查：已完成，等待确认手机竖屏 UI 改造。** 本轮没有修改业务代码，已强制重跑 62 个构建任务并生成 [审查基线 APK](dist/CodePocket-UI-audit-baseline-debug.apk)。见 [客观审查](docs/UI_AUDIT_2026-10-17.md)、[分批 UI 计划](docs/UI_REDESIGN_PLAN_2026-10-17.md) 和 [本次完整需求](docs/DEVELOPMENT_REQUIREMENTS_UI_2026-10-17.md)；旧需求和阶段成果保留。
+
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**2026-10-17：P1 第五批内置函数参数参考主机验证通过。** [当前 Debug APK](dist/CodePocket-P1-signatures-debug.apk) 20.82 MiB，Android 7.0+ / arm64-v8a。Kotlin 99 项中 98 通过、1 跳过；Python 源码和 APK 字节码各 13 项通过，既有生成模板 Python/C++17 各 7 个真实执行成功；Lint 0 错误、13 警告。实机按用户要求统一后置，弹窗/IME/键鼠/帧率尚未设备验收。
+**2026-10-17：P1 第五批内置函数参数参考主机验证通过。** [上一功能批 Debug APK](dist/CodePocket-P1-signatures-debug.apk) 20.82 MiB，Android 7.0+ / arm64-v8a。Kotlin 99 项中 98 通过、1 跳过；Python 源码和 APK 字节码各 13 项通过，既有生成模板 Python/C++17 各 7 个真实执行成功；Lint 0 错误、13 警告。实机按用户要求统一后置，弹窗/IME/键鼠/帧率尚未设备验收。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
 - [P1 内置函数参数参考与验证](docs/P1_SIGNATURE_HELP.md)
@@ -13,7 +15,8 @@
 - [P0 后续回修与历史接续点](docs/P0_FOLLOWUP_2026-10-16.md)
 - [初轮 P0 修改与验证结果](docs/P0_VERIFICATION.md)
 - [P0 设备验收清单](docs/P0_DEVICE_TESTS.md)
-- [完整开发需求](docs/DEVELOPMENT_REQUIREMENTS.md)
+- [2026-10-17 完整需求与重构任务](docs/DEVELOPMENT_REQUIREMENTS_UI_2026-10-17.md)
+- [原完整开发需求（保留）](docs/DEVELOPMENT_REQUIREMENTS.md)
 - [动画与智能补全增补计划（P1 部分实现，P2 待实现，与原需求共同生效）](docs/P1_P2_ANIMATION_COMPLETION_PLAN.md)
 - [阶段 0 审查基线](docs/STAGE0_AUDIT_2026-10-15.md)
 - [第三方依赖初步清单](docs/THIRD_PARTY_INVENTORY.md)
@@ -123,4 +126,4 @@ Kotlin 测试完成后，可用 `python scripts/verify_snippets.py --junit app/b
 - P1 第一批设置、独立词法主题和当前文件查找替换已实现；面板拖动/最大化/恢复和原生词法候选列表已接入；内置片段与占位符已接入；常用内置函数调用参数参考已接入；完整动画、语义签名、项目搜索和流式程序终端仍待开发。第三方许可证完整通知包仍待完善。
 - 2026-10-15 增补：动画系统和 VS Code 风格补全界面归入 P1；C++ / Python 深度语义补全归入 P2。Sora、clangd、Jedi 等仅列为待评估候选，尚未集成；当前为原生候选列表上的基础词法补全，成员语义未实现。动画须尊重系统减少动画及 App 开关，60 FPS/高刷新率与输入法、光标、弹窗配合均待实测。
 
-当前继续按 P1 → P2 → P3 分批开发、主机验证和保存 APK，发现 P0 缺陷仍优先回修。依据 2026-10-16 最新指示，实机验收统一放到功能开发完成后，不作为继续开发的前置条件；历史记录保留。
+当前依据 2026-10-17 新请求，审查完成后先等待确认 P1-A 手机竖屏 UI 外壳；确认后继续按 P1 → P2 → P3 分批开发、主机验证和保存 APK，发现 P0 缺陷仍优先回修。依据 2026-10-16 最新指示，实机验收统一放到功能开发完成后，不作为继续开发的前置条件；历史记录保留。

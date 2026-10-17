@@ -1,6 +1,19 @@
 # CodePocket 当前交接状态
 
-## 当前：P1 第五批内置参数参考已完成（2026-10-17）
+## 当前：新完整需求审查完成，等待 UI 阶段确认（2026-10-17）
+
+最新用户请求是粘贴附件中的完整要求，末尾明确“审查后先汇报，等待确认，不直接大规模重构”。**这一要求替代此前自动继续状态栏的下一步；在用户确认前不要改生产代码。** 本轮只归档新需求、审查/设计计划并更新说明。
+
+- 当前业务基线 `b935079`，app/src/构建/测试/脚本/Actions 等 61 项输入哈希未改；[新需求](DEVELOPMENT_REQUIREMENTS_UI_2026-10-17.md) 逐字节保留，旧需求不覆盖。
+- 详见 [客观审查](UI_AUDIT_2026-10-17.md) 与 [P1-A 具体计划](UI_REDESIGN_PLAN_2026-10-17.md)。顶部 21 项第二工具栏、37dp 常驻说明、1812 行 Activity、树/Tab UI 线程元数据和全量高亮是已确认问题；旧图标题换行不能冒充最新截图。
+- 强制重跑 `--rerun-tasks --offline`：`BUILD SUCCESSFUL in 1m 15s`，62 任务执行；Kotlin 99 中 98 通过/1 跳过，Python 源码/真实 APK 字节码各13/13，模板 Python/C++17各7/7，Lint0错误13警告；签名/CRC/ABI/对齐通过。
+- [无 UI 修改的审查基线 APK](../dist/CodePocket-UI-audit-baseline-debug.apk)，21,777,988字节，SHA256 `130eef58299f62aca33fb8c4f090f2706a5ff1bf164df3cee8e00fd687f4d2f7`。证据 `verification/ui-audit-2026-10-17/results.json`；与上批仅 Chaquopy 打包元数据不同，Dex/资源等未变。
+- 真实 Wandbox 小样例 STL/stdin 成功（gcc13.2，输出8），第二例 TLS EOF，第三例未执行；在线脚本退出1，不称全通过。此为主机 API 测试，不是 Android 端验证。
+- 设备统一后置仍有效；检查的 SDK 没有 emulator/system-images、默认 SDK 不存在，无新截图/ADB/帧率/卓易通证据。无远端 Actions 或 push。
+- 推荐下一步确认 P1-A 手机竖屏主栏/菜单/令牌，再扩展横屏/平板及状态；Sora 仅官方资料评估（LGPL、pre-release、LSP API26），先隔离原型，不贸然替换 EditText；真实终端/语义/本地 C++ 仍未实现。
+
+
+## P1 第五批内置参数参考记录（2026-10-17，历史）
 
 前一批提交 `b688871`。本批在现有编辑器上增量开发，详见 [参数参考报告](P1_SIGNATURE_HELP.md) 和 [进度表](DEVELOPMENT_PROGRESS.md)，不重建项目；实机统一后置。
 
