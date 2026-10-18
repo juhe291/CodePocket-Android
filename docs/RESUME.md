@@ -1,6 +1,14 @@
 # CodePocket 当前交接状态
 
-## 最新：P1 原生 Shell 终端首批（2026-10-18）
+## 最新：Shell启动闪退复现与修复（2026-10-18）
+
+- 用户暂停动画，要求先查明点击Shell闪退，手机无法连接。基线edf3cf4；[报告](P1_SHELL_CRASH_FIX.md)。在SDK34/Robolectric4.14.1实际执行View初始化，旧代码2项正向启动用例均在TerminalView.setTypeface:504 / ShellTerminalPane.changed:125空指针；原顺序独立异常断言也通过。原因是先字体后字号，绘制器未创建，且主线程创建段在原异常保护之外。
+- 修正先字号后字体、完整视图/主线程启动保护、失败会话身份隔离和单次FAILED通知；本机最后错误限64KiB，菜单可查看/复制，只记录新版本今后捕获的故障。没有旧日志恢复承诺，不是native信号崩溃捕获器。
+- 最终构建57s，App287中286通过/1旧跳过，新增9；原278状态全保留。Lint0错/11旧警告，Python源码/实际字节码各13/13，模板各7/7；核心145复用通过结果。签名/CRC/16KB ZIP对齐、稳定DEX类/未打包测试库、JNI/许可不变和旧dist哈希已检查。测试依赖仅testImplementation，默认生产依赖不变。
+- 新APK dist/CodePocket-shell-crash-fixed-debug.apk，22,678,342字节，SHA256 96cd81703e515190afb16aed4e03ad1e72368edf5581c846cde3c985e055c8a3。完整失败/成功证据verification/shell-crash-2026-10-18/results.json。主机证明该Java故障并已修复；没有手机日志，Android PTY/IME等仍未实测，不声称已排除其他设备故障。
+- 动画保持暂停；下一步遵照用户纠正，将旧输出与Shell整合为一个底部真实终端并保留Python/Wandbox真实功能。当前尚未完成统一界面，不再追加第二套终端或模拟运行；本地C++和P1/P2/P3仍保留。MainActivity/文件/SAF/草稿/编辑器/执行器/原JNI未改，无push/远端Actions或设备连接。
+
+## 历史：P1 原生 Shell 终端首批（2026-10-18）
 
 - 用户已确认“第二种”：嵌入成熟终端并连接真实Shell，撤销脚本化终端演示作为实现路线；[本批报告](P1_NATIVE_TERMINAL.md)。Termux v0.118.3/5b657c6固定源码、原生视图+协议核心+真实PTY JNI，默认App新增面板“Shell终端”标签；点击连接/system/bin/sh，不需要另装Termux。
 - 单进程会话/弱UI观察、终端焦点快捷键直通、IME面板保护、输出字号/动画联动、复制粘贴/控制键/结束会话；原结果面板和Python/Wandbox执行器保持。上游5项适配及许可/归档/哈希、NDK r27c、CI构建/核心回归已接入。

@@ -26,6 +26,14 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { viewBinding = false }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            providers.gradleProperty("codepocket.testRepository").orNull?.let { repository ->
+                it.systemProperty("robolectric.dependency.repo.url", repository)
+            }
+        }
+    }
 }
 
 chaquopy {
@@ -41,4 +49,5 @@ dependencies {
     implementation(project(":terminal-view"))
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")
+    testImplementation("org.robolectric:robolectric:4.14.1")
 }

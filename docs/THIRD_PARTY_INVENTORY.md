@@ -43,3 +43,5 @@ POM 原文快照及机器可读索引位于 [license-metadata.json](../verificat
 
 
 2026-10-18 原生Shell：[本批报告](P1_NATIVE_TERMINAL.md)。默认App新增本地Termux terminal-view/terminal-emulator，固定v0.118.3 / 5b657c6adf4304e5198951ce815fe0205dcac29c；52项原始源/许可按Git blob或SHA256核验，完整固定源归档保留.tools。根GPLv3-only及Apache2.0来源例外均保留，没有将所有文件统一标为Apache；UPSTREAM.json、原始/已移位的Gradle来源、五个已修改上游文件差异、GPL/Apache正文在third-party/termux及证据。APK中terminal-licenses含两份正文、上游说明和元数据，终端菜单有入口。项目自身许可证仍由所有者决定，正式分发前继续对应源码/通知义务核验。NDK r27c仅本机/CI构建，不打包；新增libtermux.so为源码实际构建的arm64 JNI。三个JVM utility桥仅src/test，不入APK。AndroidX annotation1.9.1固定；默认Kotlin/Chaquopy版本没有整体升级。
+
+2026-10-18 Shell闪退回归：新增固定org.robolectric:robolectric:4.14.1，仅App testImplementation，启用Android测试资源。主机SDK34用于实际View初始化回归；Android平台由Robolectric提供，不是手机/PTY执行。Robolectric及传递测试依赖、下载的主机SDK均不进入Debug APK，DEX已检查；Termux源码/JNI/许可资产未改变。

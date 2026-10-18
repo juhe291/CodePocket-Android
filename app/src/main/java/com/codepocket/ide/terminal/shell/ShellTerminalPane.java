@@ -37,6 +37,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private boolean animations;
     private boolean activeHost = true;
     private boolean reportedLayoutFailure;
+    private TerminalSession reportedSession;
 
     public ShellTerminalPane(Context context, File directory, int fontSp, boolean animations, Runnable focusChanged) {
         super(context);
@@ -59,9 +60,10 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         addView(heading);
         viewport = new FrameLayout(context) {
             @Override protected void onLayout(boolean changed, int l, int t, int r, int b) {
+                TerminalSession expected = terminal == null ? null : terminal.getCurrentSession();
                 try { super.onLayout(changed, l, t, r, b); }
                 catch (RuntimeException | LinkageError failure) {
-                    if (!reportedLayoutFailure) { reportedLayoutFailure = true; post(() -> runtime.fail(failure)); }
+                    reportFailure(expected, failure);
                 }
             }
         };
@@ -109,6 +111,17 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         terminal.setTerminalCursorBlinkerState(activeHost && isShown() && animations && Float.isFinite(scale) && scale > 0 && !save, true);
     }
     @Override public void changed() {
+        TerminalSession expected = runtime.session();
+        try { renderSession(); }
+        catch (RuntimeException | LinkageError failure) { reportFailure(expected, failure); }
+    }
+    private void reportFailure(TerminalSession expected, Throwable failure) {
+        if (expected == null) { Log.e("CodePocket-Shell", "Error presenting terminal state", failure); return; }
+        if (reportedLayoutFailure && reportedSession == expected) return;
+        reportedLayoutFailure = true; reportedSession = expected;
+        post(() -> runtime.failIfCurrent(expected, failure));
+    }
+    private void renderSession() {
         TerminalSession session = runtime.session();
         if (session == null) {
             if (terminal != null) { terminal.setTerminalCursorBlinkerState(false, false); viewport.removeView(terminal); terminal = null; }
@@ -120,17 +133,18 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         }
         placeholder.setVisibility(GONE);
         if (terminal == null) {
-            reportedLayoutFailure = false;
-            terminal = new TerminalView(getContext(), null);
-            terminal.setTerminalViewClient(this); terminal.setTypeface(Typeface.MONOSPACE);
-            terminal.setTextSize(Math.round(fontSp * getResources().getDisplayMetrics().scaledDensity));
+            TerminalView ready = new TerminalView(getContext(), null);
+            ready.setTerminalViewClient(this);
+            // Termux setTypeface() reads mRenderer.mTextSize; setTextSize() must create the renderer first.
+            ready.setTextSize(Math.round(fontSp * getResources().getDisplayMetrics().scaledDensity));
+            ready.setTypeface(Typeface.MONOSPACE);
+            terminal = ready;
             terminal.setPadding(dp(10), dp(4), dp(10), dp(4));
             terminal.setFocusableInTouchMode(true);
             terminal.setOnFocusChangeListener((v, focused) -> { if (focused) focusChanged.run(); updateBlink(); });
             viewport.addView(terminal, new FrameLayout.LayoutParams(-1, -1));
         }
-        try { terminal.attachSession(session); terminal.onScreenUpdated(); }
-        catch (RuntimeException | LinkageError failure) { post(() -> runtime.fail(failure)); return; }
+        terminal.attachSession(session); terminal.onScreenUpdated();
         String state = runtime.state() == ShellRuntime.State.EXITED ? "已退出 · " + session.getExitStatus() : session.getPid() > 0 ? "PID " + session.getPid() : "正在启动";
         caption.setText(getContext().getString(com.codepocket.ide.R.string.shell_session_caption, state, runtime.plan().directory.getPath()));
         start.setVisibility(runtime.state() == ShellRuntime.State.EXITED ? VISIBLE : GONE);
@@ -138,7 +152,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     }
     private void showMenu(android.view.View anchor) {
         PopupMenu menu = new PopupMenu(getContext(), anchor);
-        String[] labels = {"显示虚拟键盘", "复制终端记录", "粘贴", "清屏（Ctrl+L）", "结束当前 Shell", "终端说明与许可证"};
+        String[] labels = {"显示虚拟键盘", "复制终端记录", "粘贴", "清屏（Ctrl+L）", "结束当前 Shell", "终端说明与许可证", "查看上次终端错误"};
         for (int i = 0; i < labels.length; i++) menu.getMenu().add(0, i, i, labels[i]);
         menu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -152,6 +166,10 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
                 case 5: new AlertDialog.Builder(getContext()).setTitle("真实 Android Shell")
                     .setMessage("使用本地 /system/bin/sh 和 Termux 终端组件，无需另装 Termux。\n\n命令以应用 UID 执行，可修改本应用有权访问的文件；终端只读取磁盘上已保存的内容。系统目录权限仍由 Android 控制，不是 root。\n\nSAF URI 不能直接作为 Shell 目录；外部项目仍由文件管理器授权和写回。未安装 python、pip 或 clang/g++ 命令，现有 Python 使用 Chaquopy、C++ 使用 Wandbox。\n\nTermux v0.118.3 / 5b657c6，保留 GPLv3 与 Apache 2.0 来源及通知；完整许可见 App 资产 terminal-licenses 和仓库 third-party/termux。")
                     .setPositiveButton("知道了", null).show(); break;
+                case 6: new AlertDialog.Builder(getContext()).setTitle("上次终端错误（本机记录）")
+                    .setMessage(runtime.failureDetails())
+                    .setNegativeButton("关闭", null)
+                    .setPositiveButton("复制", (d, w) -> runtime.copyFailureDetails()).show(); break;
             }
             return true;
         }); menu.show();

@@ -1,6 +1,8 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-18：已接入原生 Shell 终端首批。** 运行面板选择“Shell 终端”连接真实`/system/bin/sh`（Termux原生组件/PTY，无需另装Termux）。[Debug APK](dist/CodePocket-native-terminal-debug.apk) 21.63MiB；App277通过/1既有跳过、终端核心145通过，Lint0错误/11既有警告。构建与产物通过，**设备上的Shell/IME/键鼠/卓易通仍待统一实机验收**。当前没有python/pip/clang命令，原Python仍Chaquopy、C++仍Wandbox；本地C++未实现。见[实现、验证与边界](docs/P1_NATIVE_TERMINAL.md)。
+**2026-10-18：已复现并修复Shell视图初始化闪退。** 字号/字体初始化顺序导致空绘制器，新增实际View主机回归、完整启动异常保护及可复制的本机错误记录。[修复版Debug APK](dist/CodePocket-shell-crash-fixed-debug.apk) 21.63MiB；App286通过/1既有跳过、Lint0错误/11既有警告。见[崩溃栈、修复及验证范围](docs/P1_SHELL_CRASH_FIX.md)。尚无手机日志/PTY实测，不能据此排除设备其他故障；动画暂停，统一终端界面待接续。
+
+**此前：原生 Shell 终端首批（2026-10-18，含本轮已修复的启动Bug）。** 运行面板选择“Shell 终端”连接真实`/system/bin/sh`（Termux原生组件/PTY，无需另装Termux）。[Debug APK](dist/CodePocket-native-terminal-debug.apk) 21.63MiB；App277通过/1既有跳过、终端核心145通过，Lint0错误/11既有警告。构建与产物通过，**设备上的Shell/IME/键鼠/卓易通仍待统一实机验收**。当前没有python/pip/clang命令，原Python仍Chaquopy、C++仍Wandbox；本地C++未实现。见[实现、验证与边界](docs/P1_NATIVE_TERMINAL.md)。
 
 **2026-10-18：Sora实验已接入离线C++ / Python TextMate语法着色。** 提供语言/纯文本选择、深浅色规则、后台加载与着色预算降级，保留草稿和历史；属于语法作用域着色，不是语义IntelliSense。见[本批结果](docs/P1_SORA_LANGUAGES.md)；[事务](docs/P1_SORA_TRANSACTIONS.md)、[定位](docs/P1_EDITOR_SURFACE.md)保留。默认IDE仍为原生CodeEditor，尚未完成生产Sora迁移。
 

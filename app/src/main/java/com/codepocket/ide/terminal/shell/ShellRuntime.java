@@ -53,11 +53,16 @@ public final class ShellRuntime implements TerminalSessionClient {
                 System.loadLibrary("termux");
                 main.post(() -> {
                     if (generation != request) return;
-                    plan = ready;
-                    session = new TerminalSession(ShellLaunchPlan.EXECUTABLE, ready.directory.getPath(),
-                        ready.arguments, ready.environment, 2000, this);
-                    state = State.OPEN;
-                    notifyObserver();
+                    // A worker's try/catch cannot catch an exception thrown later by a main-thread Runnable.
+                    try {
+                        plan = ready;
+                        session = new TerminalSession(ShellLaunchPlan.EXECUTABLE, ready.directory.getPath(),
+                            ready.arguments, ready.environment, 2000, this);
+                        state = State.OPEN;
+                        notifyObserver();
+                    } catch (RuntimeException | LinkageError failure) {
+                        if (generation == request) fail(failure);
+                    }
                 });
             } catch (Exception | LinkageError failure) {
                 main.post(() -> { if (generation == request) fail(failure); });
@@ -92,12 +97,30 @@ public final class ShellRuntime implements TerminalSessionClient {
         if (old != null) old.finishIfRunning();
         notifyObserver();
     }
+    public void failIfCurrent(TerminalSession expected, Throwable failure) {
+        if (expected != null && expected == session) fail(failure);
+    }
     public void fail(Throwable failure) {
-        close(); state = State.FAILED;
+        generation++;
+        TerminalSession old = session;
+        session = null; plan = null; state = State.FAILED;
         error = failure.getClass().getSimpleName() + ": " + failure.getMessage();
         Log.e("CodePocket-Shell", "Terminal unavailable", failure);
+        try {
+            ShellFailureLog.write(context.getFilesDir(),
+                "Android SDK " + android.os.Build.VERSION.SDK_INT + " / " +
+                    java.util.Arrays.toString(android.os.Build.SUPPORTED_ABIS), failure);
+        } catch (java.io.IOException | SecurityException loggingFailure) {
+            Log.w("CodePocket-Shell", "Cannot save terminal diagnostic", loggingFailure);
+        }
+        if (old != null) old.finishIfRunning();
         notifyObserver();
     }
+    public String failureDetails() {
+        try { return ShellFailureLog.read(context.getFilesDir()); }
+        catch (java.io.IOException | SecurityException failure) { return "无法读取本机终端错误记录：" + failure.getMessage(); }
+    }
+    public void copyFailureDetails() { copy(failureDetails()); }
     @Override public void onTextChanged(TerminalSession s) { if (s == session) notifyObserver(); }
     @Override public void onTitleChanged(TerminalSession s) { if (s == session) notifyObserver(); }
     @Override public void onSessionFinished(TerminalSession s) {
