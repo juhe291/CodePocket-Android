@@ -1,6 +1,19 @@
 # CodePocket 当前交接状态
 
-## 最新：P1-C 共享弹窗定位与Sora坐标适配（2026-10-18）
+## 最新：P1-C Sora编辑事务、文档更换与历史适配首批（2026-10-18）
+
+- 基线 `c5f5bf1`；[本批报告](P1_SORA_TRANSACTIONS.md)。原生产EditorTransactions API与文档/版本/组合保护保留，范围/长度/UTF-16/CRLF/新选区规则委托本地Java TextEdits；两组件复用，无外部依赖或Kotlin升级。
+- SoraBuffer使用真实Content/Cursor及Content.getDocumentVersion，快照仅在显式命令捕获，拒绝旧实例/版本/选区/组合/关闭后请求；无变化不替换，选区变更不新增历史，替换使用原Content批次。SoraEditorAdapter已接实验插入、撤销/重做、同步草稿更换及共享锚点。实际历史/选区通知仍走CodeEditor，ContentChange监听不再另加版本计数。
+- 更换草稿创建新Content/UndoManager，关闭旧实例；组合期间重置也拒绝，选区恢复避开emoji/CRLF。原临时文本原样保留，包含超限/已有不配对UTF-16；显式编辑命令仍限制20万字符并拒绝不合法替换。不把临时原型说成项目保存或进程死亡恢复。
+- 默认构建 **48s**，64任务19执行/45未变化；Kotlin270中269通过/1原Windows符号链接跳过，新增6，原264项及状态保留。实验构建 **24s**，49任务20执行/29未变化；41/41，新增22，原19及状态保留。实际运行Sora Content/Cursor/UndoManager，不是View模拟。
+- Python源码/真实APK字节码各13/13、实际模板Python/主机C++17各7/7；Lint默认0错误/11既有警告，实验0错误/6既有警告。两份CRC/v2签名/16KB ZIP对齐/关键Dex定义通过，默认APK保留上轮所有类；实验仅两个生成lambda改编号，无稳定类删除。旧8项APK/材料包SHA256保持。
+- [默认APK](../dist/CodePocket-editor-sora-transactions-debug.apk)：22,106,015字节，SHA256 `cf5064df34b52cd1f841c714448c598f186142f0796f48291b2b61af009199a2`。[Sora事务实验APK](../dist/CodePocket-Sora-transactions-lab-debug.apk)：1,668,943字节，SHA256 `73e17c28ed44dd920fb511128b5fb5a5d4f6f8783e27abe58a04a2046a3e9aee`。默认仍Kotlin1.9.25/无Sora，实验仍0.23.7/Kotlin2.1.21；原Gradle/Actions/Manifest/文件/SAF/草稿/运行/输入事件/旧测试/三份需求哈希保持。
+- 证据 `verification/editor-sora-transactions-2026-10-18/`：results.json、修改前备份/所有已跟踪输入哈希、两份验证脚本/日志、JUnit/Lint、API原文、runtime graph、签名/对齐/字节码报告、补丁及提交记录；本轮测试与构建首轮通过，未删改失败测试。README/实验README/进度/本报告已维护，仅本地阶段提交，无push/发布。
+- **接续**：固定Sora语言包/语法装饰，随后完整生产Port/导航/候选/片段/参数/SAF项目会话与默认迁移评估。当前事务只接实验临时草稿，不是默认迁移完成；异步项目文档交接仍应接既有源快照门控。P1余项与P2/P3保留，P0缺陷优先。
+- **实机统一后置**：无Android/模拟器、真实CodeEditor View/InputConnection、系统历史通知、IME/焦点/触屏键鼠/手机平板/卓易通/定位/FPS验收；core中的组合布尔门控是主机规则测试，不是实际输入法时序。无新Wandbox或远端Actions。完整上游对应源码/重链接交付核验仍待，没有发布。
+- 保留.tools、dist、verification与设备备份；实际仓库 `C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`，配置OneDrive cwd不存在，显式workdir并按需正常审批，不改Git配置。
+
+## 历史：P1-C 共享弹窗定位与Sora坐标适配（2026-10-18）
 
 - 基线 `3dbc4af`；[本批报告](P1_EDITOR_SURFACE.md)。新editor-surface本地Java库提供无View/无正文的EditorSurface锚点、裁剪与放置规则。NativeEditorPort实际实现，生产CompletionPopup/SignaturePopup改接View父节点+接口，复查文档/版本/UTF-16偏移；原CompletionGeometry API保留为委托。输入/焦点/编辑和词法候选算法未迁移。
 - Sora实验通过固定0.23.7的Layout.getCharLayoutOffset真实API提供锚点，结合文本区偏移、滚动、行高与窗口裁剪；原始sources.jar SHA256与API源码已核对/保留。新增“光标定位”非补全探针，选择/编辑/换草稿/失焦/暂停关闭，滚动与布局重新定位；不是模拟IntelliSense或运行结果。

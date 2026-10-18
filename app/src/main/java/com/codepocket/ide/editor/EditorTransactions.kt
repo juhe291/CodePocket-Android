@@ -2,6 +2,7 @@ package com.codepocket.ide.editor
 
 import com.codepocket.ide.EditorSnapshot
 import com.codepocket.ide.TextChange
+import com.codepocket.editor.surface.TextEdits
 
 /** All positions are UTF-16. A background action must retain the snapshot it was computed from. */
 data class EditorTransaction(val source: EditorSnapshot, val change: TextChange, val matchSelection: Boolean = true)
@@ -43,38 +44,9 @@ object EditorTransactions {
         sourceFailure(current, transaction.source, transaction.matchSelection)?.let { return it }
         val code = current!!.buffer.text
         val change = transaction.change
-        if (change.start < 0 || change.end < change.start || change.end > code.length ||
-            !boundary(code, change.start) || !boundary(code, change.end)) return EditResult.INVALID_RANGE
-        // Long arithmetic prevents overflow before the platform LengthFilter sees the edit.
-        val size = code.length.toLong() - (change.end - change.start) + change.text.length
-        if (maxChars < 0 || size > maxChars) return EditResult.LIMIT_EXCEEDED
-        if (!validUtf16(change.text)) return EditResult.INVALID_TEXT
-        if (change.selectionStart !in 0..size.toInt() || change.selectionEnd !in 0..size.toInt()) return EditResult.INVALID_RANGE
-        fun character(at: Int): Char = when {
-            at < change.start -> code[at]
-            at < change.start + change.text.length -> change.text[at - change.start]
-            else -> code[at - change.text.length + (change.end - change.start)]
-        }
-        fun newBoundary(at: Int): Boolean = at == 0 || at == size.toInt() || !split(character(at - 1), character(at))
-        if (!newBoundary(change.selectionStart) || !newBoundary(change.selectionEnd)) return EditResult.INVALID_RANGE
-        val sameText = change.text.length == change.end - change.start && code.regionMatches(change.start, change.text, 0, change.text.length)
-        return if (!sameText) EditResult.APPLIED
-            else if (change.selectionStart != current.buffer.start || change.selectionEnd != current.buffer.end) EditResult.SELECTION_ONLY
-            else EditResult.UNCHANGED
+        return EditResult.valueOf(TextEdits.check(code, current.buffer.start, current.buffer.end,
+            change.start, change.end, change.text, change.selectionStart, change.selectionEnd, maxChars).name)
     }
 
-    internal fun boundary(text: String, at: Int): Boolean = at == 0 || at == text.length || !split(text[at - 1], text[at])
-    private fun split(left: Char, right: Char): Boolean =
-        (Character.isHighSurrogate(left) && Character.isLowSurrogate(right)) || (left == '\r' && right == '\n')
-
-    private fun validUtf16(text: String): Boolean {
-        var at = 0
-        while (at < text.length) {
-            val ch = text[at++]
-            if (Character.isHighSurrogate(ch)) {
-                if (at == text.length || !Character.isLowSurrogate(text[at++])) return false
-            } else if (Character.isLowSurrogate(ch)) return false
-        }
-        return true
-    }
+    internal fun boundary(text: String, at: Int): Boolean = TextEdits.boundary(text, at)
 }

@@ -25,7 +25,7 @@ import android.widget.Toast;
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.SelectionChangeEvent;
 import io.github.rosemoe.sora.event.ScrollEvent;
-import io.github.rosemoe.sora.text.CharPosition;
+import com.codepocket.editor.surface.TextEdits;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 import io.github.rosemoe.sora.widget.schemes.SchemeVS2019;
@@ -38,9 +38,8 @@ public final class EditorLabActivity extends Activity {
     private static final String SAMPLE = "# 临时测试草稿：中文 / 😀\nprint('hello')\n";
     private CodeEditor sora;
     private SurfaceProbe surfaceProbe;
-    private long documentRevision;
+    private SoraEditorAdapter soraAdapter;
     private int documentGeneration;
-    private String scratchKey = "scratch:0";
     private EditText nativeEditor;
     private TextView status;
     private TextView title;
@@ -89,8 +88,8 @@ public final class EditorLabActivity extends Activity {
         nativeEditor.setTextSize(15); nativeEditor.setHorizontallyScrolling(true); nativeEditor.setSaveEnabled(false);
         sora = new CodeEditor(this); sora.setTypefaceText(Typeface.MONOSPACE); sora.setTextSize(15);
         sora.setSaveEnabled(false); sora.setLineNumberEnabled(true);
-        surfaceProbe = new SurfaceProbe(this, sora,
-            new SoraEditorSurface(sora, () -> scratchKey, () -> documentRevision));
+        soraAdapter = new SoraEditorAdapter(sora);
+        surfaceProbe = new SurfaceProbe(this, sora, soraAdapter);
         sora.setOnFocusChangeListener((view, focused) -> { if (!focused) surfaceProbe.dismiss(); });
         body.addView(nativeEditor, new FrameLayout.LayoutParams(-1, -1));
         body.addView(sora, new FrameLayout.LayoutParams(-1, -1));
@@ -101,7 +100,7 @@ public final class EditorLabActivity extends Activity {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(Editable value) { updateStatus(); }
         });
-        sora.subscribeEvent(ContentChangeEvent.class, (event, unsubscribe) -> { documentRevision++; surfaceProbe.dismiss(); updateStatus(); });
+        sora.subscribeEvent(ContentChangeEvent.class, (event, unsubscribe) -> { surfaceProbe.dismiss(); updateStatus(); });
         sora.subscribeEvent(SelectionChangeEvent.class, (event, unsubscribe) -> { surfaceProbe.dismiss(); updateStatus(); });
         sora.subscribeEvent(ScrollEvent.class, (event, unsubscribe) -> surfaceProbe.reposition());
         sora.addOnLayoutChangeListener((view, l, t, r, b, oldL, oldT, oldR, oldB) -> surfaceProbe.reposition());
@@ -123,36 +122,38 @@ public final class EditorLabActivity extends Activity {
             useSora ? sora.getCursor().getLeft() : nativeEditor.getSelectionStart(),
             useSora ? sora.getCursor().getRight() : nativeEditor.getSelectionEnd(), useSora, dark, animate);
     }
-    private void load(Scratch value) {
-        surfaceProbe.dismiss(); scratchKey = "scratch:" + (++documentGeneration);
-        useSora = value.sora; dark = value.dark; animate = value.animate;
-        if (useSora) {
-            sora.setText(value.text);
-            CharPosition start = sora.getText().getIndexer().getCharPosition(Math.max(0, Math.min(value.start, value.text.length())));
-            CharPosition end = sora.getText().getIndexer().getCharPosition(Math.max(0, Math.min(value.end, value.text.length())));
-            sora.setSelectionRegion(start.line, start.column, end.line, end.column, false);
+    private boolean load(Scratch value) {
+        if (composing()) { message("请先完成输入法组合输入"); return false; }
+        surfaceProbe.dismiss();
+        if (value.sora) {
+            if (!soraAdapter.replaceDocument("scratch:" + (documentGeneration + 1), value.text, value.start, value.end)) {
+                message("草稿更换被拒绝，当前内容已保留"); return false;
+            }
         } else {
-            nativeEditor.setText(value.text);
-            nativeEditor.setSelection(Math.max(0, Math.min(value.start, value.text.length())), Math.max(0, Math.min(value.end, value.text.length())));
+            int[] selection = TextEdits.restoreSelection(value.text, value.start, value.end);
+            nativeEditor.setText(value.text); nativeEditor.setSelection(selection[0], selection[1]);
         }
+        documentGeneration++;
+        useSora = value.sora; dark = value.dark; animate = value.animate;
         sora.setVisibility(useSora ? View.VISIBLE : View.GONE);
         nativeEditor.setVisibility(useSora ? View.GONE : View.VISIBLE);
         (useSora ? sora : nativeEditor).requestFocus(); appearance(); updateStatus();
+        return true;
     }
     private void switchEditor() {
         if (composing()) { message("请先完成输入法组合输入"); return; }
         Scratch old = capture();
-        load(new Scratch(old.text, Math.min(old.start, old.end), Math.max(old.start, old.end), !useSora, dark, animate));
-        message("已切换；文本与选区保留，撤销历史按组件重新开始");
+        if (load(new Scratch(old.text, Math.min(old.start, old.end), Math.max(old.start, old.end), !useSora, dark, animate)))
+            message("已切换；文本与选区保留，撤销历史按组件重新开始");
     }
     private void insert(String text) {
         if (composing()) { message("请先完成输入法组合输入"); return; }
         Scratch old = capture(); int start = Math.min(old.start, old.end), end = Math.max(old.start, old.end);
         if (!ScratchEdits.valid(old.text, start, end, text)) { message("选区边界无效或超出实验命令的20万字符上限"); return; }
         if (useSora) {
-            ScratchEdits.replace(sora.getText(), start, end, text);
-            CharPosition point = sora.getText().getIndexer().getCharPosition(start + text.length());
-            sora.setSelection(point.line, point.column);
+            SoraBuffer.Snapshot source = soraAdapter.snapshot();
+            if (!soraAdapter.apply(source, start, end, text, start + text.length(), start + text.length()).accepted())
+                message("编辑请求已过期或被拒绝，当前内容已保留");
         } else {
             nativeEditor.beginBatchEdit();
             try { nativeEditor.getText().replace(start, end, text); nativeEditor.setSelection(start + text.length()); }
@@ -162,7 +163,7 @@ public final class EditorLabActivity extends Activity {
     }
     private void history(boolean redo) {
         if (composing()) { message("请先完成输入法组合输入"); return; }
-        if (useSora) { if (redo) sora.redo(); else sora.undo(); }
+        if (useSora) { if (!soraAdapter.history(soraAdapter.snapshot(), redo)) message("当前没有可执行的历史操作"); }
         else nativeEditor.onTextContextMenuItem(redo ? android.R.id.redo : android.R.id.undo);
         updateStatus();
     }
@@ -217,7 +218,7 @@ public final class EditorLabActivity extends Activity {
         if (!focused && surfaceProbe != null) surfaceProbe.dismiss();
     }
     @Override protected void onPause() { if (surfaceProbe != null) surfaceProbe.dismiss(); motionAllowed = false; if (sora != null) sora.setCursorAnimationEnabled(false); super.onPause(); }
-    @Override protected void onDestroy() { if (surfaceProbe != null) surfaceProbe.dismiss(); if (sora != null) sora.release(); super.onDestroy(); }
+    @Override protected void onDestroy() { if (surfaceProbe != null) surfaceProbe.dismiss(); if (soraAdapter != null) soraAdapter.close(); if (sora != null) sora.release(); super.onDestroy(); }
     @Override public void onBackPressed() {
         if (!capture().text.equals(SAMPLE)) new AlertDialog.Builder(this).setMessage("离开实验？临时草稿未保存，可先长按复制内容。")
             .setNegativeButton("留在此页", null).setPositiveButton("离开", (d, w) -> finish()).show();

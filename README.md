@@ -1,14 +1,15 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-18：生产弹窗已接入共享光标定位接口，Sora完成定位适配首批。** 补全/参数窗口通过组件提供的光标与可用区域定位，复查文件/版本/UTF-16偏移，保留原生输入。Sora实验实现同一接口，读取固定0.23.7布局API，并提供明确的非补全定位探针。见[本批结果](docs/P1_EDITOR_SURFACE.md)。[文档交接](docs/P1_EDITOR_DOCUMENTS.md)、[导航](docs/P1_EDITOR_NAVIGATION.md)与[事务](docs/P1_EDITOR_TRANSACTIONS.md)保留；默认编辑器仍为原生CodeEditor，尚未完成Sora迁移或语义补全。
+**2026-10-18：Sora实验接入受保护的编辑事务、草稿更换和历史入口。** 原生与Sora复用无Android依赖的UTF-16/CRLF/长度校验；实验按真实Content版本、文档身份和选区拒绝过期命令，撤销/重做仍由组件执行。见[本批结果](docs/P1_SORA_TRANSACTIONS.md)。[共享定位](docs/P1_EDITOR_SURFACE.md)、[生产文档交接](docs/P1_EDITOR_DOCUMENTS.md)保留；默认仍为原生CodeEditor，尚未完成Sora生产迁移或语义补全。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [默认IDE Debug APK](dist/CodePocket-editor-surface-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。构建1m 17s；Kotlin264中263通过/1跳过，新增18通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
+**最新 [默认IDE Debug APK](dist/CodePocket-editor-sora-transactions-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。构建48s；Kotlin270中269通过/1既有跳过，新增6通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
 
-另有[最新Sora定位实验APK](dist/CodePocket-Sora-surface-lab-debug.apk)，独立包名/临时草稿；构建32s，原14项真实Content回归与5项适配主机测试全部通过，尚未接入项目/运行器。新源码见当前仓库的editor-lab与editor-surface模块；[历史实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)保持原样。实机按要求统一后置，未验收UI/键鼠/IME/FPS。
+另有[最新Sora事务实验APK](dist/CodePocket-Sora-transactions-lab-debug.apk)，独立包名/临时草稿；构建24s，41/41主机测试（新增22），实际执行Content/Cursor/UndoManager，不执行Android View或InputConnection。新源码见当前editor-lab与editor-surface；[历史实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)保持原样，不含后续适配代码。实机统一后置，未验收UI/键鼠/IME/FPS。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
+- [P1 Sora事务、草稿更换与历史适配验证](docs/P1_SORA_TRANSACTIONS.md)
 - [P1 生产弹窗与Sora共享定位适配验证](docs/P1_EDITOR_SURFACE.md)
 - [P1 文档交接、异步读取与标签安全验证](docs/P1_EDITOR_DOCUMENTS.md)
 - [P1 生产选区、视口与错误导航验证](docs/P1_EDITOR_NAVIGATION.md)
