@@ -626,7 +626,7 @@ class MainActivity : Activity() {
 
     private fun showContextCommands(anchor: View, commands: List<IdeCommand>) {
         commandMenu?.dismiss()
-        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands, ::dispatchCommand)
+        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands.filter { isCpp() || it !in listOf(IdeCommand.PRESET_INPUT,IdeCommand.CLEAR_INPUT) }, ::dispatchCommand)
     }
 
     private fun dispatchCommand(command: IdeCommand) {
@@ -804,7 +804,7 @@ class MainActivity : Activity() {
     }
 
     private fun setPresetInputExpanded(expanded: Boolean) {
-        if (workspaceBusy || !::input.isInitialized) return
+        if (workspaceBusy || !::input.isInitialized || !isCpp()) return
         val stamp = capturePanelViewport(); hideCompletion()
         presetInputExpanded = expanded
         if (expanded) {
@@ -853,9 +853,9 @@ class MainActivity : Activity() {
         panelResize.isEnabled = spec.resizable && !workspaceBusy
         val panelHeight = if (side || full) height else spec.extent
         val preset = WorkspaceLayoutPolicy.preset(presetInputExpanded, imeVisible, input.hasFocus(), panelHeight)
-        panelInputHeading.visibility = if (preset.showCaption && selectedOutput == 3) View.VISIBLE else View.GONE
+        panelInputHeading.visibility = if (preset.showCaption && selectedOutput == 3 && isCpp()) View.VISIBLE else View.GONE
         panelOutputScroll.visibility = if (preset.showTabs) View.VISIBLE else View.GONE
-        input.visibility = if (preset.showInput && selectedOutput == 3) View.VISIBLE else View.GONE
+        input.visibility = if (preset.showInput && selectedOutput == 3 && isCpp()) View.VISIBLE else View.GONE
         input.layoutParams?.let { old ->
             val target = dp(preset.inputHeight)
             if (old.height != target) input.layoutParams = old.apply { this.height = target }
@@ -898,9 +898,9 @@ class MainActivity : Activity() {
         }
         input.setSelection(view.inputStart, view.inputEnd)
         lastFocus = view.focus
-        presetInputExpanded = WorkspaceLayoutPolicy.restorePreset(presetInputExpanded, view.focus, panelVisible)
-        input.visibility = if (presetInputExpanded) View.VISIBLE else View.GONE
-        if (view.focus == "stdin" && panelVisible) input.requestFocus()
+        presetInputExpanded = isCpp() && WorkspaceLayoutPolicy.restorePreset(presetInputExpanded, view.focus, panelVisible)
+        input.visibility = if (presetInputExpanded && isCpp()) View.VISIBLE else View.GONE
+        if (view.focus == "stdin" && panelVisible && isCpp()) input.requestFocus()
         else if (panelState.maximized && panelVisible) outputRegion.requestFocus()
         else editor.requestFocus()
         updateImeLayout()
@@ -1048,7 +1048,7 @@ class MainActivity : Activity() {
                 handler.removeCallbacks(saveSession); handler.postDelayed(saveSession, 200)
             }
         })
-        input.visibility = if (presetInputExpanded) View.VISIBLE else View.GONE
+        input.visibility = if (presetInputExpanded && isCpp()) View.VISIBLE else View.GONE
         panelInputHeading.visibility = input.visibility
         outputRegion.addView(input, LinearLayout.LayoutParams(-1, dp(64)))
         val scroll = ScrollView(this)
@@ -2204,12 +2204,15 @@ class MainActivity : Activity() {
         showOutput(3)
         shellPane?.ensureSession()
         val owner = terminalRegistry.catalog.selected()!!.value.runtime
-        val interactive = settings.pythonInteractive
+        val interactive = true
         fun launch(entry: String, root: String, key: String?) {
             if (!RunSession.start(applicationContext,code,stdin,cpp,runningFile,root,workspace.identity,
                 entry,key,owner,interactive)) alert("当前终端正在执行命令。请先停止它或新建终端后运行。")
         }
-        if (!panelVisible) togglePanel()
+        // A remembered-open panel can still be temporarily GONE under the editor IME.
+        // Explicit Run must reveal it too; hiding the IME does not focus/show the terminal keyboard.
+        hideKeyboard()
+        if (panelLayout?.showPanel != true) togglePanel() else updateImeLayout()
         val projectRoot = workspace.root.absolutePath
         if (!cpp && workspace.external) {
             val path = activePath
@@ -2262,7 +2265,8 @@ class MainActivity : Activity() {
         shellPane?.visibility = if (shell) View.VISIBLE else View.GONE
         shellPane?.hostActive(shell)
         panelToolbar.setShellMode(shell)
-        input.visibility = if (target == 3 && presetInputExpanded) View.VISIBLE else View.GONE
+        panelToolbar.setInputAvailable(isCpp())
+        input.visibility = if (target == 3 && presetInputExpanded && isCpp()) View.VISIBLE else View.GONE
         panelInputHeading.visibility = input.visibility
         outputTabs.removeAllViews()
         fun tab(title: String, selected: Boolean, action: () -> Unit) = button(title, action).apply {
@@ -2325,7 +2329,7 @@ class MainActivity : Activity() {
         val menu = android.widget.PopupMenu(this, anchor)
         if (entry == null) { newShellSession(); return }
         val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证",
-            if(settings.pythonInteractive) "Python 输入：终端交互（点击改为预填）" else "Python 输入：预填（点击改为交互）", "编辑每文件预填输入")
+            ) + if(isCpp())listOf("编辑 C++ 云端预填输入")else emptyList()
         titles.forEachIndexed { index, title -> menu.menu.add(0, index, index, title) }
         menu.setOnMenuItemClickListener { item ->
             if (terminalRegistry.catalog.selected() === entry) when (item.itemId) {
@@ -2344,8 +2348,7 @@ class MainActivity : Activity() {
                     .setNegativeButton("关闭", null).setPositiveButton("复制") { _, _ -> entry.value.runtime.copyFailureDetails() }.show()
                 7 -> shellPane?.ensureSession()
                 8 -> shellPane?.showAbout()
-                9 -> { applySettings(settings.copy(pythonInteractive = !settings.pythonInteractive)) }
-                10 -> setPresetInputExpanded(true)
+                9 -> setPresetInputExpanded(true)
             }
             true
         }; menu.show()

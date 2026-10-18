@@ -48,6 +48,8 @@ object RunSession {
     private var terminalBridge: TerminalBridgeBroker? = null
     private var terminalStreams: TerminalBridgeBroker.Streams? = null
     private var terminalLaunchFile: File? = null
+    private var startupStage = "准备本地终端"
+    private fun startup(stage:String) { startupStage=stage;terminalOwner?.refreshForeground() }
     private var interactiveInput = false
     private var outputBytes = 0L
     private var lastKilledPid = 0
@@ -61,7 +63,7 @@ object RunSession {
         interactive: Boolean = false): Boolean {
         check(Looper.myLooper() == Looper.getMainLooper())
         val id = tickets.begin() ?: return false
-        terminalOwner=terminal;interactiveInput=interactive;outputBytes=0;bindingRetries=0
+        startupStage="准备本地终端";terminalOwner=terminal;interactiveInput=interactive;outputBytes=0;bindingRetries=0
         terminalClock=if(terminal!=null&&!cpp)TerminalRunClock(now())else null
         val displayFile=File(sourcePath).name
         val control=object:ShellRuntime.RunControl {
@@ -82,7 +84,7 @@ object RunSession {
                 else when(terminalClock?.state) {
                     TerminalRunClock.State.WAITING -> "Python · 等待终端输入 · Enter提交 / Ctrl+D结束输入"
                     TerminalRunClock.State.RUNNING -> if(interactive)"Python · 运行中 · Ctrl+C停止" else "Python · 使用预填输入 · Ctrl+C停止"
-                    else -> "Python · 正在连接当前终端"
+                    else -> "Python · $startupStage"
                 }
             override fun closed(){if(tickets.accepts(id))finish(id,RunSession.terminal(RunKind.CANCELLED,"所属终端已结束，程序已停止"))}
         }
@@ -116,7 +118,8 @@ object RunSession {
         val delay=clock.remaining(now())
         if(delay<=0) {
             finish(id,terminal(RunKind.TIMEOUT,if(clock.state==TerminalRunClock.State.WAITING)
-                "等待终端输入超过5分钟，已停止程序" else "Python启动或执行超过时间限制，已停止程序"));return
+                "等待终端输入超过5分钟，已停止程序" else if(clock.state==TerminalRunClock.State.STARTING) "Python启动超时：$startupStage。请复制终端记录以查看启动错误。"
+                else "Python有效执行超过时间限制，已停止程序"));return
         }
         deadline=Runnable { if(tickets.accepts(id))scheduleTerminalDeadline(id) }.also { main.postDelayed(it,delay.coerceAtLeast(1)) }
     }
@@ -126,6 +129,7 @@ object RunSession {
         if(!File("/system/bin/app_process").canExecute()) {
             finish(id,terminal(RunKind.SERVICE,"此系统无法执行app_process终端桥，未切换为模拟运行"));return
         }
+        startup("创建本地终端桥")
         terminalBridge=TerminalBridgeBroker.start(object:TerminalBridgeBroker.Listener {
             override fun listening(broker:TerminalBridgeBroker) {
                 if(!tickets.accepts(id)){broker.close();return}
@@ -135,14 +139,15 @@ object RunSession {
                     script.writeText(broker.command(app.applicationInfo.sourceDir)+"\n")
                     android.system.Os.chmod(script.path,384) // 0600: sourced data, never an app-writable executable.
                     terminalLaunchFile=script
-                    terminalOwner?.queueCommand(". "+BridgeCommand.quote(script.path)) { error ->
+                    startup("等待 Shell 提示符")
+                    terminalOwner?.queueCommand(". "+BridgeCommand.quote(script.path), { error ->
                         if(tickets.accepts(id))finish(id,terminal(RunKind.SERVICE,error))
-                    }
+                    }, { if(tickets.accepts(id))startup("等待前台桥连接（app_process）") })
                 }.onFailure { finish(id,terminal(RunKind.SERVICE,"终端启动失败：${it.message}")) }
             }
             override fun connected(broker:TerminalBridgeBroker,streams:TerminalBridgeBroker.Streams) {
                 if(!tickets.accepts(id)){streams.close();broker.close();return}
-                terminalStreams=streams;bindPython(id,code,input)
+                terminalStreams=streams;startup("连接 Python 独立服务");bindPython(id,code,input)
             }
             override fun disconnected(broker:TerminalBridgeBroker,error:String) {
                 if(tickets.accepts(id))finish(id,terminal(RunKind.CANCELLED,"终端前台桥已退出，Python已停止：$error"))
@@ -166,6 +171,7 @@ object RunSession {
                     }
                     if (pid > 0 && pid != Process.myPid() && pid!=lastKilledPid) {
                         pythonPid = pid;pythonGroup=data.getInt("pgid")
+                        if(terminalOwner!=null)startup("初始化 Python 运行时")
                         // A cancelled pre-handshake bind never receives RUN, so it cannot leave native code running.
                         runCatching { remote!!.send(Message.obtain(null, PythonExecutionService.RUN).apply {
                             replyTo = reply

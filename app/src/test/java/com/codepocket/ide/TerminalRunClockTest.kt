@@ -21,8 +21,8 @@ class TerminalRunClockTest {
   c.update(TerminalRunClock.State.WAITING,4,15000);c.update(TerminalRunClock.State.RUNNING,5,50000)
   assertEquals(2000,c.remaining(50000));assertEquals(0,c.remaining(52000))
  }
- @Test fun defaultsAndDisabledPrefillModePersist() {
-  assertTrue(AppSettings.fromJson("{} ").pythonInteractive)
-  assertFalse(AppSettings.fromJson(AppSettings(pythonInteractive=false).toJson()).pythonInteractive)
+ @Test fun removedPythonModeDoesNotDiscardOtherLegacySettings() {
+  val restored=AppSettings.fromJson("""{"version":5,"pythonInteractive":false,"fontSize":18}""")
+  assertEquals(18,restored.fontSize);assertFalse(restored.toJson().contains("pythonInteractive"))
  }
 }

@@ -101,4 +101,21 @@ class TerminalWorkbenchViewTest {
         assertEquals(1,ReflectionHelpers.getField<Int>(activity,"selectedOutput"))
         assertFalse(ReflectionHelpers.getField<Boolean>(activity,"panelVisible"))
     }
+    @Test fun pythonNeverDisplaysLegacyPrefillControls() {
+        ReflectionHelpers.setField(activity,"activePath","main.py")
+        ReflectionHelpers.setField(activity,"presetInputExpanded",true)
+        show(3)
+        assertEquals(View.GONE,ReflectionHelpers.getField<EditText>(activity,"input").visibility)
+        assertEquals(View.GONE,ReflectionHelpers.getField<LinearLayout>(activity,"panelInputHeading").visibility)
+        val toolbar=ReflectionHelpers.getField<PanelToolbar>(activity,"panelToolbar")
+        toolbar.measure(View.MeasureSpec.makeMeasureSpec(800,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(48,View.MeasureSpec.EXACTLY))
+        assertEquals(View.GONE,ReflectionHelpers.getField<View>(toolbar,"preset").visibility)
+    }
+    @Test fun cppCloudInputRemainsClearlySeparateFromPythonTerminalInput() {
+        ReflectionHelpers.setField(activity,"activePath","main.cpp")
+        ReflectionHelpers.setField(activity,"presetInputExpanded",true)
+        show(3)
+        assertEquals(View.VISIBLE,ReflectionHelpers.getField<EditText>(activity,"input").visibility)
+    }
+
 }

@@ -1,6 +1,13 @@
 # CodePocket 当前交接状态
 
-## 最新：真实PTY内的Python前台运行（2026-10-18）
+## 最新：Python连接等待修正、移除Python预填（2026-10-18）
+
+- 用户反馈Python一直连接后超时；已发现Shell只在View测量后创建，而代码IME可能隐藏面板，且运行只按逻辑面板开关展开。改为ShellRuntime主动创建80x24真实PTY，后续视图仅resize；运行根据实际可见状态展开并收起代码IME。没有手机日志，不把这一代码问题称为唯一设备根因。
+- Python固定终端交互，删除预填输入UI/菜单/开关；旧设置忽略且保留历史stdin数据。C++仍云端预填并明确限制。新增可见启动阶段，超时指出Shell/桥/服务/运行时哪个阶段；迟到调度回调身份隔离保持。
+- App328项327通过/1旧跳过，新增语言UI2项，旧被撤销模式测试改为配置兼容性；核心146缓存保持，实际打包Python29/29，模板各7，Lint0错/11旧警告，最终Debug构建1m6s，APK完整性/签名/对齐/类/JNI/旧产物检查通过。
+- APK dist/CodePocket-terminal-startup-debug.apk，SHA256 45b938879b7fa15d1ee636c044c7007924ac876a64922a8ec1a0e530a8a59e76；[报告](P1_TERMINAL_STARTUP_FIX.md)，证据verification/terminal-startup-2026-10-18。没有Android链路/IME实测，无push/发布/远端Actions。动画暂停，原P1/P2/P3保留。
+
+## 历史：真实PTY内的Python前台运行（2026-10-18）
 
 - 基线fe4c709；[完整报告](P1_LIVE_TERMINAL.md)。用户明确要求不要再只做入口合并：已移除任务输出终端，运行接入当前Shell的app_process前台桥，经同UID/令牌认证LocalSocket+PFD把真实PTY的0/1/2交给隔离Chaquopy进程。实际输出/输入直接走成熟Termux组件，结果模型只用于问题与定位。
 - 默认交互、多轮input/EOF/停止、启动/有效执行/等待独立预算及身份序号保护；保留可选每文件预填，C++真实Wandbox仍预填/完成后返回。历史不抢滚动、回底、相对偏移与不向stdin注入的清空；IDE快捷键与PTY控制键分流。动画继续暂停。

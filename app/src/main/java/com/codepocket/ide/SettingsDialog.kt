@@ -50,7 +50,6 @@ object SettingsDialog {
         val symbols = toggle("显示编程快捷键栏", current.symbolBar)
         val collapse = toggle("输入代码时自动收起运行面板", current.collapsePanelOnIme)
         heading("终端与运行")
-        val pythonInteractive = toggle("Python 使用终端交互输入（默认）", current.pythonInteractive)
         content.addView(TextView(activity).apply {
             setText(R.string.python_terminal_help)
         })
@@ -70,7 +69,6 @@ object SettingsDialog {
                     wordWrap = wrap.isChecked, autoIndent = autoIndent.isChecked, autoPairs = pairs.isChecked,
                     autoCompletion = completion.isChecked, signatureHelp = signatures.isChecked, symbolBar = symbols.isChecked, collapsePanelOnIme = collapse.isChecked,
                     autoSave = autoSave.isChecked, autoSaveDelayMs = delays[delay.selectedItemPosition], animations = animations.isChecked,
-                    pythonInteractive = pythonInteractive.isChecked,
                     completionTab = completionTab.isChecked, completionEnter = completionEnter.isChecked,
                     completionArrows = CompletionArrows.values()[completionArrows.selectedItemPosition]).normalized())
             }.create()

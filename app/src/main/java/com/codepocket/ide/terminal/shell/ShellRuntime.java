@@ -30,6 +30,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     public int historyTopRow() { return historyTopRow; }
     public void saveHistoryTopRow(int row) { historyTopRow=Math.min(0,row); }
     private String pendingCommand;
+    private Runnable commandDispatched;
     private java.util.function.Consumer<String> pendingCommandFailure;
     private final StringBuilder externalOutput = new StringBuilder();
     public enum State { EMPTY, PREPARING, OPEN, EXITED, FAILED }
@@ -74,6 +75,9 @@ public final class ShellRuntime implements TerminalSessionClient {
                         plan = ready;
                         session = new TerminalSession(ShellLaunchPlan.EXECUTABLE, ready.directory.getPath(),
                             ready.arguments, ready.environment, 2000, this);
+                        // A GONE/IME-collapsed terminal has no measured View. Start its real PTY anyway.
+                        // A later View resize updates the existing PTY; it must not own process creation.
+                        session.updateSize(80,24,8,16);
                         state = State.OPEN;
                         notifyObserver();
                     } catch (RuntimeException | LinkageError failure) {
@@ -103,7 +107,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     }
     public void clearForeground(RunControl control) {
         if(foreground!=control)return;
-        foreground=null;pendingCommand=null;pendingCommandFailure=null;notifyObserver();
+        foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;notifyObserver();
     }
     public boolean filterInput(String text) {
         RunControl control=foreground;if(control==null)return false;
@@ -114,16 +118,22 @@ public final class ShellRuntime implements TerminalSessionClient {
     public String foregroundLabel() { return foreground==null?"":foreground.label(); }
     public void refreshForeground() { notifyObserver(); }
     public void queueCommand(String command,java.util.function.Consumer<String> failure) {
+        queueCommand(command,failure,()->{});
+    }
+    public void queueCommand(String command,java.util.function.Consumer<String> failure,Runnable dispatched) {
         if(pendingCommand!=null)throw new IllegalStateException("A launch is already queued");
+        commandDispatched=dispatched;
         pendingCommand=command;pendingCommandFailure=failure;pumpCommand();
     }
     private void pumpCommand() {
         if(pendingCommand==null||!promptReady||session==null||session.getPid()<=0)return;
         String command=pendingCommand;java.util.function.Consumer<String> failure=pendingCommandFailure;
+        Runnable dispatched=commandDispatched;commandDispatched=null;
         pendingCommand=null;pendingCommandFailure=null;
         if(!session.isShellForeground()) { failure.accept("当前终端有前台命令，请先结束该命令或新建终端");return; }
         // Clear both halves of a partially edited mksh line without interrupting a foreground job.
         promptReady=false;writeRaw("\u0015\u000b"+command+"\n");
+        if(dispatched!=null)dispatched.run();
     }
     public void appendExternal(String text) {
         String normalized=text.replace("\r\n","\n").replace("\n","\r\n");
@@ -161,7 +171,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     }
     public void close() {
         generation++;
-        RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;externalOutput.setLength(0);
+        RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;externalOutput.setLength(0);
         TerminalSession old = session;
         session = null; plan = null; state = State.EMPTY;promptSeen=false;promptReady=false;
         if(control!=null)control.closed();
@@ -174,7 +184,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     }
     public void fail(Throwable failure) {
         generation++;
-        RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;
+        RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;
         TerminalSession old = session;
         session = null; plan = null; state = State.FAILED;promptSeen=false;promptReady=false;
         error = failure.getClass().getSimpleName() + ": " + failure.getMessage();
@@ -209,7 +219,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     @Override public void onTitleChanged(TerminalSession s) { if (s == session) notifyObserver(); }
     @Override public void onSessionFinished(TerminalSession s) {
         if (s == session) {
-            state = State.EXITED;RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;
+            state = State.EXITED;RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;
             if(control!=null)control.closed();notifyObserver();
         }
     }
