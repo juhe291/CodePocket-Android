@@ -1,0 +1,6 @@
+<resources>
+    <string name="surface_probe_info">光标定位探针（非补全）
+UTF-16 %1$d · rev %2$d</string>
+    <string name="surface_probe_sora">请切换到 Sora 后查看定位探针</string>
+    <string name="surface_probe_unavailable">当前光标不可用或没有足够可见空间</string>
+</resources>

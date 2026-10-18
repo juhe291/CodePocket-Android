@@ -1,14 +1,15 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-18：已接入文档交接保护首批。** 修复后台读文件期间继续输入可能被覆盖、重载同一工作区丢失最新stdin/选区，以及替代文件读取成功前关闭活动标签的问题。代码有新编辑时保留当前缓冲并取消旧交接；会话状态在交接时捕获。见[本批结果](docs/P1_EDITOR_DOCUMENTS.md)。[导航保护](docs/P1_EDITOR_NAVIGATION.md)、[事务与历史](docs/P1_EDITOR_TRANSACTIONS.md)和[Sora隔离原型](docs/P1_EDITOR_LAB.md)保留，默认仍为原生编辑器。
+**2026-10-18：生产弹窗已接入共享光标定位接口，Sora完成定位适配首批。** 补全/参数窗口通过组件提供的光标与可用区域定位，复查文件/版本/UTF-16偏移，保留原生输入。Sora实验实现同一接口，读取固定0.23.7布局API，并提供明确的非补全定位探针。见[本批结果](docs/P1_EDITOR_SURFACE.md)。[文档交接](docs/P1_EDITOR_DOCUMENTS.md)、[导航](docs/P1_EDITOR_NAVIGATION.md)与[事务](docs/P1_EDITOR_TRANSACTIONS.md)保留；默认编辑器仍为原生CodeEditor，尚未完成Sora迁移或语义补全。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [默认IDE Debug APK](dist/CodePocket-editor-documents-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。最终构建1m 10s；Kotlin246中245通过/1跳过，新增20通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
+**最新 [默认IDE Debug APK](dist/CodePocket-editor-surface-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。构建1m 17s；Kotlin264中263通过/1跳过，新增18通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
 
-另有[Sora实验APK](dist/CodePocket-Sora-editor-lab-debug.apk)和[实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)，使用独立包名/临时草稿；14项真实库测试通过，尚未接入IDE功能。实机按要求统一后置，未验收UI/键鼠/IME/FPS。
+另有[最新Sora定位实验APK](dist/CodePocket-Sora-surface-lab-debug.apk)，独立包名/临时草稿；构建32s，原14项真实Content回归与5项适配主机测试全部通过，尚未接入项目/运行器。新源码见当前仓库的editor-lab与editor-surface模块；[历史实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)保持原样。实机按要求统一后置，未验收UI/键鼠/IME/FPS。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
+- [P1 生产弹窗与Sora共享定位适配验证](docs/P1_EDITOR_SURFACE.md)
 - [P1 文档交接、异步读取与标签安全验证](docs/P1_EDITOR_DOCUMENTS.md)
 - [P1 生产选区、视口与错误导航验证](docs/P1_EDITOR_NAVIGATION.md)
 - [P1 内置函数参数参考与验证](docs/P1_SIGNATURE_HELP.md)
@@ -43,6 +44,7 @@
 - 主菜单→设置：深/浅/系统主题、独立词法主题、代码/输出字号、Tab 宽度与空格/Tab、行号/换行、自动缩进/括号/补全、符号栏、IME 面板、停顿保存及基础过渡开关。
 - 按实际工作区宽度停靠的运行面板；拖动/菜单调整大小、最大化/恢复/收起、独立尺寸记忆及 IME 临时约束；保留原编辑器、stdin 和输出视图。
 - 光标锚定的原生补全候选列表、类别与简短资料；触屏点击、可配置 Tab/Enter/方向键、Esc 关闭；后台查询过期保护，明确词法能力与 P2 成员语义的区别。
+- 补全/参数窗口使用共享EditorSurface接口，不直接读取EditText布局或正文；组件提供裁剪到文本区/窗口的实际光标坐标，窗口复核文件/版本/UTF-16偏移。Sora目前仅在隔离实验中实现此接口，未迁移整个IDE。
 - C++ / Python 各 6 个内置片段，保持缩进/换行；Tab/Shift+Tab 字段导航、触屏等价入口与文档版本保护；不属于语义分析。
 - Python 7 项 / C++17 5 项内置参数资料，当前参数标识、参考形式切换、后台快照保护、独立自动开关和光标弹窗；复杂表达式保守降级，非语义签名。
 - 当前文件纯文本查找替换、区分大小写/全字匹配、循环查找及跳转行；后台操作校验文档身份和版本，避免过期结果改写缓冲区。
@@ -85,7 +87,8 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 
 | 模块 | 职责 |
 | --- | --- |
-| editor-lab（显式启用） | 同一工程的独立Sora/原生基础编辑比较；不连接项目或运行器 |
+| editor-surface（本地Java库） | View/文本无关的光标锚点、屏幕可用区域与弹窗放置规则，原生/Sora共用 |
+| editor-lab（显式启用） | 同一工程的独立Sora/原生比较与共享定位探针；不连接项目或运行器 |
 | ui/MainToolbar / IdeCommandMenu / IdeCommands / WorkspaceLayoutPolicy | 实测宽度的单排主栏、原生命令入口与焦点/状态策略 |
 | ui/EditorToolbar / InteractionState | 上下文编辑入口、返回/状态/只清显示规则 |
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |

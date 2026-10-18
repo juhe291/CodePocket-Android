@@ -1,5 +1,8 @@
 package com.codepocket.ide
 
+import com.codepocket.editor.surface.EditorSurface
+import com.codepocket.editor.surface.PopupGeometry
+
 enum class CompletionKind(val icon: String, val title: String) {
     KEYWORD("K", "关键字"), TYPE("T", "类型名称"), BUILTIN("ƒ", "内置/常用名称"), IDENTIFIER("abc", "文件中出现的名称"), SNIPPET("{}", "内置代码片段")
 }
@@ -107,17 +110,8 @@ object CompletionGeometry {
     /** Coordinates share the same screen space; keep the popup off both IME and caret line. */
     fun place(bounds: CompletionBounds, caretX: Int, caretTop: Int, caretBottom: Int,
         desiredWidth: Int, desiredHeight: Int, minimumHeight: Int, gap: Int): CompletionPlacement? {
-        if (bounds.right <= bounds.left || bounds.bottom <= bounds.top || caretX !in bounds.left..bounds.right ||
-            caretTop < bounds.top || caretBottom > bounds.bottom || caretBottom < caretTop) return null
-        val below = (bounds.bottom - caretBottom - gap).coerceAtLeast(0)
-        val above = (caretTop - bounds.top - gap).coerceAtLeast(0)
-        val useBelow = below >= desiredHeight || below >= above
-        val height = minOf(desiredHeight, if (useBelow) below else above)
-        if (height < minimumHeight) return null
-        val width = minOf(desiredWidth, bounds.right - bounds.left)
-        if (width <= 0) return null
-        val x = caretX.coerceIn(bounds.left, bounds.right - width)
-        val y = if (useBelow) caretBottom + gap else caretTop - gap - height
-        return CompletionPlacement(x, y, width, height)
+        val placed = PopupGeometry.place(EditorSurface.Bounds(bounds.left, bounds.top, bounds.right, bounds.bottom),
+            caretX, caretTop, caretBottom, desiredWidth, desiredHeight, minimumHeight, gap) ?: return null
+        return CompletionPlacement(placed.x, placed.y, placed.width, placed.height)
     }
 }

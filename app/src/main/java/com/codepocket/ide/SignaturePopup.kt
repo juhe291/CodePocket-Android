@@ -1,7 +1,7 @@
 package com.codepocket.ide
 
 import android.app.Activity
-import android.graphics.Rect
+import com.codepocket.editor.surface.EditorSurface
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -18,7 +18,8 @@ import android.widget.PopupWindow
 import android.widget.TextView
 
 /** Read-only, non-focusable reference. Never takes the editor's IME, selection or keyboard events. */
-class SignaturePopup(private val activity: Activity, private val editor: CodeEditor,
+class SignaturePopup(private val activity: Activity, private val editor: View,
+    private val editorSurface: EditorSurface,
     private val backgroundColor: Int, private val foregroundColor: Int, private val muted: Int,
     private val accent: Int, private val close: () -> Unit) {
     private fun dp(value: Int) = (activity.resources.displayMetrics.density * value + .5f).toInt()
@@ -103,27 +104,14 @@ class SignaturePopup(private val activity: Activity, private val editor: CodeEdi
     }
 
     fun reposition(): Boolean {
-        if (!editor.isAttachedToWindow || !editor.isShown || !editor.hasFocus() || activity.isDestroyed || activity.isFinishing ||
-            editor.selectionStart != editor.selectionEnd || android.view.inputmethod.BaseInputConnection.getComposingSpanStart(editor.text) >= 0) {
-            dismiss(); return false
-        }
-        val layout = editor.layout ?: run { dismiss(); return false }
-        val visible = Rect()
-        if (!editor.getGlobalVisibleRect(visible)) { dismiss(); return false }
-        val rootOrigin = IntArray(2); editor.rootView.getLocationOnScreen(rootOrigin)
-        visible.offset(rootOrigin[0], rootOrigin[1])
-        val frame = Rect(); editor.getWindowVisibleDisplayFrame(frame)
-        val origin = IntArray(2); editor.getLocationOnScreen(origin)
-        if (!visible.intersect(frame) || !visible.intersect(Rect(origin[0], origin[1], origin[0] + editor.width, origin[1] + editor.height))) {
-            dismiss(); return false
-        }
-        val offset = editor.selectionStart.coerceIn(0, editor.length())
-        val line = layout.getLineForOffset(offset)
-        val x = origin[0] + editor.totalPaddingLeft + layout.getPrimaryHorizontal(offset).toInt() - editor.scrollX
-        val top = origin[1] + editor.totalPaddingTop + layout.getLineTop(line) - editor.scrollY
-        val bottom = origin[1] + editor.totalPaddingTop + layout.getLineBottom(line) - editor.scrollY
+        if (activity.isDestroyed || activity.isFinishing) { dismiss(); return false }
+        val anchor = editorSurface.anchor() ?: run { dismiss(); return false }
+        val request = result?.request ?: run { dismiss(); return false }
+        val matches = anchor.matches(request.document, request.revision, request.caret)
+        if (!matches) { dismiss(); return false }
+        val visible = anchor.visible
         val placed = CompletionGeometry.place(CompletionBounds(visible.left, visible.top, visible.right, visible.bottom),
-            x, top, bottom, dp(460), dp(156), dp(144), dp(3)) ?: run { dismiss(); return false }
+            anchor.x, anchor.top, anchor.bottom, dp(460), dp(156), dp(144), dp(3)) ?: run { dismiss(); return false }
         if (placed.width < dp(260)) { dismiss(); return false }
         var px = placed.x; var py = placed.y
         if (Build.VERSION.SDK_INT < 29) {

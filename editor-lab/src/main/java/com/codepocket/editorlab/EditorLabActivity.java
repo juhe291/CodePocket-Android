@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.SelectionChangeEvent;
+import io.github.rosemoe.sora.event.ScrollEvent;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
@@ -36,6 +37,10 @@ import java.nio.charset.StandardCharsets;
 public final class EditorLabActivity extends Activity {
     private static final String SAMPLE = "# 临时测试草稿：中文 / 😀\nprint('hello')\n";
     private CodeEditor sora;
+    private SurfaceProbe surfaceProbe;
+    private long documentRevision;
+    private int documentGeneration;
+    private String scratchKey = "scratch:0";
     private EditText nativeEditor;
     private TextView status;
     private TextView title;
@@ -66,6 +71,11 @@ public final class EditorLabActivity extends Activity {
         action(tools, "光标动画", () -> { animate = !animate; appearance(); });
         action(tools, "重置", () -> new AlertDialog.Builder(this).setMessage("丢弃当前临时草稿？")
             .setNegativeButton("取消", null).setPositiveButton("重置", (d, w) -> load(new Scratch(SAMPLE, 0, 0, useSora, dark, animate))).show());
+        action(tools, "光标定位", () -> {
+            if (!useSora) { message(getString(R.string.surface_probe_sora)); return; }
+            sora.requestFocus();
+            if (!surfaceProbe.show(dark)) message(getString(R.string.surface_probe_unavailable));
+        });
         action(tools, "许可 / 说明", this::notices);
         root.addView(scroll, new LinearLayout.LayoutParams(-1, dp(52)));
         FrameLayout body = new FrameLayout(this);
@@ -79,6 +89,9 @@ public final class EditorLabActivity extends Activity {
         nativeEditor.setTextSize(15); nativeEditor.setHorizontallyScrolling(true); nativeEditor.setSaveEnabled(false);
         sora = new CodeEditor(this); sora.setTypefaceText(Typeface.MONOSPACE); sora.setTextSize(15);
         sora.setSaveEnabled(false); sora.setLineNumberEnabled(true);
+        surfaceProbe = new SurfaceProbe(this, sora,
+            new SoraEditorSurface(sora, () -> scratchKey, () -> documentRevision));
+        sora.setOnFocusChangeListener((view, focused) -> { if (!focused) surfaceProbe.dismiss(); });
         body.addView(nativeEditor, new FrameLayout.LayoutParams(-1, -1));
         body.addView(sora, new FrameLayout.LayoutParams(-1, -1));
         root.addView(body, new LinearLayout.LayoutParams(-1, 0, 1));
@@ -88,8 +101,10 @@ public final class EditorLabActivity extends Activity {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(Editable value) { updateStatus(); }
         });
-        sora.subscribeEvent(ContentChangeEvent.class, (event, unsubscribe) -> updateStatus());
-        sora.subscribeEvent(SelectionChangeEvent.class, (event, unsubscribe) -> updateStatus());
+        sora.subscribeEvent(ContentChangeEvent.class, (event, unsubscribe) -> { documentRevision++; surfaceProbe.dismiss(); updateStatus(); });
+        sora.subscribeEvent(SelectionChangeEvent.class, (event, unsubscribe) -> { surfaceProbe.dismiss(); updateStatus(); });
+        sora.subscribeEvent(ScrollEvent.class, (event, unsubscribe) -> surfaceProbe.reposition());
+        sora.addOnLayoutChangeListener((view, l, t, r, b, oldL, oldT, oldR, oldB) -> surfaceProbe.reposition());
         setContentView(root);
         Scratch retained = (Scratch) getLastNonConfigurationInstance();
         load(retained == null ? new Scratch(SAMPLE, 0, 0, true, true, true) : retained);
@@ -109,6 +124,7 @@ public final class EditorLabActivity extends Activity {
             useSora ? sora.getCursor().getRight() : nativeEditor.getSelectionEnd(), useSora, dark, animate);
     }
     private void load(Scratch value) {
+        surfaceProbe.dismiss(); scratchKey = "scratch:" + (++documentGeneration);
         useSora = value.sora; dark = value.dark; animate = value.animate;
         if (useSora) {
             sora.setText(value.text);
@@ -157,6 +173,7 @@ public final class EditorLabActivity extends Activity {
         return animate && system && (power == null || !power.isPowerSaveMode());
     }
     private void appearance() {
+        surfaceProbe.dismiss();
         root.setBackgroundColor(dark ? 0xff1e1e1e : 0xffffffff);
         title.setTextColor(dark ? 0xffcccccc : 0xff242424);
         nativeEditor.setTextColor(dark ? 0xffd4d4d4 : 0xff242424);
@@ -197,9 +214,10 @@ public final class EditorLabActivity extends Activity {
     @Override protected void onResume() { super.onResume(); if (sora != null) updateMotion(); }
     @Override public void onWindowFocusChanged(boolean focused) {
         super.onWindowFocusChanged(focused); if (focused && sora != null) updateMotion();
+        if (!focused && surfaceProbe != null) surfaceProbe.dismiss();
     }
-    @Override protected void onPause() { motionAllowed = false; if (sora != null) sora.setCursorAnimationEnabled(false); super.onPause(); }
-    @Override protected void onDestroy() { if (sora != null) sora.release(); super.onDestroy(); }
+    @Override protected void onPause() { if (surfaceProbe != null) surfaceProbe.dismiss(); motionAllowed = false; if (sora != null) sora.setCursorAnimationEnabled(false); super.onPause(); }
+    @Override protected void onDestroy() { if (surfaceProbe != null) surfaceProbe.dismiss(); if (sora != null) sora.release(); super.onDestroy(); }
     @Override public void onBackPressed() {
         if (!capture().text.equals(SAMPLE)) new AlertDialog.Builder(this).setMessage("离开实验？临时草稿未保存，可先长按复制内容。")
             .setNegativeButton("留在此页", null).setPositiveButton("离开", (d, w) -> finish()).show();

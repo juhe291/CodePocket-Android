@@ -63,6 +63,13 @@ class NativeEditorPort(
         pendingNavigation.clear()
     }
 
+    override fun anchor(): com.codepocket.editor.surface.EditorSurface.Anchor? {
+        check(Looper.myLooper() == Looper.getMainLooper())
+        if (closed || replacing || !available()) return null
+        val (key, revision) = document() ?: return null
+        return NativeEditorSurface.capture(editor, key, revision)
+    }
+
     override fun navigationSnapshot(): EditorViewportSnapshot? {
         check(Looper.myLooper() == Looper.getMainLooper())
         if (closed || replacing || !available()) return null

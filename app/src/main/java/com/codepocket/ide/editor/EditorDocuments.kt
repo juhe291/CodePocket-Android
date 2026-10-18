@@ -1,9 +1,10 @@
 package com.codepocket.ide.editor
 
 import com.codepocket.ide.EditorSessions
+import com.codepocket.editor.surface.EditorSurface
 
 /** Document replacement is separate from edits/undo. Only the owner may invoke it after a handoff. */
-interface DocumentEditorPort : NavigatingEditorPort {
+interface DocumentEditorPort : NavigatingEditorPort, EditorSurface {
     // Read the loaded buffer even while file I/O suspends interactive commands.
     fun captureDocument(): EditorFrame?
     fun replaceDocument(text: String): Boolean

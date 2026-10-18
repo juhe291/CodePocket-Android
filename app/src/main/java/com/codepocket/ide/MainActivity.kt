@@ -1503,7 +1503,7 @@ class MainActivity : Activity() {
                 }
                 hideSignatureHelp()
                 completionBatch = batch; completionExplicit = force
-                val popup = completionPopup ?: CompletionPopup(this, editor, surface, textForeground, muted, accent,
+                val popup = completionPopup ?: CompletionPopup(this, editor, editorPort ?: return@runOnUiThread, surface, textForeground, muted, accent,
                     { index -> acceptCompletion(index) }, {
                         completionBatch?.let { completionSuppressed = it.request }
                         completionBatch = null; completionGeneration++; completionTask?.cancel(true)
@@ -1546,7 +1546,7 @@ class MainActivity : Activity() {
                     if (force) status.setText(R.string.signature_empty)
                     return@runOnUiThread
                 }
-                val popup = signaturePopup ?: SignaturePopup(this, editor, surface, textForeground, muted, accent,
+                val popup = signaturePopup ?: SignaturePopup(this, editor, editorPort ?: return@runOnUiThread, surface, textForeground, muted, accent,
                     { hideSignatureHelp(true) }).also { signaturePopup = it }
                 if (!popup.show(found, motionEnabled()) && force) status.setText(R.string.signature_no_space)
             }

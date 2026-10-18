@@ -1,7 +1,7 @@
 package com.codepocket.ide
 
 import android.app.Activity
-import android.graphics.Rect
+import com.codepocket.editor.surface.EditorSurface
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -16,7 +16,8 @@ import android.widget.PopupWindow
 import android.widget.TextView
 
 /** Native non-focusable list: editor/IME retain ownership of input, selection and undo. */
-class CompletionPopup(private val activity: Activity, private val editor: CodeEditor,
+class CompletionPopup(private val activity: Activity, private val editor: View,
+    private val editorSurface: EditorSurface,
     private val backgroundColor: Int, private val foregroundColor: Int, private val muted: Int,
     private val accent: Int, private val accept: (Int) -> Unit, private val dismissed: () -> Unit) {
     private fun dp(value: Int) = (activity.resources.displayMetrics.density * value + .5f).toInt()
@@ -26,6 +27,9 @@ class CompletionPopup(private val activity: Activity, private val editor: CodeEd
         maxLines = 3; ellipsize = android.text.TextUtils.TruncateAt.END
     }
     private var items = emptyList<CompletionItem>()
+    private var document: String? = null
+    private var revision = -1L
+    private var offset = -1
     var selectedIndex = 0
         private set
     var explicitSelection = false
@@ -77,6 +81,7 @@ class CompletionPopup(private val activity: Activity, private val editor: CodeEd
     }
 
     fun show(batch: CompletionBatch, animate: Boolean): Boolean {
+        document = batch.request.document; revision = batch.request.revision; offset = batch.request.caret
         items = batch.items; selectedIndex = 0; explicitSelection = false
         adapter.notifyDataSetChanged(); updateDetails()
         if (!reposition()) return false
@@ -99,27 +104,14 @@ class CompletionPopup(private val activity: Activity, private val editor: CodeEd
     }
 
     fun reposition(): Boolean {
-        if (!editor.isAttachedToWindow || activity.isDestroyed || activity.isFinishing) { dismiss(); return false }
-        val layout = editor.layout ?: run { dismiss(); return false }
-        if (!editor.isShown || !editor.hasFocus() || editor.selectionStart != editor.selectionEnd ||
-            android.view.inputmethod.BaseInputConnection.getComposingSpanStart(editor.text) >= 0) { dismiss(); return false }
-        val visible = Rect()
-        if (!editor.getGlobalVisibleRect(visible)) { dismiss(); return false }
-        val rootOrigin = IntArray(2); editor.rootView.getLocationOnScreen(rootOrigin)
-        visible.offset(rootOrigin[0], rootOrigin[1])
-        val frame = Rect(); editor.getWindowVisibleDisplayFrame(frame)
-        if (!visible.intersect(frame)) { dismiss(); return false }
-        val origin = IntArray(2); editor.getLocationOnScreen(origin)
-        val editorBounds = Rect(origin[0], origin[1], origin[0] + editor.width, origin[1] + editor.height)
-        if (!visible.intersect(editorBounds)) { dismiss(); return false }
-        val offset = editor.selectionStart.coerceIn(0, editor.length())
-        val line = layout.getLineForOffset(offset)
-        val x = origin[0] + editor.totalPaddingLeft + layout.getPrimaryHorizontal(offset).toInt() - editor.scrollX
-        val top = origin[1] + editor.totalPaddingTop + layout.getLineTop(line) - editor.scrollY
-        val bottom = origin[1] + editor.totalPaddingTop + layout.getLineBottom(line) - editor.scrollY
+        if (activity.isDestroyed || activity.isFinishing) { dismiss(); return false }
+        val anchor = editorSurface.anchor() ?: run { dismiss(); return false }
+        val matches = anchor.matches(document, revision, offset)
+        if (!matches) { dismiss(); return false }
+        val visible = anchor.visible
         val desired = dp(32 + minOf(items.size, 5) * 44 + 60)
         val placed = CompletionGeometry.place(CompletionBounds(visible.left, visible.top, visible.right, visible.bottom),
-            x, top, bottom, dp(380), desired, dp(76), dp(3)) ?: run { dismiss(); return false }
+            anchor.x, anchor.top, anchor.bottom, dp(380), desired, dp(76), dp(3)) ?: run { dismiss(); return false }
         details.visibility = if (placed.height >= dp(32 + 2 * 44 + 60)) View.VISIBLE else View.GONE
         var popupX = placed.x; var popupY = placed.y
         if (Build.VERSION.SDK_INT < 29) {

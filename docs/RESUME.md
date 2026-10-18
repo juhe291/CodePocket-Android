@@ -1,6 +1,19 @@
 # CodePocket 当前交接状态
 
-## 最新：P1-C 文档交接保护首批（2026-10-18）
+## 最新：P1-C 共享弹窗定位与Sora坐标适配（2026-10-18）
+
+- 基线 `3dbc4af`；[本批报告](P1_EDITOR_SURFACE.md)。新editor-surface本地Java库提供无View/无正文的EditorSurface锚点、裁剪与放置规则。NativeEditorPort实际实现，生产CompletionPopup/SignaturePopup改接View父节点+接口，复查文档/版本/UTF-16偏移；原CompletionGeometry API保留为委托。输入/焦点/编辑和词法候选算法未迁移。
+- Sora实验通过固定0.23.7的Layout.getCharLayoutOffset真实API提供锚点，结合文本区偏移、滚动、行高与窗口裁剪；原始sources.jar SHA256与API源码已核对/保留。新增“光标定位”非补全探针，选择/编辑/换草稿/失焦/暂停关闭，滚动与布局重新定位；不是模拟IntelliSense或运行结果。
+- 默认IDE构建 **1m 17s**，64 actionable tasks: 22 executed, 42 up-to-date；Kotlin264中263通过/1 Windows符号链接跳过，新增18通过，原246项及状态保留；Python源码/实际APK字节码各13/13，实际模板Python/主机C++17各7/7，Lint0错误/11既有警告。
+- 实验构建 **32s**，49 actionable tasks: 24 executed, 25 up-to-date；19/19，原14个真实Content/Indexer/UndoManager用例保留，5项新测试运行真实Content及实际适配数学函数；未运行Sora View。实验Lint0错误/6既有警告，无元数据不兼容日志。
+- [默认APK](../dist/CodePocket-editor-surface-debug.apk)：22,106,015字节，SHA256 `0a8c53bc85b83c586a92b640b824d21b19ded88eea0a6b9613671c657b7f3fb9`。[Sora定位实验APK](../dist/CodePocket-Sora-surface-lab-debug.apk)：1,650,260字节，SHA256 `8944ece94e994acb25ea44ab5b536c1be9bea885b6da83fc133c99f653fa9d21`。两份CRC/v2签名/16KB ZIP对齐/关键Dex定义通过；上一各自APK类定义全部保留，旧六项APK/材料包SHA256保持。历史材料包不是新增定位源码的打包版本，新源码在当前仓库。
+- runtime graph实测：App仍Kotlin1.9.25，无Sora，仅新增本地Java surface；实验仍Sora0.23.7/Kotlin2.1.21，新增同一Java库。没有升级整个Kotlin工程、压低库stdlib或跳过元数据检查。两模块Gradle仅增本地project依赖，settings包含该库；原Actions命令仍自动构建它，未远端执行。
+- 证据 `verification/editor-surface-2026-10-18/results.json`、两份验证脚本/日志、JUnit/Lint、runtime-dependencies.log、精确API源码/哈希与APK报告。保存/SAF/草稿/运行/Python服务、CodeEditor输入事件、原编辑/事务/导航规则、旧测试、Manifest/root Gradle版本/Actions/原需求哈希保持；无新权限或存储迁移。
+- **接续**：Sora文本/选区事务、文档更换与历史接口，再接语言包和现有候选/片段/参数/SAF会话。当前仅Sora定位适配，默认仍原生；完整动画/手势/帮助许可/真实流式以及P2/P3保留，P0缺陷优先。
+- **实机统一后置**：未运行Android/模拟器、Sora实际布局/InputConnection、窗口坐标/IME遮挡/焦点/RTL/滚动、手机/平板/卓易通或FPS验收；无新Wandbox/远端Actions。新数学用例与1000个采样场景不能证明设备定位或60FPS。完整上游源码/重链接交付核验沿用历史待办，没有发布。
+- 保留.tools、dist、旧verification与设备备份，仅本地阶段提交，无push。真实仓库 `C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`，配置OneDrive cwd不存在，显式workdir并按需正常审批，不改Git配置。
+
+## 历史：P1-C 文档交接保护首批（2026-10-18）
 
 - 基线 `fa5cd60`；[本批报告](P1_EDITOR_DOCUMENTS.md)。原生适配器实现DocumentEditorPort的交接快照/显式替换；EditorDocumentTransitions在文件/工作区读取完成时校验原缓冲/编辑版本/组合状态，请求一次性消费。默认仍为原生编辑器，未迁移Sora。
 - 修复switchFile/reloadActive/startWorkspace后台读文件期间继续输入会被旧结果覆盖的风险；双阶段“保留草稿后切工作区”同样门控。源码改变保留缓冲、排队草稿与自动保存；stdin/选区/滚动/焦点取交接前最新状态，同一工作区重载复用最新会话。活动标签仅在替代文件实际载入后关闭，原生拒绝替换时还原路径与标签列表，最后一个标签保留并说明。

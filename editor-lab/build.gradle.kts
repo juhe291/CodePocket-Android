@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":editor-surface"))
     implementation("io.github.rosemoe:editor:0.23.7")
     testImplementation("junit:junit:4.13.2")
 }
