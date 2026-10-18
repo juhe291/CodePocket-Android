@@ -31,3 +31,12 @@ POM 原文快照及机器可读索引位于 [license-metadata.json](../verificat
 2026-10-17 P1-C：新增显式启用的独立 `editor-lab`，默认App依赖和原APK入口不变。实验固定 `io.github.rosemoe:editor:0.23.7`（LGPL-2.1-or-later，上游版权头），真实AAR minSdk21/Java17/Kotlin元数据2.1.0/无原生.so，精确制品哈希与Maven module一致。实验runtime为AndroidX annotation1.9.1/collection1.5.0/Kotlin stdlib2.1.21及annotations13.0；POM与原内包许可资源指向Apache2.0，未把外层Sora许可套用于所有依赖。
 
 实验APK含LGPL2.1正文、Sora版权/精确源码链接、依赖说明和原AndroidX许可资源；本地材料包提供AAR/POM/module/sources.jar及当前工程源。未取得完整上游Git仓库归档，正式分发的完整对应源码/重链接/通知仍需核验；项目自身许可证未替所有者选择。0.24.4曾因Kotlin编译/Lint元数据不兼容弃选，未分发为本批实验版本。详见[P1_EDITOR_LAB.md](P1_EDITOR_LAB.md)及verification/editor-lab-2026-10-17/results.json。
+
+
+2026-10-18 Sora语法实验：[本批报告](P1_SORA_LANGUAGES.md)。仅editor-lab新增language-textmate0.23.7（LGPL-2.1-or-later，内含TM4E EPL-2.0及原MIT部分）；原AAR未修改，源码JAR SHA256 `ca06b725576c3de059d0625d7971803c08046cd4907b3235d88b82baa2d4311b`。Maven Central本机403，后用现有Aliyun镜像取得同版，实际Gradle AAR SHA256与下载件 `909576591348f999b318ef601568a208550ee1c0cae375d70626f70f2b7c63ba` 相同。
+
+实际实验传递图增加Gson2.13.1/ErrorProne annotations2.38.0（Apache2.0）、Joni2.2.6/JCodings1.0.63（MIT）、SnakeYAML Engine2.9（Apache2.0）、Eclipse JDT annotation2.3.100（EPL2.0）；单独coreLibraryDesugaring2.1.5为OpenJDK子集，POM声明GPL2+Classpath Exception。默认App无这些实验依赖、仍Kotlin1.9.25；实验仍Kotlin2.1.21。构建期脱糖工具配置不等于全部工具代码进入APK，实际j$运行库已检查。
+
+语法/配置原样来自microsoft/vscode1.95.3，附原MIT与ThirdPartyNotices（含MagicPython、better-cpp-syntax等归属），每文件URL/哈希在textmate/UPSTREAM.json。新增完整EPL/Apache、Joni/JCodings MIT和desugar GPL2+Classpath/Assembly Exception文本，从上游许可地址取得，许可下载URL/哈希在textmate/licenses/UPSTREAM.json；desugar许可地址沿POM的master链接，未冒充完整2.1.5源码档案。两套主题为本地资产。
+
+实验APK20项asset复制与解压字节逐项匹配，并提供“许可/说明→语法许可”阅读入口。本次主机验证不构成完整法律/分发审查；历史源码材料ZIP保持原样，不含新增适配和语法模块。正式发布前仍需收齐精确对应源码、重链接交付及完整通知；未替项目所有者选择项目许可证、未push或发布。实验依旧不访问项目/SAF/运行器。

@@ -1,0 +1,75 @@
+{
+  "name": "CodePocket Light",
+  "colors": {
+    "editor.background": "#FFFFFF",
+    "editor.foreground": "#242424",
+    "editorCursor.foreground": "#000000",
+    "editor.selectionBackground": "#ADD6FF",
+    "editor.lineHighlightBackground": "#F3F3F3",
+    "editorLineNumber.foreground": "#707070"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "keyword",
+        "storage"
+      ],
+      "settings": {
+        "foreground": "#AF00DB"
+      }
+    },
+    {
+      "scope": [
+        "storage.type",
+        "entity.name.type",
+        "support.type",
+        "support.class"
+      ],
+      "settings": {
+        "foreground": "#267F99"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.function",
+        "support.function"
+      ],
+      "settings": {
+        "foreground": "#795E26"
+      }
+    },
+    {
+      "scope": [
+        "string"
+      ],
+      "settings": {
+        "foreground": "#A31515"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric",
+        "constant.language"
+      ],
+      "settings": {
+        "foreground": "#098658"
+      }
+    },
+    {
+      "scope": [
+        "comment"
+      ],
+      "settings": {
+        "foreground": "#008000"
+      }
+    },
+    {
+      "scope": [
+        "variable"
+      ],
+      "settings": {
+        "foreground": "#001080"
+      }
+    }
+  ]
+}

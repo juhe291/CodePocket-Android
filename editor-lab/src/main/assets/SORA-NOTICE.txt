@@ -5,10 +5,28 @@ Copyright (C) 2020-2024 Rosemoe
 License: GNU Lesser General Public License v2.1 or later. Full LGPL 2.1 is included in this APK.
 The Sora AAR is used unmodified.
 Exact sources: https://repo.maven.apache.org/maven2/io/github/rosemoe/editor/0.23.7/editor-0.23.7-sources.jar
-The matching sources, POM, metadata and license are also provided with the local experiment bundle.
+The historical experiment bundle contains the original core prototype only; later adapter and TextMate sources are in the current repository/cache, not that old ZIP.
 AndroidX annotation 1.9.1 / collection 1.5.0: Apache License 2.0.
 Kotlin stdlib 2.1.21: Apache License 2.0; JetBrains annotations 13.0: Apache License 2.0.
 Embedded dependency license resources are retained. This experiment does not decide CodePocket's own license.
 
 临时草稿不读写 CodePocket 的项目、SAF、运行器或设置。切换组件只传递文本与归一化选区，组件间撤销历史不迁移；旋转保留文本，进程结束后草稿清空。
-当前仅比较原生 EditText 与 Sora 的基础编辑/光标；未接语言包、生产 EditorPort、语义补全或运行后端。触屏/键鼠/IME/卓易通/FPS 仍待统一设备验收。
+当前Sora实验已接编辑事务、光标定位与TextMate C++/Python语法；默认IDE仍用原生编辑器，尚未接完整生产EditorPort、语义补全或运行后端。触屏/键鼠/IME/卓易通/FPS 仍待统一设备验收。
+
+
+TextMate syntax experiment (not semantic completion):
+io.github.rosemoe:language-textmate:0.23.7, used unmodified, LGPL-2.1-or-later.
+Exact source artifact: https://repo.maven.apache.org/maven2/io/github/rosemoe/language-textmate/0.23.7/language-textmate-0.23.7-sources.jar
+Included TM4E code: Copyright Angelo Zerr and contributors; Eclipse Public License 2.0, with original vscode-textmate MIT portions.
+Grammar/configuration files are unmodified from microsoft/vscode 1.95.3 (MIT); Python grammar originates in MagicStack/MagicPython, C++ in jeff-hykin/better-cpp-syntax.
+Full Microsoft license and original ThirdPartyNotices, including grammar authors, are in textmate/. Exact paths and SHA256: textmate/UPSTREAM.json.
+Joni 2.2.6: Copyright 2017 JRuby Team, MIT. JCodings 1.0.63: Copyright 2025 JRuby Team, MIT.
+Gson 2.13.1 / Error Prone annotations 2.38.0 / SnakeYAML Engine 2.9: Apache-2.0.
+Eclipse JDT annotation 2.3.100: EPL-2.0.
+desugar_jdk_libs 2.1.5: GPL-2.0 with Classpath Exception (OpenJDK subset); official license and assembly exception are included.
+Full additional license texts and their download provenance are in textmate/licenses/. They can be read with the syntax-license button.
+Both CodePocket TextMate color themes are local project assets, not copied VS Code themes.
+
+语法加载/正则预热在后台执行；失败或正文超4.5万字符时明确显示纯文本。只切换语法不替换草稿，语言选择旋转保留，历史不跨组件迁移。
+暂未打包C++内嵌SQL/GLSL/汇编/正则等全部外部语法；引擎会警告并跳过部分嵌入规则，不代表完整C++语义或所有语法均覆盖。
+本地Debug实验，未正式发布；完整对应源码、所有上游通知与可重链接交付仍须最终核验。

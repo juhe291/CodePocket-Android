@@ -1,14 +1,15 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-18：Sora实验接入受保护的编辑事务、草稿更换和历史入口。** 原生与Sora复用无Android依赖的UTF-16/CRLF/长度校验；实验按真实Content版本、文档身份和选区拒绝过期命令，撤销/重做仍由组件执行。见[本批结果](docs/P1_SORA_TRANSACTIONS.md)。[共享定位](docs/P1_EDITOR_SURFACE.md)、[生产文档交接](docs/P1_EDITOR_DOCUMENTS.md)保留；默认仍为原生CodeEditor，尚未完成Sora生产迁移或语义补全。
+**2026-10-18：Sora实验已接入离线C++ / Python TextMate语法着色。** 提供语言/纯文本选择、深浅色规则、后台加载与着色预算降级，保留草稿和历史；属于语法作用域着色，不是语义IntelliSense。见[本批结果](docs/P1_SORA_LANGUAGES.md)；[事务](docs/P1_SORA_TRANSACTIONS.md)、[定位](docs/P1_EDITOR_SURFACE.md)保留。默认IDE仍为原生CodeEditor，尚未完成生产Sora迁移。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [默认IDE Debug APK](dist/CodePocket-editor-sora-transactions-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。构建48s；Kotlin270中269通过/1既有跳过，新增6通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
+**最新 [默认IDE Debug APK](dist/CodePocket-editor-sora-languages-debug.apk)** 20.87MiB，Android7.0+ / arm64-v8a。强制重编译1m 26s、64/64任务执行；原270项中269通过/1既有跳过，Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告。生产源码和依赖未改，签名/CRC/对齐及关键类定义检查通过。
 
-另有[最新Sora事务实验APK](dist/CodePocket-Sora-transactions-lab-debug.apk)，独立包名/临时草稿；构建24s，41/41主机测试（新增22），实际执行Content/Cursor/UndoManager，不执行Android View或InputConnection。新源码见当前editor-lab与editor-surface；[历史实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)保持原样，不含后续适配代码。实机统一后置，未验收UI/键鼠/IME/FPS。
+[Sora语法实验APK](dist/CodePocket-Sora-languages-lab-debug.apk) 4.66MiB，独立包名/临时草稿；最终离线构建29s，60/60主机测试（新增19），Lint0错误/6既有警告。真实运行TM4E/Joni、Content/Cursor/UndoManager；测试仅把Android日志转发到stderr，未执行Android View/InputConnection。C++部分内嵌语言规则缺失，警告与边界已记录。新源码在当前仓库；[历史源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)不含后续适配。实机验收统一后置。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
+- [P1 Sora离线语法与主题验证](docs/P1_SORA_LANGUAGES.md)
 - [P1 Sora事务、草稿更换与历史适配验证](docs/P1_SORA_TRANSACTIONS.md)
 - [P1 生产弹窗与Sora共享定位适配验证](docs/P1_EDITOR_SURFACE.md)
 - [P1 文档交接、异步读取与标签安全验证](docs/P1_EDITOR_DOCUMENTS.md)

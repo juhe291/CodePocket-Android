@@ -1,0 +1,38 @@
+[
+  {
+    "path": "JONI-MIT.txt",
+    "url": "https://raw.githubusercontent.com/jruby/joni/joni-2.2.6/LICENSE",
+    "bytes": 1067,
+    "sha256": "cd6c90a4a6f514d1e797f090839d0fc553b61ff032037ec1cd94ab437ba68159"
+  },
+  {
+    "path": "JCODINGS-MIT.txt",
+    "url": "https://raw.githubusercontent.com/jruby/jcodings/jcodings-1.0.63/LICENSE.txt",
+    "bytes": 1055,
+    "sha256": "5d3d477f7450dc6abb60ede67707f3365836cb4caf914f63d0c2baa3a5e7764e"
+  },
+  {
+    "path": "APACHE-2.0.txt",
+    "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "bytes": 11358,
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "path": "EPL-2.0.txt",
+    "url": "https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt",
+    "bytes": 14198,
+    "sha256": "0becf16567beb77fa252b7664631dd177c8f9a1889e48995b45379c7130e5303"
+  },
+  {
+    "path": "DESUGAR-GPL2.txt",
+    "url": "https://raw.githubusercontent.com/google/desugar_jdk_libs/master/LICENSE",
+    "bytes": 19274,
+    "sha256": "4b9abebc4338048a7c2dc184e9f800deb349366bdf28eb23c2677a77b4c87726"
+  },
+  {
+    "path": "DESUGAR-ASSEMBLY-EXCEPTION.txt",
+    "url": "https://raw.githubusercontent.com/google/desugar_jdk_libs/master/ASSEMBLY_EXCEPTION",
+    "bytes": 1522,
+    "sha256": "a44eb7b5caf5534c6ef536b21edb40b4d6babf91bf97d9d45596868618b2c6fb"
+  }
+]

@@ -1,6 +1,20 @@
 # CodePocket 当前交接状态
 
-## 最新：P1-C Sora编辑事务、文档更换与历史适配首批（2026-10-18）
+## 最新：P1-C Sora C++ / Python离线语法适配（2026-10-18）
+
+- 基线 `3a5b53c`；[报告](P1_SORA_LANGUAGES.md)。只给可选实验增加固定language-textmate0.23.7与desugar_jdk_libs2.1.5；默认生产源码/Gradle/Manifest/依赖、Actions与三份需求哈希保持。Sora核心仍0.23.7，实验stdlib2.1.21，默认1.9.25/无Sora，未整体升级工程。
+- TextMateBundle读取固定VS Code1.95.3的原始Python/C++/macro/platform语法和配置，加载两套本地主题，后台预热代表语句；临时文件resolver在finally移除/关闭。SoraSyntaxController只在UI线程挂载成熟异步分析器，语法选择不换正文/历史，旋转保留选择；组合时延后，暂停/销毁取消回调，迟到加载结果关闭，失败稳定退回纯文本。超4.5万字符明确纯文本，原大草稿不截断。
+- 真实语法scope/跨行/Unicode/颜色/配置回车测试新增19，Sora60/60，旧41项名称/状态保留。JVM仅转发Android Log至stderr，未默认返回所有Android API、未mock View或分词器；该桥不入APK。C++ SQL/GLSL/汇编/正则等部分外部语法/规则仍缺失，真实警告保留；非语义补全，自动词法候选关闭，等后续接现有候选/片段/参数。
+- 最终实验离线构建29s、51任务18执行/33未变化；默认强制重编译1m26s、64/64任务执行，原270中269通过/1 Windows符号链接跳过。Python源码/真实APK字节码各13/13、模板Python/主机C++17各7/7。Lint默认0错误/11既有警告，实验0错误/6既有警告；两份CRC/v2签名/16KB ZIP对齐/关键Dex定义通过。
+- API核对发现TextMate调用Duration，实验开启脱糖。实际Dex包含j$.time.Duration，IGrammar的Duration参数与调用表改写到j$.time；D8的TimeConversions兼容桥仍保留平台java.time引用，不能笼统断言无java.time。没有执行API24设备，不能据构建声称Android7兼容验收完成。
+- 默认完整重编译少一个已核对synthetic且无悬空引用的IdeCommandMenu$EntriesMappings，当前javap直接调用IdeCommand.getEntries；其他稳定类保留。不是功能删除或体积优化。实验保留旧类；新.gitattributes保持TextMate资产原始字节/上游许可原有空白，不改Git配置；20项assets解压后与源码逐字节相同，日志测试桥未入包。旧10项APK/材料包哈希保持。
+- [默认APK](../dist/CodePocket-editor-sora-languages-debug.apk)：21,879,652字节，SHA256 `b80071918c11b2eb6706a8f4415f5ef5b1b1e61f80a3468e80a54384677ecb28`。[Sora语法实验APK](../dist/CodePocket-Sora-languages-lab-debug.apk)：4,890,437字节，SHA256 `223ce8377a129553bf464b6e59b3cb10b1e8d1248f167d527c7c67b9ed95541a`。历史bundle未重新打包；匹配TextMate源码/制品/元数据在.tools，完整对应源码/重链接交付仍待正式分发前核验。
+- 证据 `verification/editor-sora-languages-2026-10-18/`：results.json、所有跟踪输入哈希、源码备份、首次编译API误用/Log桩失败/两项夹具预期失败及最终日志、JUnit/Lint、首个成功APK、API原文、语法/许可来源哈希、依赖图、javap/脱糖专项及签名/对齐/字节码审计。保留全部旧测试，未删失败用例；许可入口/清单及README/进度已维护，本地提交无push。
+- **下一批**：完整生产Port/导航、候选/片段/参数与SAF会话联动、默认迁移评估；不重复阶段0或已做首批。P1完整动画/手势/设置/真实Python流式以及P2/P3仍保留，P0缺陷优先。
+- **实机统一后置**：无Android/模拟器、View渲染/InputConnection/组合时序/焦点/键鼠/折行/定位/手机平板/卓易通/FPS验收；无新Wandbox/远端Actions。主机语法颜色验证不等于设备实际着色或60FPS。
+- 保留.tools、dist、verification和设备备份。真实仓库 `C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`；配置OneDrive cwd不存在，显式workdir和正常权限审批，不改Git配置。
+
+## 历史：P1-C Sora编辑事务、文档更换与历史适配首批（2026-10-18）
 
 - 基线 `c5f5bf1`；[本批报告](P1_SORA_TRANSACTIONS.md)。原生产EditorTransactions API与文档/版本/组合保护保留，范围/长度/UTF-16/CRLF/新选区规则委托本地Java TextEdits；两组件复用，无外部依赖或Kotlin升级。
 - SoraBuffer使用真实Content/Cursor及Content.getDocumentVersion，快照仅在显式命令捕获，拒绝旧实例/版本/选区/组合/关闭后请求；无变化不替换，选区变更不新增历史，替换使用原Content批次。SoraEditorAdapter已接实验插入、撤销/重做、同步草稿更换及共享锚点。实际历史/选区通知仍走CodeEditor，ContentChange监听不再另加版本计数。

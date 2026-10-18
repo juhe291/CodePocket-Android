@@ -1,0 +1,4 @@
+# Preserve offline grammar/notice/license bytes for the recorded SHA256 values.
+editor-lab/src/main/assets/textmate/** -text whitespace=cr-at-eol
+# Store upstream license spacing verbatim; keep normal checks on project code.
+editor-lab/src/main/assets/textmate/licenses/** whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

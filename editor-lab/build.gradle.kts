@@ -12,7 +12,9 @@ android {
         versionCode = 1
         versionName = "0.1-experiment"
     }
+    sourceSets.getByName("test").resources.srcDir("src/main/assets")
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -21,5 +23,7 @@ android {
 dependencies {
     implementation(project(":editor-surface"))
     implementation("io.github.rosemoe:editor:0.23.7")
+    implementation("io.github.rosemoe:language-textmate:0.23.7")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     testImplementation("junit:junit:4.13.2")
 }
