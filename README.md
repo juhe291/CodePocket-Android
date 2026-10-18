@@ -1,10 +1,12 @@
 # CodePocket · Android C++ / Python IDE
 
+**2026-10-18：已接入原生 Shell 终端首批。** 运行面板选择“Shell 终端”连接真实`/system/bin/sh`（Termux原生组件/PTY，无需另装Termux）。[Debug APK](dist/CodePocket-native-terminal-debug.apk) 21.63MiB；App277通过/1既有跳过、终端核心145通过，Lint0错误/11既有警告。构建与产物通过，**设备上的Shell/IME/键鼠/卓易通仍待统一实机验收**。当前没有python/pip/clang命令，原Python仍Chaquopy、C++仍Wandbox；本地C++未实现。见[实现、验证与边界](docs/P1_NATIVE_TERMINAL.md)。
+
 **2026-10-18：Sora实验已接入离线C++ / Python TextMate语法着色。** 提供语言/纯文本选择、深浅色规则、后台加载与着色预算降级，保留草稿和历史；属于语法作用域着色，不是语义IntelliSense。见[本批结果](docs/P1_SORA_LANGUAGES.md)；[事务](docs/P1_SORA_TRANSACTIONS.md)、[定位](docs/P1_EDITOR_SURFACE.md)保留。默认IDE仍为原生CodeEditor，尚未完成生产Sora迁移。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [默认IDE Debug APK](dist/CodePocket-editor-sora-languages-debug.apk)** 20.87MiB，Android7.0+ / arm64-v8a。强制重编译1m 26s、64/64任务执行；原270项中269通过/1既有跳过，Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告。生产源码和依赖未改，签名/CRC/对齐及关键类定义检查通过。
+**此前 [默认IDE Debug APK](dist/CodePocket-editor-sora-languages-debug.apk)** 20.87MiB，Android7.0+ / arm64-v8a。强制重编译1m 26s、64/64任务执行；原270项中269通过/1既有跳过，Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告。生产源码和依赖未改，签名/CRC/对齐及关键类定义检查通过。
 
 [Sora语法实验APK](dist/CodePocket-Sora-languages-lab-debug.apk) 4.66MiB，独立包名/临时草稿；最终离线构建29s，60/60主机测试（新增19），Lint0错误/6既有警告。真实运行TM4E/Joni、Content/Cursor/UndoManager；测试仅把Android日志转发到stderr，未执行Android View/InputConnection。C++部分内嵌语言规则缺失，警告与边界已记录。新源码在当前仓库；[历史源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)不含后续适配。实机验收统一后置。
 

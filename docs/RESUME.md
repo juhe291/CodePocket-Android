@@ -1,6 +1,15 @@
 # CodePocket 当前交接状态
 
-## 最新：P1-C Sora C++ / Python离线语法适配（2026-10-18）
+## 最新：P1 原生 Shell 终端首批（2026-10-18）
+
+- 用户已确认“第二种”：嵌入成熟终端并连接真实Shell，撤销脚本化终端演示作为实现路线；[本批报告](P1_NATIVE_TERMINAL.md)。Termux v0.118.3/5b657c6固定源码、原生视图+协议核心+真实PTY JNI，默认App新增面板“Shell终端”标签；点击连接/system/bin/sh，不需要另装Termux。
+- 单进程会话/弱UI观察、终端焦点快捷键直通、IME面板保护、输出字号/动画联动、复制粘贴/控制键/结束会话；原结果面板和Python/Wandbox执行器保持。上游5项适配及许可/归档/哈希、NDK r27c、CI构建/核心回归已接入。
+- 最终构建1m 9s，App278中277通过/1旧跳过，原270保持；核心145/145，新增8启动/目录边界；Lint0错/11旧警告，Python源码/字节码各13/13，模板各7/7。APK归档/签名/ZIP对齐/类/16KB ELF/JNI/许可检查通过，旧dist哈希保持。原菜单测试失败已通过恢复紧凑菜单修复，未放宽测试。
+- APK `dist/CodePocket-native-terminal-debug.apk`，22,678,342字节，SHA256 `def9ba82b438445276bda980a79dbe616c424fb833e150d117854f6b3224ab98`；证据verification/native-terminal-2026-10-18/results.json及各失败轮日志。**没有Android PTY/Shell实际运行或IME/键鼠/卓易通/FPS验证**；实机仍统一后置。
+- Shell仅基础Android命令环境；尚无python/pip/本地clang，IDE Python仍Chaquopy/预填输入、C++仍Wandbox。NDK用于主机JNI构建，不是手机C++编译器；Python交互桥与本地C++原型仍待做。此前图标/设置/文件树样稿与P1动画/Sora/P2/P3保留，整体UI未完成。
+- 下一批按真实终端路线继续，不再反复解释或制作脚本结果冒充运行。维护原保存/SAF/草稿保护，P0缺陷优先。无新Wandbox/远端Actions/push/发布；不要求先连设备。
+
+## 历史：P1-C Sora C++ / Python离线语法适配（2026-10-18）
 
 - 基线 `3a5b53c`；[报告](P1_SORA_LANGUAGES.md)。只给可选实验增加固定language-textmate0.23.7与desugar_jdk_libs2.1.5；默认生产源码/Gradle/Manifest/依赖、Actions与三份需求哈希保持。Sora核心仍0.23.7，实验stdlib2.1.21，默认1.9.25/无Sora，未整体升级工程。
 - TextMateBundle读取固定VS Code1.95.3的原始Python/C++/macro/platform语法和配置，加载两套本地主题，后台预热代表语句；临时文件resolver在finally移除/关闭。SoraSyntaxController只在UI线程挂载成熟异步分析器，语法选择不换正文/历史，旋转保留选择；组合时延后，暂停/销毁取消回调，迟到加载结果关闭，失败稳定退回纯文本。超4.5万字符明确纯文本，原大草稿不截断。

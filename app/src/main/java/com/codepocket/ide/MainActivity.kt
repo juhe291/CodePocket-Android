@@ -54,6 +54,8 @@ import com.codepocket.ide.editor.DiagnosticFiles
 import com.codepocket.ide.search.ProjectSearch
 import com.codepocket.ide.ui.*
 import com.codepocket.ide.terminal.TerminalView
+import com.codepocket.ide.terminal.shell.ShellRuntime
+import com.codepocket.ide.terminal.shell.ShellTerminalPane
 import java.io.File
 import org.json.JSONArray
 
@@ -162,6 +164,8 @@ class MainActivity : Activity() {
     private lateinit var numbers: TextView
     private lateinit var status: TextView
     private lateinit var consoleText: TerminalView
+    private lateinit var consoleResultScroll: ScrollView
+    private var shellPane: ShellTerminalPane? = null
     private lateinit var tabsRow: LinearLayout
     private lateinit var suggestionRow: LinearLayout
     private var sidebarExplorerList: LinearLayout? = null
@@ -192,6 +196,7 @@ class MainActivity : Activity() {
         dark = settings.isDark(isSystemDark())
         setTheme(if (dark) R.style.Theme_CodePocket else R.style.Theme_CodePocket_Light)
         super.onCreate(savedInstanceState)
+        selectedOutput = savedInstanceState?.getInt("outputChannel", 0)?.coerceIn(0, 3) ?: 0
         drafts = DraftStore(File(filesDir, "drafts")) { a, b -> android.system.Os.rename(a.path, b.path) }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         setContentView(TextView(this).apply { text = "正在载入 CodePocket…"; setPadding(24, 36, 24, 24) })
@@ -314,6 +319,7 @@ class MainActivity : Activity() {
         persist()
         if (exportContent != null) outState.putString("exportSnapshot", "pending-export.txt")
         outState.putString("exportPath", exportPath)
+        outState.putInt("outputChannel", selectedOutput)
         if (dirty) {
             outState.putString("draftPath", activePath)
             outState.putString("draft", editor.text.toString())
@@ -325,11 +331,13 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        shellPane?.hostActive(true)
         if (::editor.isInitialized) { handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
     }
 
     override fun onPause() {
         super.onPause()
+        shellPane?.hostActive(false)
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         explorerResizeHandle?.cancelGesture(); projectSearch?.cancel()
         listOfNotNull(explorerPane, activityBar).forEach(Animations::cancel)
@@ -364,6 +372,8 @@ class MainActivity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        shellPane?.dispose(); shellPane = null
+        if (isFinishing) ShellRuntime.get(applicationContext).close()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null
         documentTransitions.close()
@@ -658,7 +668,10 @@ class MainActivity : Activity() {
             IdeCommand.SIGNATURE -> requestSignatureHelp()
             IdeCommand.SNIPPET -> showSnippetMenu()
             IdeCommand.PANEL -> togglePanel()
-            IdeCommand.CLEAR_TERMINAL -> { outputDisplay.clear(); showOutput(selectedOutput) }
+            IdeCommand.CLEAR_TERMINAL -> {
+                if (selectedOutput == 3) shellPane?.clearScreen()
+                else { outputDisplay.clear(); showOutput(selectedOutput) }
+            }
             IdeCommand.MAXIMIZE_TERMINAL -> setPanelMaximized(!panelState.maximized)
             IdeCommand.CLOSE_TERMINAL -> closePanel()
             IdeCommand.PRESET_INPUT -> setPresetInputExpanded(true)
@@ -684,7 +697,7 @@ class MainActivity : Activity() {
         if (changed) { completionPopup?.dismiss(); hideSignatureHelp() }
         imeVisible = visible
         val height = (root.height / resources.displayMetrics.density).toInt()
-        val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus(), height, panelVisible, settings.collapsePanelOnIme)
+        val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, height, panelVisible, settings.collapsePanelOnIme)
         if (visible) listOfNotNull(explorerPane, tabsRow, outputRegion).forEach(Animations::cancel)
         suggestionScroll.visibility = if (WorkspaceLayoutPolicy.showSnippet(snippetSession != null, visible, height)) View.VISIBLE else View.GONE
         keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
@@ -812,7 +825,7 @@ class MainActivity : Activity() {
         // Before first measure, hiding stdin would make restoreSession.requestFocus() silently fail.
         if (width <= 0 || height <= 0) return
         val spec = PanelLayoutPolicy.resolve(panelState, panelVisible, width, height,
-            imeVisible, input.hasFocus(), settings.collapsePanelOnIme, settings.panelPreferSide)
+            imeVisible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, settings.collapsePanelOnIme, settings.panelPreferSide)
         val previous = panelLayout
         val stamp = if (previous != null && previous.dock != spec.dock) capturePanelViewport() else null
         panelLayout = spec
@@ -836,9 +849,9 @@ class MainActivity : Activity() {
         panelResize.isEnabled = spec.resizable && !workspaceBusy
         val panelHeight = if (side || full) height else spec.extent
         val preset = WorkspaceLayoutPolicy.preset(presetInputExpanded, imeVisible, input.hasFocus(), panelHeight)
-        panelInputHeading.visibility = if (preset.showCaption) View.VISIBLE else View.GONE
+        panelInputHeading.visibility = if (preset.showCaption && selectedOutput != 3) View.VISIBLE else View.GONE
         panelOutputScroll.visibility = if (preset.showTabs) View.VISIBLE else View.GONE
-        input.visibility = if (preset.showInput) View.VISIBLE else View.GONE
+        input.visibility = if (preset.showInput && selectedOutput != 3) View.VISIBLE else View.GONE
         input.layoutParams?.let { old ->
             val target = dp(preset.inputHeight)
             if (old.height != target) input.layoutParams = old.apply { this.height = target }
@@ -1031,6 +1044,7 @@ class MainActivity : Activity() {
         panelInputHeading.visibility = input.visibility
         outputRegion.addView(input, LinearLayout.LayoutParams(-1, dp(64)))
         val scroll = ScrollView(this)
+        consoleResultScroll = scroll
         consoleText = TerminalView(this).apply {
             textSize = 12f; setTextColor(green)
             typeface = Typeface.MONOSPACE; gravity = Gravity.TOP or Gravity.START
@@ -1038,6 +1052,14 @@ class MainActivity : Activity() {
         }
         scroll.addView(consoleText)
         outputRegion.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
+        shellPane?.dispose()
+        shellPane = ShellTerminalPane(this, if (workspace.external) null else workspace.root,
+            settings.terminalFontSize, settings.animations) {
+                hideCompletion(); clearSnippet(); lastFocus = "terminal"; updateImeLayout()
+            }.also { pane ->
+                pane.visibility = View.GONE
+                outputRegion.addView(pane, LinearLayout.LayoutParams(-1, 0, 1f))
+            }
         return outputRegion
     }
 
@@ -1759,6 +1781,7 @@ class MainActivity : Activity() {
     private fun applyEditorPreferences() {
         editor.textSize = settings.fontSize.toFloat(); numbers.textSize = settings.fontSize.toFloat()
         consoleText.textSize = settings.terminalFontSize.toFloat()
+        shellPane?.setPreferences(settings.terminalFontSize, settings.animations)
         numbers.visibility = if (settings.lineNumbers) View.VISIBLE else View.GONE
         editor.setHorizontallyScrolling(!settings.wordWrap)
         (editor.parent as? View)?.setBackgroundColor(codeBackground)
@@ -1925,6 +1948,8 @@ class MainActivity : Activity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        // Terminal control sequences must reach the real PTY, not IDE shortcuts.
+        if (shellPane?.hasTerminalFocus() == true) return super.dispatchKeyEvent(event)
         if (!::editor.isInitialized || toolDialog?.isShowing == true || explorerDialog?.isShowing == true)
             return super.dispatchKeyEvent(event)
         if (event.action == KeyEvent.ACTION_UP && completionConsumedKeys.remove(event.keyCode)) return true
@@ -2144,6 +2169,8 @@ class MainActivity : Activity() {
     }
 
     private fun runCode(consented: Boolean = false) {
+        // An explicit IDE run selects its own result channel; a Shell stays independent.
+        if (selectedOutput == 3) showOutput(0)
         if (running || workspaceBusy) return
         if (dirty || saving) { saveActive { runCode(consented) }; return }
         if (loadedPath != activePath) return
@@ -2183,6 +2210,7 @@ class MainActivity : Activity() {
         updateMainToolbarState()
         outputDisplay.synchronize(RunSession.result, running)
         result = RunSession.result
+        if (selectedOutput == 3) { showOutput(3); return }
         if (result == null && !running) showOutput(selectedOutput)
         if (running) {
             showOutput(0)
@@ -2197,13 +2225,21 @@ class MainActivity : Activity() {
         selectedOutput = type
         if (!::outputTabs.isInitialized) return
         outputTabs.removeAllViews()
-        listOf("输出", "错误", "运行信息").forEachIndexed { index, item ->
-            outputTabs.addView(button(item) { showOutput(index) }.apply {
+        val shell = type == 3
+        consoleResultScroll.visibility = if (shell) View.GONE else View.VISIBLE
+        shellPane?.visibility = if (shell) View.VISIBLE else View.GONE
+        shellPane?.hostActive(shell)
+        panelToolbar.setShellMode(shell)
+        if (shell) { input.visibility = View.GONE; panelInputHeading.visibility = View.GONE }
+        else { input.visibility = if (presetInputExpanded) View.VISIBLE else View.GONE; panelInputHeading.visibility = input.visibility }
+        listOf("输出", "错误", "运行信息", "Shell 终端").forEachIndexed { index, item ->
+            outputTabs.addView(button(item) { showOutput(index); if (index == 3) shellPane?.ensureSession() }.apply {
                 background = shape(if (index == type) editorBackground else surface, 0)
                 if (index == type) setTextColor(accent)
             })
         }
         outputTabs.addView(button("定位错误") { gotoError() }.apply { visibility = if (result?.errorLine != null) View.VISIBLE else View.GONE })
+        if (shell) return
         val current = result
         consoleText.setOutput(when {
             outputDisplay.cleared && type != 2 -> "显示已清空；预设输入和运行结果仍保留，下次运行显示新输出。"

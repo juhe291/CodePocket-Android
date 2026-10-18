@@ -13,7 +13,9 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "CodePocket"
-include(":app", ":editor-surface")
+include(":app", ":editor-surface", ":terminal-emulator", ":terminal-view")
+project(":terminal-emulator").projectDir = file("third-party/termux/terminal-emulator")
+project(":terminal-view").projectDir = file("third-party/termux/terminal-view")
 
 // Opt-in isolated prototype; the normal IDE and CI dependency graph do not include it.
 if (providers.gradleProperty("codepocket.editorLab").orNull == "true") include(":editor-lab")

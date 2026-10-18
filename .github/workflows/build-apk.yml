@@ -40,10 +40,10 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install SDK 35
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
 
       - name: Run Kotlin regression tests and Android lint
-        run: bash ./gradlew :app:testDebugUnitTest :app:lintDebug --stacktrace --no-daemon
+        run: bash ./gradlew :terminal-emulator:testDebugUnitTest :app:testDebugUnitTest :app:lintDebug --stacktrace --no-daemon
 
       - name: Verify generated snippets on the host
         run: |
@@ -80,6 +80,7 @@ jobs:
           name: CodePocket-verification-reports
           path: |
             app/build/reports/tests/
+            third-party/termux/terminal-emulator/build/reports/tests/
             app/build/reports/lint-results-debug.*
             verification/apk-inspection.json
             verification/snippet-inspection.json

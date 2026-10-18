@@ -40,3 +40,6 @@ POM 原文快照及机器可读索引位于 [license-metadata.json](../verificat
 语法/配置原样来自microsoft/vscode1.95.3，附原MIT与ThirdPartyNotices（含MagicPython、better-cpp-syntax等归属），每文件URL/哈希在textmate/UPSTREAM.json。新增完整EPL/Apache、Joni/JCodings MIT和desugar GPL2+Classpath/Assembly Exception文本，从上游许可地址取得，许可下载URL/哈希在textmate/licenses/UPSTREAM.json；desugar许可地址沿POM的master链接，未冒充完整2.1.5源码档案。两套主题为本地资产。
 
 实验APK20项asset复制与解压字节逐项匹配，并提供“许可/说明→语法许可”阅读入口。本次主机验证不构成完整法律/分发审查；历史源码材料ZIP保持原样，不含新增适配和语法模块。正式发布前仍需收齐精确对应源码、重链接交付及完整通知；未替项目所有者选择项目许可证、未push或发布。实验依旧不访问项目/SAF/运行器。
+
+
+2026-10-18 原生Shell：[本批报告](P1_NATIVE_TERMINAL.md)。默认App新增本地Termux terminal-view/terminal-emulator，固定v0.118.3 / 5b657c6adf4304e5198951ce815fe0205dcac29c；52项原始源/许可按Git blob或SHA256核验，完整固定源归档保留.tools。根GPLv3-only及Apache2.0来源例外均保留，没有将所有文件统一标为Apache；UPSTREAM.json、原始/已移位的Gradle来源、五个已修改上游文件差异、GPL/Apache正文在third-party/termux及证据。APK中terminal-licenses含两份正文、上游说明和元数据，终端菜单有入口。项目自身许可证仍由所有者决定，正式分发前继续对应源码/通知义务核验。NDK r27c仅本机/CI构建，不打包；新增libtermux.so为源码实际构建的arm64 JNI。三个JVM utility桥仅src/test，不入APK。AndroidX annotation1.9.1固定；默认Kotlin/Chaquopy版本没有整体升级。

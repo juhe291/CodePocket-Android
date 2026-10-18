@@ -12,3 +12,6 @@ __pycache__/
 verification/*.zip
 verification/*.log
 dist/
+
+# Android external native build intermediates.
+**/.cxx/

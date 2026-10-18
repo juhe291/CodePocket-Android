@@ -73,6 +73,14 @@ class PanelToolbar(context: Context, private val palette: IdePalette,
     private val maximize = IdeControls.icon(context, palette, IdeIcon.MAXIMIZE, context.getString(R.string.panel_maximize), onMaximize)
     private val close = IdeControls.icon(context, palette, IdeIcon.CLOSE, context.getString(R.string.panel_close), onClose)
     val menuAnchor = IdeControls.icon(context, palette, IdeIcon.MORE, context.getString(R.string.panel_size_menu)) {}
+    private var shellMode = false
+    fun setShellMode(shell: Boolean) {
+        shellMode = shell
+        titleView.text = if (shell) "Shell 终端" else context.getString(R.string.panel_title)
+        IdeControls.describe(titleView, if (shell) "真实 Android Shell 会话" else "运行输出：预设输入，程序结束后展示结果")
+        IdeControls.describe(clear, if (shell) "向 Shell 发送 Ctrl+L" else "清空输出显示；保留结果和预设输入")
+        requestLayout()
+    }
     private var maximized: Boolean? = null
     private var expanded: Boolean? = null
     init {
@@ -99,7 +107,7 @@ class PanelToolbar(context: Context, private val palette: IdePalette,
         val budget = (width / resources.displayMetrics.density).toInt()
         val spec = WorkspaceLayoutPolicy.panelToolbar(budget)
         clear.visibility = if (spec.clear) VISIBLE else GONE
-        preset.visibility = if (spec.preset) VISIBLE else GONE
+        preset.visibility = if (spec.preset && !shellMode) VISIBLE else GONE
         maximize.visibility = if (spec.maximize) VISIBLE else GONE
         close.visibility = if (spec.close) VISIBLE else GONE
         listOf(preset, clear, maximize, close, menuAnchor).forEach { it.layoutParams.width = minOf(dp(48), width) }

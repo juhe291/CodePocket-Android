@@ -60,4 +60,5 @@
     <string name="editor_document_changed">读取期间源码已变化，已保留当前编辑；请重新操作</string>
     <string name="editor_document_rejected">无法载入内容，当前缓冲区未替换</string>
     <string name="editor_last_tab">已保留项目中的最后一个标签</string>
+    <string name="shell_session_caption">sh · %1$s · 初始目录 %2$s</string>
 </resources>
