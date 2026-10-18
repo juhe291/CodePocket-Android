@@ -29,6 +29,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private final File initialDirectory;
     private final Runnable focusChanged;
     private final TextView caption;
+    private final LinearLayout heading;
     private final FrameLayout viewport;
     private final TextView placeholder;
     private final Button start;
@@ -40,12 +41,15 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private TerminalSession reportedSession;
 
     public ShellTerminalPane(Context context, File directory, int fontSp, boolean animations, Runnable focusChanged) {
+        this(context, directory, fontSp, animations, focusChanged, ShellRuntime.get(context));
+    }
+    public ShellTerminalPane(Context context, File directory, int fontSp, boolean animations, Runnable focusChanged, ShellRuntime runtime) {
         super(context);
-        this.runtime = ShellRuntime.get(context);
+        this.runtime = runtime;
         this.initialDirectory = directory;
         this.fontSp = fontSp; this.animations = animations; this.focusChanged = focusChanged;
         setOrientation(VERTICAL); setBackgroundColor(0xff10141a);
-        LinearLayout heading = new LinearLayout(context);
+        heading = new LinearLayout(context);
         heading.setGravity(Gravity.CENTER_VERTICAL);
         caption = new TextView(context);
         caption.setTextColor(0xffaab7c9); caption.setTextSize(10); caption.setSingleLine(true);
@@ -91,6 +95,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         button.setMinWidth(0); button.setMinimumWidth(0); button.setMinHeight(dp(48));
         button.setOnClickListener(v -> callback.run()); return button;
     }
+    public void setEmbedded(boolean embedded) { heading.setVisibility(embedded ? GONE : VISIBLE); }
     public void ensureSession() { runtime.start(initialDirectory); }
     public boolean hasTerminalFocus() { return terminal != null && terminal.hasFocus(); }
     public void clearScreen() { runtime.send("\u000c"); }
@@ -163,9 +168,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
                 case 4: new AlertDialog.Builder(getContext()).setTitle("结束当前 Shell？")
                     .setMessage("将关闭当前终端会话；编辑器文件与 Python / C++ 运行器保留。")
                     .setNegativeButton("取消", null).setPositiveButton("结束", (d, w) -> runtime.close()).show(); break;
-                case 5: new AlertDialog.Builder(getContext()).setTitle("真实 Android Shell")
-                    .setMessage("使用本地 /system/bin/sh 和 Termux 终端组件，无需另装 Termux。\n\n命令以应用 UID 执行，可修改本应用有权访问的文件；终端只读取磁盘上已保存的内容。系统目录权限仍由 Android 控制，不是 root。\n\nSAF URI 不能直接作为 Shell 目录；外部项目仍由文件管理器授权和写回。未安装 python、pip 或 clang/g++ 命令，现有 Python 使用 Chaquopy、C++ 使用 Wandbox。\n\nTermux v0.118.3 / 5b657c6，保留 GPLv3 与 Apache 2.0 来源及通知；完整许可见 App 资产 terminal-licenses 和仓库 third-party/termux。")
-                    .setPositiveButton("知道了", null).show(); break;
+                case 5: showAbout(); break;
                 case 6: new AlertDialog.Builder(getContext()).setTitle("上次终端错误（本机记录）")
                     .setMessage(runtime.failureDetails())
                     .setNegativeButton("关闭", null)
@@ -174,7 +177,12 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
             return true;
         }); menu.show();
     }
-    private void showKeyboard() {
+    public void showAbout() {
+        new AlertDialog.Builder(getContext()).setTitle("真实 Android Shell")
+                    .setMessage("使用本地 /system/bin/sh 和 Termux 终端组件，无需另装 Termux。\n\n命令以应用 UID 执行，可修改本应用有权访问的文件；终端只读取磁盘上已保存的内容。系统目录权限仍由 Android 控制，不是 root。\n\nSAF URI 不能直接作为 Shell 目录；外部项目仍由文件管理器授权和写回。未安装 python、pip 或 clang/g++ 命令，现有 Python 使用 Chaquopy、C++ 使用 Wandbox。\n\nTermux v0.118.3 / 5b657c6，保留 GPLv3 与 Apache 2.0 来源及通知；完整许可见 App 资产 terminal-licenses 和仓库 third-party/termux。")
+                    .setPositiveButton("知道了", null).show();
+    }
+    public void showKeyboard() {
         if (terminal == null) return;
         terminal.requestFocus();
         ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(terminal, InputMethodManager.SHOW_IMPLICIT);

@@ -1,6 +1,8 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-18：已复现并修复Shell视图初始化闪退。** 字号/字体初始化顺序导致空绘制器，新增实际View主机回归、完整启动异常保护及可复制的本机错误记录。[修复版Debug APK](dist/CodePocket-shell-crash-fixed-debug.apk) 21.63MiB；App286通过/1既有跳过、Lint0错误/11既有警告。见[崩溃栈、修复及验证范围](docs/P1_SHELL_CRASH_FIX.md)。尚无手机日志/PTY实测，不能据此排除设备其他故障；动画暂停，统一终端界面待接续。
+**2026-10-18：终端入口与多Shell会话首批。** 底部统一“终端 / 问题”，终端内切换Shell/最近运行任务；支持新建、重命名、单独结束，运行回调保留用户当前选择。Python/Wandbox真实批量任务完整保留，尚无Python实时输入桥。[本批报告](docs/P1_TERMINAL_WORKFLOW.md)；[最新Debug APK](dist/CodePocket-terminal-workflow-debug.apk) 21.63MiB，App305通过/1既有跳过、Lint0错误/11既有警告；设备PTY/IME仍未验收，动画暂停。
+
+**此前：Shell视图初始化闪退修复（2026-10-18）。** 字号/字体初始化顺序导致空绘制器，新增实际View主机回归、完整启动异常保护及可复制的本机错误记录。[修复版Debug APK](dist/CodePocket-shell-crash-fixed-debug.apk) 21.63MiB；App286通过/1既有跳过、Lint0错误/11既有警告。见[崩溃栈、修复及验证范围](docs/P1_SHELL_CRASH_FIX.md)。尚无手机日志/PTY实测，不能据此排除设备其他故障；动画暂停，统一终端界面待接续。
 
 **此前：原生 Shell 终端首批（2026-10-18，含本轮已修复的启动Bug）。** 运行面板选择“Shell 终端”连接真实`/system/bin/sh`（Termux原生组件/PTY，无需另装Termux）。[Debug APK](dist/CodePocket-native-terminal-debug.apk) 21.63MiB；App277通过/1既有跳过、终端核心145通过，Lint0错误/11既有警告。构建与产物通过，**设备上的Shell/IME/键鼠/卓易通仍待统一实机验收**。当前没有python/pip/clang命令，原Python仍Chaquopy、C++仍Wandbox；本地C++未实现。见[实现、验证与边界](docs/P1_NATIVE_TERMINAL.md)。
 

@@ -54,7 +54,9 @@ import com.codepocket.ide.editor.DiagnosticFiles
 import com.codepocket.ide.search.ProjectSearch
 import com.codepocket.ide.ui.*
 import com.codepocket.ide.terminal.TerminalView
-import com.codepocket.ide.terminal.shell.ShellRuntime
+import com.codepocket.ide.terminal.shell.ShellSessionRegistry
+import com.codepocket.ide.terminal.shell.TerminalCatalog
+import com.codepocket.ide.terminal.TaskTranscript
 import com.codepocket.ide.terminal.shell.ShellTerminalPane
 import java.io.File
 import org.json.JSONArray
@@ -75,7 +77,7 @@ class MainActivity : Activity() {
     private val opened = mutableListOf<String>()
     private val running get() = RunSession.running
     private var result: RunResult? = null
-    private var selectedOutput = 0
+    private var selectedOutput = 3
     private var completionPopup: CompletionPopup? = null
     private var completionBatch: CompletionBatch? = null
     private var completionSuppressed: CompletionRequest? = null
@@ -166,6 +168,8 @@ class MainActivity : Activity() {
     private lateinit var consoleText: TerminalView
     private lateinit var consoleResultScroll: ScrollView
     private var shellPane: ShellTerminalPane? = null
+    private var shellPaneId = -1L
+    private lateinit var terminalRegistry: ShellSessionRegistry
     private lateinit var tabsRow: LinearLayout
     private lateinit var suggestionRow: LinearLayout
     private var sidebarExplorerList: LinearLayout? = null
@@ -196,7 +200,7 @@ class MainActivity : Activity() {
         dark = settings.isDark(isSystemDark())
         setTheme(if (dark) R.style.Theme_CodePocket else R.style.Theme_CodePocket_Light)
         super.onCreate(savedInstanceState)
-        selectedOutput = savedInstanceState?.getInt("outputChannel", 0)?.coerceIn(0, 3) ?: 0
+        selectedOutput = savedInstanceState?.getInt("outputChannel", 3)?.coerceIn(0, 3) ?: if (RunSession.running || RunSession.result != null) 0 else 3
         drafts = DraftStore(File(filesDir, "drafts")) { a, b -> android.system.Os.rename(a.path, b.path) }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         setContentView(TextView(this).apply { text = "正在载入 CodePocket…"; setPadding(24, 36, 24, 24) })
@@ -373,7 +377,7 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         super.onDestroy()
         shellPane?.dispose(); shellPane = null
-        if (isFinishing) ShellRuntime.get(applicationContext).close()
+        if (isFinishing) ShellSessionRegistry.finishAll()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null
         documentTransitions.close()
@@ -745,7 +749,7 @@ class MainActivity : Activity() {
     private fun closePanel() {
         panelResize.cancelGesture(); hideCompletion()
         val stamp = capturePanelViewport()
-        if (input.hasFocus()) { hideKeyboard(); editor.requestFocus() }
+        if (input.hasFocus() || shellPane?.hasTerminalFocus() == true) { hideKeyboard(); editor.requestFocus() }
         panelVisible = false; panelState = panelState.copy(maximized = false)
         updateImeLayout(); persistPanel(); restorePanelViewport(stamp, true)
     }
@@ -805,6 +809,7 @@ class MainActivity : Activity() {
         val stamp = capturePanelViewport(); hideCompletion()
         presetInputExpanded = expanded
         if (expanded) {
+            terminalRegistry.catalog.select(TerminalCatalog.TASK); showOutput(0)
             panelVisible = true; outputRegion.visibility = View.VISIBLE
             input.visibility = View.VISIBLE
             input.requestFocus() // Do not force an IME for a hardware-keyboard user.
@@ -849,14 +854,18 @@ class MainActivity : Activity() {
         panelResize.isEnabled = spec.resizable && !workspaceBusy
         val panelHeight = if (side || full) height else spec.extent
         val preset = WorkspaceLayoutPolicy.preset(presetInputExpanded, imeVisible, input.hasFocus(), panelHeight)
-        panelInputHeading.visibility = if (preset.showCaption && selectedOutput != 3) View.VISIBLE else View.GONE
+        panelInputHeading.visibility = if (preset.showCaption && selectedOutput == 0) View.VISIBLE else View.GONE
         panelOutputScroll.visibility = if (preset.showTabs) View.VISIBLE else View.GONE
-        input.visibility = if (preset.showInput && selectedOutput != 3) View.VISIBLE else View.GONE
+        input.visibility = if (preset.showInput && selectedOutput == 0) View.VISIBLE else View.GONE
         input.layoutParams?.let { old ->
             val target = dp(preset.inputHeight)
             if (old.height != target) input.layoutParams = old.apply { this.height = target }
         }
         panelToolbar.setState(panelState.maximized, presetInputExpanded)
+        // Start an idle selected Shell only when its panel is actually visible; never steal IME focus.
+        if (spec.showPanel && selectedOutput == 3 && ::terminalRegistry.isInitialized &&
+            terminalRegistry.catalog.selected()?.value?.runtime?.state() == com.codepocket.ide.terminal.shell.ShellRuntime.State.EMPTY)
+            shellPane?.ensureSession()
         if (previous != spec) { completionPopup?.dismiss(); hideSignatureHelp() }
         restorePanelViewport(stamp)
     }
@@ -1011,7 +1020,7 @@ class MainActivity : Activity() {
         outputRegion.addView(panelToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         outputTabs = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         panelOutputScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(outputTabs) }
-        outputRegion.addView(panelOutputScroll, LinearLayout.LayoutParams(-1, dp(36)))
+        outputRegion.addView(panelOutputScroll, LinearLayout.LayoutParams(-1, dp(48)))
         val stdinCaption = label("标准输入 stdin", 11f, muted).apply { setPadding(dp(10), dp(3), 0, dp(3)) }
         val inputHeading = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         inputHeading.addView(stdinCaption, LinearLayout.LayoutParams(0, -2, 1f))
@@ -1052,14 +1061,8 @@ class MainActivity : Activity() {
         }
         scroll.addView(consoleText)
         outputRegion.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
-        shellPane?.dispose()
-        shellPane = ShellTerminalPane(this, if (workspace.external) null else workspace.root,
-            settings.terminalFontSize, settings.animations) {
-                hideCompletion(); clearSnippet(); lastFocus = "terminal"; updateImeLayout()
-            }.also { pane ->
-                pane.visibility = View.GONE
-                outputRegion.addView(pane, LinearLayout.LayoutParams(-1, 0, 1f))
-            }
+        shellPane?.dispose(); shellPane = null; shellPaneId = -1L
+        terminalRegistry = ShellSessionRegistry.get(applicationContext, if (workspace.external) null else workspace.root)
         return outputRegion
     }
 
@@ -2169,8 +2172,6 @@ class MainActivity : Activity() {
     }
 
     private fun runCode(consented: Boolean = false) {
-        // An explicit IDE run selects its own result channel; a Shell stays independent.
-        if (selectedOutput == 3) showOutput(0)
         if (running || workspaceBusy) return
         if (dirty || saving) { saveActive { runCode(consented) }; return }
         if (loadedPath != activePath) return
@@ -2188,6 +2189,9 @@ class MainActivity : Activity() {
             return
         }
         val runningFile = workspace.resolve(activePath).absolutePath
+        // Only the explicit run action selects its task. Later executor messages preserve user selection.
+        terminalRegistry.catalog.select(TerminalCatalog.TASK)
+        showOutput(0)
         if (!panelVisible) togglePanel()
         val projectRoot = workspace.root.absolutePath
         if (!cpp && workspace.external) {
@@ -2210,54 +2214,131 @@ class MainActivity : Activity() {
         updateMainToolbarState()
         outputDisplay.synchronize(RunSession.result, running)
         result = RunSession.result
-        if (selectedOutput == 3) { showOutput(3); return }
-        if (result == null && !running) showOutput(selectedOutput)
-        if (running) {
-            showOutput(0)
-            status.text = "正在执行，请稍候…"
-        } else result?.let { response ->
-            showOutput(if (response.stderr.isNotBlank()) 1 else 0)
+        showOutput(selectedOutput)
+        if (running) status.text = "正在执行，请稍候…"
+        else result?.let { response ->
             status.text = "${if (response.successful) "✓" else "✕"} ${response.kind.label} (${response.elapsedMs}ms)"
         }
     }
 
+    private fun ensureShellPane() {
+        val selected = terminalRegistry.catalog.selected() ?: return
+        if (shellPaneId == selected.id && shellPane != null) return
+        shellPane?.let { it.dispose(); outputRegion.removeView(it) }
+        shellPaneId = selected.id
+        shellPane = ShellTerminalPane(this, selected.value.directory, settings.terminalFontSize, settings.animations,
+            { hideCompletion(); clearSnippet(); lastFocus = "terminal"; updateImeLayout() }, selected.value.runtime).also { pane ->
+                pane.setEmbedded(true)
+                outputRegion.addView(pane, LinearLayout.LayoutParams(-1, 0, 1f))
+            }
+    }
+
     private fun showOutput(type: Int) {
-        selectedOutput = type
-        if (!::outputTabs.isInitialized) return
-        outputTabs.removeAllViews()
-        val shell = type == 3
+        if (!::outputTabs.isInitialized || !::terminalRegistry.isInitialized) return
+        // Legacy output/info selections become the task view; Shell remains a session choice inside Terminal.
+        var target = if (type == 2) 0 else type
+        if (target == 3 && terminalRegistry.catalog.selected() == null) target = 0
+        if (target == 0) terminalRegistry.catalog.select(TerminalCatalog.TASK)
+        selectedOutput = target
+        val shell = target == 3
+        if (shellPaneId != -1L && terminalRegistry.catalog.find(shellPaneId) == null) {
+            shellPane?.let { it.dispose(); outputRegion.removeView(it) }; shellPane = null; shellPaneId = -1L
+        }
+        if (shell) ensureShellPane()
         consoleResultScroll.visibility = if (shell) View.GONE else View.VISIBLE
         shellPane?.visibility = if (shell) View.VISIBLE else View.GONE
         shellPane?.hostActive(shell)
         panelToolbar.setShellMode(shell)
-        if (shell) { input.visibility = View.GONE; panelInputHeading.visibility = View.GONE }
+        if (target != 0) { input.visibility = View.GONE; panelInputHeading.visibility = View.GONE }
         else { input.visibility = if (presetInputExpanded) View.VISIBLE else View.GONE; panelInputHeading.visibility = input.visibility }
-        listOf("输出", "错误", "运行信息", "Shell 终端").forEachIndexed { index, item ->
-            outputTabs.addView(button(item) { showOutput(index); if (index == 3) shellPane?.ensureSession() }.apply {
-                background = shape(if (index == type) editorBackground else surface, 0)
-                if (index == type) setTextColor(accent)
-            })
+        outputTabs.removeAllViews()
+        fun tab(title: String, selected: Boolean, action: () -> Unit) = button(title, action).apply {
+            minHeight = dp(48); background = shape(if (selected) editorBackground else surface, 0)
+            if (selected) setTextColor(accent)
         }
-        outputTabs.addView(button("定位错误") { gotoError() }.apply { visibility = if (result?.errorLine != null) View.VISIBLE else View.GONE })
+        outputTabs.addView(tab("终端", target != 1) {
+            showOutput(if (terminalRegistry.catalog.selectedId() == TerminalCatalog.TASK) 0 else 3)
+            if (selectedOutput == 3) shellPane?.ensureSession()
+        })
+        outputTabs.addView(tab("问题", target == 1) { showOutput(1) })
+        if (target != 1) {
+            val entry = terminalRegistry.catalog.selected()
+            outputTabs.addView(button((entry?.name() ?: "最近运行任务") + " ▾") { showTerminalChoices(outputTabs) }.apply {
+                minHeight = dp(48); maxWidth = dp(160); setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.END
+                contentDescription = if (entry == null) "选择终端会话，当前最近运行任务" else "选择终端会话，当前${entry.name()}，初始目录${entry.value.directory?.path ?: "应用终端主目录"}"
+            })
+            outputTabs.addView(button("＋") { newShellSession() }.apply { minWidth = dp(48); minHeight = dp(48); contentDescription = "新建终端，初始目录为当前项目" })
+            outputTabs.addView(button("⋯") { showTerminalActions(outputTabs) }.apply { minWidth = dp(48); minHeight = dp(48); contentDescription = "当前终端会话操作" })
+        } else outputTabs.addView(button("定位错误") { gotoError() }.apply { minHeight = dp(48); isEnabled = result?.errorLine != null })
         if (shell) return
         val current = result
-        consoleText.setOutput(when {
-            outputDisplay.cleared && type != 2 -> "显示已清空；预设输入和运行结果仍保留，下次运行显示新输出。"
-            current == null -> "运行程序后，这里显示输出、编译错误和状态。"
-            type == 0 -> current.stdout.ifEmpty { "（没有标准输出）" }
-            type == 1 -> current.stderr.ifEmpty { "（没有错误信息）" }
-            else -> "执行引擎：${current.engine}\n结果：${current.kind.label}\n退出码：${current.exitCode}\n耗时：${current.elapsedMs}ms" +
-                (current.errorLine?.let { "\n错误行：$it" } ?: "")
-        })
-        consoleText.setTextColor(if (type == 1) red else if (type == 0) green else textForeground)
-        if (!outputDisplay.cleared && consoleText.length() > 0 && type == 1 && current?.errorLine != null) {
+        consoleText.setOutput(if (target == 1) current?.stderr?.ifBlank { "没有错误诊断。" } ?: "尚无错误诊断。"
+            else TaskTranscript.render(current, running, outputDisplay.cleared))
+        consoleText.setTextColor(if (target == 1) red else textForeground)
+        if (target == 1 && current?.errorLine != null && current.stderr.isNotEmpty()) {
             val clickable = android.text.SpannableString(consoleText.text)
-            clickable.setSpan(object : ClickableSpan() {
-                override fun onClick(widget: View) { gotoError() }
-            }, 0, clickable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            consoleText.text = clickable
-            consoleText.movementMethod = LinkMovementMethod.getInstance()
+            clickable.setSpan(object : ClickableSpan() { override fun onClick(widget: View) { gotoError() } }, 0, clickable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            consoleText.text = clickable; consoleText.movementMethod = LinkMovementMethod.getInstance()
         } else consoleText.movementMethod = null
+    }
+
+    private fun showTerminalChoices(anchor: View) {
+        val menu = android.widget.PopupMenu(this, anchor)
+        val choices = listOf(TerminalCatalog.TASK to "最近运行任务") + terminalRegistry.catalog.entries().map { e -> e.id to e.name() }
+        choices.forEachIndexed { index, choice -> menu.menu.add(0, index, index, choice.second).apply {
+            isCheckable = true; isChecked = choice.first == terminalRegistry.catalog.selectedId()
+        } }
+        menu.setOnMenuItemClickListener { item ->
+            val id = choices.getOrNull(item.itemId)?.first
+            if (id != null && terminalRegistry.catalog.select(id)) {
+                showOutput(if (id == TerminalCatalog.TASK) 0 else 3)
+                if (id != TerminalCatalog.TASK) shellPane?.ensureSession()
+                updateImeLayout()
+            }
+            true
+        }; menu.show()
+    }
+
+    private fun newShellSession() {
+        if (workspaceBusy) return
+        try {
+            terminalRegistry.create(if (workspace.external) null else workspace.root)
+            showOutput(3); shellPane?.ensureSession(); updateImeLayout()
+        } catch (failure: IllegalStateException) { alert(failure.message ?: "无法新建终端") }
+    }
+
+    private fun showTerminalActions(anchor: View) {
+        val entry = terminalRegistry.catalog.selected()
+        val menu = android.widget.PopupMenu(this, anchor)
+        val taskWasRunning = entry == null && running
+        val titles = if (entry == null) listOf("预填输入", "复制任务记录", if (taskWasRunning) "停止运行任务" else "清空任务显示")
+            else listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清屏（Ctrl+L）", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证")
+        titles.forEachIndexed { index, title -> menu.menu.add(0, index, index, title) }
+        menu.setOnMenuItemClickListener { item ->
+            if (entry == null && terminalRegistry.catalog.selectedId() != TerminalCatalog.TASK) return@setOnMenuItemClickListener true
+            if (entry == null) when (item.itemId) {
+                0 -> setPresetInputExpanded(true)
+                1 -> (getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText("运行任务", consoleText.text))
+                2 -> if (taskWasRunning) { if (running) RunSession.stop() } else { outputDisplay.clear(); showOutput(0) }
+            } else if (terminalRegistry.catalog.selected() === entry) when (item.itemId) {
+                0 -> shellPane?.showKeyboard()
+                1 -> entry.value.runtime.copyTranscript()
+                2 -> entry.value.runtime.paste()
+                3 -> entry.value.runtime.send("\u000c")
+                4 -> nameDialog("重命名终端会话", entry.name()) { name -> terminalRegistry.catalog.rename(entry.id, name); showOutput(selectedOutput) }
+                5 -> AlertDialog.Builder(this).setTitle("结束 ${entry.name()}？")
+                    .setMessage("会关闭这个Shell进程。收起面板不结束会话；其他终端与运行任务保留。")
+                    .setNegativeButton("取消", null).setPositiveButton("结束") { _, _ ->
+                        terminalRegistry.end(entry.id)
+                        showOutput(if (terminalRegistry.catalog.selected() == null) 0 else 3); updateImeLayout()
+                    }.show()
+                6 -> AlertDialog.Builder(this).setTitle("本机终端错误").setMessage(entry.value.runtime.failureDetails())
+                    .setNegativeButton("关闭", null).setPositiveButton("复制") { _, _ -> entry.value.runtime.copyFailureDetails() }.show()
+                7 -> shellPane?.ensureSession()
+                8 -> shellPane?.showAbout()
+            }
+            true
+        }; menu.show()
     }
 
     private fun gotoError() {

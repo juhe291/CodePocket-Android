@@ -1,6 +1,15 @@
 # CodePocket 当前交接状态
 
-## 最新：Shell启动闪退复现与修复（2026-10-18）
+## 最新：统一终端入口与多Shell会话首批（2026-10-18）
+
+- 基线834fb97；[报告](P1_TERMINAL_WORKFLOW.md)。底部终端/问题两页，终端内部选择多个Shell或最近运行任务；稳定ID/8会话上限/新建/重命名/单独结束/初始cwd，Registry不持有Activity/View，关闭IDE释放所有Shell及准备线程池。新启动不用已关闭Executor，字体初始化修复保持。
+- 显式运行选择任务，迟到任务结果不抢Shell/问题页或重开面板。每文件预填输入保持；真实stdout/stderr及退出信息同页展示，原错误安全跳转保留；菜单停止/完成竞态保护，Shell键盘/复制/错误记录与许可入口保持。Shell嵌入隐藏重复标题栏。
+- 这是入口/会话统一，非所有后端已变成PTY：Shell用成熟Termux，任务仍原只读ANSI视图+真实Python/Wandbox批量结果；Python实时多轮输入/成熟任务终端渲染/命令环境未接。本地C++没有实现，不将任务结果伪装为可输入Shell。
+- 最终构建1m9s，App306中305通过/1旧跳过，旧287状态保持，新增19（含实际生产面板方法/Views的Robolectric4项、Registry4、Catalog7、结果4）；Lint0错/11旧警告，Python源码/真实字节码各13/13，模板各7/7，核心145复用通过结果。完整Activity启动/测量/渲染/PTY未运行。
+- 新APK dist/CodePocket-terminal-workflow-debug.apk，22,678,342字节，SHA256 7b3c0419ec05901b4502cde75a16b76a4d511d493b7bd879c9559861368e95ed。证据verification/terminal-workflow-2026-10-18/results.json；CRC/签名/ZIP对齐/关键类/未打包测试库/旧dist哈希通过，上游Termux/JNI/许可与原保存/SAF/草稿/CodeEditor/执行器/RunSession/Gradle/Actions/需求及旧测试源码未改。
+- 下一批先真实Python流式/输入桥、终端滚动/退出与启动布局，再恢复动画。旧P1 UI/Sora与P2/P3继续；实机统一后置，无手机连接/Android Shell/IME/键鼠/卓易通/FPS通过声明。只有进程内会话保持，不承诺杀进程后恢复原Shell、滚动视口或子进程树退出。无新Wandbox/远端Actions/push/发布。
+
+## 历史：Shell启动闪退复现与修复（2026-10-18）
 
 - 用户暂停动画，要求先查明点击Shell闪退，手机无法连接。基线edf3cf4；[报告](P1_SHELL_CRASH_FIX.md)。在SDK34/Robolectric4.14.1实际执行View初始化，旧代码2项正向启动用例均在TerminalView.setTypeface:504 / ShellTerminalPane.changed:125空指针；原顺序独立异常断言也通过。原因是先字体后字号，绘制器未创建，且主线程创建段在原异常保护之外。
 - 修正先字号后字体、完整视图/主线程启动保护、失败会话身份隔离和单次FAILED通知；本机最后错误限64KiB，菜单可查看/复制，只记录新版本今后捕获的故障。没有旧日志恢复承诺，不是native信号崩溃捕获器。

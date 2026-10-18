@@ -23,6 +23,7 @@ public final class ShellRuntime implements TerminalSessionClient {
         if (instance == null) instance = new ShellRuntime(context.getApplicationContext());
         return instance;
     }
+    public static ShellRuntime create(Context context) { return new ShellRuntime(context.getApplicationContext()); }
     private final android.app.Application context;
     private final Handler main = new Handler(Looper.getMainLooper());
     private final ExecutorService io = Executors.newSingleThreadExecutor();
@@ -97,6 +98,7 @@ public final class ShellRuntime implements TerminalSessionClient {
         if (old != null) old.finishIfRunning();
         notifyObserver();
     }
+    public void shutdown() { close(); io.shutdownNow(); }
     public void failIfCurrent(TerminalSession expected, Throwable failure) {
         if (expected != null && expected == session) fail(failure);
     }

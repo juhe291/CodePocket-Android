@@ -66,7 +66,7 @@ class PanelToolbar(context: Context, private val palette: IdePalette,
     private val titleView = TextView(context).apply {
         text = context.getString(R.string.panel_title); textSize = 12f; setTextColor(palette.muted); gravity = Gravity.CENTER_VERTICAL
         setSingleLine(); ellipsize = TextUtils.TruncateAt.END; setPadding(dp(8), 0, 0, 0)
-        IdeControls.describe(this, "运行输出：预设输入，程序结束后展示结果")
+        IdeControls.describe(this, "终端工作台：Shell会话或真实执行任务")
     }
     private val clear = IdeControls.icon(context, palette, IdeIcon.CLEAR, "清空输出显示；保留结果和预设输入", onClear)
     private val preset = IdeControls.icon(context, palette, IdeIcon.INPUT, "展开预设输入", onInput)
@@ -76,8 +76,8 @@ class PanelToolbar(context: Context, private val palette: IdePalette,
     private var shellMode = false
     fun setShellMode(shell: Boolean) {
         shellMode = shell
-        titleView.text = if (shell) "Shell 终端" else context.getString(R.string.panel_title)
-        IdeControls.describe(titleView, if (shell) "真实 Android Shell 会话" else "运行输出：预设输入，程序结束后展示结果")
+        titleView.text = context.getString(R.string.panel_title)
+        IdeControls.describe(titleView, if (shell) "真实 Android Shell 会话" else "终端工作台：Shell会话或真实执行任务")
         IdeControls.describe(clear, if (shell) "向 Shell 发送 Ctrl+L" else "清空输出显示；保留结果和预设输入")
         requestLayout()
     }
