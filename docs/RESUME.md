@@ -1,6 +1,15 @@
 # CodePocket 当前交接状态
 
-## 最新：统一终端入口与多Shell会话首批（2026-10-18）
+## 最新：真实PTY内的Python前台运行（2026-10-18）
+
+- 基线fe4c709；[完整报告](P1_LIVE_TERMINAL.md)。用户明确要求不要再只做入口合并：已移除任务输出终端，运行接入当前Shell的app_process前台桥，经同UID/令牌认证LocalSocket+PFD把真实PTY的0/1/2交给隔离Chaquopy进程。实际输出/输入直接走成熟Termux组件，结果模型只用于问题与定位。
+- 默认交互、多轮input/EOF/停止、启动/有效执行/等待独立预算及身份序号保护；保留可选每文件预填，C++真实Wandbox仍预填/完成后返回。历史不抢滚动、回底、相对偏移与不向stdin注入的清空；IDE快捷键与PTY控制键分流。动画继续暂停。
+- 最终构建57s；App326中325通过/1旧跳过，核心146通过；Python源码/实际字节码各29（各16项真实管道子进程），模板各7；Lint0错/11旧警告。旧305项状态保持，1项旧任务UI断言按新需求替换。APK CRC/签名/ZIP与ELF16KB/新桥类及JNI/稳定类/许可/旧dist检查通过。
+- APK dist/CodePocket-live-terminal-debug.apk，22,678,342字节，SHA256 b01843b3bce932605053fd905496e017a32068aaba2b32538531ab8ed60acafc；证据 verification/terminal-live-2026-10-18/results.json。累计上游源码补丁已放入third-party/termux/codepocket-port.patch，原许可证和UPSTREAM.json保持。
+- **未运行Android PTY/app_process/FD传递/Chaquopy整链/手机平板IME与键鼠/卓易通/FPS**。不能将主机管道通过写成设备通过，也不保证全Unix作业控制或任意脱离会话子进程清理。无python/pip/clang命令，无手机C++，无新远端Wandbox调用/Actions/push/发布。
+- 不再把“接Python输入桥”列为未写代码；接续为设备统一验收、P1余项及P2/P3，原需求继续保留。实际仓库仍是Desktop路径，保留.tools/dist/verification/设备备份，不清理旧材料。
+
+## 历史：统一终端入口与多Shell会话首批（2026-10-18）
 
 - 基线834fb97；[报告](P1_TERMINAL_WORKFLOW.md)。底部终端/问题两页，终端内部选择多个Shell或最近运行任务；稳定ID/8会话上限/新建/重命名/单独结束/初始cwd，Registry不持有Activity/View，关闭IDE释放所有Shell及准备线程池。新启动不用已关闭Executor，字体初始化修复保持。
 - 显式运行选择任务，迟到任务结果不抢Shell/问题页或重开面板。每文件预填输入保持；真实stdout/stderr及退出信息同页展示，原错误安全跳转保留；菜单停止/完成竞态保护，Shell键盘/复制/错误记录与许可入口保持。Shell嵌入隐藏重复标题栏。

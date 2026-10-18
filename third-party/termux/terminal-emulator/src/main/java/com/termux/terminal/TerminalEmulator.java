@@ -2026,6 +2026,9 @@ public final class TerminalEmulator {
         }
 
         switch (value) {
+            case 133: // Shell prompt/command boundaries, invisible to the terminal screen.
+                mSession.onShellIntegration(textParameter);
+                break;
             case 0: // Change icon name and window title to T.
             case 1: // Change icon name to T.
             case 2: // Change window title to T.

@@ -177,7 +177,10 @@ public final class TerminalSession extends TerminalOutput {
     /** Write data to the shell process. */
     @Override
     public void write(byte[] data, int offset, int count) {
-        if (mShellPid > 0) mTerminalToProcessIOQueue.write(data, offset, count);
+        if (mShellPid > 0) {
+            mClient.onTerminalInput(this, data, offset, count);
+            mTerminalToProcessIOQueue.write(data, offset, count);
+        }
     }
 
     /** Write the Unicode code point to the terminal encoded in UTF-8. */
@@ -292,6 +295,18 @@ public final class TerminalSession extends TerminalOutput {
         mClient.onColorsChanged(this);
     }
 
+    @Override public void onShellIntegration(String marker) { mClient.onShellIntegration(this, marker); }
+
+    public boolean isShellForeground() { return mShellPid > 0 && JNI.getPtyProcessGroup(mTerminalFileDescriptor) == mShellPid; }
+
+    /** Append actual external-service data to this terminal; never writes data as a Shell command. */
+    public void appendExternalOutput(String value) {
+        if (mEmulator == null) return;
+        byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
+        mEmulator.append(bytes, bytes.length);
+        notifyScreenUpdate();
+    }
+
     public int getPid() {
         return mShellPid;
     }
@@ -325,7 +340,7 @@ public final class TerminalSession extends TerminalOutput {
         @Override
         public void handleMessage(Message msg) {
             int bytesRead = mProcessToTerminalIOQueue.read(mReceiveBuffer, false);
-            if (bytesRead > 0) {
+            if (bytesRead > 0 && mClient.onTerminalOutput(TerminalSession.this, bytesRead)) {
                 mEmulator.append(mReceiveBuffer, bytesRead);
                 notifyScreenUpdate();
             }

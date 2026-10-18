@@ -1,0 +1,306 @@
+--- a/terminal-emulator/src/main/AndroidManifest.xml
++++ b/terminal-emulator/src/main/AndroidManifest.xml
+@@ -1,2 +1 @@
+-<manifest package="com.termux.terminal">
+-</manifest>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android" />
+--- a/terminal-emulator/src/main/java/com/termux/terminal/JNI.java
++++ b/terminal-emulator/src/main/java/com/termux/terminal/JNI.java
+@@ -38,4 +38,6 @@
+     /** Close a file descriptor through the close(2) system call. */
+     public static native void close(int fileDescriptor);
+ 
++    public static native int getPtyProcessGroup(int fileDescriptor);
++
+ }
+--- a/terminal-emulator/src/main/java/com/termux/terminal/TerminalEmulator.java
++++ b/terminal-emulator/src/main/java/com/termux/terminal/TerminalEmulator.java
+@@ -2026,6 +2026,9 @@
+         }
+ 
+         switch (value) {
++            case 133: // Shell prompt/command boundaries, invisible to the terminal screen.
++                mSession.onShellIntegration(textParameter);
++                break;
+             case 0: // Change icon name and window title to T.
+             case 1: // Change icon name to T.
+             case 2: // Change window title to T.
+--- a/terminal-emulator/src/main/java/com/termux/terminal/TerminalOutput.java
++++ b/terminal-emulator/src/main/java/com/termux/terminal/TerminalOutput.java
+@@ -29,4 +29,6 @@
+ 
+     public abstract void onColorsChanged();
+ 
++    public void onShellIntegration(String marker) { }
++
+ }
+--- a/terminal-emulator/src/main/java/com/termux/terminal/TerminalSession.java
++++ b/terminal-emulator/src/main/java/com/termux/terminal/TerminalSession.java
+@@ -13,7 +13,7 @@
+ import java.io.FileOutputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+-import java.lang.reflect.Field;
++import android.os.ParcelFileDescriptor;
+ import java.nio.charset.StandardCharsets;
+ import java.util.UUID;
+ 
+@@ -55,6 +55,7 @@
+ 
+     /** The pid of the shell process. 0 if not started and -1 if finished running. */
+     int mShellPid;
++    private boolean mSessionClosed;
+ 
+     /** The exit status of the shell process. Only valid if ${@link #mShellPid} is -1. */
+     int mShellExitStatus;
+@@ -101,6 +102,7 @@
+ 
+     /** Inform the attached pty of the new size and reflow or initialize the emulator. */
+     public void updateSize(int columns, int rows, int cellWidthPixels, int cellHeightPixels) {
++        if (mSessionClosed) return;
+         if (mEmulator == null) {
+             initializeEmulator(columns, rows, cellWidthPixels, cellHeightPixels);
+         } else {
+@@ -127,12 +129,12 @@
+         mTerminalFileDescriptor = JNI.createSubprocess(mShellPath, mCwd, mArgs, mEnv, processId, rows, columns, cellWidthPixels, cellHeightPixels);
+         mShellPid = processId[0];
+ 
+-        final FileDescriptor terminalFileDescriptorWrapped = wrapFileDescriptor(mTerminalFileDescriptor, mClient);
++        // Public SDK fd duplication; each stream owns only its own descriptor.
+ 
+         new Thread("TermSessionInputReader[pid=" + mShellPid + "]") {
+             @Override
+             public void run() {
+-                try (InputStream termIn = new FileInputStream(terminalFileDescriptorWrapped)) {
++                try (InputStream termIn = new ParcelFileDescriptor.AutoCloseInputStream(ParcelFileDescriptor.fromFd(mTerminalFileDescriptor))) {
+                     final byte[] buffer = new byte[4096];
+                     while (true) {
+                         int read = termIn.read(buffer);
+@@ -150,7 +152,7 @@
+             @Override
+             public void run() {
+                 final byte[] buffer = new byte[4096];
+-                try (FileOutputStream termOut = new FileOutputStream(terminalFileDescriptorWrapped)) {
++                try (FileOutputStream termOut = new ParcelFileDescriptor.AutoCloseOutputStream(ParcelFileDescriptor.fromFd(mTerminalFileDescriptor))) {
+                     while (true) {
+                         int bytesToWrite = mTerminalToProcessIOQueue.read(buffer, true);
+                         if (bytesToWrite == -1) return;
+@@ -175,7 +177,10 @@
+     /** Write data to the shell process. */
+     @Override
+     public void write(byte[] data, int offset, int count) {
+-        if (mShellPid > 0) mTerminalToProcessIOQueue.write(data, offset, count);
++        if (mShellPid > 0) {
++            mClient.onTerminalInput(this, data, offset, count);
++            mTerminalToProcessIOQueue.write(data, offset, count);
++        }
+     }
+ 
+     /** Write the Unicode code point to the terminal encoded in UTF-8. */
+@@ -232,7 +237,9 @@
+ 
+     /** Finish this terminal session by sending SIGKILL to the shell. */
+     public void finishIfRunning() {
+-        if (isRunning()) {
++        mSessionClosed = true;
++        if (mShellPid == 0) { mShellPid = -1; return; }
++        if (mShellPid > 0) {
+             try {
+                 Os.kill(mShellPid, OsConstants.SIGKILL);
+             } catch (ErrnoException e) {
+@@ -286,6 +293,18 @@
+     @Override
+     public void onColorsChanged() {
+         mClient.onColorsChanged(this);
++    }
++
++    @Override public void onShellIntegration(String marker) { mClient.onShellIntegration(this, marker); }
++
++    public boolean isShellForeground() { return mShellPid > 0 && JNI.getPtyProcessGroup(mTerminalFileDescriptor) == mShellPid; }
++
++    /** Append actual external-service data to this terminal; never writes data as a Shell command. */
++    public void appendExternalOutput(String value) {
++        if (mEmulator == null) return;
++        byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
++        mEmulator.append(bytes, bytes.length);
++        notifyScreenUpdate();
+     }
+ 
+     public int getPid() {
+@@ -313,25 +332,6 @@
+         return null;
+     }
+ 
+-    private static FileDescriptor wrapFileDescriptor(int fileDescriptor, TerminalSessionClient client) {
+-        FileDescriptor result = new FileDescriptor();
+-        try {
+-            Field descriptorField;
+-            try {
+-                descriptorField = FileDescriptor.class.getDeclaredField("descriptor");
+-            } catch (NoSuchFieldException e) {
+-                // For desktop java:
+-                descriptorField = FileDescriptor.class.getDeclaredField("fd");
+-            }
+-            descriptorField.setAccessible(true);
+-            descriptorField.set(result, fileDescriptor);
+-        } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
+-            Logger.logStackTraceWithMessage(client, LOG_TAG, "Error accessing FileDescriptor#descriptor private field", e);
+-            System.exit(1);
+-        }
+-        return result;
+-    }
+-
+     @SuppressLint("HandlerLeak")
+     class MainThreadHandler extends Handler {
+ 
+@@ -340,7 +340,7 @@
+         @Override
+         public void handleMessage(Message msg) {
+             int bytesRead = mProcessToTerminalIOQueue.read(mReceiveBuffer, false);
+-            if (bytesRead > 0) {
++            if (bytesRead > 0 && mClient.onTerminalOutput(TerminalSession.this, bytesRead)) {
+                 mEmulator.append(mReceiveBuffer, bytesRead);
+                 notifyScreenUpdate();
+             }
+--- a/terminal-emulator/src/main/java/com/termux/terminal/TerminalSessionClient.java
++++ b/terminal-emulator/src/main/java/com/termux/terminal/TerminalSessionClient.java
+@@ -8,6 +8,9 @@
+ public interface TerminalSessionClient {
+ 
+     void onTextChanged(TerminalSession changedSession);
++    default void onShellIntegration(TerminalSession session, String marker) { }
++    default void onTerminalInput(TerminalSession session, byte[] data, int offset, int count) { }
++    default boolean onTerminalOutput(TerminalSession session, int bytes) { return true; }
+ 
+     void onTitleChanged(TerminalSession changedSession);
+ 
+--- a/terminal-emulator/src/main/jni/Android.mk
++++ b/terminal-emulator/src/main/jni/Android.mk
+@@ -2,4 +2,5 @@
+ include $(CLEAR_VARS)
+ LOCAL_MODULE:= libtermux
+ LOCAL_SRC_FILES:= termux.c
++LOCAL_LDFLAGS += -Wl,-z,max-page-size=16384
+ include $(BUILD_SHARED_LIBRARY)
+--- a/terminal-emulator/src/main/jni/termux.c
++++ b/terminal-emulator/src/main/jni/termux.c
+@@ -1,4 +1,5 @@
+ #include <dirent.h>
++#include <errno.h>
+ #include <fcntl.h>
+ #include <jni.h>
+ #include <signal.h>
+@@ -48,6 +49,7 @@
+             ptsname_r(ptm, devname, sizeof(devname))
+ #endif
+        ) {
++        close(ptm);
+         return throw_runtime_exception(env, "Cannot grantpt()/unlockpt()/ptsname_r() on /dev/ptmx");
+     }
+ 
+@@ -64,6 +66,7 @@
+ 
+     pid_t pid = fork();
+     if (pid < 0) {
++        close(ptm);
+         return throw_runtime_exception(env, "Fork failed");
+     } else if (pid > 0) {
+         *pProcessId = (int) pid;
+@@ -104,6 +107,7 @@
+             if (asprintf(&error_message, "chdir(\"%s\")", cwd) == -1) error_message = "chdir()";
+             perror(error_message);
+             fflush(stderr);
++            _exit(1);
+         }
+         execvp(cmd, argv);
+         // Show terminal output about failing exec() call:
+@@ -162,7 +166,7 @@
+     char const* cmd_utf8 = (*env)->GetStringUTFChars(env, cmd, NULL);
+     int ptm = create_subprocess(env, cmd_utf8, cmd_cwd, argv, envp, &procId, rows, columns, cell_width, cell_height);
+     (*env)->ReleaseStringUTFChars(env, cmd, cmd_utf8);
+-    (*env)->ReleaseStringUTFChars(env, cmd, cmd_cwd);
++    (*env)->ReleaseStringUTFChars(env, cwd, cmd_cwd);
+ 
+     if (argv) {
+         for (char** tmp = argv; *tmp; ++tmp) free(*tmp);
+@@ -201,7 +205,9 @@
+ JNIEXPORT jint JNICALL Java_com_termux_terminal_JNI_waitFor(JNIEnv* TERMUX_UNUSED(env), jclass TERMUX_UNUSED(clazz), jint pid)
+ {
+     int status;
+-    waitpid(pid, &status, 0);
++    pid_t waited;
++    do { waited = waitpid(pid, &status, 0); } while (waited < 0 && errno == EINTR);
++    if (waited < 0) return -1;
+     if (WIFEXITED(status)) {
+         return WEXITSTATUS(status);
+     } else if (WIFSIGNALED(status)) {
+@@ -216,3 +222,16 @@
+ {
+     close(fileDescriptor);
+ }
++
++JNIEXPORT jint JNICALL Java_com_termux_terminal_JNI_getPtyProcessGroup(JNIEnv* TERMUX_UNUSED(env), jclass TERMUX_UNUSED(clazz), jint fd)
++{
++    return (jint) tcgetpgrp(fd);
++}
++
++// CodePocket private Python-service group. Never changes the editor or shell process group.
++JNIEXPORT jint JNICALL Java_com_codepocket_ide_terminal_bridge_ProcessControl_getGroup(JNIEnv* env, jclass cls, jint pid) {
++    return getpgid(pid);
++}
++JNIEXPORT jint JNICALL Java_com_codepocket_ide_terminal_bridge_ProcessControl_isolate(JNIEnv* env, jclass cls) {
++    return setpgid(0, 0);
++}
+--- a/terminal-view/src/main/AndroidManifest.xml
++++ b/terminal-view/src/main/AndroidManifest.xml
+@@ -1,2 +1 @@
+-<manifest package="com.termux.view">
+-</manifest>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android" />
+--- a/terminal-view/src/main/java/com/termux/view/TerminalView.java
++++ b/terminal-view/src/main/java/com/termux/view/TerminalView.java
+@@ -450,7 +450,8 @@
+         int rowsInHistory = mEmulator.getScreen().getActiveTranscriptRows();
+         if (mTopRow < -rowsInHistory) mTopRow = -rowsInHistory;
+ 
+-        boolean skipScrolling = false;
++        boolean skipScrolling = !isSelectingText() && mTopRow < 0;
++        if (skipScrolling) mTopRow = Math.max(-rowsInHistory, mTopRow - mEmulator.getScrollCounter());
+         if (isSelectingText()) {
+             // Do not scroll when selecting text.
+             int rowShift = mEmulator.getScrollCounter();
+@@ -600,15 +601,8 @@
+                 if (action == MotionEvent.ACTION_DOWN) showContextMenu();
+                 return true;
+             } else if (event.isButtonPressed(MotionEvent.BUTTON_TERTIARY)) {
+-                ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+-                ClipData clipData = clipboardManager.getPrimaryClip();
+-                if (clipData != null) {
+-                    ClipData.Item clipItem = clipData.getItemAt(0);
+-                    if (clipItem != null) {
+-                        CharSequence text = clipItem.coerceToText(getContext());
+-                        if (!TextUtils.isEmpty(text)) mEmulator.paste(text.toString());
+-                    }
+-                }
++                // Use the session owner so cloud/startup input gating also applies to middle-click paste.
++                mTermSession.onPasteTextFromClipboard();
+             } else if (mEmulator.isMouseTrackingActive()) { // BUTTON_PRIMARY.
+                 switch (event.getAction()) {
+                     case MotionEvent.ACTION_DOWN:
+@@ -970,6 +964,7 @@
+         int newRows = Math.max(4, (viewHeight - mRenderer.mFontLineSpacingAndAscent) / mRenderer.mFontLineSpacing);
+ 
+         if (mEmulator == null || (newColumns != mEmulator.mColumns || newRows != mEmulator.mRows)) {
++            int previousTopRow = mTopRow;
+             mTermSession.updateSize(newColumns, newRows, (int) mRenderer.getFontWidth(), mRenderer.getFontLineSpacing());
+             mEmulator = mTermSession.getEmulator();
+             mClient.onEmulatorSet();
+@@ -978,7 +973,7 @@
+             if (mTerminalCursorBlinkerRunnable != null)
+                 mTerminalCursorBlinkerRunnable.setEmulator(mEmulator);
+ 
+-            mTopRow = 0;
++            mTopRow = Math.max(-mEmulator.getScreen().getActiveTranscriptRows(), previousTopRow);
+             scrollTo(0, 0);
+             invalidate();
+         }

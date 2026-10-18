@@ -17,7 +17,7 @@ class PythonExecutionService : Service() {
     private val messenger = Messenger(Handler(Looper.getMainLooper()) { request ->
         if (request.what == HELLO) {
             runCatching { request.replyTo.send(Message.obtain(null, READY).apply {
-                data = Bundle().apply { putLong("id", request.data.getLong("id")); putInt("pid", Process.myPid()) }
+                data = Bundle().apply { putLong("id", request.data.getLong("id")); putInt("pid", Process.myPid()); putInt("pgid", runCatching { com.codepocket.ide.terminal.bridge.ProcessControl.getGroup(0) }.getOrDefault(0)) }
             }) }
             return@Handler true
         }
@@ -26,22 +26,49 @@ class PythonExecutionService : Service() {
         val args = request.data
         val id = args.getLong("id")
         Thread({
+            @Suppress("DEPRECATION")
+            val input = args.getParcelable<android.os.ParcelFileDescriptor>("ttyIn")
+            @Suppress("DEPRECATION")
+            val output = args.getParcelable<android.os.ParcelFileDescriptor>("ttyOut")
+            @Suppress("DEPRECATION")
+            val error = args.getParcelable<android.os.ParcelFileDescriptor>("ttyErr")
             val result = try {
-                PythonEngine.run(applicationContext, args.getString("code")!!, args.getString("stdin")!!,
+                if (args.getBoolean("terminal")) {
+                    require(input != null && output != null && error != null) { "Missing real terminal descriptors" }
+                    // Only this private :python process is changed. Native modules/subprocesses inherit real PTY stdio too.
+                    runCatching { com.codepocket.ide.terminal.bridge.ProcessControl.isolate() }
+                    android.system.Os.dup2(input.fileDescriptor,0)
+                    android.system.Os.dup2(output.fileDescriptor,1)
+                    android.system.Os.dup2(error.fileDescriptor,2)
+                    val events = TerminalEvents(id, reply)
+                    PythonEngine.runTerminal(applicationContext,args.getString("code")!!,args.getString("stdin")!!,
+                        args.getString("path")!!,args.getString("root")!!,args.getBoolean("interactive",true),events)
+                } else PythonEngine.run(applicationContext, args.getString("code")!!, args.getString("stdin")!!,
                     args.getString("path")!!, args.getString("root")!!)
             } catch (e: Exception) {
                 RunResult("", "Python 执行失败：${e.message}", "—", 0, engine = "Python · 独立进程", kind = RunKind.RUNTIME)
+            } finally {
+                listOfNotNull(input,output,error).forEach { runCatching { it.close() } }
             }
             runCatching { reply.send(Message.obtain(null, RESULT).apply { data = result.toBundle(id) }) }
         }, "CodePocket-Python").start()
         true
     })
+    class TerminalEvents(private val id: Long, private val reply: Messenger) {
+        fun onState(state: String, sequence: Long) {
+            reply.send(Message.obtain(null, STATE).apply { data = Bundle().apply {
+                putLong("id", id);putString("state",state);putLong("sequence",sequence)
+            } })
+        }
+    }
+    override fun onCreate() { super.onCreate();runCatching { com.codepocket.ide.terminal.bridge.ProcessControl.isolate() } }
     override fun onBind(intent: Intent): IBinder = messenger.binder
     companion object {
         const val RUN = 1
         const val READY = 2
         const val RESULT = 3
         const val HELLO = 4
+        const val STATE = 5
     }
 }
 

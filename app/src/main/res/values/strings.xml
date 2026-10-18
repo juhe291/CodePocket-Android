@@ -61,4 +61,5 @@
     <string name="editor_document_rejected">无法载入内容，当前缓冲区未替换</string>
     <string name="editor_last_tab">已保留项目中的最后一个标签</string>
     <string name="shell_session_caption">sh · %1$s · 初始目录 %2$s</string>
+    <string name="python_terminal_help">运行按钮将 Python 接到当前终端，input() 等待键入后按 Enter。关闭后使用每文件预填输入。C++ 始终通过 Wandbox 云端预填输入运行。切换设置只影响下一次运行。</string>
 </resources>

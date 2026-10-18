@@ -60,9 +60,9 @@ def run_code(source, stdin_text, filename="main.py", project_dir=""):
         return _run_code(source, stdin_text, filename, project_dir)
 
 
-def _run_code(source, stdin_text, filename, project_dir):
-    stdout = CappedOutput()
-    stderr = CappedOutput()
+def _run_code(source, stdin_text, filename, project_dir, terminal=None):
+    stdout = terminal.stdout if terminal else CappedOutput()
+    stderr = terminal.stderr if terminal else CappedOutput()
     old_stdin = sys.stdin
     old_path = list(sys.path)
     old_trace = sys.gettrace()
@@ -77,6 +77,9 @@ def _run_code(source, stdin_text, filename, project_dir):
     for name in original_modules:
         sys.modules.pop(name, None)
     begin = time.monotonic()
+    budget = terminal.budget if terminal else None
+    if budget:
+        budget.begin(begin)
     error_line = None
     error_file = None
     diagnostic = ""
@@ -84,12 +87,12 @@ def _run_code(source, stdin_text, filename, project_dir):
     exit_code = 0
 
     def watchdog(frame, event, arg):
-        if time.monotonic() - begin > TIME_LIMIT_SECONDS:
+        if (budget.active_seconds() if budget else time.monotonic() - begin) > TIME_LIMIT_SECONDS:
             raise TimeoutError("运行超过 6 秒，已中止（仅限制 Python 字节码）")
         return watchdog
 
     try:
-        sys.stdin = io.StringIO(stdin_text)
+        sys.stdin = terminal.stdin if terminal and terminal.interactive else io.StringIO(stdin_text)
         sys.argv = [filename]
         # Allows relative imports from the app-private project workspace.
         if project_dir:
@@ -138,6 +141,13 @@ def _run_code(source, stdin_text, filename, project_dir):
                 sys.modules.pop(name, None)
         sys.modules.update(original_modules)
 
+    if terminal and diagnostic:
+        # A full stderr capture must not hide the traceback on the actual terminal.
+        try:
+            terminal.error_stream.write(diagnostic[-MAX_OUTPUT_CHARS:])
+            terminal.error_stream.flush()
+        except (OSError, ValueError):
+            pass
     if exit_code == 0:
         error_line = None
         error_file = None
@@ -152,3 +162,154 @@ def _run_code(source, stdin_text, filename, project_dir):
         "error_kind": error_kind,
         "elapsed_ms": int((time.monotonic() - begin) * 1000),
     }, ensure_ascii=False)
+
+
+class TerminalBudget:
+    """Exclude blocking stdin on the execution thread; Android also enforces an independent hard deadline."""
+    def __init__(self, events=None):
+        self.events = events
+        self.sequence = 0
+        self.started = 0.0
+        self.waiting_since = None
+        self.waited = 0.0
+        self.owner = threading.get_ident()
+
+    def emit(self, state):
+        self.sequence += 1
+        if self.events is not None:
+            self.events.onState(state, self.sequence)
+
+    def begin(self, now):
+        self.started = now
+        self.emit("running")
+
+    def active_seconds(self):
+        now = time.monotonic()
+        waiting = now - self.waiting_since if self.waiting_since is not None else 0.0
+        return now - self.started - self.waited - waiting
+
+    def read(self, operation):
+        # Other Python threads must not pause the main execution budget while it is computing.
+        main_read = threading.get_ident() == self.owner
+        if main_read:
+            self.waiting_since = time.monotonic()
+            self.emit("waiting")
+        try:
+            return operation()
+        finally:
+            if main_read:
+                self.waited += time.monotonic() - self.waiting_since
+                self.waiting_since = None
+                self.emit("running")
+
+
+class TerminalInput(io.TextIOBase):
+    def __init__(self, stream, budget):
+        self.stream = stream
+        self.budget = budget
+        self._binary = TerminalBinaryInput(stream.buffer, budget)
+
+    @property
+    def encoding(self): return self.stream.encoding
+    @property
+    def errors(self): return self.stream.errors
+    @property
+    def buffer(self): return self._binary
+    def fileno(self): return self.stream.fileno()
+    def isatty(self): return self.stream.isatty()
+    def readable(self): return True
+    def seekable(self): return False
+    def read(self, size=-1): return self.budget.read(lambda: self.stream.read(size))
+    def readline(self, size=-1): return self.budget.read(lambda: self.stream.readline(size))
+
+
+class TerminalBinaryInput(io.BufferedIOBase):
+    def __init__(self, stream, budget): self.stream, self.budget = stream, budget
+    def fileno(self): return self.stream.fileno()
+    def isatty(self): return self.stream.isatty()
+    def readable(self): return True
+    def read(self, size=-1): return self.budget.read(lambda: self.stream.read(size))
+    def read1(self, size=-1): return self.budget.read(lambda: self.stream.read1(size))
+    def readline(self, size=-1): return self.budget.read(lambda: self.stream.readline(size))
+
+
+class TerminalOutput(io.TextIOBase):
+    def __init__(self, stream):
+        self.stream = stream
+        self.capture = io.StringIO()
+        self.count = 0
+        self._binary = TerminalBinaryOutput(self)
+
+    def _reserve(self, count):
+        if self.count + count > MAX_OUTPUT_CHARS:
+            raise RuntimeError("输出超过 50000 字符，已中止运行")
+        self.count += count
+
+    def write(self, value):
+        if not isinstance(value, str): raise TypeError("write() requires str")
+        self._reserve(len(value))
+        self.capture.write(value)
+        self.stream.write(value)
+        self.stream.flush()  # Prompts without a newline must arrive before input() blocks.
+        return len(value)
+
+    @property
+    def encoding(self): return self.stream.encoding
+    @property
+    def errors(self): return self.stream.errors
+    @property
+    def buffer(self): return self._binary
+    def fileno(self): return self.stream.fileno()
+    def isatty(self): return self.stream.isatty()
+    def writable(self): return True
+    def flush(self):
+        if not self.stream.closed: self.stream.flush()
+    def getvalue(self): return self.capture.getvalue()
+
+
+class TerminalBinaryOutput(io.RawIOBase):
+    def __init__(self, output): self.output = output
+    def writable(self): return True
+    def fileno(self): return self.output.fileno()
+    def isatty(self): return self.output.isatty()
+    def flush(self): return self.output.flush()
+    def write(self, value):
+        value = bytes(value)
+        self.output._reserve(len(value))
+        self.output.capture.write(value.decode("utf-8", errors="replace"))
+        self.output.stream.flush()
+        self.output.stream.buffer.write(value)
+        self.output.stream.buffer.flush()
+        return len(value)
+
+
+class TerminalStreams:
+    def __init__(self, stdin_fd, stdout_fd, stderr_fd, interactive, events):
+        from contextlib import ExitStack
+        self.resources = ExitStack()
+        try:
+            # Real duplicate fds preserve isatty(), while fd != C stdin/stdout forces CPython
+            # input() through our readline wrapper instead of bypassing waiting events via PyOS_Readline.
+            incoming = self.resources.enter_context(os.fdopen(os.dup(stdin_fd), "r", encoding="utf-8", errors="replace"))
+            outgoing = self.resources.enter_context(os.fdopen(os.dup(stdout_fd), "w", encoding="utf-8", errors="backslashreplace", buffering=1))
+            self.error_stream = self.resources.enter_context(os.fdopen(os.dup(stderr_fd), "w", encoding="utf-8", errors="backslashreplace", buffering=1))
+            self.budget = TerminalBudget(events)
+            self.stdin = TerminalInput(incoming, self.budget)
+            self.stdout, self.stderr = TerminalOutput(outgoing), TerminalOutput(self.error_stream)
+            self.interactive = interactive
+        except BaseException:
+            self.resources.close()
+            raise
+
+    def close(self): self.resources.close()
+
+
+def run_terminal(source, stdin_text, filename, project_dir, stdin_fd, stdout_fd, stderr_fd,
+                 interactive=True, events=None):
+    """Execute real Python against inherited terminal descriptors; never manufactures output or input."""
+    with _RUN_LOCK:
+        streams = TerminalStreams(stdin_fd, stdout_fd, stderr_fd, interactive, events)
+        try:
+            return _run_code(source, stdin_text, filename, project_dir, streams)
+        finally:
+            streams.close()

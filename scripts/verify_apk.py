@@ -49,11 +49,15 @@ def main():
     bundled_runner = types.ModuleType("runner")
     bundled_runner.__file__ = f"{args.apk}!assets/chaquopy/app.imy!{runner_entry}"
     exec(marshal.loads(bytecode[16:]), bundled_runner.__dict__)
+    bundled_runner.__packaged_bytecode__ = bytecode
     sys.modules["runner"] = bundled_runner
     sys.path.insert(0, str(root / "tests"))
     import test_runner
     assert test_runner.run_code is bundled_runner.run_code, "Tests must use APK bytecode"
-    suite = unittest.defaultTestLoader.loadTestsFromModule(test_runner)
+    import test_terminal_runner
+    assert test_terminal_runner.runner is bundled_runner
+    suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromModule(test_runner),
+        unittest.defaultTestLoader.loadTestsFromModule(test_terminal_runner)])
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     report = {

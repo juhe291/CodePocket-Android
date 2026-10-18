@@ -5,6 +5,7 @@ import java.io.IOException;
 
 /** Launches a real Android shell; no user source is interpolated into a command. */
 public final class ShellLaunchPlan {
+    public static final String PROMPT = "\u0001\r\u0001\u001b]133;A\u0007\u0001CodePocket $ \u0001\u001b]133;B\u0007\u0001";
     public static final String EXECUTABLE = "/system/bin/sh";
     public final File home;
     public final File temporary;
@@ -20,7 +21,7 @@ public final class ShellLaunchPlan {
         environment = new String[]{
             "HOME=" + home.getPath(), "TMPDIR=" + temporary.getPath(),
             "PATH=/system/bin:/system/xbin", "TERM=xterm-256color", "COLORTERM=truecolor",
-            "LANG=C.UTF-8", "SHELL=" + EXECUTABLE, "PS1=CodePocket $ ",
+            "LANG=C.UTF-8", "SHELL=" + EXECUTABLE, "PS1=" + PROMPT,
             "ANDROID_ROOT=/system", "ANDROID_DATA=/data"
         };
     }

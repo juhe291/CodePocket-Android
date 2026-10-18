@@ -66,7 +66,7 @@ class PanelToolbar(context: Context, private val palette: IdePalette,
     private val titleView = TextView(context).apply {
         text = context.getString(R.string.panel_title); textSize = 12f; setTextColor(palette.muted); gravity = Gravity.CENTER_VERTICAL
         setSingleLine(); ellipsize = TextUtils.TruncateAt.END; setPadding(dp(8), 0, 0, 0)
-        IdeControls.describe(this, "终端工作台：Shell会话或真实执行任务")
+        IdeControls.describe(this, "终端工作台：在同一个真实终端中运行程序")
     }
     private val clear = IdeControls.icon(context, palette, IdeIcon.CLEAR, "清空输出显示；保留结果和预设输入", onClear)
     private val preset = IdeControls.icon(context, palette, IdeIcon.INPUT, "展开预设输入", onInput)
@@ -77,8 +77,8 @@ class PanelToolbar(context: Context, private val palette: IdePalette,
     fun setShellMode(shell: Boolean) {
         shellMode = shell
         titleView.text = context.getString(R.string.panel_title)
-        IdeControls.describe(titleView, if (shell) "真实 Android Shell 会话" else "终端工作台：Shell会话或真实执行任务")
-        IdeControls.describe(clear, if (shell) "向 Shell 发送 Ctrl+L" else "清空输出显示；保留结果和预设输入")
+        IdeControls.describe(titleView, if (shell) "真实 Android Shell 会话" else "终端工作台：在同一个真实终端中运行程序")
+        IdeControls.describe(clear, if (shell) "清空当前终端显示（不向程序发送输入）" else "清空输出显示；保留结果和预设输入")
         requestLayout()
     }
     private var maximized: Boolean? = null
@@ -107,7 +107,7 @@ class PanelToolbar(context: Context, private val palette: IdePalette,
         val budget = (width / resources.displayMetrics.density).toInt()
         val spec = WorkspaceLayoutPolicy.panelToolbar(budget)
         clear.visibility = if (spec.clear) VISIBLE else GONE
-        preset.visibility = if (spec.preset && !shellMode) VISIBLE else GONE
+        preset.visibility = if (spec.preset) VISIBLE else GONE
         maximize.visibility = if (spec.maximize) VISIBLE else GONE
         close.visibility = if (spec.close) VISIBLE else GONE
         listOf(preset, clear, maximize, close, menuAnchor).forEach { it.layoutParams.width = minOf(dp(48), width) }

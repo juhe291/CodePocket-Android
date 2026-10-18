@@ -8,6 +8,9 @@ package com.termux.terminal;
 public interface TerminalSessionClient {
 
     void onTextChanged(TerminalSession changedSession);
+    default void onShellIntegration(TerminalSession session, String marker) { }
+    default void onTerminalInput(TerminalSession session, byte[] data, int offset, int count) { }
+    default boolean onTerminalOutput(TerminalSession session, int bytes) { return true; }
 
     void onTitleChanged(TerminalSession changedSession);
 

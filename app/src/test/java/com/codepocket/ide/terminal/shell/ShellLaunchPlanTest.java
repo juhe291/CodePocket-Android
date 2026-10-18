@@ -27,7 +27,7 @@ public class ShellLaunchPlanTest {
         ShellLaunchPlan p=ShellLaunchPlan.prepare(files,cache,project);
         assertArrayEquals(new String[]{"/system/bin/sh","-i"},p.arguments);
         assertEquals(project.getCanonicalFile(),p.directory);
-        assertTrue(Arrays.asList(p.environment).contains("PS1=CodePocket $ "));
+        assertTrue(Arrays.asList(p.environment).contains("PS1="+ShellLaunchPlan.PROMPT));
         assertFalse(Arrays.toString(p.arguments).contains("quoted"));
     }
     @Test(expected=IOException.class) public void rejectsOutsideInitialDirectory() throws Exception {

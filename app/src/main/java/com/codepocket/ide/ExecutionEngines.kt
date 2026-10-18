@@ -53,6 +53,17 @@ object PythonEngine {
             errorFile = if (result.isNull("error_file")) null else result.optString("error_file")
         )
     }
+    fun runTerminal(context: android.content.Context, code: String, input: String, filename: String, projectDir: String,
+        interactive: Boolean, events: Any): RunResult {
+        if (!Python.isStarted()) Python.start(com.chaquo.python.android.AndroidPlatform(context.applicationContext))
+        val data = JSONObject(Python.getInstance().getModule("runner").callAttr("run_terminal", code, input, filename,
+            projectDir, 0, 1, 2, interactive, events).toString())
+        return RunResult(data.optString("stdout"),data.optString("stderr"),data.optInt("exit_code",1).toString(),data.optLong("elapsed_ms",0),
+            if(data.isNull("error_line"))null else data.optInt("error_line"),"Python 3.13 · 终端 / 本地",
+            when(data.optString("error_kind")){"success"->RunKind.SUCCESS;"timeout"->RunKind.TIMEOUT;"compile"->RunKind.COMPILE;else->RunKind.RUNTIME},
+            if(data.isNull("error_file"))null else data.optString("error_file"))
+    }
+
 }
 
 object WandboxEngine {

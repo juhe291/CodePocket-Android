@@ -17,6 +17,21 @@ import java.util.concurrent.Executors;
 /** One process-owned PTY session, with no Activity or View retained. */
 public final class ShellRuntime implements TerminalSessionClient {
     public interface Observer { void changed(); }
+    public interface RunControl {
+        boolean control(int code);
+        boolean acceptsInput();
+        boolean output(int bytes);
+        String label();
+        void closed();
+    }
+    private RunControl foreground;
+    private boolean promptSeen, promptReady;
+    private int historyTopRow;
+    public int historyTopRow() { return historyTopRow; }
+    public void saveHistoryTopRow(int row) { historyTopRow=Math.min(0,row); }
+    private String pendingCommand;
+    private java.util.function.Consumer<String> pendingCommandFailure;
+    private final StringBuilder externalOutput = new StringBuilder();
     public enum State { EMPTY, PREPARING, OPEN, EXITED, FAILED }
     private static ShellRuntime instance;
     public static ShellRuntime get(Context context) {
@@ -46,7 +61,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     public void start(File directory) {
         if (state == State.PREPARING || (session != null && session.isRunning())) return;
         final long request = ++generation;
-        state = State.PREPARING; error = null; notifyObserver();
+        state = State.PREPARING; error = null; promptSeen=false;promptReady=false;notifyObserver();
         io.execute(() -> {
             try {
                 ShellLaunchPlan ready = ShellLaunchPlan.prepare(context.getFilesDir(), context.getCacheDir(), directory);
@@ -72,11 +87,64 @@ public final class ShellRuntime implements TerminalSessionClient {
     }
 
     public void send(String text) {
+        // Stop/EOF policy must also work while a real PTY is still starting.
+        if (filterInput(text)) return;
         if (session == null || state != State.OPEN || session.getPid() <= 0) return;
-        byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
-        session.write(bytes, 0, bytes.length);
+        writeRaw(text);
     }
+    private void writeRaw(String text) {
+        if(session==null||session.getPid()<=0)return;
+        byte[] bytes=text.getBytes(StandardCharsets.UTF_8);session.write(bytes,0,bytes.length);
+    }
+    public boolean beginForeground(RunControl control) {
+        if(foreground!=null)return false;
+        if(session!=null&&session.getPid()>0&&promptSeen&&(!promptReady||!session.isShellForeground()))return false;
+        foreground=control;notifyObserver();return true;
+    }
+    public void clearForeground(RunControl control) {
+        if(foreground!=control)return;
+        foreground=null;pendingCommand=null;pendingCommandFailure=null;notifyObserver();
+    }
+    public boolean filterInput(String text) {
+        RunControl control=foreground;if(control==null)return false;
+        if(text.equals("\u0003")||text.equals("\u0004"))return control.control(text.charAt(0));
+        return !control.acceptsInput();
+    }
+    public boolean acceptsInput() { return foreground==null||foreground.acceptsInput(); }
+    public String foregroundLabel() { return foreground==null?"":foreground.label(); }
+    public void refreshForeground() { notifyObserver(); }
+    public void queueCommand(String command,java.util.function.Consumer<String> failure) {
+        if(pendingCommand!=null)throw new IllegalStateException("A launch is already queued");
+        pendingCommand=command;pendingCommandFailure=failure;pumpCommand();
+    }
+    private void pumpCommand() {
+        if(pendingCommand==null||!promptReady||session==null||session.getPid()<=0)return;
+        String command=pendingCommand;java.util.function.Consumer<String> failure=pendingCommandFailure;
+        pendingCommand=null;pendingCommandFailure=null;
+        if(!session.isShellForeground()) { failure.accept("当前终端有前台命令，请先结束该命令或新建终端");return; }
+        // Clear both halves of a partially edited mksh line without interrupting a foreground job.
+        promptReady=false;writeRaw("\u0015\u000b"+command+"\n");
+    }
+    public void appendExternal(String text) {
+        String normalized=text.replace("\r\n","\n").replace("\n","\r\n");
+        externalOutput.append(normalized);
+        if(externalOutput.length()>220000)externalOutput.delete(0,externalOutput.length()-220000);
+        flushExternal();
+    }
+    private void flushExternal() {
+        if(session==null||session.getEmulator()==null||externalOutput.length()==0)return;
+        String text=externalOutput.toString();externalOutput.setLength(0);session.appendExternalOutput(text);
+    }
+    public void clearScreen() {
+        externalOutput.setLength(0);
+        if(session!=null)session.appendExternalOutput("\u001b[2J\u001b[H\u001b[3J");
+        historyTopRow=0;redrawPrompt();
+    }
+    public void redrawPrompt() { if(promptReady&&foreground==null)writeRaw("\u000c"); }
+    public void copyText(String text) { copy(text); }
+
     public void paste() {
+        if(!acceptsInput())return;
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = clipboard.getPrimaryClip();
         if (clip == null || clip.getItemCount() == 0 || session == null || session.getEmulator() == null) return;
@@ -93,8 +161,10 @@ public final class ShellRuntime implements TerminalSessionClient {
     }
     public void close() {
         generation++;
+        RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;externalOutput.setLength(0);
         TerminalSession old = session;
-        session = null; plan = null; state = State.EMPTY;
+        session = null; plan = null; state = State.EMPTY;promptSeen=false;promptReady=false;
+        if(control!=null)control.closed();
         if (old != null) old.finishIfRunning();
         notifyObserver();
     }
@@ -104,8 +174,9 @@ public final class ShellRuntime implements TerminalSessionClient {
     }
     public void fail(Throwable failure) {
         generation++;
+        RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;
         TerminalSession old = session;
-        session = null; plan = null; state = State.FAILED;
+        session = null; plan = null; state = State.FAILED;promptSeen=false;promptReady=false;
         error = failure.getClass().getSimpleName() + ": " + failure.getMessage();
         Log.e("CodePocket-Shell", "Terminal unavailable", failure);
         try {
@@ -116,6 +187,7 @@ public final class ShellRuntime implements TerminalSessionClient {
             Log.w("CodePocket-Shell", "Cannot save terminal diagnostic", loggingFailure);
         }
         if (old != null) old.finishIfRunning();
+        if(control!=null)control.closed();
         notifyObserver();
     }
     public String failureDetails() {
@@ -123,10 +195,23 @@ public final class ShellRuntime implements TerminalSessionClient {
         catch (java.io.IOException | SecurityException failure) { return "无法读取本机终端错误记录：" + failure.getMessage(); }
     }
     public void copyFailureDetails() { copy(failureDetails()); }
-    @Override public void onTextChanged(TerminalSession s) { if (s == session) notifyObserver(); }
+    @Override public void onTextChanged(TerminalSession s) { if (s == session) { flushExternal();pumpCommand();notifyObserver(); } }
+    @Override public void onShellIntegration(TerminalSession s,String marker) {
+        if(s!=session)return;
+        if(marker.equals("B")) { promptSeen=true;promptReady=true; }
+        else if(marker.equals("A")||marker.equals("C"))promptReady=false;
+    }
+    @Override public void onTerminalInput(TerminalSession s,byte[] bytes,int offset,int count) {
+        if(s!=session)return;
+        for(int i=offset;i<offset+count;i++)if(bytes[i]=='\n'||bytes[i]=='\r')promptReady=false;
+    }
+    @Override public boolean onTerminalOutput(TerminalSession s,int bytes) { return s!=session||foreground==null||foreground.output(bytes); }
     @Override public void onTitleChanged(TerminalSession s) { if (s == session) notifyObserver(); }
     @Override public void onSessionFinished(TerminalSession s) {
-        if (s == session) { state = State.EXITED; notifyObserver(); }
+        if (s == session) {
+            state = State.EXITED;RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;
+            if(control!=null)control.closed();notifyObserver();
+        }
     }
     @Override public void onCopyTextToClipboard(TerminalSession s, String text) { if (s == session) copy(text); }
     @Override public void onPasteTextFromClipboard(TerminalSession s) { if (s == session) paste(); }

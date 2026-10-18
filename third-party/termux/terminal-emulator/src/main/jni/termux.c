@@ -222,3 +222,16 @@ JNIEXPORT void JNICALL Java_com_termux_terminal_JNI_close(JNIEnv* TERMUX_UNUSED(
 {
     close(fileDescriptor);
 }
+
+JNIEXPORT jint JNICALL Java_com_termux_terminal_JNI_getPtyProcessGroup(JNIEnv* TERMUX_UNUSED(env), jclass TERMUX_UNUSED(clazz), jint fd)
+{
+    return (jint) tcgetpgrp(fd);
+}
+
+// CodePocket private Python-service group. Never changes the editor or shell process group.
+JNIEXPORT jint JNICALL Java_com_codepocket_ide_terminal_bridge_ProcessControl_getGroup(JNIEnv* env, jclass cls, jint pid) {
+    return getpgid(pid);
+}
+JNIEXPORT jint JNICALL Java_com_codepocket_ide_terminal_bridge_ProcessControl_isolate(JNIEnv* env, jclass cls) {
+    return setpgid(0, 0);
+}

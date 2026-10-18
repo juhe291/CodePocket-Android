@@ -92,4 +92,36 @@ public class ShellTerminalInitializationTest {
         runtime.detach(observer);
     }
 
+    private TerminalView installTranscript() throws Exception {
+        TerminalSession session=installUnmeasuredSession();
+        com.termux.terminal.TerminalEmulator emulator=new com.termux.terminal.TerminalEmulator(session,60,6,13,15,2000,runtime);
+        ReflectionHelpers.setField(session,"mEmulator",emulator);
+        for(int i=0;i<30;i++) {
+            byte[] line=("line-"+i+"\r\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            emulator.append(line,line.length);
+        }
+        pane.changed();return ReflectionHelpers.getField(pane,"terminal");
+    }
+    @Test public void actualEmulatorOutputDoesNotSnapBrowsingHistoryToBottom() throws Exception {
+        TerminalView view=installTranscript();view.setTopRow(-3);
+        runtime.appendExternal("new-output\n");pane.changed();
+        assertTrue(view.getTopRow()<=-3);
+        assertTrue(runtime.session().getEmulator().getScreen().getTranscriptText().contains("new-output"));
+    }
+    @Test public void switchingPaneKeepsHistoryOffsetWithoutHoldingOldView() throws Exception {
+        TerminalView old=installTranscript();old.setTopRow(-4);pane.dispose();
+        ShellTerminalPane replacement=new ShellTerminalPane(application,null,12,false,()->{},runtime);
+        try {
+            TerminalView current=ReflectionHelpers.getField(replacement,"terminal");
+            assertNotSame(old,current);assertEquals(-4,current.getTopRow());
+        } finally {replacement.dispose();}
+    }
+    @Test public void clearDisplayUsesEmulatorNotProgramStdin() throws Exception {
+        installTranscript();ShellRunInputTest.Control control=new ShellRunInputTest.Control();
+        assertTrue(runtime.beginForeground(control));runtime.clearScreen();
+        assertFalse(runtime.session().getEmulator().getScreen().getTranscriptText().contains("line-29"));
+        assertEquals(0,control.stopped);assertEquals("Python",runtime.foregroundLabel());
+        assertEquals(0,runtime.session().getPid()); // No JNI/PT Y or native process executed by this test.
+    }
+
 }

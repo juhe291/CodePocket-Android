@@ -27,6 +27,7 @@ data class AppSettings(
     val completionEnter: Boolean = false,
     val completionArrows: CompletionArrows = CompletionArrows.EXPLICIT,
     val signatureHelp: Boolean = true,
+    val pythonInteractive: Boolean = true,
     val panelPreferSide: Boolean = false  // P1-B: Bottom-first strategy
 ) {
     fun normalized() = copy(fontSize = fontSize.coerceIn(10, 28), terminalFontSize = terminalFontSize.coerceIn(10, 24),
@@ -34,7 +35,7 @@ data class AppSettings(
     fun isDark(systemDark: Boolean) = when (theme) { UiTheme.DARK -> true; UiTheme.LIGHT -> false; UiTheme.SYSTEM -> systemDark }
     fun syntaxIsDark(uiDark: Boolean) = when (syntax) { SyntaxTheme.DARK -> true; SyntaxTheme.LIGHT -> false; SyntaxTheme.FOLLOW_UI -> uiDark }
     fun toJson(): String = normalized().let { s -> JSONObject().apply {
-        put("version", 4); put("theme", s.theme.name); put("syntax", s.syntax.name)
+        put("version", 5); put("theme", s.theme.name); put("syntax", s.syntax.name)
         put("fontSize", s.fontSize); put("terminalFontSize", s.terminalFontSize); put("tabWidth", s.tabWidth)
         put("useSpaces", s.useSpaces); put("lineNumbers", s.lineNumbers); put("wordWrap", s.wordWrap)
         put("autoIndent", s.autoIndent); put("autoPairs", s.autoPairs); put("autoCompletion", s.autoCompletion)
@@ -42,7 +43,7 @@ data class AppSettings(
         put("autoSave", s.autoSave); put("autoSaveDelayMs", s.autoSaveDelayMs); put("animations", s.animations)
         put("signatureHelp", s.signatureHelp)
         put("completionTab", s.completionTab); put("completionEnter", s.completionEnter); put("completionArrows", s.completionArrows.name)
-        put("panelPreferSide", s.panelPreferSide)
+        put("panelPreferSide", s.panelPreferSide); put("pythonInteractive",s.pythonInteractive)
     }.toString() }
     companion object {
         fun fromJson(json: String?, legacyDark: Boolean = true): AppSettings {
@@ -63,6 +64,7 @@ data class AppSettings(
                 completionTab = j.optBoolean("completionTab", defaults.completionTab),
                 completionEnter = j.optBoolean("completionEnter", defaults.completionEnter),
                 completionArrows = runCatching { CompletionArrows.valueOf(j.optString("completionArrows")) }.getOrDefault(defaults.completionArrows),
+                pythonInteractive = j.optBoolean("pythonInteractive",defaults.pythonInteractive),
                 panelPreferSide = j.optBoolean("panelPreferSide", defaults.panelPreferSide)
             ).normalized()
         }

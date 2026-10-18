@@ -67,15 +67,24 @@ class TerminalWorkbenchViewTest {
         assertEquals(1,(0 until region.childCount).count { region.getChildAt(it) is ShellTerminalPane })
         assertNull(registry.catalog.selected()!!.value.runtime.session())
     }
-    @Test fun selectingTaskKeepsSameWorkbenchAndPreservesBothStreams() {
+    @Test fun historicalOutputSelectionKeepsRealShellAndCannotReplayResults() {
         show(3)
-        val result=RunResult("real executor stdout", "real executor stderr", "0",5,engine="test fixture")
-        ReflectionHelpers.setField(activity,"result",result)
+        val selected=registry.catalog.selected()
+        val pane=ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane")
+        ReflectionHelpers.setField(activity,"result",RunResult("must not replay stdout","real stderr","0",5))
         show(0)
-        assertEquals(TerminalCatalog.TASK,registry.catalog.selectedId())
-        assertEquals(listOf("终端","问题"),labels().take(2))
-        assertTrue(text.text.contains(result.stdout));assertTrue(text.text.contains(result.stderr))
-        assertEquals(View.GONE,ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane").visibility)
+        assertSame(selected,registry.catalog.selected())
+        assertSame(pane,ReflectionHelpers.getField(activity,"shellPane"))
+        assertEquals(View.VISIBLE,pane.visibility)
+        assertFalse(text.text.contains("must not replay stdout"))
+        assertFalse(labels().any { it.contains("最近运行任务") })
+        show(1);assertTrue(text.text.contains("real stderr"))
+    }
+    @Test fun noShellShowsOnlyCreateHintNotAnotherRunConsole() {
+        registry.end(registry.catalog.selected()!!.id);show(3)
+        assertTrue(text.text.contains("没有打开的终端"))
+        assertEquals(3,ReflectionHelpers.getField<Int>(activity,"selectedOutput"))
+        assertFalse(labels().any { it.contains("最近运行任务") })
     }
     @Test fun visitingProblemsAndReturningKeepsSelectedShellAndView() {
         val selected=registry.create(null);show(3)
