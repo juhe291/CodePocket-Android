@@ -1,14 +1,15 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-17：已接入生产选区、视口与错误导航保护。** 查找/跳行/片段/错误定位及会话与面板恢复共用版本、选区和组合输入保护；布局后的滚动不会覆盖后续用户操作。入口错误核对运行时文件身份与源码摘要，超范围行不再落到文件末尾。见[本批结果](docs/P1_EDITOR_NAVIGATION.md)。[事务与历史保护](docs/P1_EDITOR_TRANSACTIONS.md)、[Sora隔离原型](docs/P1_EDITOR_LAB.md)继续保留，默认仍为原生编辑器。
+**2026-10-18：已接入文档交接保护首批。** 修复后台读文件期间继续输入可能被覆盖、重载同一工作区丢失最新stdin/选区，以及替代文件读取成功前关闭活动标签的问题。代码有新编辑时保留当前缓冲并取消旧交接；会话状态在交接时捕获。见[本批结果](docs/P1_EDITOR_DOCUMENTS.md)。[导航保护](docs/P1_EDITOR_NAVIGATION.md)、[事务与历史](docs/P1_EDITOR_TRANSACTIONS.md)和[Sora隔离原型](docs/P1_EDITOR_LAB.md)保留，默认仍为原生编辑器。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**最新 [默认IDE Debug APK](dist/CodePocket-editor-navigation-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。最终构建48s；Kotlin226中225通过/1跳过，新增30通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
+**最新 [默认IDE Debug APK](dist/CodePocket-editor-documents-debug.apk)** 21.08MiB，Android7.0+ / arm64-v8a。最终构建1m 10s；Kotlin246中245通过/1跳过，新增20通过；Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告；签名/CRC/对齐及关键类定义通过。
 
 另有[Sora实验APK](dist/CodePocket-Sora-editor-lab-debug.apk)和[实验源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)，使用独立包名/临时草稿；14项真实库测试通过，尚未接入IDE功能。实机按要求统一后置，未验收UI/键鼠/IME/FPS。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
+- [P1 文档交接、异步读取与标签安全验证](docs/P1_EDITOR_DOCUMENTS.md)
 - [P1 生产选区、视口与错误导航验证](docs/P1_EDITOR_NAVIGATION.md)
 - [P1 内置函数参数参考与验证](docs/P1_SIGNATURE_HELP.md)
 - [P1 内置片段、占位符与真实模板验证](docs/P1_SNIPPETS.md)
@@ -49,6 +50,7 @@
 - 深色/浅色记忆；按窗口宽度分段布局，多文件标签及文件树。
 - C++/Python 分语言词法高亮、基础补全、行号、自动缩进、括号/引号补齐与匹配；不是 LSP/IntelliSense。
 - 按工作区和稳定文件身份保存 stdin、选区、横纵滚动及代码/stdin 焦点；应用内改名/移动保留对应状态。
+- 切文件、重新载入与切工作区时，后台读取结果必须通过来源缓冲与版本交接校验；读取期间新代码保留，stdin/选区取最新状态。同一工作区重载保留当前会话，活动标签在替代文件成功载入后关闭；最后一个文件标签继续保留并说明。
 - 内部工作区保留路径/符号链接边界、同名拒绝、根目录保护、删除确认、同步临时文件替换及 UTF-8 限量读取。
 - SAF 真实目录授权、最近项目、提供方 CRUD；编辑器写回前核对版本、保存原文备份、写后读回验证；磁盘恢复草稿独立于提供方授权。
 - Python 本地标准库、工作区模块与资源、traceback；后台独立进程可中止，运行状态跨 Activity 重建。
@@ -89,7 +91,8 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |
 | terminal/AnsiParser / TerminalView | 受限SGR样式与只读结束后输出，保留原生文字选择 |
 | ui/DesignTokens / IdeIcons / IdeControls | 外壳配色/尺寸、原创线性图标和原生触控组件 |
-| editor/EditorPort / EditingEditorPort / NavigatingEditorPort / NativeEditorPort | 生产分析/装饰、显式事务/历史与选区/视口/行错误导航；完整文档会话与组件适配待做 |
+| editor/EditorPort / EditingEditorPort / NavigatingEditorPort / DocumentEditorPort / NativeEditorPort | 生产分析/装饰、事务/历史、导航及显式文档替换/交接快照；完整组件适配待做 |
+| editor/EditorDocuments | 文件/工作区读取交接门控、一次性请求与同工作区最新会话选择 |
 | editor/EditorNavigation / EditorDiagnostics | UTF-16选区校验、轻量视口队列、过期交互保护、入口源码证明和安全路径映射 |
 | MainActivity / CodeEditor | 原生界面、触摸/键鼠入口、IME、编辑与会话联动 |
 | AppSettings / SettingsDialog | 持久化设置、边界校验与原生设置页面 |

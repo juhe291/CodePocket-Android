@@ -22,11 +22,13 @@ class NativeEditorPort(
     private val document: () -> Pair<String, Long>?,
     private val cpp: () -> Boolean,
     private val dark: () -> Boolean,
+    private val available: () -> Boolean,
     private val compositionEnded: () -> Unit
-) : NavigatingEditorPort {
+) : DocumentEditorPort {
     private class SyntaxSpan(color: Int) : ForegroundColorSpan(color), NoCopySpan
     private class BracketSpan(color: Int) : BackgroundColorSpan(color), NoCopySpan
     private var closed = false
+    private var replacing = false
     private var interaction = 0L
     private val pendingNavigation = mutableSetOf<Pair<ViewTreeObserver, ViewTreeObserver.OnPreDrawListener>>()
     private val navigation = EditorViewportQueue(::postNavigation, ::navigationSnapshot) { source, reveal ->
@@ -63,7 +65,7 @@ class NativeEditorPort(
 
     override fun navigationSnapshot(): EditorViewportSnapshot? {
         check(Looper.myLooper() == Looper.getMainLooper())
-        if (closed) return null
+        if (closed || replacing || !available()) return null
         val (key, revision) = document() ?: return null
         return EditorViewportSnapshot(key, revision, editor.selectionStart, editor.selectionEnd,
             editor.scrollX, editor.scrollY, interaction, BaseInputConnection.getComposingSpanStart(editor.text) >= 0,
@@ -101,13 +103,13 @@ class NativeEditorPort(
     private var coloredText: Editable? = null
     private var coloredFrame: EditorFrame? = null
     private var coloredFallback: HighlightFallback? = null
-    private val composition = CompositionTransition()
+    private var composition = CompositionTransition()
     private val notifyCommit = Runnable {
         if (!closed && BaseInputConnection.getComposingSpanStart(editor.text) < 0) compositionEnded()
     }
     private val spanWatcher = object : SpanWatcher, NoCopySpan {
         private fun changed(text: Spannable, what: Any) {
-            if (closed || what === this || what is SyntaxSpan || what is BracketSpan) return
+            if (closed || replacing || what === this || what is SyntaxSpan || what is BracketSpan) return
             if (what === Selection.SELECTION_START || what === Selection.SELECTION_END) interaction++
             if (composition.observe(BaseInputConnection.getComposingSpanStart(text) >= 0)) {
                 // Wait until the IME has finished its current transaction; never edit from a span callback.
@@ -139,12 +141,33 @@ class NativeEditorPort(
         composition.observe(BaseInputConnection.getComposingSpanStart(text) >= 0)
     }
 
-    override fun snapshot(): EditorFrame? {
+    override fun snapshot(): EditorFrame? = if (available()) captureDocument() else null
+
+    override fun captureDocument(): EditorFrame? {
         check(Looper.myLooper() == Looper.getMainLooper())
-        if (closed) return null
+        if (closed || replacing) return null
         val (key, revision) = document() ?: return null
         return EditorFrame(EditorSnapshot(key, revision, editor.text.toString(), editor.selectionStart,
             editor.selectionEnd), cpp(), dark(), BaseInputConnection.getComposingSpanStart(editor.text) >= 0)
+    }
+
+    override fun replaceDocument(text: String): Boolean {
+        check(Looper.myLooper() == Looper.getMainLooper())
+        if (closed || replacing || text.length > Workspace.MAX_CHARS) return false
+        cancelNavigation()
+        editor.removeCallbacks(notifyCommit)
+        replacing = true
+        editor.beginBatchEdit()
+        try {
+            editor.setText(text)
+        } finally {
+            editor.endBatchEdit()
+            composition = CompositionTransition()
+            coloredText = null; coloredFrame = null; coloredFallback = null
+            replacing = false
+            observe(editor.text)
+        }
+        return true
     }
 
     override fun applyEdit(transaction: EditorTransaction): EditResult =

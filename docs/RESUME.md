@@ -1,6 +1,19 @@
 # CodePocket 当前交接状态
 
-## 最新：P1-C 生产选区、视口与错误导航（2026-10-17）
+## 最新：P1-C 文档交接保护首批（2026-10-18）
+
+- 基线 `fa5cd60`；[本批报告](P1_EDITOR_DOCUMENTS.md)。原生适配器实现DocumentEditorPort的交接快照/显式替换；EditorDocumentTransitions在文件/工作区读取完成时校验原缓冲/编辑版本/组合状态，请求一次性消费。默认仍为原生编辑器，未迁移Sora。
+- 修复switchFile/reloadActive/startWorkspace后台读文件期间继续输入会被旧结果覆盖的风险；双阶段“保留草稿后切工作区”同样门控。源码改变保留缓冲、排队草稿与自动保存；stdin/选区/滚动/焦点取交接前最新状态，同一工作区重载复用最新会话。活动标签仅在替代文件实际载入后关闭，原生拒绝替换时还原路径与标签列表，最后一个标签保留并说明。
+- 原生替换先取消旧导航与组合结束通知，暂时不提供快照，结束后重新观察新Editable并清除装饰缓存。quietEdit使用try/finally恢复，加载成功才增加编辑版本。已确认删除发生后才输入的新代码会排队为恢复草稿；不声称能撤销磁盘删除或保证草稿写入失败时的数据持久性。
+- 最终构建 **1m 10s**，62 actionable tasks: 18 executed, 44 up-to-date；Kotlin246中245通过/1 Windows符号链接跳过，新增20通过，原226项及状态保留。Python源码/实际APK字节码各13/13，实际模板Python/主机C++17各7/7，Lint0错误/11既有警告。
+- [最新APK](../dist/CodePocket-editor-documents-debug.apk)，22,106,581字节，SHA256 `7d38f8d3c32c9802879670e787390a793065b870789f2093703379d213a46fe4`；CRC、v2签名、16KB ZIP对齐、ABI/关键Dex定义通过，旧具名类保留。增加可用性lambda导致buildEditor匿名监听类重编号，审计核对该方法除构造参数变更外源码相同。旧五项APK/材料包哈希保持。
+- 证据 `verification/editor-documents-2026-10-18/results.json`；首轮1m11s/244项及APK保留在round-01，补同工作区会话/失败后自动保存，再补原生拒绝替换时路径与标签回滚后最终重跑；中间20项成功版本保留在round-02。无失败测试被移除/跳过；更新README、进度与本报告，本地阶段提交，无push/发布。
+- CodeEditor输入事件、Workspace/SAF/DraftStore/EditorSessions格式、运行/Python服务、旧规则/旧测试、Gradle/Manifest/Actions及三份需求输入哈希保持。保留.tools、旧dist/verification和设备备份。
+- **下一批**：Sora生产组件与语言包适配、候选/片段/参数/SAF会话联动及其余文档生命周期。当前仅文档交接首批，不等于完整EditorPort/Sora迁移。P1其余手势/动画/帮助许可/真实Python流式及P2/P3继续保留，P0问题优先。
+- **实机统一后置**；没有Android/模拟器运行、原生UndoManager/IME/文档替换/焦点/布局/FPS/手机平板卓易通验收，无新Wandbox或远端Actions。主机真实文件读取+生产门控回归不等于Android输入法时序验收；删除后回退读取失败等恢复分支仍需专项联合检查。
+- 实际仓库 `C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android`，配置OneDrive cwd不存在；显式指定真实workdir，正常审批沙箱升级，不改Git配置。
+
+## 历史：P1-C 生产选区、视口与错误导航（2026-10-17）
 
 - 基线 `241e0d1`；[本批报告](P1_EDITOR_NAVIGATION.md)。现有原生适配器实现 `NavigatingEditorPort`，查找/项目搜索、跳行、片段字段、会话与面板恢复、IME显露光标及错误定位已实际接入。默认未迁移Sora。
 - 修复迟到滚动覆盖后续触摸/键鼠/选区、布局前恢复被截断、跨文件/工作区旧请求、保存选区拆分emoji/CRLF，以及超范围错误行落在末尾的问题。轻量视口戳不复制正文；一次性pre-draw队列复核文档/版本/选区/组合/交互/可见性；暂停/关闭撤销待执行回调。

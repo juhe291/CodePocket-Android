@@ -36,6 +36,11 @@ import android.widget.TextView
 import com.codepocket.ide.animation.Animations
 import com.codepocket.ide.editor.EditorAnalysisController
 import com.codepocket.ide.editor.NativeEditorPort
+import com.codepocket.ide.editor.DocumentEditorPort
+import com.codepocket.ide.editor.EditorDocumentRequest
+import com.codepocket.ide.editor.EditorDocumentTransitions
+import com.codepocket.ide.editor.EditorDocumentSessions
+import com.codepocket.ide.editor.DocumentTransitionResult
 import com.codepocket.ide.editor.EditorTransaction
 import com.codepocket.ide.editor.EditResult
 import com.codepocket.ide.editor.HistoryAction
@@ -78,7 +83,8 @@ class MainActivity : Activity() {
     private var completionTask: java.util.concurrent.Future<*>? = null
     private val completionConsumedKeys = mutableSetOf<Int>()
     private var quietEdit = false
-    private var editorPort: NavigatingEditorPort? = null
+    private var editorPort: DocumentEditorPort? = null
+    private val documentTransitions = EditorDocumentTransitions()
     private var editorAnalysis: EditorAnalysisController? = null
     private var snippetSession: SnippetSession? = null
     private var snippetTextChanging = false
@@ -194,6 +200,7 @@ class MainActivity : Activity() {
 
     private fun startWorkspace(tree: String?, saved: Bundle? = null) {
         if ((running && ::editor.isInitialized) || workspaceBusy || saving) return
+        val transition = beginDocumentTransition() ?: return
         explorerDialog?.dismiss(); explorerDialog = null
         workspaceBusy = true
         if (::editor.isInitialized) { captureSession(); persistSessions(); persistNavigation() }
@@ -233,27 +240,32 @@ class MainActivity : Activity() {
                 if (isDestroyed) return@runOnUiThread
                 workspaceBusy = false
                 prepared.onSuccess { ready ->
-                    workspace = ready.workspace; sessions = ready.sessions
-                    selectedTree = tree
-                    opened.clear(); opened.addAll(ready.paths)
-                    activePath = ready.active; loadedPath = null; dirty = false
-                    currentDirectory = prefs.getString(prefKey("directory"), "") ?: ""
-                    expanded.clear(); expanded.add("")
-                    explorerVisible = prefs.getBoolean("explorerVisible", true)
-                    panelVisible = prefs.getBoolean("panelVisible", true)
-                    presetInputExpanded = prefs.getBoolean(prefKey("presetInputExpanded"), false)
-                    panelState = PanelState.fromJson(prefs.getString("panelLayout", null))
-                        .let { if (panelVisible) it else it.copy(maximized = false) }
-                    explorerWidth = prefs.getInt("explorerWidth", 240)
-                    createUi(); loadActive(ready.code, ready.draft)
-                    // Bundle checkpoints are merged before reading; loadActive reconciles them once.
-                    exportContent = saved?.getString("exportSnapshot")?.let { name ->
-                        runCatching { File(filesDir, name).readText() }.getOrNull()
+                    commitDocumentTransition(transition) {
+                        val liveSessions = if (::sessions.isInitialized) sessions else null
+                        sessions = EditorDocumentSessions.choose(liveSessions, ready.sessions)
+                        workspace = ready.workspace
+                        selectedTree = tree
+                        opened.clear(); opened.addAll(ready.paths)
+                        activePath = ready.active; loadedPath = null; dirty = false
+                        currentDirectory = prefs.getString(prefKey("directory"), "") ?: ""
+                        expanded.clear(); expanded.add("")
+                        explorerVisible = prefs.getBoolean("explorerVisible", true)
+                        panelVisible = prefs.getBoolean("panelVisible", true)
+                        presetInputExpanded = prefs.getBoolean(prefKey("presetInputExpanded"), false)
+                        panelState = PanelState.fromJson(prefs.getString("panelLayout", null))
+                            .let { if (panelVisible) it else it.copy(maximized = false) }
+                        explorerWidth = prefs.getInt("explorerWidth", 240)
+                        createUi(); loadActive(ready.code, ready.draft)
+                        // Bundle checkpoints are merged before reading; loadActive reconciles them once.
+                        exportContent = saved?.getString("exportSnapshot")?.let { name ->
+                            runCatching { File(filesDir, name).readText() }.getOrNull()
+                        }
+                        exportPath = saved?.getString("exportPath")
+                        if (tree != null) rememberWorkspace(tree, workspace.title)
+                        renderRunState()
                     }
-                    exportPath = saved?.getString("exportPath")
-                    if (tree != null) rememberWorkspace(tree, workspace.title)
-                    renderRunState()
                 }.onFailure { error ->
+                    documentTransitions.cancel(); preservePendingDocumentEdits()
                     if (!::root.isInitialized) {
                         setContentView(TextView(this).apply { text = "工作区载入失败，请重新授权或打开内部项目。" })
                     }
@@ -279,6 +291,7 @@ class MainActivity : Activity() {
                 if (isDestroyed) return@runOnUiThread
                 workspaceBusy = false
                 value.onSuccess(done).onFailure { error ->
+                    documentTransitions.cancel(); preservePendingDocumentEdits()
                     status.text = getString(R.string.file_operation_failed, error.message.orEmpty())
                     alert("${error.message}\n未保存内容和恢复草稿会保留；可导出或重新选择目录。")
                 }
@@ -353,6 +366,7 @@ class MainActivity : Activity() {
         super.onDestroy()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null
+        documentTransitions.close()
         editorAnalysis?.close(); editorPort?.close()
         handler.removeCallbacksAndMessages(null)
         projectSearch?.cancel(); explorerResizeHandle?.cancelGesture()
@@ -904,8 +918,8 @@ class MainActivity : Activity() {
             filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS))
         }
         editorPort = NativeEditorPort(editor,
-            { if (workspaceBusy || loadedPath != activePath || !::sessions.isInitialized) null
-                else sessions.key(activePath) to editRevision }, ::isCpp, { syntaxDark }) {
+            { if (loadedPath != activePath || !::sessions.isInitialized) null
+                else sessions.key(activePath) to editRevision }, ::isCpp, { syntaxDark }, { !workspaceBusy }) {
             if (!isDestroyed && !isFinishing && hasWindowFocus()) {
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
             }
@@ -1203,6 +1217,8 @@ class MainActivity : Activity() {
                 saveActive {
                     val path = workspace.path(file)
                     ioAction("正在删除…", { workspace.delete(file); ensureFallback() }) { fallback ->
+                        // Deletion is already confirmed/completed. Preserve any code typed during I/O.
+                        if (activePath == path || activePath.startsWith("$path/")) queueDraft()
                         sessions.removeTree(path); persistSessions()
                         if (currentDirectory == path || currentDirectory.startsWith("$path/")) currentDirectory = ""
                         opened.removeAll { it == path || it.startsWith("$path/") }
@@ -1242,35 +1258,87 @@ class MainActivity : Activity() {
         persistNavigation()
     }
 
+    private fun beginDocumentTransition(): EditorDocumentRequest? {
+        val frame = editorPort?.captureDocument()
+        if (frame?.composing == true) {
+            if (::status.isInitialized) status.setText(R.string.editor_edit_composing)
+            return null
+        }
+        return documentTransitions.begin(frame, editRevision)
+    }
+
+    private fun commitDocumentTransition(request: EditorDocumentRequest, action: () -> Unit): Boolean {
+        val result = documentTransitions.commit(request, editorPort?.captureDocument(), editRevision) {
+            // Capture after background reading, before changing the workspace/path or native text.
+            captureSession(); if (::sessions.isInitialized) persistSessions()
+            action()
+        }
+        if (result == DocumentTransitionResult.APPLIED) return true
+        if (::status.isInitialized) status.setText(if (result == DocumentTransitionResult.COMPOSING)
+            R.string.editor_edit_composing else R.string.editor_document_changed)
+        preservePendingDocumentEdits()
+        return false
+    }
+
+    private fun preservePendingDocumentEdits() {
+        queueDraft()
+        if (dirty && settings.autoSave) {
+            handler.removeCallbacks(autosave); handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
+        }
+    }
+
     private fun switchFile(relative: String, after: (() -> Unit)? = null): Boolean {
         if (workspaceBusy) return false
         revealEditor()
         if (relative == activePath && loadedPath == activePath) { after?.invoke(); return true }
         saveActive {
+            val transition = beginDocumentTransition() ?: return@saveActive
             captureSession(); persistSessions()
             val key = sessions.key(relative)
             ioAction("正在打开 $relative…", {
                 workspace.read(workspace.resolve(relative)) to drafts.read(key)
             }) { (content, draft) ->
-                activePath = relative
-                if (relative !in opened) opened.add(relative)
-                loadActive(content, draft); refreshTabs(); renderExplorer(); animateDecoration(tabsRow); after?.invoke()
+                commitDocumentTransition(transition) {
+                    val previousPath = activePath
+                    val newlyOpened = relative !in opened
+                    activePath = relative
+                    if (newlyOpened) opened.add(relative)
+                    if (loadActive(content, draft)) {
+                        refreshTabs(); renderExplorer(); animateDecoration(tabsRow); after?.invoke()
+                    } else {
+                        activePath = previousPath
+                        if (newlyOpened) opened.remove(relative)
+                        refreshTabs(); renderExplorer()
+                    }
+                }
             }
         }
         return false
     }
 
     private fun closeTab(relative: String) {
-        if (workspaceBusy) return
+        if (workspaceBusy || relative !in opened) return
         saveActive {
             captureSession(); persistSessions()
-            opened.remove(relative)
-            if (relative == activePath) {
-                val next = opened.lastOrNull()
-                if (next != null) switchFile(next)
-                else ioAction("正在打开项目…", { ensureFallback() }) { path -> opened.add(path); switchFile(path); refreshTabs() }
-            } else persistNavigation()
-            refreshTabs(); renderExplorer()
+            if (relative != activePath) {
+                opened.remove(relative); persistNavigation(); refreshTabs(); renderExplorer()
+            } else {
+                // Keep the active tab until its replacement has actually loaded successfully.
+                val closed = {
+                    opened.remove(relative); persistNavigation(); refreshTabs(); renderExplorer()
+                }
+                val next = opened.lastOrNull { it != relative }
+                if (next != null) switchFile(next, closed)
+                else {
+                    val transition = beginDocumentTransition() ?: return@saveActive
+                    ioAction("正在打开项目…", { ensureFallback() }) { path ->
+                        commitDocumentTransition(transition) {
+                            if (path != relative) switchFile(path, closed)
+                            else { refreshTabs(); status.setText(R.string.editor_last_tab) }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1295,28 +1363,36 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun loadActive(content: String? = null, restored: Draft? = null) {
+    private fun loadActive(content: String? = null, restored: Draft? = null): Boolean {
         editorAnalysis?.cancel()
-        hideCompletion(); clearSnippet(); editRevision++
+        hideCompletion(); clearSnippet()
         if (content == null) {
+            val transition = beginDocumentTransition() ?: return false
             val path = activePath; val key = sessions.key(path)
             ioAction("正在载入…", { workspace.read(workspace.resolve(path)) to drafts.read(key) }) { (text, draft) ->
-                loadActive(text, draft)
+                commitDocumentTransition(transition) { loadActive(text, draft) }
             }
-            return
+            return false
         }
         val recovered = DraftRecovery.restore(content, restored)
+        val previousQuiet = quietEdit
         quietEdit = true
-        editor.setText(recovered.text)
-        loadedPath = activePath
-        loadedVersion = recovered.baseHash
-        dirty = recovered.dirty
-        restoreSession(); quietEdit = false
+        try {
+            if (editorPort?.replaceDocument(recovered.text) != true) {
+                status.setText(R.string.editor_document_rejected); return false
+            }
+            editRevision++
+            loadedPath = activePath
+            loadedVersion = recovered.baseHash
+            dirty = recovered.dirty
+            restoreSession()
+        } finally { quietEdit = previousQuiet }
         handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
         updateNumbers(); updateSuggestions()
         updateShellTitle()
         status.text = if (dirty) "已恢复未写回草稿，请保存或导出" else if (isCpp()) "C++17 · Wandbox 云端" else "Python 3.13 · 本地"
         refreshTabs(); persistNavigation()
+        return true
     }
 
     private fun queueDraft() {
@@ -1942,6 +2018,7 @@ class MainActivity : Activity() {
         AlertDialog.Builder(this).setTitle("重新载入原文件？")
             .setMessage("当前内容将先保留为恢复草稿，然后读取原文件。恢复入口可以导出此前的草稿。")
             .setNegativeButton("取消", null).setPositiveButton("保留草稿并载入") { _, _ ->
+                val transition = beginDocumentTransition() ?: return@setPositiveButton
                 handler.removeCallbacks(autosave); handler.removeCallbacks(checkpointDraft)
                 val path = activePath; val key = sessions.key(path); val text = editor.text.toString(); val base = loadedVersion
                 ioAction("正在保留草稿并载入…", {
@@ -1949,7 +2026,7 @@ class MainActivity : Activity() {
                     val fresh = workspace.read(workspace.resolve(path))
                     drafts.removeIfMatches(key, text)
                     fresh
-                }) { fresh -> loadActive(fresh) }
+                }) { fresh -> commitDocumentTransition(transition) { loadActive(fresh) } }
             }.show()
     }
 
@@ -2004,10 +2081,13 @@ class MainActivity : Activity() {
             .setMessage("当前内容尚未写回。可以先保存，或保留应用内草稿后切换；授权失效时可选择保留草稿。")
             .setPositiveButton("保存后切换") { _, _ -> saveActive { startWorkspace(tree) } }
             .setNeutralButton("保留草稿后切换") { _, _ ->
+                val transition = beginDocumentTransition() ?: return@setNeutralButton
                 handler.removeCallbacks(autosave); handler.removeCallbacks(checkpointDraft)
                 val key = sessions.key(activePath); val path = activePath; val text = editor.text.toString(); val base = loadedVersion
                 captureSession(); persistSessions()
-                ioAction("正在保留恢复草稿…", { drafts.put(key, path, text, base) }) { startWorkspace(tree) }
+                ioAction("正在保留恢复草稿…", { drafts.put(key, path, text, base) }) {
+                    commitDocumentTransition(transition) { startWorkspace(tree) }
+                }
             }.setNegativeButton("取消", null).show()
     }
 
