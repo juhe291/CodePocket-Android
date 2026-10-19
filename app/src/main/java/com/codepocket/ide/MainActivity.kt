@@ -828,8 +828,13 @@ class MainActivity : Activity() {
         val width = (splitHost.width / density).toInt(); val height = (splitHost.height / density).toInt()
         // Before first measure, hiding stdin would make restoreSession.requestFocus() silently fail.
         if (width <= 0 || height <= 0) return
+        val expandedTerminalMinimum = 96 + (shellPane?.minimumHeightDp(false) ?: 168)
+        val terminalCompact = selectedOutput == 3 && PanelLayoutPolicy.terminalCompact(height,
+            expandedTerminalMinimum, imeVisible && shellPane?.hasTerminalFocus() == true)
+        shellPane?.setCompact(terminalCompact)
+        val terminalMinimum=if(selectedOutput==3) (if(terminalCompact)48 else 96)+(shellPane?.minimumHeightDp(terminalCompact)?:168) else 0
         val spec = PanelLayoutPolicy.resolve(panelState, panelVisible, width, height,
-            imeVisible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, settings.collapsePanelOnIme, settings.panelPreferSide)
+            imeVisible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, settings.collapsePanelOnIme, settings.panelPreferSide,terminalMinimum)
         val previous = panelLayout
         val stamp = if (previous != null && previous.dock != spec.dock) capturePanelViewport() else null
         panelLayout = spec
@@ -854,7 +859,7 @@ class MainActivity : Activity() {
         val panelHeight = if (side || full) height else spec.extent
         val preset = WorkspaceLayoutPolicy.preset(presetInputExpanded, imeVisible, input.hasFocus(), panelHeight)
         panelInputHeading.visibility = if (preset.showCaption && selectedOutput == 3 && isCpp()) View.VISIBLE else View.GONE
-        panelOutputScroll.visibility = if (preset.showTabs) View.VISIBLE else View.GONE
+        panelOutputScroll.visibility = if (preset.showTabs && !terminalCompact) View.VISIBLE else View.GONE
         input.visibility = if (preset.showInput && selectedOutput == 3 && isCpp()) View.VISIBLE else View.GONE
         input.layoutParams?.let { old ->
             val target = dp(preset.inputHeight)
@@ -900,7 +905,11 @@ class MainActivity : Activity() {
         lastFocus = view.focus
         presetInputExpanded = isCpp() && WorkspaceLayoutPolicy.restorePreset(presetInputExpanded, view.focus, panelVisible)
         input.visibility = if (presetInputExpanded && isCpp()) View.VISIBLE else View.GONE
-        if (view.focus == "stdin" && panelVisible && isCpp()) input.requestFocus()
+        if (view.focus == "terminal" && panelVisible && selectedOutput == 3 &&
+            ::terminalRegistry.isInitialized && terminalRegistry.catalog.selected() != null) {
+            ensureShellPane()
+            if (shellPane?.restoreTerminalFocus() != true) outputRegion.requestFocus()
+        } else if (view.focus == "stdin" && panelVisible && isCpp()) input.requestFocus()
         else if (panelState.maximized && panelVisible) outputRegion.requestFocus()
         else editor.requestFocus()
         updateImeLayout()

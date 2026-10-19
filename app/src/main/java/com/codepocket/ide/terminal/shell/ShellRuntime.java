@@ -61,15 +61,17 @@ public final class ShellRuntime implements TerminalSessionClient {
 
     public void start(File directory) {
         if (state == State.PREPARING || (session != null && session.isRunning())) return;
+        if(plan!=null)plan.startup.delete();
         final long request = ++generation;
         state = State.PREPARING; error = null; promptSeen=false;promptReady=false;notifyObserver();
         io.execute(() -> {
             try {
                 ShellLaunchPlan ready = ShellLaunchPlan.prepare(context.getFilesDir(), context.getCacheDir(), directory);
                 // Loading the bundled library does not execute a shell or any user commands.
-                System.loadLibrary("termux");
+                try { System.loadLibrary("termux"); }
+                catch (LinkageError failure) { ready.startup.delete();throw failure; }
                 main.post(() -> {
-                    if (generation != request) return;
+                    if (generation != request) { ready.startup.delete();return; }
                     // A worker's try/catch cannot catch an exception thrown later by a main-thread Runnable.
                     try {
                         plan = ready;
@@ -173,6 +175,7 @@ public final class ShellRuntime implements TerminalSessionClient {
         generation++;
         RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;externalOutput.setLength(0);
         TerminalSession old = session;
+        if(plan!=null)plan.startup.delete();
         session = null; plan = null; state = State.EMPTY;promptSeen=false;promptReady=false;
         if(control!=null)control.closed();
         if (old != null) old.finishIfRunning();
@@ -186,6 +189,7 @@ public final class ShellRuntime implements TerminalSessionClient {
         generation++;
         RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;
         TerminalSession old = session;
+        if(plan!=null)plan.startup.delete();
         session = null; plan = null; state = State.FAILED;promptSeen=false;promptReady=false;
         error = failure.getClass().getSimpleName() + ": " + failure.getMessage();
         Log.e("CodePocket-Shell", "Terminal unavailable", failure);
@@ -219,6 +223,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     @Override public void onTitleChanged(TerminalSession s) { if (s == session) notifyObserver(); }
     @Override public void onSessionFinished(TerminalSession s) {
         if (s == session) {
+            if(plan!=null)plan.startup.delete();
             state = State.EXITED;RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;
             if(control!=null)control.closed();notifyObserver();
         }

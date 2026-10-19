@@ -1,6 +1,15 @@
 # CodePocket 当前交接状态
 
-## 最新：Python连接等待修正、移除Python预填（2026-10-18）
+## 最新：提示符覆盖、终端IME与短窗口回修（2026-10-19）
+
+- 用户手机真实记录为系统目录提示符、Python等待Shell标记超时，平板相同。确认系统mkshrc覆盖PS1；上一批View尺寸修复未覆盖此路径。每会话私有ENV rc先加载系统配置再设置OSC133标记，并补齐清理，保留启动/超时/身份保护。
+- 统一真实Shell/Python面板不变；Python无预填，C++仍真实云端预填。新增48dp键盘按钮与点击焦点延后请求、隐藏/失焦取消；按字号和窗口紧凑显示，空间不足临时全终端，不覆写用户布局偏好；会话焦点白名单补入terminal，恢复已有终端时不转回编辑器或强制IME。
+- 验证副本完整通过后，4个后续文件按源哈希校验应用回原仓库；原仓库再次构建1m9s。App342中341通过/1既有跳过，旧328状态保留、新增14；核心146（验证副本实际运行、原库复用缓存）；Python源码/最终APK字节码各29，Shell实际生成脚本3，模板各7，Lint0错/11旧警告；产物/许可/旧dist检查通过。
+- APK `dist/CodePocket-terminal-prompt-ime-debug.apk`，22,678,342字节，SHA256 `22ff560ab19c4f3b56e005497e68c81c5d57dd49d3791978fb135ca4bbf84109`；[报告](P1_TERMINAL_PROMPT_IME_FIX.md)，证据 `verification/terminal-prompt-ime-2026-10-19/`。与旧Debug证书一致；未做本轮设备安装/运行。
+- 当前实仓仍在Desktop路径，当前任务权限快照仍指向旧OneDrive路径；本轮通过获准的命令完成原库写入和构建。Windows沙箱Java ZipFS路径异常与早期审批超时均记录，不再把环境失败写成源码失败。不要重建或迁移项目，不清理.tools/dist/旧verification/设备备份。
+- Android PTY/app_process/FD/Chaquopy整链、手机和平板IME/键鼠/卓易通/FPS仍未实测。动画暂停，原P1完整动画与P2/P3继续；无push/发布/远端Actions。没有python/pip/clang命令，不把系统Shell说成完整Termux发行环境。
+
+## 历史：Python连接等待修正、移除Python预填（2026-10-18）
 
 - 用户反馈Python一直连接后超时；已发现Shell只在View测量后创建，而代码IME可能隐藏面板，且运行只按逻辑面板开关展开。改为ShellRuntime主动创建80x24真实PTY，后续视图仅resize；运行根据实际可见状态展开并收起代码IME。没有手机日志，不把这一代码问题称为唯一设备根因。
 - Python固定终端交互，删除预填输入UI/菜单/开关；旧设置忽略且保留历史stdin数据。C++仍云端预填并明确限制。新增可见启动阶段，超时指出Shell/桥/服务/运行时哪个阶段；迟到调度回调身份隔离保持。

@@ -49,13 +49,17 @@ data class PanelLayout(
 object PanelLayoutPolicy {
     const val HANDLE = 24
 
+    /** Drop optional terminal chrome before its measured minimum would hide the entire panel. */
+    fun terminalCompact(height: Int, expandedMinimum: Int, inputFocusedWithIme: Boolean) =
+        inputFocusedWithIme || height < expandedMinimum + HANDLE + 128
+
     /**
      * Resolve panel layout with bottom-first strategy.
      * Panel defaults to bottom; only uses side dock when explicitly configured and width allows.
      * @param preferSide User preference for side docking (default false = bottom priority)
      */
     fun resolve(state: PanelState, visible: Boolean, width: Int, height: Int,
-        ime: Boolean, inputFocused: Boolean, collapseOnIme: Boolean, preferSide: Boolean = false): PanelLayout {
+        ime: Boolean, inputFocused: Boolean, collapseOnIme: Boolean, preferSide: Boolean = false, minimumPanel: Int = 0): PanelLayout {
         // Bottom-first strategy: only dock to side if user explicitly prefers it AND there's room
         // A short wide window has room for side-by-side panes even when a bottom split cannot fit.
         val compactSplit = width >= 600 && height in 160 until (208 + HANDLE + 128) && !state.maximized
@@ -65,11 +69,13 @@ object PanelLayoutPolicy {
         if (width <= 0 || height <= 0 || !visible) return hidden()
         if (state.maximized) return PanelLayout(dock, true, false, available, available)
         if (ime && !inputFocused && collapseOnIme) return hidden()
-        val minimum = if (dock == PanelDock.SIDE) 200 else if (ime && inputFocused) 136 else 208
+        val minimum = if (dock == PanelDock.SIDE) 200 else maxOf(minimumPanel,if (ime && inputFocused) 136 else 208)
         val editorMinimum = if (dock == PanelDock.SIDE) 240 else 128
         val maximum = available - HANDLE - editorMinimum
         if (maximum < minimum) {
-            return if (ime && inputFocused) PanelLayout(dock, true, false, available, available) else hidden()
+            // An explicitly visible terminal must stay reachable even at a large font size.
+            return if ((ime && inputFocused) || minimumPanel > 0)
+                PanelLayout(dock, true, false, available, available) else hidden()
         }
         val extent = (state.fraction(dock) * available).roundToInt().coerceIn(minimum, maximum)
         return PanelLayout(dock, true, true, extent, available, minimum, maximum)

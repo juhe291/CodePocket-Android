@@ -35,6 +35,15 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private final TextView placeholder;
     private final Button start;
     private TerminalView terminal;
+    private final TerminalKeyboard keyboardRequest=new TerminalKeyboard();
+    private boolean compact;
+    public void setCompact(boolean value) { if(compact!=value){compact=value;changed();} }
+    public int minimumHeightDp(boolean small) {
+        android.graphics.Paint paint=new android.graphics.Paint();paint.setTypeface(Typeface.MONOSPACE);
+        paint.setTextSize(fontSp*getResources().getDisplayMetrics().scaledDensity);
+        int rows=(int)Math.ceil((4*paint.getFontSpacing()+dp(8))/getResources().getDisplayMetrics().density);
+        return 48+(small?0:48)+rows;
+    }
     private int fontSp;
     private boolean animations;
     private boolean activeHost = true;
@@ -84,6 +93,8 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         viewport.addView(placeholder, new FrameLayout.LayoutParams(-1, -1));
         addView(viewport, new LayoutParams(-1, 0, 1));
         LinearLayout keys = new LinearLayout(context);
+        Button imeButton=action("键盘",this::showKeyboard);imeButton.setContentDescription("显示终端虚拟键盘");
+        keys.addView(imeButton,new LayoutParams(dp(48),dp(48)));
         String[][] shortcuts = {{"Ctrl+C","\u0003"},{"Ctrl+D","\u0004"},{"Tab","\t"},{"Esc","\u001b"},{"↑","\u001b[A"},{"↓","\u001b[B"},{"←","\u001b[D"},{"→","\u001b[C"}};
         for (String[] shortcut : shortcuts) {
             String label = shortcut[0], text = shortcut[1];
@@ -109,6 +120,8 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     public void setEmbedded(boolean embedded) { heading.setVisibility(embedded ? GONE : VISIBLE); }
     public void ensureSession() { runtime.start(initialDirectory); }
     public boolean hasTerminalFocus() { return terminal != null && terminal.hasFocus(); }
+    /** Restore an existing terminal's focus only; never queue a late focus steal or request the IME. */
+    public boolean restoreTerminalFocus() { return activeHost && terminal != null && terminal.requestFocus(); }
     private void sendKey(String text) {
         if(text.equals("\u0003") && terminal!=null && terminal.isSelectingText()) {
             runtime.copyText(terminal.getSelectedText());terminal.stopTextSelectionMode();return;
@@ -121,8 +134,8 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         if (terminal != null) terminal.setTextSize(Math.round(fontSp * getResources().getDisplayMetrics().scaledDensity));
         updateBlink();
     }
-    public void hostActive(boolean active) { activeHost = active; updateBlink(); }
-    public void dispose() { runtime.detach(this); if (terminal != null) { runtime.saveHistoryTopRow(terminal.getTopRow());terminal.setTerminalCursorBlinkerState(false, false); } }
+    public void hostActive(boolean active) { activeHost = active;if(!active)keyboardRequest.cancel();updateBlink(); }
+    public void dispose() { keyboardRequest.cancel();runtime.detach(this); if (terminal != null) { runtime.saveHistoryTopRow(terminal.getTopRow());terminal.setTerminalCursorBlinkerState(false, false); } }
     @Override protected void onAttachedToWindow() { super.onAttachedToWindow(); runtime.attach(this); changed(); }
     @Override protected void onDetachedFromWindow() { dispose(); super.onDetachedFromWindow(); }
     private void updateBlink() {
@@ -145,7 +158,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     }
     private void renderSession() {
         runCaption.setText(runtime.foregroundLabel());
-        runCaption.setVisibility(runtime.foregroundLabel().isEmpty() ? GONE : VISIBLE);
+        runCaption.setVisibility(runtime.foregroundLabel().isEmpty() || compact ? GONE : VISIBLE);
         TerminalSession session = runtime.session();
         if (session == null) {
             if (terminal != null) { terminal.setTerminalCursorBlinkerState(false, false); viewport.removeView(terminal); terminal = null; }
@@ -172,7 +185,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
             terminal = ready;
             terminal.setPadding(dp(10), dp(4), dp(10), dp(4));
             terminal.setFocusableInTouchMode(true);
-            terminal.setOnFocusChangeListener((v, focused) -> { if (focused) focusChanged.run(); updateBlink(); });
+            terminal.setOnFocusChangeListener((v, focused) -> { if (focused) focusChanged.run(); else keyboardRequest.cancel(); updateBlink(); });
             viewport.addView(terminal, new FrameLayout.LayoutParams(-1, -1));
         }
         if(terminal.attachSession(session))terminal.setTopRow(runtime.historyTopRow());
@@ -211,15 +224,14 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     }
     public void showKeyboard() {
         if (terminal == null || !runtime.acceptsInput()) return;
-        terminal.requestFocus();
-        ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(terminal, InputMethodManager.SHOW_IMPLICIT);
+        keyboardRequest.show(terminal,()->activeHost&&runtime.acceptsInput());
     }
     @Override public float onScale(float scale) { setPreferences(Math.max(10, Math.min(24, Math.round(fontSp * scale))), animations); return 1f; }
     @Override public void onSingleTapUp(MotionEvent e) { showKeyboard(); }
     @Override public boolean shouldBackButtonBeMappedToEscape() { return false; }
     @Override public boolean shouldEnforceCharBasedInput() { return false; }
     @Override public boolean shouldUseCtrlSpaceWorkaround() { return false; }
-    @Override public boolean isTerminalViewSelected() { return isShown(); }
+    @Override public boolean isTerminalViewSelected() { return isShown() && hasTerminalFocus(); }
     @Override public void copyModeChanged(boolean copyMode) { }
     @Override public boolean onKeyDown(int code, KeyEvent e, TerminalSession s) {
         if(e.isCtrlPressed() && code==KeyEvent.KEYCODE_C)return runtime.filterInput("\u0003");

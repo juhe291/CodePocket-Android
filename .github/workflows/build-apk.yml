@@ -45,6 +45,9 @@ jobs:
       - name: Run Kotlin regression tests and Android lint
         run: bash ./gradlew :terminal-emulator:testDebugUnitTest :app:testDebugUnitTest :app:lintDebug --stacktrace --no-daemon
 
+      - name: Verify actual generated Shell startup on the host
+        run: python scripts/verify_shell_startup.py --junit app/build/test-results/testDebugUnitTest --shell /bin/sh --output verification/shell-startup-inspection.json
+
       - name: Verify generated snippets on the host
         run: |
           if ! command -v g++ > /dev/null; then
@@ -84,6 +87,7 @@ jobs:
             app/build/reports/lint-results-debug.*
             verification/apk-inspection.json
             verification/snippet-inspection.json
+            verification/shell-startup-inspection.json
             verification/snippet-fixtures/*.cpp
             verification/snippet-fixtures/*.py
           if-no-files-found: warn

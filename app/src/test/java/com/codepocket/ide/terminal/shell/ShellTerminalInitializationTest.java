@@ -124,4 +124,48 @@ public class ShellTerminalInitializationTest {
         assertEquals(0,runtime.session().getPid()); // No JNI/PT Y or native process executed by this test.
     }
 
+    @Test public void closingSessionDeletesOnlyItsStartupFile() throws Exception {
+        installUnmeasuredSession();
+        java.io.File startup=runtime.plan().startup;
+        assertTrue(startup.isFile());
+        runtime.close();
+        assertFalse(startup.exists());
+    }
+    @Test public void failedSessionDeletesStartupFile() throws Exception {
+        TerminalSession current=installUnmeasuredSession();
+        java.io.File startup=runtime.plan().startup;
+        runtime.failIfCurrent(current,new IllegalStateException("startup failed"));
+        assertFalse(startup.exists());
+    }
+    @Test public void realTerminalExposesTextInputAndKeyboardButton() throws Exception {
+        installUnmeasuredSession();pane.changed();
+        TerminalView view=ReflectionHelpers.getField(pane,"terminal");
+        assertTrue(view.onCheckIsTextEditor());
+        android.view.inputmethod.EditorInfo info=new android.view.inputmethod.EditorInfo();
+        assertNotNull(view.onCreateInputConnection(info));
+        assertTrue((info.imeOptions & android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN)!=0);
+        assertTrue(findKeyboardButton(pane));
+        assertTrue(pane.minimumHeightDp(false)>pane.minimumHeightDp(true));
+        pane.setCompact(true);
+        android.widget.TextView label=ReflectionHelpers.getField(pane,"runCaption");
+        assertEquals(android.view.View.GONE,label.getVisibility());
+    }
+    private boolean findKeyboardButton(android.view.View view) {
+        if("显示终端虚拟键盘".contentEquals(view.getContentDescription()==null?"":view.getContentDescription()))return true;
+        if(view instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group=(android.view.ViewGroup)view;
+            for(int i=0;i<group.getChildCount();i++)if(findKeyboardButton(group.getChildAt(i)))return true;
+        }
+        return false;
+    }
+    @Test public void restoringFocusTargetsActualTerminalWithoutShowingKeyboard() throws Exception {
+        installUnmeasuredSession();pane.changed();
+        assertTrue(pane.restoreTerminalFocus());
+        assertTrue(pane.hasTerminalFocus());
+        android.view.inputmethod.InputMethodManager ime=(android.view.inputmethod.InputMethodManager)application.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+        assertFalse(org.robolectric.Shadows.shadowOf(ime).isSoftInputVisible());
+        pane.hostActive(false);
+        assertFalse(pane.restoreTerminalFocus());
+        assertEquals(0,runtime.session().getPid()); // No Android subprocess or deferred request is introduced.
+    }
 }

@@ -10,18 +10,22 @@ public final class ShellLaunchPlan {
     public final File home;
     public final File temporary;
     public final File directory;
+    public final File startup;
+    // mksh uses ENV instead of its default /system/etc/mkshrc. Preserve system setup, then set our markers.
+    public static final String STARTUP = "if [ -r /system/etc/mkshrc ]; then . /system/etc/mkshrc; fi\n"+
+        "PS1=$(printf '\\001\\r\\001\\033]133;A\\007\\001CodePocket $ \\001\\033]133;B\\007\\001')\nexport PS1\nPS2='> '\n";
     public final String[] arguments;
     public final String[] environment;
 
-    private ShellLaunchPlan(File home, File temporary, File directory) {
+    private ShellLaunchPlan(File home, File temporary, File directory, File startup) {
         this.home = home;
         this.temporary = temporary;
-        this.directory = directory;
+        this.directory = directory;this.startup=startup;
         arguments = new String[]{EXECUTABLE, "-i"};
         environment = new String[]{
             "HOME=" + home.getPath(), "TMPDIR=" + temporary.getPath(),
             "PATH=/system/bin:/system/xbin", "TERM=xterm-256color", "COLORTERM=truecolor",
-            "LANG=C.UTF-8", "SHELL=" + EXECUTABLE, "PS1=" + PROMPT,
+            "LANG=C.UTF-8", "SHELL=" + EXECUTABLE, "PS1=" + PROMPT, "ENV="+startup.getPath(),
             "ANDROID_ROOT=/system", "ANDROID_DATA=/data"
         };
     }
@@ -37,7 +41,11 @@ public final class ShellLaunchPlan {
         if (!(home.isDirectory() || home.mkdirs()) || !(temporary.isDirectory() || temporary.mkdirs()))
             throw new IOException("无法创建终端目录");
         if (!cwd.isDirectory()) throw new IOException("终端初始目录不存在");
-        return new ShellLaunchPlan(home, temporary, cwd);
+        File startup=File.createTempFile("codepocket-rc-", ".sh",home);
+        try(java.io.FileOutputStream out=new java.io.FileOutputStream(startup)) {
+            out.write(STARTUP.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        } catch(IOException failure) { startup.delete();throw failure; }
+        return new ShellLaunchPlan(home, temporary, cwd,startup);
     }
 
     private static boolean within(File file, File root) {

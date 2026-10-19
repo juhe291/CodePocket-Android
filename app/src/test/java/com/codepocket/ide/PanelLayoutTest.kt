@@ -139,4 +139,40 @@ class PanelLayoutTest {
                 }
             }
     }
+    @Test fun terminalMinimumProtectsRowsWithImeAndRestoresSavedFraction() {
+        val state=PanelState(bottomFraction=.2f)
+        val normal=PanelLayoutPolicy.resolve(state,true,400,900,false,true,true,false,320)
+        assertTrue(normal.showPanel);assertEquals(320,normal.extent)
+        val ime=PanelLayoutPolicy.resolve(state,true,400,400,true,true,true,false,240)
+        assertTrue(ime.showEditor);assertEquals(240,ime.extent)
+        val tiny=PanelLayoutPolicy.resolve(state,true,400,300,true,true,true,false,240)
+        assertTrue(tiny.showPanel);assertFalse(tiny.showEditor);assertEquals(300,tiny.extent)
+        assertEquals(.2f,state.bottomFraction,.001f)
+        val restored=PanelLayoutPolicy.resolve(state,true,400,1800,false,true,true,false,320)
+        assertEquals(360,restored.extent)
+    }
+    @Test fun compactTerminalKeepsShortWindowsVisibleAtDifferentFontSizes() {
+        for (expandedMinimum in listOf(240, 264, 320, 400)) {
+            val boundary=expandedMinimum+PanelLayoutPolicy.HANDLE+128
+            assertTrue(PanelLayoutPolicy.terminalCompact(boundary-1,expandedMinimum,false))
+            assertFalse(PanelLayoutPolicy.terminalCompact(boundary,expandedMinimum,false))
+            assertTrue(PanelLayoutPolicy.terminalCompact(900,expandedMinimum,true))
+            val compact=PanelLayoutPolicy.terminalCompact(400,expandedMinimum,false)
+            val minimum=if(compact) expandedMinimum-96 else expandedMinimum
+            val spec=PanelLayoutPolicy.resolve(PanelState(),true,400,400,false,false,true,false,minimum)
+            assertTrue("Terminal must stay visible at $expandedMinimum",spec.showPanel)
+        }
+    }
+    @Test fun visibleTerminalUsesFullPaneWhenLargeFontCannotFitSplit() {
+        val state=PanelState(bottomFraction=.35f)
+        for(width in listOf(320,400,599,840))for(height in listOf(160,190,300,400,700)) {
+            val spec=PanelLayoutPolicy.resolve(state,true,width,height,false,false,true,false,400)
+            assertTrue(spec.showPanel)
+            assertEquals(.35f,state.bottomFraction,.001f)
+            assertFalse(state.maximized)
+            val closed=PanelLayoutPolicy.resolve(state,false,width,height,false,false,true,false,400)
+            assertFalse(closed.showPanel)
+        }
+        assertFalse(PanelLayoutPolicy.resolve(state,true,400,400,true,false,true,false,400).showPanel)
+    }
 }

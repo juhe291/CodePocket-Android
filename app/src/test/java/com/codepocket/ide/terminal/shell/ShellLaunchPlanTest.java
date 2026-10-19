@@ -51,4 +51,22 @@ public class ShellLaunchPlanTest {
         assertTrue(Arrays.asList(p.environment).contains("PATH=/system/bin:/system/xbin"));
         assertFalse(Arrays.toString(p.environment).contains("termux/files/usr"));
     }
+    @Test public void startupFileOverridesSystemPromptAndIsPassedAsEnv() throws Exception {
+        ShellLaunchPlan p=ShellLaunchPlan.prepare(temp.newFolder("files"),temp.newFolder("cache"),null);
+        assertTrue(p.startup.isFile());
+        assertEquals(p.home,p.startup.getCanonicalFile().getParentFile());
+        assertTrue(Arrays.asList(p.environment).contains("ENV="+p.startup.getPath()));
+        byte[] bytes=java.nio.file.Files.readAllBytes(p.startup.toPath());
+        String script=new String(bytes,java.nio.charset.StandardCharsets.UTF_8);
+        assertTrue(script.indexOf(". /system/etc/mkshrc") < script.indexOf("PS1="));
+        // Consumed by scripts/verify_shell_startup.py to execute the exact generated startup file.
+        System.out.println("CODEPOCKET_SHELL_RC="+java.util.Base64.getEncoder().encodeToString(bytes));
+    }
+    @Test public void sessionsHaveIndependentStartupFiles() throws Exception {
+        File files=temp.newFolder("files"),cache=temp.newFolder("cache");
+        ShellLaunchPlan a=ShellLaunchPlan.prepare(files,cache,null),b=ShellLaunchPlan.prepare(files,cache,null);
+        assertNotEquals(a.startup,b.startup);
+        assertTrue(a.startup.delete());
+        assertTrue(b.startup.isFile());
+    }
 }

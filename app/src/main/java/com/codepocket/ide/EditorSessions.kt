@@ -12,7 +12,7 @@ data class EditorViewState(
         start = start.coerceIn(0, length), end = end.coerceIn(0, length),
         scrollX = scrollX.coerceAtLeast(0), scrollY = scrollY.coerceAtLeast(0),
         inputStart = inputStart.coerceIn(0, inputLength), inputEnd = inputEnd.coerceIn(0, inputLength),
-        focus = if (focus == "stdin") "stdin" else "editor"
+        focus = when (focus) { "stdin", "terminal" -> focus; else -> "editor" }
     )
 }
 
