@@ -34,6 +34,10 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import com.codepocket.ide.animation.Animations
+import com.codepocket.ide.animation.MotionEnvironment
+import com.codepocket.ide.animation.LayoutMotion
+import com.codepocket.ide.animation.SurfaceMotion
+import com.codepocket.ide.animation.DialogMotion
 import com.codepocket.ide.editor.EditorAnalysisController
 import com.codepocket.ide.editor.NativeEditorPort
 import com.codepocket.ide.editor.DocumentEditorPort
@@ -64,6 +68,9 @@ import org.json.JSONArray
 class MainActivity : Activity() {
     private lateinit var workspace: Workspace
     private val prefs by lazy { getSharedPreferences("codepocket_v2", MODE_PRIVATE) }
+    private var motionObserver: MotionEnvironment? = null
+    private var motionForeground = false
+    private var themeSnapshot: SurfaceMotion.Snapshot? = null
     private var dark = true
     private var settings = AppSettings()
     private var toolDialog: AlertDialog? = null
@@ -105,6 +112,7 @@ class MainActivity : Activity() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var sessions: EditorSessions
     private var quietInput = false
+    private var startupPanelPending = true
     private var panelVisible = true
     private var panelState = PanelState()
     private var panelLayout: PanelLayout? = null
@@ -171,6 +179,7 @@ class MainActivity : Activity() {
     private lateinit var terminalRegistry: ShellSessionRegistry
     private lateinit var tabsRow: LinearLayout
     private lateinit var suggestionRow: LinearLayout
+    private var restoredExplorerScroll = 0
     private var sidebarExplorerList: LinearLayout? = null
     private var overlayExplorerList: LinearLayout? = null
     private lateinit var contentHost: LinearLayout
@@ -199,6 +208,8 @@ class MainActivity : Activity() {
         dark = settings.isDark(isSystemDark())
         setTheme(if (dark) R.style.Theme_CodePocket else R.style.Theme_CodePocket_Light)
         super.onCreate(savedInstanceState)
+        themeSnapshot = lastNonConfigurationInstance as? SurfaceMotion.Snapshot
+        startupPanelPending = savedInstanceState?.getBoolean("panelStartupPending", true) ?: true
         selectedOutput = savedInstanceState?.getInt("outputChannel", 3)?.coerceIn(0, 3) ?: 3
         drafts = DraftStore(File(filesDir, "drafts")) { a, b -> android.system.Os.rename(a.path, b.path) }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
@@ -256,12 +267,14 @@ class MainActivity : Activity() {
                         opened.clear(); opened.addAll(ready.paths)
                         activePath = ready.active; loadedPath = null; dirty = false
                         currentDirectory = prefs.getString(prefKey("directory"), "") ?: ""
-                        expanded.clear(); expanded.add("")
+                        restoreExplorerViewport(saved)
                         explorerVisible = prefs.getBoolean("explorerVisible", true)
-                        panelVisible = prefs.getBoolean("panelVisible", true)
+                        if (!::root.isInitialized) {
+                            panelVisible = saved?.getBoolean("panelVisible", false) ?: false
+                            panelState = PanelState.fromJson(saved?.getString("panelState") ?: prefs.getString("panelLayout", null))
+                                .let { if (panelVisible) it else it.copy(maximized = false) }
+                        }
                         presetInputExpanded = prefs.getBoolean(prefKey("presetInputExpanded"), false)
-                        panelState = PanelState.fromJson(prefs.getString("panelLayout", null))
-                            .let { if (panelVisible) it else it.copy(maximized = false) }
                         explorerWidth = prefs.getInt("explorerWidth", 240)
                         createUi(); loadActive(ready.code, ready.draft)
                         // Bundle checkpoints are merged before reading; loadActive reconciles them once.
@@ -271,8 +284,15 @@ class MainActivity : Activity() {
                         exportPath = saved?.getString("exportPath")
                         if (tree != null) rememberWorkspace(tree, workspace.title)
                         renderRunState()
+                        themeSnapshot?.let { snapshot ->
+                            themeSnapshot = null
+                            if (motionAllowed()) SurfaceMotion.play(root, snapshot,
+                                android.graphics.Rect(0, 0, snapshot.width, snapshot.height), matchRootSize = true)
+                            else snapshot.release()
+                        }
                     }
                 }.onFailure { error ->
+                    themeSnapshot?.release(); themeSnapshot = null
                     documentTransitions.cancel(); preservePendingDocumentEdits()
                     if (!::root.isInitialized) {
                         setContentView(TextView(this).apply { text = "工作区载入失败，请重新授权或打开内部项目。" })
@@ -280,7 +300,7 @@ class MainActivity : Activity() {
                     AlertDialog.Builder(this).setTitle("工作区载入失败")
                         .setMessage("${error.message}\n恢复草稿仍保留在应用内。请选择原目录重新授权。")
                         .setPositiveButton("选择目录") { _, _ -> selectDirectory() }
-                        .setNegativeButton("内部项目") { _, _ -> startWorkspace(null) }.show()
+                        .setNegativeButton("内部项目") { _, _ -> startWorkspace(null) }.showAnimated()
                 }
             }
         }
@@ -309,11 +329,14 @@ class MainActivity : Activity() {
 
     override fun onStart() {
         super.onStart()
+        if (motionObserver == null) motionObserver = MotionEnvironment(this, ::refreshMotionPolicy)
+        motionObserver?.start()
         RunSession.listener = { renderRunState() }
         renderRunState()
     }
 
     override fun onStop() {
+        motionObserver?.stop()
         RunSession.listener = null
         super.onStop()
     }
@@ -323,6 +346,10 @@ class MainActivity : Activity() {
         if (exportContent != null) outState.putString("exportSnapshot", "pending-export.txt")
         outState.putString("exportPath", exportPath)
         outState.putInt("outputChannel", selectedOutput)
+        saveExplorerViewport(outState)
+        outState.putBoolean("panelVisible", panelVisible)
+        outState.putBoolean("panelStartupPending", startupPanelPending)
+        outState.putString("panelState", panelState.toJson())
         if (dirty) {
             outState.putString("draftPath", activePath)
             outState.putString("draft", editor.text.toString())
@@ -334,16 +361,21 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        motionForeground = true
         shellPane?.hostActive(true)
+        refreshMotionPolicy()
         if (::editor.isInitialized) { handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
     }
 
     override fun onPause() {
         super.onPause()
+        motionForeground = false
         shellPane?.hostActive(false)
+        refreshMotionPolicy()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         explorerResizeHandle?.cancelGesture(); projectSearch?.cancel()
         cancelWorkbenchMotion()
+        completionPopup?.dismiss(false); signaturePopup?.dismiss(false)
         handler.removeCallbacks(refreshEditor); editorAnalysis?.cancel(); editorPort?.cancelNavigation(); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
         currentGeometry?.let { updateExplorerLayout(ExplorerLayout.resolve(it, explorerWidth)) }
         persist()
@@ -351,8 +383,8 @@ class MainActivity : Activity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (!hasFocus) { cancelWorkbenchMotion(); editorAnalysis?.cancel(); hideCompletion(); completionConsumedKeys.clear() }
-        else if (::editor.isInitialized) { handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
+        if (!hasFocus) { cancelWorkbenchMotion(); completionPopup?.dismiss(false); signaturePopup?.dismiss(false); editorAnalysis?.cancel(); hideCompletion(); completionConsumedKeys.clear() }
+        else if (::editor.isInitialized) { refreshMotionPolicy(); handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
     }
 
     private fun persist() {
@@ -373,7 +405,17 @@ class MainActivity : Activity() {
             .putBoolean("panelVisible", panelVisible).putString("panelLayout", panelState.toJson()).apply()
     }
 
+    override fun onRetainNonConfigurationInstance(): Any? {
+        // System night-mode changes recreate this Activity too. Size changes safely discard this bounded image later.
+        val snapshot = themeSnapshot ?: if (settings.theme == UiTheme.SYSTEM && ::root.isInitialized)
+            SurfaceMotion.capture(root, motionEnabled()) else null
+        themeSnapshot = null
+        return snapshot
+    }
+
     override fun onDestroy() {
+        motionObserver?.stop(); motionObserver = null
+        themeSnapshot?.release(); themeSnapshot = null
         super.onDestroy()
         shellPane?.dispose(); shellPane = null
         if (isFinishing) ShellSessionRegistry.finishAll()
@@ -471,6 +513,7 @@ class MainActivity : Activity() {
         splitHost = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; layoutDirection = View.LAYOUT_DIRECTION_LTR }
         panelResize = PanelResizeHandle(this).apply {
             setCallbacks(muted, {
+                if (::splitHost.isInitialized) Animations.cancelTree(splitHost)
                 hideCompletion(); panelDragViewport = capturePanelViewport()
             }, ::resizePanelFraction, ::finishPanelResize)
             setBackgroundColor(surface)
@@ -525,6 +568,7 @@ class MainActivity : Activity() {
         if (!::contentHost.isInitialized || contentHost.width <= 0 || contentHost.height <= 0) return
         val geometry = WorkspaceGeometry.measure(contentHost, imeVisible)
         if (currentGeometry == geometry) return
+        if (currentGeometry != null) cancelWorkbenchMotion()
         currentGeometry = geometry
         updateExplorerLayout(ExplorerLayout.resolve(geometry, explorerWidth))
     }
@@ -540,6 +584,7 @@ class MainActivity : Activity() {
                 explorerPane = makeExplorerPane(true).also { contentHost.addView(it, 1, LinearLayout.LayoutParams(dp(layout.width), -1)) }
                 explorerResizeHandle = ExplorerResizeHandle(this).also { handle ->
                     handle.setCallbacks(::resizeExplorer, ::finishExplorerResize) {
+                        if (::contentHost.isInitialized) Animations.cancelTree(contentHost)
                         explorerDragStartWidth = ((explorerPane?.layoutParams?.width ?: dp(explorerWidth)) / resources.displayMetrics.density).toInt()
                         explorerDragViewport = capturePanelViewport(); hideCompletion()
                     }
@@ -625,7 +670,7 @@ class MainActivity : Activity() {
 
     private fun showContextCommands(anchor: View, commands: List<IdeCommand>) {
         commandMenu?.dismiss()
-        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands.filter { isCpp() || it !in listOf(IdeCommand.PRESET_INPUT,IdeCommand.CLEAR_INPUT) }, ::dispatchCommand)
+        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands.filter { isCpp() || it !in listOf(IdeCommand.PRESET_INPUT,IdeCommand.CLEAR_INPUT) }, ::dispatchCommand, motionAllowed())
     }
 
     private fun dispatchCommand(command: IdeCommand) {
@@ -696,17 +741,26 @@ class MainActivity : Activity() {
     private fun updateImeLayout(visible: Boolean = imeVisible) {
         if (!::input.isInitialized || !::status.isInitialized) return
         val changed = visible != imeVisible
-        if (changed) { completionPopup?.dismiss(); hideSignatureHelp() }
+        if (changed) { completionPopup?.dismiss(false); signaturePopup?.dismiss(false); hideSignatureHelp() }
         imeVisible = visible
         val height = (root.height / resources.displayMetrics.density).toInt()
+        resolvePanelStartup((root.width / resources.displayMetrics.density).toInt(), height)
         val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, height, panelVisible, settings.collapsePanelOnIme)
-        if (visible) cancelWorkbenchMotion()
+        if (visible && changed) cancelWorkbenchMotion()
+        if (::splitHost.isInitialized && shellPane?.hasTerminalFocus() == true) SurfaceMotion.finish(splitHost)
         suggestionScroll.visibility = if (WorkspaceLayoutPolicy.showSnippet(snippetSession != null, visible, height)) View.VISIBLE else View.GONE
         keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
         statusBarComponent.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
         editorToolbar.visibility = if (keyboardToolbar.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         applyPanelLayout()
         if (changed && visible && editor.hasFocus()) editorPort?.revealCaret()
+    }
+
+    private fun resolvePanelStartup(width: Int, height: Int) {
+        if (!startupPanelPending || width <= 0 || height <= 0 || imeVisible) return
+        startupPanelPending = false
+        panelVisible = width >= 600 && height >= 480
+        panelState = panelState.copy(bottomFraction = .35f, maximized = false)
     }
 
     private var panelDragViewport: EditorViewportSnapshot? = null
@@ -745,7 +799,12 @@ class MainActivity : Activity() {
     }
 
     private fun closePanel() {
+        startupPanelPending = false
         panelResize.cancelGesture(); hideCompletion()
+        if (::splitHost.isInitialized) {
+            LayoutMotion.finish(splitHost)
+            SurfaceMotion.outgoing(splitHost, outputRegion, motionEnabled(), dy = dp(16))
+        }
         val stamp = capturePanelViewport()
         if (input.hasFocus() || shellPane?.hasTerminalFocus() == true) { hideKeyboard(); editor.requestFocus() }
         panelVisible = false; panelState = panelState.copy(maximized = false)
@@ -753,24 +812,33 @@ class MainActivity : Activity() {
     }
 
     private fun togglePanel() {
+        startupPanelPending = false
         if (panelVisible && panelLayout?.showPanel == true) { closePanel(); return }
+        if (::splitHost.isInitialized) SurfaceMotion.finish(splitHost)
         panelVisible = true
         updateImeLayout()
         // A narrow/short window has room for one pane; explicit opening must still work.
         if (panelLayout?.showPanel != true) setPanelMaximized(true)
-        else { persistPanel(); animateDecoration(outputRegion) }
+        else { persistPanel(); Animations.enterPanel(outputRegion, motionEnabled()) }
     }
 
     private fun setPanelMaximized(maximized: Boolean) {
+        startupPanelPending = false
         if (workspaceBusy) return
         panelResize.cancelGesture(); hideCompletion()
+        val panelWasShown = outputRegion.isShown
+        if (::splitHost.isInitialized) {
+            SurfaceMotion.finish(splitHost)
+            LayoutMotion.begin(splitHost, motionEnabled(), outputRegion)
+        }
         val stamp = capturePanelViewport()
         if (maximized) clearSnippet()
         if (maximized && !input.hasFocus() && shellPane?.hasTerminalFocus() != true) { hideKeyboard(); outputRegion.requestFocus() }
         panelVisible = true; panelState = panelState.copy(maximized = maximized)
         updateImeLayout(); persistPanel()
         if (!maximized) restorePanelViewport(stamp, true)
-        animateDecoration(if (maximized) outputRegion else editorRegion)
+        if (!panelWasShown) Animations.enterPanel(outputRegion, motionEnabled())
+        if (!::splitHost.isInitialized) animateDecoration(if (maximized) outputRegion else editorRegion)
     }
 
     private fun revealEditor() {
@@ -784,7 +852,7 @@ class MainActivity : Activity() {
 
     private fun showPanelSizeMenu(anchor: View) {
         panelResize.cancelGesture(); commandMenu?.dismiss()
-        val menu = android.widget.PopupMenu(this, anchor)
+        val menu = DialogMotion.menu(this, anchor, motionAllowed())
         menu.menu.add(0, 1, 0, R.string.panel_smaller).isEnabled = panelLayout?.resizable == true
         menu.menu.add(0, 2, 1, R.string.panel_larger).isEnabled = panelLayout?.resizable == true
         menu.menu.add(0, 3, 2, R.string.panel_reset)
@@ -797,6 +865,7 @@ class MainActivity : Activity() {
                         else panelLayout?.let { spec ->
                             panelState = spec.resize(panelState, spec.extent + spec.available * if (item.itemId == 2) .05f else -.05f)
                         }
+                        if (::splitHost.isInitialized) LayoutMotion.begin(splitHost, motionEnabled(), outputRegion)
                         applyPanelLayout(); persistPanel(); restorePanelViewport(stamp)
                     }
                 }
@@ -923,7 +992,7 @@ class MainActivity : Activity() {
         editorRegion = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         work.addView(editorRegion, LinearLayout.LayoutParams(-1, 0, 1f))
         val tabs = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; setBackgroundColor(surface) }
-        tabsRow = LinearLayout(this)
+        tabsRow = EditorTabs(this, palette)
         tabs.addView(tabsRow)
         editorRegion.addView(tabs, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         editorToolbar = EditorToolbar(this, palette, ::dispatchCommand) { showContextCommands(it, IdeCommands.editorMenuItems) }
@@ -1077,6 +1146,23 @@ class MainActivity : Activity() {
         return outputRegion
     }
 
+    private fun saveExplorerViewport(outState: Bundle) {
+        val paths = ArrayList<String>()
+        var characters = 0
+        expanded.take(512).forEach { path ->
+            if (characters + path.length <= 32768) { paths.add(path); characters += path.length }
+        }
+        outState.putStringArrayList("expandedDirectories", paths)
+        val visible = if (explorerDialog?.isShowing == true) overlayExplorerList else sidebarExplorerList
+        outState.putInt("explorerScroll", (visible?.parent as? ScrollView)?.scrollY ?: restoredExplorerScroll)
+    }
+
+    private fun restoreExplorerViewport(saved: Bundle?) {
+        expanded.clear(); expanded.add("")
+        saved?.getStringArrayList("expandedDirectories")?.take(512)?.forEach { expanded.add(it) }
+        restoredExplorerScroll = saved?.getInt("explorerScroll", 0)?.coerceAtLeast(0) ?: 0
+    }
+
     private fun makeExplorerPane(sidebar: Boolean): LinearLayout {
         val panelView = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(surface) }
         val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0) }
@@ -1093,6 +1179,16 @@ class MainActivity : Activity() {
         val fileList = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         if (sidebar) sidebarExplorerList = fileList else overlayExplorerList = fileList
         scroll.addView(fileList)
+        if (restoredExplorerScroll > 0) {
+            val desired = restoredExplorerScroll
+            scroll.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+                override fun onLayoutChange(view: View, l: Int, t: Int, r: Int, b: Int, ol: Int, ot: Int, or: Int, ob: Int) {
+                    if (r <= l || b <= t || fileList.height <= 0) return
+                    scroll.removeOnLayoutChangeListener(this)
+                    scroll.scrollTo(0, desired)
+                }
+            })
+        }
         panelView.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         renderExplorer()
         return panelView
@@ -1105,8 +1201,12 @@ class MainActivity : Activity() {
             val pane = explorerPane ?: return
             explorerResizeHandle?.visibility = if (explorerVisible) View.VISIBLE else View.GONE
             activityBar?.setExplorerActive(explorerVisible)
+            SurfaceMotion.finish(contentHost)
             if (explorerVisible) Animations.slideIn(pane, -pane.width.toFloat(), enabled = motionEnabled())
-            else Animations.slideOut(pane, -pane.width.toFloat(), enabled = motionEnabled())
+            else {
+                SurfaceMotion.outgoing(contentHost, pane, motionEnabled(), dx = -dp(24))
+                Animations.cancelTree(pane); pane.visibility = View.GONE
+            }
             prefs.edit().putBoolean("explorerVisible", explorerVisible).apply()
             return
         }
@@ -1115,7 +1215,7 @@ class MainActivity : Activity() {
         explorerDialog = AlertDialog.Builder(this).setTitle("项目文件 · CodePocket").setView(content)
             .setPositiveButton("完成", null).create().also { dialog ->
                 dialog.setOnDismissListener { overlayExplorerList = null; if (explorerDialog === dialog) explorerDialog = null }
-                dialog.show()
+                DialogMotion.show(dialog, motionAllowed(), drawer = true)
                 dialog.window?.setLayout(-1, -1)
             }
     }
@@ -1138,7 +1238,8 @@ class MainActivity : Activity() {
             }
         }
         visit(workspace.root, 0)
-        val moving = animate && motionEnabled()
+        val moving = animate && entries.size + 2 <= LayoutMotion.MAX_TREE_ITEMS && motionEnabled()
+        LayoutMotion.begin(explorerList, moving)
         KeyedViews.update(explorerList, listOf("root") + entries.keys + "hint", { key ->
             when (key) {
                 "root" -> label(workspace.title, 12f, muted, true).apply {
@@ -1151,7 +1252,7 @@ class MainActivity : Activity() {
                 }
                 else -> ExplorerRow(this, palette)
             }
-        }) { view, key, added ->
+        }) { view, key, _ ->
             val entry = entries[key] ?: return@update
             (view as ExplorerRow).bind(entry.path, entry.depth, entry.folder, entry.open, entry.path == activePath, moving)
             view.setOnClickListener {
@@ -1168,7 +1269,7 @@ class MainActivity : Activity() {
                     fileMenu(entry.file); true
                 } else false
             }
-            if (added && moving) Animations.fadeIn(view, 120)
+
         }
     }
 
@@ -1186,7 +1287,7 @@ class MainActivity : Activity() {
                 "移动到…" -> askMove(file)
                 "删除" -> askDelete(file)
             }
-        }.show()
+        }.showAnimated()
     }
 
     private fun nameDialog(title: String, value: String = "", onConfirm: (String) -> Unit) {
@@ -1194,7 +1295,7 @@ class MainActivity : Activity() {
         AlertDialog.Builder(this).setTitle(title).setView(field).setNegativeButton("取消", null)
             .setPositiveButton("确定") { _, _ ->
                 try { onConfirm(field.text.toString()) } catch (e: Exception) { alert(e.message ?: "操作失败") }
-            }.show()
+            }.showAnimated()
     }
 
     private fun askCreate(directory: Boolean) {
@@ -1242,7 +1343,7 @@ class MainActivity : Activity() {
                         expanded.add(workspace.path(folders[which])); renderExplorer(); refreshTabs()
                     }
                 }
-            }.show()
+            }.showAnimated()
     }
 
     private fun askDelete(file: File) {
@@ -1266,7 +1367,7 @@ class MainActivity : Activity() {
                         renderExplorer(); refreshTabs()
                     }
                 }
-            }.show()
+            }.showAnimated()
     }
 
     private fun ensureFallback(): String {
@@ -1389,6 +1490,8 @@ class MainActivity : Activity() {
             (view as EditorTab).bind(path == activePath, path == activePath && dirty)
             if (added && existing && motionEnabled()) Animations.fadeIn(view, 120)
         }
+        (tabsRow as? EditorTabs)?.select((0 until tabsRow.childCount).map { tabsRow.getChildAt(it) }
+            .firstOrNull { (it as? EditorTab)?.path == activePath }, motionEnabled())
     }
 
     private fun loadActive(content: String? = null, restored: Draft? = null): Boolean {
@@ -1497,7 +1600,7 @@ class MainActivity : Activity() {
         if (suppress && ::sessions.isInitialized && ::editor.isInitialized) completionSuppressed = completionRequest()
         completionGeneration++; completionTask?.cancel(true); completionTask = null
         completionBatch = null
-        completionPopup?.dismiss()
+        completionPopup?.dismiss(animated = suppress && motionEnabled())
     }
 
     private fun updateSuggestions(force: Boolean = false) {
@@ -1536,6 +1639,7 @@ class MainActivity : Activity() {
                         completionBatch?.let { completionSuppressed = it.request }
                         completionBatch = null; completionGeneration++; completionTask?.cancel(true)
                     }).also { completionPopup = it }
+                editor.finishMotion() // Popup and drawn caret must agree on the real insertion point immediately.
                 if (!popup.show(batch, motionEnabled())) {
                     hideCompletion()
                     if (force) status.setText(R.string.completion_no_space)
@@ -1547,7 +1651,7 @@ class MainActivity : Activity() {
     private fun hideSignatureHelp(suppress: Boolean = false) {
         if (suppress && ::sessions.isInitialized && ::editor.isInitialized) signatureSuppressed = completionRequest()
         signatureGeneration++; signatureTask?.cancel(true); signatureTask = null
-        signaturePopup?.dismiss()
+        signaturePopup?.dismiss(animated = suppress && motionEnabled())
     }
 
     private fun updateSignatureHelp(force: Boolean = false) {
@@ -1576,6 +1680,7 @@ class MainActivity : Activity() {
                 }
                 val popup = signaturePopup ?: SignaturePopup(this, editor, editorPort ?: return@runOnUiThread, surface, textForeground, muted, accent,
                     { hideSignatureHelp(true) }).also { signaturePopup = it }
+                editor.finishMotion()
                 if (!popup.show(found, motionEnabled()) && force) status.setText(R.string.signature_no_space)
             }
         }
@@ -1690,7 +1795,7 @@ class MainActivity : Activity() {
             .setItems(options.map { it.first }.toTypedArray()) { dialog, which ->
                 dialog.dismiss()
                 if (snapshot.document == completionRequest().document && snapshot.revision == editRevision) options[which].second()
-            }.setNegativeButton(R.string.snippet_cancel, null).show()
+            }.setNegativeButton(R.string.snippet_cancel, null).showAnimated()
     }
 
     private fun insertText(snippet: String, caretInside: Boolean = false) {
@@ -1777,6 +1882,10 @@ class MainActivity : Activity() {
         if (themeChanged && (dirty || saving)) { saveActive { applySettings(next) }; return }
         hideCompletion()
         captureSession(); persistSessions()
+        if (themeChanged && ::root.isInitialized) {
+            themeSnapshot?.release()
+            themeSnapshot = SurfaceMotion.capture(root, motionEnabled() && next.animations)
+        }
         settings = next.normalized()
         dark = settings.isDark(isSystemDark())
         prefs.edit().putString("settings", settings.toJson()).putBoolean("dark", dark).apply()
@@ -1787,7 +1896,8 @@ class MainActivity : Activity() {
     private fun applyEditorPreferences() {
         editor.textSize = settings.fontSize.toFloat(); numbers.textSize = settings.fontSize.toFloat()
         consoleText.textSize = settings.terminalFontSize.toFloat()
-        shellPane?.setPreferences(settings.terminalFontSize, settings.animations)
+        shellPane?.setPreferences(settings.terminalFontSize, motionForeground && motionAllowed() && settings.cursorBlink)
+        refreshMotionPolicy()
         numbers.visibility = if (settings.lineNumbers) View.VISIBLE else View.GONE
         editor.setHorizontallyScrolling(!settings.wordWrap)
         (editor.parent as? View)?.setBackgroundColor(codeBackground)
@@ -1812,23 +1922,31 @@ class MainActivity : Activity() {
     }
 
     private fun cancelWorkbenchMotion() {
+        if (::root.isInitialized) { Animations.cancelTree(root); return }
+        // Unmeasured command fixtures/early startup can have individual panes before a root is published.
         listOfNotNull(explorerPane, activityBar, sidebarExplorerList, overlayExplorerList,
             if (::tabsRow.isInitialized) tabsRow else null,
             if (::editorRegion.isInitialized) editorRegion else null,
             if (::outputRegion.isInitialized) outputRegion else null).forEach(Animations::cancelTree)
     }
 
+    private fun refreshMotionPolicy() {
+        if (isDestroyed) return
+        val allowed = motionForeground && motionAllowed()
+        if (!allowed) cancelWorkbenchMotion()
+        if (::editor.isInitialized) editor.configureMotion(allowed, settings.cursorMovement, settings.cursorBlink,
+            if (syntaxDark) 0xFFAECDFF.toInt() else 0xFF005FB8.toInt())
+        shellPane?.setAnimationsEnabled(allowed && settings.cursorBlink)
+    }
+
     private fun animateDecoration(view: View?) {
         if (view != null) Animations.fadeIn(view, 120, enabled = motionEnabled())
     }
 
-    private fun motionEnabled(): Boolean {
-        val scale = runCatching { android.provider.Settings.Global.getFloat(contentResolver,
-            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) }.getOrDefault(0f)
-        val powerSave = (getSystemService(POWER_SERVICE) as android.os.PowerManager).isPowerSaveMode
-        return !imeVisible && MotionPolicy.enabled(settings.animations, scale, powerSave) &&
-            (Build.VERSION.SDK_INT < 26 || android.animation.ValueAnimator.areAnimatorsEnabled())
-    }
+    private fun motionAllowed() = MotionEnvironment.enabled(this, settings.animations)
+    private fun motionEnabled() = !imeVisible && motionAllowed()
+
+    private fun AlertDialog.Builder.showAnimated(): AlertDialog = DialogMotion.show(create(), motionAllowed())
 
     private fun searchSnapshot() = EditorSnapshot(sessions.key(activePath), editRevision,
         editor.text.toString(), editor.selectionStart.coerceAtLeast(0), editor.selectionEnd.coerceAtLeast(0))
@@ -1895,7 +2013,7 @@ class MainActivity : Activity() {
             if (projectSearch === dialogSearch) projectSearch = null
             if (toolDialog === dialog) toolDialog = null
         }
-        toolDialog = dialog; dialog.show()
+        toolDialog = dialog; DialogMotion.show(dialog, motionAllowed())
     }
 
     @Deprecated("Native back handling retained for API 24; predictive-back UI still needs device verification")
@@ -1914,7 +2032,7 @@ class MainActivity : Activity() {
                     .setMessage("当前修改尚未保存。保存失败时会保留编辑内容和恢复草稿，并留在编辑器。")
                     .setPositiveButton("保存并退出") { _, _ -> saveActive { finish() } }
                     .setNeutralButton("导出当前内容") { _, _ -> exportFile() }
-                    .setNegativeButton("取消", null).show()
+                    .setNegativeButton("取消", null).showAnimated()
             }
         }
     }
@@ -1932,7 +2050,7 @@ class MainActivity : Activity() {
             val accepted = finishEditorChange(result)
             if (result.changesText) queueDraft()
             accepted
-        })
+        }, animations = motionAllowed())
     }
 
     private fun showGoToLine() {
@@ -1951,7 +2069,7 @@ class MainActivity : Activity() {
             else if (!selectEditor(EditorSelectionRequest(source, offset))) field.error = getString(R.string.editor_navigation_stale)
             else { dialog.dismiss(); editor.requestFocus() }
         } }
-        toolDialog?.dismiss(); toolDialog = dialog; dialog.show()
+        toolDialog?.dismiss(); toolDialog = dialog; DialogMotion.show(dialog, motionAllowed())
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -2067,7 +2185,7 @@ class MainActivity : Activity() {
                     drafts.removeIfMatches(key, text)
                     fresh
                 }) { fresh -> commitDocumentTransition(transition) { loadActive(fresh) } }
-            }.show()
+            }.showAnimated()
     }
 
     private fun recoverDrafts() {
@@ -2093,7 +2211,7 @@ class MainActivity : Activity() {
                             putExtra(Intent.EXTRA_TITLE, draft.path.substringAfterLast('/'))
                         }, 202)
                     }
-                }.show()
+                }.showAnimated()
         }
     }
 
@@ -2106,12 +2224,12 @@ class MainActivity : Activity() {
                 when (which) {
                     0 -> AlertDialog.Builder(this).setTitle("选择真实项目目录")
                         .setMessage("编辑器保存会写回所选目录；权限只限该目录。外部文件卸载后仍由提供方保留。Python 使用私有运行镜像，运行代码产生的文件不会自动同步回外部目录。")
-                        .setPositiveButton("选择目录") { _, _ -> selectDirectory() }.setNegativeButton("取消", null).show()
+                        .setPositiveButton("选择目录") { _, _ -> selectDirectory() }.setNegativeButton("取消", null).showAnimated()
                     1 -> requestWorkspace(null)
                     2 -> requestWorkspace(selectedTree)
                     else -> requestWorkspace(recent.getJSONObject(which - 3).getString("uri"))
                 }
-        }.show()
+        }.showAnimated()
     }
 
     private fun requestWorkspace(tree: String?) {
@@ -2128,7 +2246,7 @@ class MainActivity : Activity() {
                 ioAction("正在保留恢复草稿…", { drafts.put(key, path, text, base) }) {
                     commitDocumentTransition(transition) { startWorkspace(tree) }
                 }
-            }.setNegativeButton("取消", null).show()
+            }.setNegativeButton("取消", null).showAnimated()
     }
 
     private fun selectDirectory() {
@@ -2197,10 +2315,11 @@ class MainActivity : Activity() {
                 .setNegativeButton("取消", null).setPositiveButton("同意并运行") { _, _ ->
                     prefs.edit().putBoolean("wandboxConsent", true).apply()
                     runCode(true)
-                }.show()
+                }.showAnimated()
             return
         }
         val runningFile = workspace.resolve(activePath).absolutePath
+        startupPanelPending = false
         // Run in the selected real terminal. Background messages never change the selected session.
         if (terminalRegistry.catalog.selected() == null) {
             try { terminalRegistry.create(if (workspace.external) null else workspace.root) }
@@ -2250,7 +2369,7 @@ class MainActivity : Activity() {
         val hadTerminalFocus = shellPane?.hasTerminalFocus() == true
         shellPane?.let { it.dispose(); outputRegion.removeView(it) }
         shellPaneId = selected.id
-        shellPane = ShellTerminalPane(this, selected.value.directory, settings.terminalFontSize, settings.animations,
+        shellPane = ShellTerminalPane(this, selected.value.directory, settings.terminalFontSize, motionForeground && motionAllowed() && settings.cursorBlink,
             { hideCompletion(); clearSnippet(); lastFocus = "terminal"; updateImeLayout() }, selected.value.runtime).also { pane ->
                 pane.setEmbedded(true)
                 outputRegion.addView(pane, LinearLayout.LayoutParams(-1, 0, 1f))
@@ -2311,7 +2430,7 @@ class MainActivity : Activity() {
     }
 
     private fun showTerminalChoices(anchor: View) {
-        val menu = android.widget.PopupMenu(this, anchor)
+        val menu = DialogMotion.menu(this, anchor, motionAllowed())
         val choices = terminalRegistry.catalog.entries().map { e -> e.id to e.name() }
         choices.forEachIndexed { index, choice -> menu.menu.add(0, index, index, choice.second).apply {
             isCheckable = true; isChecked = choice.first == terminalRegistry.catalog.selectedId()
@@ -2337,7 +2456,7 @@ class MainActivity : Activity() {
 
     private fun showTerminalActions(anchor: View) {
         val entry = terminalRegistry.catalog.selected()
-        val menu = android.widget.PopupMenu(this, anchor)
+        val menu = DialogMotion.menu(this, anchor, motionAllowed())
         if (entry == null) { newShellSession(); return }
         val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证",
             ) + if(isCpp())listOf("编辑 C++ 云端预填输入")else emptyList()
@@ -2354,9 +2473,9 @@ class MainActivity : Activity() {
                     .setNegativeButton("取消", null).setPositiveButton("结束") { _, _ ->
                         terminalRegistry.end(entry.id)
                         showOutput(3); updateImeLayout()
-                    }.show()
+                    }.showAnimated()
                 6 -> AlertDialog.Builder(this).setTitle("本机终端错误").setMessage(entry.value.runtime.failureDetails())
-                    .setNegativeButton("关闭", null).setPositiveButton("复制") { _, _ -> entry.value.runtime.copyFailureDetails() }.show()
+                    .setNegativeButton("关闭", null).setPositiveButton("复制") { _, _ -> entry.value.runtime.copyFailureDetails() }.showAnimated()
                 7 -> shellPane?.ensureSession()
                 8 -> shellPane?.showAbout()
                 9 -> setPresetInputExpanded(true)
@@ -2397,5 +2516,5 @@ class MainActivity : Activity() {
         switchFile(relative, jump)
     }
 
-    private fun alert(message: String) { AlertDialog.Builder(this).setMessage(message).setPositiveButton("确定", null).show() }
+    private fun alert(message: String) { AlertDialog.Builder(this).setMessage(message).setPositiveButton("确定", null).showAnimated() }
 }

@@ -39,6 +39,8 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         textSize = 10f; setTextColor(muted); setPadding(dp(8), 0, dp(8), 0); maxLines = 1
         ellipsize = android.text.TextUtils.TruncateAt.END
     }
+    private var recentlyClosedDocument: String? = null
+    private var recentlyClosedAt = Long.MIN_VALUE
     private var result: SignatureResult? = null
     private var variant = 0
     private val popup = PopupWindow(content, 1, 1, false).apply {
@@ -47,7 +49,10 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         elevation = dp(6).toFloat(); animationStyle = 0; enterTransition = null; exitTransition = null
         setBackgroundDrawable(GradientDrawable().apply { setColor(backgroundColor); setStroke(dp(1), muted) })
         if (Build.VERSION.SDK_INT >= 29) setIsLaidOutInScreen(true)
-        setOnDismissListener { Animations.cancel(content) }
+        setOnDismissListener {
+            recentlyClosedDocument = result?.request?.document; recentlyClosedAt = android.os.SystemClock.uptimeMillis()
+            Animations.cancel(content)
+        }
     }
     val isShowing get() = popup.isShowing
 
@@ -74,7 +79,11 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
             result?.reference?.name != next.reference.name) variant = 0
         result = next; render()
         if (!reposition()) return false
-        Animations.popup(content, alreadyShowing, animate)
+        popup.exitTransition = if (com.codepocket.ide.animation.MotionEnvironment.enabled(activity, animate))
+            android.transition.Fade().apply { duration = 80 } else null
+        val continuing = next.request.document == recentlyClosedDocument &&
+            android.os.SystemClock.uptimeMillis() - recentlyClosedAt in 0..350
+        Animations.popup(content, alreadyShowing || continuing, animate)
         return true
     }
 
@@ -106,15 +115,15 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
     }
 
     fun reposition(): Boolean {
-        if (activity.isDestroyed || activity.isFinishing) { dismiss(); return false }
-        val anchor = editorSurface.anchor() ?: run { dismiss(); return false }
-        val request = result?.request ?: run { dismiss(); return false }
+        if (activity.isDestroyed || activity.isFinishing) { dismiss(false); return false }
+        val anchor = editorSurface.anchor() ?: run { dismiss(false); return false }
+        val request = result?.request ?: run { dismiss(false); return false }
         val matches = anchor.matches(request.document, request.revision, request.caret)
-        if (!matches) { dismiss(); return false }
+        if (!matches) { dismiss(false); return false }
         val visible = anchor.visible
         val placed = CompletionGeometry.place(CompletionBounds(visible.left, visible.top, visible.right, visible.bottom),
-            anchor.x, anchor.top, anchor.bottom, dp(460), dp(156), dp(144), dp(3)) ?: run { dismiss(); return false }
-        if (placed.width < dp(260)) { dismiss(); return false }
+            anchor.x, anchor.top, anchor.bottom, dp(460), dp(156), dp(144), dp(3)) ?: run { dismiss(false); return false }
+        if (placed.width < dp(260)) { dismiss(false); return false }
         var px = placed.x; var py = placed.y
         if (Build.VERSION.SDK_INT < 29) {
             val screen = IntArray(2); val local = IntArray(2)
@@ -126,10 +135,10 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
             popup.width = placed.width; popup.height = placed.height
             @Suppress("RtlHardcoded")
             try { popup.showAtLocation(editor, Gravity.TOP or Gravity.LEFT, px, py) }
-            catch (_: WindowManager.BadTokenException) { dismiss(); return false }
+            catch (_: WindowManager.BadTokenException) { dismiss(false); return false }
         }
         return true
     }
 
-    fun dismiss() { Animations.cancel(content); popup.dismiss() }
+    fun dismiss(animated: Boolean = true) { if (!animated) popup.exitTransition = null; Animations.cancel(content); popup.dismiss() }
 }

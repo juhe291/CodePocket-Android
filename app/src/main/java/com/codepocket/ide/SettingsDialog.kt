@@ -31,7 +31,10 @@ object SettingsDialog {
         val font = choice("代码字号 sp", sizes.map { it.toString() }, sizes.indexOf(current.fontSize))
         val terminalSizes = (10..24).toList()
         val terminal = choice("运行输出字号 sp", terminalSizes.map { it.toString() }, terminalSizes.indexOf(current.terminalFontSize))
-        val animations = toggle("工作区过渡动画（遵从系统减少动画）", current.animations)
+        val animations = toggle("动画总开关（遵从系统减少动画）", current.animations)
+        val cursorMovement = toggle("平滑移动代码光标", current.cursorMovement)
+        val cursorBlink = toggle("柔和闪烁光标（关闭后常亮）", current.cursorBlink)
+        content.addView(TextView(activity).apply { text = "动画总开关、系统减少动画及省电模式优先；输入和拖动立即响应。" })
         heading("编辑与输入")
         val tabs = listOf(2, 4, 8)
         val indent = choice("Tab 宽度", tabs.map { "$it 列" }, tabs.indexOf(current.tabWidth))
@@ -69,11 +72,11 @@ object SettingsDialog {
                     wordWrap = wrap.isChecked, autoIndent = autoIndent.isChecked, autoPairs = pairs.isChecked,
                     autoCompletion = completion.isChecked, signatureHelp = signatures.isChecked, symbolBar = symbols.isChecked, collapsePanelOnIme = collapse.isChecked,
                     autoSave = autoSave.isChecked, autoSaveDelayMs = delays[delay.selectedItemPosition], animations = animations.isChecked,
+                    cursorMovement = cursorMovement.isChecked, cursorBlink = cursorBlink.isChecked,
                     completionTab = completionTab.isChecked, completionEnter = completionEnter.isChecked,
                     completionArrows = CompletionArrows.values()[completionArrows.selectedItemPosition]).normalized())
             }.create()
-        if (!current.animations) dialog.window?.setWindowAnimations(0)
-        dialog.show()
+        com.codepocket.ide.animation.DialogMotion.show(dialog, current.animations)
         return dialog
     }
 }

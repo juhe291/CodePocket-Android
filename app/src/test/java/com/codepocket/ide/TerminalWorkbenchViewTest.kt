@@ -158,4 +158,14 @@ class TerminalWorkbenchViewTest {
         editor.requestFocus();val selected=registry.create(null);installClosedSession(selected.value.runtime);show(3)
         assertTrue(editor.hasFocus());assertFalse(ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane").hasTerminalFocus())
     }
+    @Test fun firstOutputRefreshDoesNotConsumeTheTabletLaunchDecision() {
+        ReflectionHelpers.setField(activity,"startupPanelPending",true)
+        show(3)
+        assertTrue(ReflectionHelpers.getField<Boolean>(activity,"startupPanelPending"))
+        ReflectionHelpers.callInstanceMethod<Any?>(activity,"resolvePanelStartup",
+            ClassParameter.from(Int::class.javaPrimitiveType!!,840),ClassParameter.from(Int::class.javaPrimitiveType!!,480))
+        assertTrue(ReflectionHelpers.getField<Boolean>(activity,"panelVisible"))
+        assertFalse(ReflectionHelpers.getField<Boolean>(activity,"startupPanelPending"))
+    }
+
 }

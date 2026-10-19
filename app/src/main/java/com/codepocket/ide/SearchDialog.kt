@@ -14,7 +14,7 @@ import java.util.concurrent.Future
 /** Search work stays off the input thread; revision checks prevent edits being applied to another buffer. */
 object SearchDialog {
     fun show(activity: Activity, replace: Boolean, snapshot: () -> EditorSnapshot,
-        select: (EditorSnapshot, Int, Int) -> Boolean, apply: (EditorSnapshot, TextChange, Boolean) -> Boolean): AlertDialog {
+        select: (EditorSnapshot, Int, Int) -> Boolean, apply: (EditorSnapshot, TextChange, Boolean) -> Boolean, animations: Boolean = true): AlertDialog {
         val content = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL; setPadding(28, 8, 28, 8) }
         val query = EditText(activity).apply { hint = "查找文本（非正则）"; setSingleLine(); filters = arrayOf(InputFilter.LengthFilter(10000)) }
         val replacement = EditText(activity).apply { hint = "替换为"; setSingleLine(); filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS)) }
@@ -69,7 +69,7 @@ object SearchDialog {
             buttons.addView(Button(activity).apply { this.text = text; setOnClickListener { operation(kind) } })
         }
         dialog.setOnDismissListener { request++; pending?.cancel(true); executor.shutdownNow() }
-        dialog.show()
+        com.codepocket.ide.animation.DialogMotion.show(dialog, animations)
         return dialog
     }
 }

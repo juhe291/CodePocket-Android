@@ -5,8 +5,8 @@ import android.view.View
 import android.widget.PopupMenu
 
 object IdeCommandMenu {
-    fun show(anchor: View, state: CommandContext, commands: List<IdeCommand>, dispatch: (IdeCommand) -> Unit): PopupMenu {
-        val popup = PopupMenu(anchor.context, anchor)
+    fun show(anchor: View, state: CommandContext, commands: List<IdeCommand>, dispatch: (IdeCommand) -> Unit, animations: Boolean = true): PopupMenu {
+        val popup = com.codepocket.ide.animation.DialogMotion.menu(anchor.context, anchor, animations)
         commands.forEach { command ->
             val title = when {
                 command == IdeCommand.RUN_STOP && state.running -> "停止程序"

@@ -26,12 +26,14 @@ object Animations {
         view.setTag(R.id.workbench_motion, null)
         view.removeOnAttachStateChangeListener(motion)
         view.animate().setListener(null).withEndAction(null).withStartAction(null).cancel()
-        view.alpha = 1f; view.translationX = 0f; view.rotation = motion.rotation
+        view.alpha = 1f; view.translationX = 0f; view.translationY = 0f; view.rotation = motion.rotation
         view.visibility = motion.visibility
     }
 
     fun cancelTree(view: View) {
         cancel(view)
+        (view as? MotionParticipant)?.finishMotion()
+        if (view is ViewGroup) { LayoutMotion.finish(view); SurfaceMotion.finish(view) }
         if (view is ViewGroup) for (i in 0 until view.childCount) cancelTree(view.getChildAt(i))
     }
 
@@ -86,6 +88,13 @@ object Animations {
         if (!degrees.isFinite() || view.rotation == degrees) return
         if (!allowed(enabled)) { view.rotation = degrees; return }
         run(view, view.visibility, degrees, DURATION_SHORT) { it.rotation(degrees) }
+    }
+
+    fun enterPanel(view: View, enabled: Boolean) {
+        cancel(view); view.visibility = View.VISIBLE
+        if (!allowed(enabled) || !MotionEnvironment.enabled(view.context, enabled)) return
+        view.alpha = .85f; view.translationY = 8 * view.resources.displayMetrics.density
+        run(view, View.VISIBLE, view.rotation, 160) { it.alpha(1f).translationY(0f) }
     }
 
     /** New candidate batches update an open popup in place, without restarting its entrance on every key. */

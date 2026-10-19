@@ -86,4 +86,24 @@ class TerminalPanelFocusTest {
         ReflectionHelpers.callInstanceMethod<Any?>(activity,"revealEditor")
         assertTrue(editor.hasFocus());assertFalse(pane.hasTerminalFocus())
     }
+    @Test fun animationSwitchKeepsTheActualTerminalRendererAndFocus() {
+        assertTrue(pane.restoreTerminalFocus())
+        val terminal=ReflectionHelpers.getField<com.termux.view.TerminalView>(pane,"terminal")
+        val renderer=terminal.mRenderer
+        pane.setAnimationsEnabled(true);pane.setAnimationsEnabled(false);pane.setAnimationsEnabled(false)
+        assertSame(renderer,terminal.mRenderer);assertTrue(pane.hasTerminalFocus());assertEquals(3,editor.selectionStart)
+    }
+    @Test fun activityMotionPolicyCanChangeBlinkWithoutResettingTerminalFontOrInput() {
+        assertTrue(pane.restoreTerminalFocus())
+        val terminal=ReflectionHelpers.getField<com.termux.view.TerminalView>(pane,"terminal")
+        val renderer=terminal.mRenderer
+        field("settings",AppSettings(cursorBlink=false));field("motionForeground",true)
+        ReflectionHelpers.callInstanceMethod<Any?>(activity,"refreshMotionPolicy")
+        assertFalse(ReflectionHelpers.getField<Boolean>(pane,"animations"));assertSame(renderer,terminal.mRenderer)
+        field("settings",AppSettings(cursorBlink=true))
+        ReflectionHelpers.callInstanceMethod<Any?>(activity,"refreshMotionPolicy")
+        assertTrue(ReflectionHelpers.getField<Boolean>(pane,"animations"));assertSame(renderer,terminal.mRenderer)
+        assertTrue(pane.hasTerminalFocus());assertEquals(3,editor.selectionStart)
+    }
+
 }

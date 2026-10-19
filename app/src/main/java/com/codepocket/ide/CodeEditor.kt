@@ -2,10 +2,43 @@ package com.codepocket.ide
 
 import android.content.Context
 import android.widget.EditText
+import android.graphics.Canvas
+import android.graphics.Rect
+import com.codepocket.ide.animation.EditorCaretMotion
+import com.codepocket.ide.animation.MotionParticipant
 import android.view.KeyEvent
 import android.view.MotionEvent
 
-class CodeEditor(context: Context) : EditText(context) {
+class CodeEditor(context: Context) : EditText(context, null, 0, R.style.WorkbenchEditor), MotionParticipant {
+    // Native cursor remains visible to insertion/selection controllers; only its drawable is transparent.
+    private var caretMotion: EditorCaretMotion? = null
+    init { caretMotion = EditorCaretMotion(this) }
+    fun configureMotion(enabled: Boolean, move: Boolean, blink: Boolean, color: Int) {
+        caretMotion?.configure(enabled, move, blink, color)
+    }
+    override fun finishMotion() { caretMotion?.reset() }
+    override fun onDraw(canvas: Canvas) { super.onDraw(canvas); caretMotion?.draw(canvas) }
+    override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+        super.onTextChanged(text, start, before, count); caretMotion?.textChanged()
+    }
+    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+        super.onScrollChanged(l, t, oldl, oldt); caretMotion?.reset()
+    }
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh); caretMotion?.reset()
+    }
+    override fun onFocusChanged(focused: Boolean, direction: Int, previous: Rect?) {
+        super.onFocusChanged(focused, direction, previous); caretMotion?.reset()
+    }
+    override fun onWindowFocusChanged(focused: Boolean) {
+        super.onWindowFocusChanged(focused); caretMotion?.reset()
+    }
+    override fun onVisibilityAggregated(visible: Boolean) {
+        super.onVisibilityAggregated(visible)
+        if (visible) caretMotion?.reset() else caretMotion?.stop()
+    }
+    override fun onDetachedFromWindow() { caretMotion?.stop(); super.onDetachedFromWindow() }
+
     var onCaretChanged: (() -> Unit)? = null
     var onNavigationInput: (() -> Unit)? = null
 
@@ -51,6 +84,7 @@ class CodeEditor(context: Context) : EditText(context) {
 
     override fun onSelectionChanged(selStart: Int, selEnd: Int) {
         super.onSelectionChanged(selStart, selEnd)
+        caretMotion?.selectionChanged(selStart, selEnd)
         onCaretChanged?.invoke()
     }
 }

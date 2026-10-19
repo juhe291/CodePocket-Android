@@ -41,6 +41,6 @@ class EditorTab(context: Context, private val palette: IdePalette, val path: Str
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (activeTab) canvas.drawRect(0f, 0f, width.toFloat(), dp(2).toFloat(), pen)
+        if (activeTab && parent !is EditorTabs) canvas.drawRect(0f, 0f, width.toFloat(), dp(2).toFloat(), pen)
     }
 }

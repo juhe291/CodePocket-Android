@@ -1,0 +1,16 @@
+<resources>
+    <!-- Keep the platform EditText and insertion/selection controllers; replace only its cursor pixels. -->
+    <style name="WorkbenchEditor" parent="android:style/Widget.Material.EditText">
+        <item name="android:textCursorDrawable">@drawable/editor_cursor_transparent</item>
+    </style>
+    <style name="WorkbenchWindowMotion">
+        <item name="android:windowEnterAnimation">@anim/workbench_enter</item>
+        <item name="android:windowExitAnimation">@anim/workbench_exit</item>
+    </style>
+    <style name="WorkbenchPopupMotion" parent="android:style/Widget.Material.PopupMenu"><item name="android:popupAnimationStyle">@style/WorkbenchWindowMotion</item></style>
+    <style name="WorkbenchPopupStatic" parent="android:style/Widget.Material.PopupMenu"><item name="android:popupAnimationStyle">@null</item></style>
+    <style name="WorkbenchDrawerWindowMotion">
+        <item name="android:windowEnterAnimation">@anim/workbench_drawer_enter</item>
+        <item name="android:windowExitAnimation">@anim/workbench_drawer_exit</item>
+    </style>
+</resources>

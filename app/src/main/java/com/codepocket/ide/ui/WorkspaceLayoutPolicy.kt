@@ -32,7 +32,7 @@ object WorkspaceLayoutPolicy {
      * Returns null when explorer should be hidden or use overlay mode.
      */
     fun explorerSidebar(width: Int, height: Int): Int? {
-        return if (width >= 600 && height >= 360) {
+        return if (width >= 840 && height >= 360) {
             val maxWidth = (width * 0.4).toInt()
             240.coerceIn(180, maxWidth)
         } else null
@@ -46,7 +46,7 @@ object WorkspaceLayoutPolicy {
      * @return New explorer width in dp, or null if not resizable
      */
     fun resizeExplorer(currentWidth: Int, delta: Float, contentWidth: Int, density: Float): Int? {
-        if (contentWidth < 600 || !delta.isFinite() || !density.isFinite() || density <= 0f) return null
+        if (contentWidth < 840 || !delta.isFinite() || !density.isFinite() || density <= 0f) return null
         val minWidth = 180
         val maxWidth = (contentWidth * 0.4).toInt()
         if (maxWidth <= minWidth) return null

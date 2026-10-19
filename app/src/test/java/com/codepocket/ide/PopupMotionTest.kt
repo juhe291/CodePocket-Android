@@ -68,4 +68,38 @@ class PopupMotionTest {
         val signature=BuiltinSignatures.find("input",false)!!.description
         for(text in listOf(hint,signature)) {assertTrue(text.contains("终端"));assertFalse(text.contains("预填"))}
     }
+    @Test fun completionDismissCanReopenImmediatelyWithoutAStaleExitHidingIt() {
+        val popup=CompletionPopup(activity,editor,surface,colors.panel,colors.foreground,colors.muted,colors.accent,{},{}).also {completion=it}
+        assertTrue(popup.show(LexicalCompletion.complete(request)!!,true))
+        popup.dismiss();assertFalse(popup.isShowing)
+        assertTrue(popup.show(LexicalCompletion.complete(request)!!,true))
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(300))
+        assertTrue(popup.isShowing);assertTrue(editor.hasFocus())
+        popup.dismiss(false);assertFalse(popup.isShowing)
+    }
+    @Test fun disabledMotionHasNoNativeExitTransition() {
+        val popup=CompletionPopup(activity,editor,surface,colors.panel,colors.foreground,colors.muted,colors.accent,{},{}).also {completion=it}
+        assertTrue(popup.show(LexicalCompletion.complete(request)!!,false))
+        val window=ReflectionHelpers.getField<android.widget.PopupWindow>(popup,"popup")
+        assertNull(window.exitTransition);popup.dismiss(false)
+    }
+
+    @Test fun rapidTypingReopenDoesNotFadeTheSameDocumentAgain() {
+        val popup=CompletionPopup(activity,editor,surface,colors.panel,colors.foreground,colors.muted,colors.accent,{},{}).also {completion=it}
+        assertTrue(popup.show(LexicalCompletion.complete(request)!!,true))
+        val content=ReflectionHelpers.getField<LinearLayout>(popup,"content")
+        assertNotNull(content.getTag(R.id.workbench_motion))
+        popup.dismiss(false);select("prin",2)
+        assertTrue(popup.show(LexicalCompletion.complete(request)!!,true))
+        assertNull(content.getTag(R.id.workbench_motion));assertEquals(1f,content.alpha,0f);assertTrue(editor.hasFocus())
+    }
+    @Test fun anotherDocumentStillGetsItsOwnEntranceAfterRapidDismiss() {
+        val popup=CompletionPopup(activity,editor,surface,colors.panel,colors.foreground,colors.muted,colors.accent,{},{}).also {completion=it}
+        assertTrue(popup.show(LexicalCompletion.complete(request)!!,true));popup.dismiss(false)
+        request=request.copy(document="file:another.py")
+        assertTrue(popup.show(LexicalCompletion.complete(request)!!,true))
+        val content=ReflectionHelpers.getField<LinearLayout>(popup,"content")
+        assertNotNull(content.getTag(R.id.workbench_motion))
+    }
+
 }

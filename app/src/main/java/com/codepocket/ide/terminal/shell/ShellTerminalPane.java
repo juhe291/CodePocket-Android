@@ -136,6 +136,12 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         if (terminal != null) terminal.setTextSize(Math.round(fontSp * getResources().getDisplayMetrics().scaledDensity));
         updateBlink();
     }
+    /** Motion policy changes must not rebuild the renderer or resize the PTY. */
+    public void setAnimationsEnabled(boolean enabled) {
+        if (animations == enabled) return;
+        animations = enabled;
+        updateBlink();
+    }
     public void hostActive(boolean active) { activeHost = active;if(!active)keyboardRequest.cancel();updateBlink(); }
     public void dispose() { disposed=true;keyboardRequest.cancel();runtime.detach(this); if (terminal != null) { runtime.saveHistoryTopRow(terminal.getTopRow());terminal.setTerminalCursorBlinkerState(false, false); } }
     @Override protected void onAttachedToWindow() { super.onAttachedToWindow(); disposed=false;runtime.attach(this); changed(); }

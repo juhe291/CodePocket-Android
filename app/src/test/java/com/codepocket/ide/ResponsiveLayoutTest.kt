@@ -19,16 +19,15 @@ class ResponsiveLayoutTest {
     }
 
     @Test
-    fun `medium width shows sidebar with activity bar`() {
+    fun `medium width reserves editor space and uses overlay explorer`() {
         val geometry = WorkspaceGeometry(650, 500, false)
         assertEquals(WidthCategory.MEDIUM, geometry.widthCategory)
-        assertTrue(geometry.showActivityBar)
-        assertTrue(geometry.showExplorerSidebar)
-
+        // 600-839dp keeps editor space and uses the full-height phone/tablet drawer.
+        assertFalse(geometry.showActivityBar)
+        assertFalse(geometry.showExplorerSidebar)
         val explorerLayout = ExplorerLayout.resolve(geometry, null)
-        assertEquals(ExplorerMode.SIDEBAR, explorerLayout.mode)
-        assertTrue(explorerLayout.resizable)
-        assertTrue(explorerLayout.width in 180..260) // 650 * 0.4 = 260 max
+        assertEquals(ExplorerMode.OVERLAY, explorerLayout.mode)
+        assertFalse(explorerLayout.resizable)
     }
 
     @Test
@@ -78,8 +77,8 @@ class ResponsiveLayoutTest {
         val geometry2 = WorkspaceGeometry(650, 400, true) // IME reduces height
 
         assertEquals(geometry1.widthCategory, geometry2.widthCategory)
-        assertTrue(geometry1.showExplorerSidebar)
-        assertTrue(geometry2.showExplorerSidebar) // Width still allows
+        assertFalse(geometry1.showExplorerSidebar)
+        assertFalse(geometry2.showExplorerSidebar) // Fixed columns start at 840dp
     }
 
     @Test
@@ -87,10 +86,9 @@ class ResponsiveLayoutTest {
         // Narrow: no sidebar
         assertNull(WorkspaceLayoutPolicy.explorerSidebar(500, 600))
 
-        // Medium: sidebar with default
-        val width1 = WorkspaceLayoutPolicy.explorerSidebar(650, 400)
-        assertNotNull(width1)
-        assertEquals(240, width1)
+        // Medium: drawer; wide windows keep a fixed sidebar.
+        assertNull(WorkspaceLayoutPolicy.explorerSidebar(650, 400))
+        assertEquals(240, WorkspaceLayoutPolicy.explorerSidebar(840, 400))
 
         // Wide: sidebar constrained by max fraction
         val width2 = WorkspaceLayoutPolicy.explorerSidebar(1200, 600)
@@ -103,9 +101,9 @@ class ResponsiveLayoutTest {
         val density = 2.5f
 
         // Valid resize
-        val newWidth = WorkspaceLayoutPolicy.resizeExplorer(240, 50f, 800, density)
+        val newWidth = WorkspaceLayoutPolicy.resizeExplorer(240, 50f, 1000, density)
         assertNotNull(newWidth)
-        assertTrue(newWidth!! in 180..320) // 800 * 0.4 = 320 max
+        assertTrue(newWidth!! in 180..400) // 1000 * 0.4 = 400 max
 
         // Too narrow
         assertNull(WorkspaceLayoutPolicy.resizeExplorer(240, 0f, 400, density))

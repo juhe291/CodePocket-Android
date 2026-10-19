@@ -1,4 +1,6 @@
 <resources>
     <item name="workbench_motion" type="id" />
     <item name="workbench_key" type="id" />
+    <item name="workbench_layout_motion" type="id" />
+    <item name="workbench_surface_motion" type="id" />
 </resources>

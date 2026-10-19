@@ -15,8 +15,8 @@ data class WorkspaceGeometry(
         else -> WidthCategory.WIDE
     }
 
-    val showActivityBar get() = widthCategory >= WidthCategory.MEDIUM && contentHeight >= 360
-    val showExplorerSidebar get() = widthCategory >= WidthCategory.MEDIUM && contentHeight >= 360
+    val showActivityBar get() = widthCategory == WidthCategory.WIDE && contentHeight >= 360
+    val showExplorerSidebar get() = widthCategory == WidthCategory.WIDE && contentHeight >= 360
     val explorerCanResize get() = showExplorerSidebar
     val preferBottomPanel get() = true // Always prefer bottom unless user explicitly configures side
 

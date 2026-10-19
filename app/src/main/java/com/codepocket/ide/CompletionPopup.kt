@@ -27,6 +27,8 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         textSize = 11f; setTextColor(muted); setPadding(dp(8), dp(4), dp(8), dp(4))
         maxLines = 3; ellipsize = android.text.TextUtils.TruncateAt.END
     }
+    private var recentlyClosedDocument: String? = null
+    private var recentlyClosedAt = Long.MIN_VALUE
     private var items = emptyList<CompletionItem>()
     private var document: String? = null
     private var revision = -1L
@@ -64,7 +66,10 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         enterTransition = null; exitTransition = null
         setBackgroundDrawable(GradientDrawable().apply { setColor(backgroundColor); setStroke(dp(1), muted) })
         if (Build.VERSION.SDK_INT >= 29) setIsLaidOutInScreen(true)
-        setOnDismissListener { Animations.cancel(content); dismissed() }
+        setOnDismissListener {
+            recentlyClosedDocument = document; recentlyClosedAt = android.os.SystemClock.uptimeMillis()
+            Animations.cancel(content); dismissed()
+        }
     }
     val isShowing get() = popup.isShowing
 
@@ -87,7 +92,11 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         items = batch.items; selectedIndex = 0; explicitSelection = false
         adapter.notifyDataSetChanged(); updateDetails()
         if (!reposition()) return false
-        Animations.popup(content, alreadyShowing, animate)
+        popup.exitTransition = if (com.codepocket.ide.animation.MotionEnvironment.enabled(activity, animate))
+            android.transition.Fade().apply { duration = 80 } else null
+        val continuing = document == recentlyClosedDocument &&
+            android.os.SystemClock.uptimeMillis() - recentlyClosedAt in 0..350
+        Animations.popup(content, alreadyShowing || continuing, animate)
         return true
     }
 
@@ -103,14 +112,14 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
     }
 
     fun reposition(): Boolean {
-        if (activity.isDestroyed || activity.isFinishing) { dismiss(); return false }
-        val anchor = editorSurface.anchor() ?: run { dismiss(); return false }
+        if (activity.isDestroyed || activity.isFinishing) { dismiss(false); return false }
+        val anchor = editorSurface.anchor() ?: run { dismiss(false); return false }
         val matches = anchor.matches(document, revision, offset)
-        if (!matches) { dismiss(); return false }
+        if (!matches) { dismiss(false); return false }
         val visible = anchor.visible
         val desired = dp(32 + minOf(items.size, 5) * 44 + 60)
         val placed = CompletionGeometry.place(CompletionBounds(visible.left, visible.top, visible.right, visible.bottom),
-            anchor.x, anchor.top, anchor.bottom, dp(380), desired, dp(76), dp(3)) ?: run { dismiss(); return false }
+            anchor.x, anchor.top, anchor.bottom, dp(380), desired, dp(76), dp(3)) ?: run { dismiss(false); return false }
         details.visibility = if (placed.height >= dp(32 + 2 * 44 + 60)) View.VISIBLE else View.GONE
         var popupX = placed.x; var popupY = placed.y
         if (Build.VERSION.SDK_INT < 29) {
@@ -123,10 +132,10 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
             popup.width = placed.width; popup.height = placed.height
             @Suppress("RtlHardcoded")
             try { popup.showAtLocation(editor, Gravity.TOP or Gravity.LEFT, popupX, popupY) }
-            catch (_: WindowManager.BadTokenException) { dismiss(); return false }
+            catch (_: WindowManager.BadTokenException) { dismiss(false); return false }
         }
         return true
     }
 
-    fun dismiss() { Animations.cancel(content); popup.dismiss() }
+    fun dismiss(animated: Boolean = true) { if (!animated) popup.exitTransition = null; Animations.cancel(content); popup.dismiss() }
 }

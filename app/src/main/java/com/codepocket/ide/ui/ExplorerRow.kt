@@ -47,8 +47,8 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
         val icon = if (directory) (if (expanded) IdeIcon.FOLDER_OPEN else IdeIcon.FOLDER) else IdeIconDrawable.file(path)
         name.setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(icon,
             if (selected) palette.accentText else palette.muted, dp(20)), null, null, null)
-        arrow.visibility = if (directory) View.VISIBLE else View.INVISIBLE
         Animations.rotate(arrow, if (expanded && directory) 90f else 0f, animate && bound && directory)
+        arrow.visibility = if (directory) View.VISIBLE else View.INVISIBLE
         background = if (selected) GradientDrawable().apply { setColor(palette.editor); cornerRadius = dp(3).toFloat() } else null
         IdeControls.describe(this, path + if (directory) (if (expanded) "，已展开" else "，已折叠") else "")
         isSelected = selected; bound = true; invalidate()

@@ -49,7 +49,9 @@ class InteractionTest {
     @Test fun pixelGeometryUsesDensityAndActuallyAvailableHeight() {
         val geometry = WorkspaceGeometry.fromPixels(1950, 1500, 3f, true)
         assertEquals(650, geometry.contentWidth); assertEquals(500, geometry.contentHeight)
-        assertEquals(ExplorerMode.SIDEBAR, ExplorerLayout.resolve(geometry, 240).mode)
+        assertEquals(ExplorerMode.OVERLAY, ExplorerLayout.resolve(geometry, 240).mode)
+        val wide = WorkspaceGeometry.fromPixels(2520, 1500, 3f, true)
+        assertEquals(ExplorerMode.SIDEBAR, ExplorerLayout.resolve(wide, 240).mode)
         val short = WorkspaceGeometry.fromPixels(1950, 900, 3f, true)
         assertEquals(ExplorerMode.OVERLAY, ExplorerLayout.resolve(short, 240).mode)
     }
