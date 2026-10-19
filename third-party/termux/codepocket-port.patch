@@ -259,7 +259,99 @@
 +<manifest xmlns:android="http://schemas.android.com/apk/res/android" />
 --- a/terminal-view/src/main/java/com/termux/view/TerminalView.java
 +++ b/terminal-view/src/main/java/com/termux/view/TerminalView.java
-@@ -450,7 +450,8 @@
+@@ -57,6 +57,9 @@
+ 
+     public TerminalViewClient mClient;
+ 
++    // Input connections are bound to one view/session/focus lifetime, never to the next Shell.
++    private long mInputConnectionGeneration;
++
+     private TextSelectionCursorController mTextSelectionCursorController;
+ 
+     private Handler mTerminalCursorBlinkerHandler;
+@@ -285,6 +288,7 @@
+         if (session == mTermSession) return false;
+         mTopRow = 0;
+ 
++        mInputConnectionGeneration++;
+         mTermSession = session;
+         mEmulator = null;
+         mCombiningAccent = 0;
+@@ -299,6 +303,8 @@
+ 
+     @Override
+     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
++        final long inputGeneration = ++mInputConnectionGeneration;
++        final TerminalSession inputSession = mTermSession;
+         // Ensure that inputType is only set if TerminalView is selected view with the keyboard and
+         // an alternate view is not selected, like an EditText. This is necessary if an activity is
+         // initially started with the alternate view or if activity is returned to from another app
+@@ -333,9 +339,40 @@
+         outAttrs.imeOptions = EditorInfo.IME_FLAG_NO_FULLSCREEN;
+ 
+         return new BaseInputConnection(this, true) {
++            private boolean closed;
++
++            private boolean currentConnection() {
++                return !closed && inputGeneration == mInputConnectionGeneration && inputSession != null &&
++                    inputSession == mTermSession && hasFocus() && isAttachedToWindow() && mClient.isTerminalViewSelected();
++            }
++
++            private boolean discardStaleConnection() {
++                if (currentConnection()) return false;
++                getEditable().clear();
++                return true;
++            }
++
++            @Override
++            public boolean setComposingText(CharSequence text, int newCursorPosition) {
++                return !discardStaleConnection() && super.setComposingText(text, newCursorPosition);
++            }
++
++            @Override
++            public boolean sendKeyEvent(KeyEvent event) {
++                return !discardStaleConnection() && super.sendKeyEvent(event);
++            }
++
++            @Override
++            public void closeConnection() {
++                closed = true;
++                getEditable().clear(); // Closing must not commit an unfinished word to a replacement process.
++                super.closeConnection();
++            }
++
+ 
+             @Override
+             public boolean finishComposingText() {
++                if (discardStaleConnection()) return false;
+                 if (TERMINAL_VIEW_KEY_LOGGING_ENABLED) mClient.logInfo(LOG_TAG, "IME: finishComposingText()");
+                 super.finishComposingText();
+ 
+@@ -346,6 +383,7 @@
+ 
+             @Override
+             public boolean commitText(CharSequence text, int newCursorPosition) {
++                if (discardStaleConnection()) return false;
+                 if (TERMINAL_VIEW_KEY_LOGGING_ENABLED) {
+                     mClient.logInfo(LOG_TAG, "IME: commitText(\"" + text + "\", " + newCursorPosition + ")");
+                 }
+@@ -361,6 +399,7 @@
+ 
+             @Override
+             public boolean deleteSurroundingText(int leftLength, int rightLength) {
++                if (discardStaleConnection()) return false;
+                 if (TERMINAL_VIEW_KEY_LOGGING_ENABLED) {
+                     mClient.logInfo(LOG_TAG, "IME: deleteSurroundingText(" + leftLength + ", " + rightLength + ")");
+                 }
+@@ -371,6 +410,7 @@
+             }
+ 
+             void sendTextToTerminal(CharSequence text) {
++                if (discardStaleConnection()) return;
+                 stopTextSelectionMode();
+                 final int textLengthInChars = text.length();
+                 for (int i = 0; i < textLengthInChars; i++) {
+@@ -450,7 +490,8 @@
          int rowsInHistory = mEmulator.getScreen().getActiveTranscriptRows();
          if (mTopRow < -rowsInHistory) mTopRow = -rowsInHistory;
  
@@ -269,7 +361,20 @@
          if (isSelectingText()) {
              // Do not scroll when selecting text.
              int rowShift = mEmulator.getScrollCounter();
-@@ -600,15 +601,8 @@
+@@ -504,6 +545,12 @@
+         mRenderer = new TerminalRenderer(mRenderer.mTextSize, newTypeface);
+         updateSize();
+         invalidate();
++    }
++
++    @Override
++    protected void onFocusChanged(boolean focused, int direction, android.graphics.Rect previouslyFocusedRect) {
++        if (!focused) mInputConnectionGeneration++;
++        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+     }
+ 
+     @Override
+@@ -600,15 +647,8 @@
                  if (action == MotionEvent.ACTION_DOWN) showContextMenu();
                  return true;
              } else if (event.isButtonPressed(MotionEvent.BUTTON_TERTIARY)) {
@@ -287,7 +392,7 @@
              } else if (mEmulator.isMouseTrackingActive()) { // BUTTON_PRIMARY.
                  switch (event.getAction()) {
                      case MotionEvent.ACTION_DOWN:
-@@ -970,6 +964,7 @@
+@@ -970,6 +1010,7 @@
          int newRows = Math.max(4, (viewHeight - mRenderer.mFontLineSpacingAndAscent) / mRenderer.mFontLineSpacing);
  
          if (mEmulator == null || (newColumns != mEmulator.mColumns || newRows != mEmulator.mRows)) {
@@ -295,7 +400,7 @@
              mTermSession.updateSize(newColumns, newRows, (int) mRenderer.getFontWidth(), mRenderer.getFontLineSpacing());
              mEmulator = mTermSession.getEmulator();
              mClient.onEmulatorSet();
-@@ -978,7 +973,7 @@
+@@ -978,7 +1019,7 @@
              if (mTerminalCursorBlinkerRunnable != null)
                  mTerminalCursorBlinkerRunnable.setEmulator(mEmulator);
  
@@ -304,3 +409,11 @@
              scrollTo(0, 0);
              invalidate();
          }
+@@ -1420,6 +1461,7 @@
+ 
+     @Override
+     protected void onDetachedFromWindow() {
++        mInputConnectionGeneration++;
+         super.onDetachedFromWindow();
+ 
+         if (mTextSelectionCursorController != null) {

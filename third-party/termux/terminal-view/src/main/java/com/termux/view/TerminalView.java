@@ -57,6 +57,9 @@ public final class TerminalView extends View {
 
     public TerminalViewClient mClient;
 
+    // Input connections are bound to one view/session/focus lifetime, never to the next Shell.
+    private long mInputConnectionGeneration;
+
     private TextSelectionCursorController mTextSelectionCursorController;
 
     private Handler mTerminalCursorBlinkerHandler;
@@ -285,6 +288,7 @@ public final class TerminalView extends View {
         if (session == mTermSession) return false;
         mTopRow = 0;
 
+        mInputConnectionGeneration++;
         mTermSession = session;
         mEmulator = null;
         mCombiningAccent = 0;
@@ -299,6 +303,8 @@ public final class TerminalView extends View {
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+        final long inputGeneration = ++mInputConnectionGeneration;
+        final TerminalSession inputSession = mTermSession;
         // Ensure that inputType is only set if TerminalView is selected view with the keyboard and
         // an alternate view is not selected, like an EditText. This is necessary if an activity is
         // initially started with the alternate view or if activity is returned to from another app
@@ -333,9 +339,40 @@ public final class TerminalView extends View {
         outAttrs.imeOptions = EditorInfo.IME_FLAG_NO_FULLSCREEN;
 
         return new BaseInputConnection(this, true) {
+            private boolean closed;
+
+            private boolean currentConnection() {
+                return !closed && inputGeneration == mInputConnectionGeneration && inputSession != null &&
+                    inputSession == mTermSession && hasFocus() && isAttachedToWindow() && mClient.isTerminalViewSelected();
+            }
+
+            private boolean discardStaleConnection() {
+                if (currentConnection()) return false;
+                getEditable().clear();
+                return true;
+            }
+
+            @Override
+            public boolean setComposingText(CharSequence text, int newCursorPosition) {
+                return !discardStaleConnection() && super.setComposingText(text, newCursorPosition);
+            }
+
+            @Override
+            public boolean sendKeyEvent(KeyEvent event) {
+                return !discardStaleConnection() && super.sendKeyEvent(event);
+            }
+
+            @Override
+            public void closeConnection() {
+                closed = true;
+                getEditable().clear(); // Closing must not commit an unfinished word to a replacement process.
+                super.closeConnection();
+            }
+
 
             @Override
             public boolean finishComposingText() {
+                if (discardStaleConnection()) return false;
                 if (TERMINAL_VIEW_KEY_LOGGING_ENABLED) mClient.logInfo(LOG_TAG, "IME: finishComposingText()");
                 super.finishComposingText();
 
@@ -346,6 +383,7 @@ public final class TerminalView extends View {
 
             @Override
             public boolean commitText(CharSequence text, int newCursorPosition) {
+                if (discardStaleConnection()) return false;
                 if (TERMINAL_VIEW_KEY_LOGGING_ENABLED) {
                     mClient.logInfo(LOG_TAG, "IME: commitText(\"" + text + "\", " + newCursorPosition + ")");
                 }
@@ -361,6 +399,7 @@ public final class TerminalView extends View {
 
             @Override
             public boolean deleteSurroundingText(int leftLength, int rightLength) {
+                if (discardStaleConnection()) return false;
                 if (TERMINAL_VIEW_KEY_LOGGING_ENABLED) {
                     mClient.logInfo(LOG_TAG, "IME: deleteSurroundingText(" + leftLength + ", " + rightLength + ")");
                 }
@@ -371,6 +410,7 @@ public final class TerminalView extends View {
             }
 
             void sendTextToTerminal(CharSequence text) {
+                if (discardStaleConnection()) return;
                 stopTextSelectionMode();
                 final int textLengthInChars = text.length();
                 for (int i = 0; i < textLengthInChars; i++) {
@@ -505,6 +545,12 @@ public final class TerminalView extends View {
         mRenderer = new TerminalRenderer(mRenderer.mTextSize, newTypeface);
         updateSize();
         invalidate();
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, android.graphics.Rect previouslyFocusedRect) {
+        if (!focused) mInputConnectionGeneration++;
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
 
     @Override
@@ -1415,6 +1461,7 @@ public final class TerminalView extends View {
 
     @Override
     protected void onDetachedFromWindow() {
+        mInputConnectionGeneration++;
         super.onDetachedFromWindow();
 
         if (mTextSelectionCursorController != null) {

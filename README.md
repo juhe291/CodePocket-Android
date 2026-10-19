@@ -1,6 +1,8 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-19：继续修正“Python 运行时点击终端不弹键盘”。** 用户确认仍停在启动阶段；已拆开键盘显示与进程输入门控，保留必要 Android ART/boot 环境，补齐窗口焦点等待及桥提前退出识别。App356通过/1既有跳过（357项），新增15项；真实主机Shell4、源码/打包Python各29，Lint0错/11旧警告；原仓库Debug构建1分22秒。[本轮APK](dist/CodePocket-terminal-running-input-debug.apk) 21.63MiB；[原因、修改、测试与设备边界](docs/P1_TERMINAL_RUNNING_INPUT_FIX.md)。同一真实终端，原数据与功能保留；手机/平板IME和Android全链仍未复测，不能视为设备故障已闭环，动画仍暂停。
+**2026-10-19：继续完善终端焦点与会话切换。** 最大化/还原保留终端输入；切换Shell时正确交接焦点；旧输入法连接在失焦、关闭、重启或更换会话后不能写入新终端。修复前9项失败已复现，最终App372通过/1既有跳过（373项），新增16项；源码/打包Python各29、Shell4，Lint0错/11旧警告，最终Debug构建1分11秒。[本轮APK](dist/CodePocket-terminal-focus-debug.apk) 21.63MiB；[修改与验证记录](docs/P1_TERMINAL_FOCUS_LIFECYCLE.md)。保留上版已获用户可用反馈的启动/键盘修复；本版没有新增设备或帧率验收，原P1/P2/P3继续保留。
+
+**此前2026-10-19：继续修正“Python 运行时点击终端不弹键盘”。** 用户确认仍停在启动阶段；已拆开键盘显示与进程输入门控，保留必要 Android ART/boot 环境，补齐窗口焦点等待及桥提前退出识别。App356通过/1既有跳过（357项），新增15项；真实主机Shell4、源码/打包Python各29，Lint0错/11旧警告；原仓库Debug构建1分22秒。[此前APK](dist/CodePocket-terminal-running-input-debug.apk) 21.63MiB；[原因、修改、测试与设备边界](docs/P1_TERMINAL_RUNNING_INPUT_FIX.md)。同一真实终端，原数据与功能保留；手机/平板IME和Android全链仍未复测，不能视为设备故障已闭环，动画仍暂停。
 
 **此前2026-10-19：修正系统 Shell 覆盖提示符导致的 Python 启动等待，补齐终端触屏键盘与短窗口布局。** 同一个真实PTY承载Shell和Python，不增加第二个运行终端；新增“键盘”按钮与焦点延后请求，紧凑/大字体窗口保留终端，恢复页面时保留终端焦点。App341通过/1既有跳过、核心146、源码/实际打包Python各29、Shell启动3项、模板各7；Lint0错/11既有警告，原仓库Debug构建1m9s。[此前APK](dist/CodePocket-terminal-prompt-ime-debug.apk) 21.63MiB；[原因、修改、证据与设备边界](docs/P1_TERMINAL_PROMPT_IME_FIX.md)。Android整链、手机/平板IME与卓易通仍待实测，动画保持暂停。
 

@@ -118,4 +118,44 @@ class TerminalWorkbenchViewTest {
         assertEquals(View.VISIBLE,ReflectionHelpers.getField<EditText>(activity,"input").visibility)
     }
 
+    private fun makeFocusHierarchy():CodeEditor {
+        val editor=CodeEditor(activity)
+        region.isFocusableInTouchMode=true
+        val root=LinearLayout(activity).apply {orientation=LinearLayout.VERTICAL;addView(editor);addView(region)}
+        activity.setContentView(root)
+        ReflectionHelpers.setField(activity,"editor",editor)
+        ReflectionHelpers.setField(activity,"status",null) // No full layout/Activity lifecycle in this fixture.
+        return editor
+    }
+    private fun installClosedSession(runtime:com.codepocket.ide.terminal.shell.ShellRuntime) {
+        val plan=com.codepocket.ide.terminal.shell.ShellLaunchPlan.prepare(activity.filesDir,activity.cacheDir,null)
+        val session=com.termux.terminal.TerminalSession(com.codepocket.ide.terminal.shell.ShellLaunchPlan.EXECUTABLE,
+            plan.directory.path,plan.arguments,plan.environment,2000,runtime)
+        ReflectionHelpers.setField(session,"mEmulator",com.termux.terminal.TerminalEmulator(session,60,8,13,15,2000,runtime))
+        ReflectionHelpers.setField(session,"mSessionClosed",true)
+        ReflectionHelpers.setField(runtime,"session",session);ReflectionHelpers.setField(runtime,"plan",plan)
+        ReflectionHelpers.setField(runtime,"state",com.codepocket.ide.terminal.shell.ShellRuntime.State.OPEN)
+    }
+    @Test fun choosingExistingSessionTransfersTerminalFocusWithoutFocusingCode() {
+        val editor=makeFocusHierarchy();installClosedSession(registry.catalog.selected()!!.value.runtime);show(3)
+        val old=ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane");assertTrue(old.restoreTerminalFocus())
+        val selected=registry.create(null);installClosedSession(selected.value.runtime);show(3)
+        val next=ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane")
+        assertNotSame(old,next);assertTrue(next.hasTerminalFocus());assertFalse(editor.hasFocus())
+        assertEquals(selected.id,registry.catalog.selectedId())
+    }
+    @Test fun choosingUnstartedSessionKeepsInputAwayFromEditorWithoutDelayedFocus() {
+        val editor=makeFocusHierarchy();installClosedSession(registry.catalog.selected()!!.value.runtime);show(3)
+        assertTrue(ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane").restoreTerminalFocus())
+        registry.create(null);show(3)
+        assertTrue(region.isFocused);assertFalse(editor.hasFocus())
+        editor.requestFocus() // Later session state cannot reclaim focus through a queued callback.
+        val current=ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane")
+        current.changed();assertTrue(editor.hasFocus())
+    }
+    @Test fun changingSessionWhileEditingCodeDoesNotStealEditorFocus() {
+        val editor=makeFocusHierarchy();installClosedSession(registry.catalog.selected()!!.value.runtime);show(3)
+        editor.requestFocus();val selected=registry.create(null);installClosedSession(selected.value.runtime);show(3)
+        assertTrue(editor.hasFocus());assertFalse(ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane").hasTerminalFocus())
+    }
 }

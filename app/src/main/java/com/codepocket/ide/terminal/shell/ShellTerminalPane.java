@@ -47,6 +47,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private int fontSp;
     private boolean animations;
     private boolean activeHost = true;
+    private boolean disposed;
     private boolean reportedLayoutFailure;
     private TerminalSession reportedSession;
 
@@ -119,10 +120,11 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     }
     public void setEmbedded(boolean embedded) { heading.setVisibility(embedded ? GONE : VISIBLE); }
     public void ensureSession() { runtime.start(initialDirectory); }
-    public boolean hasTerminalFocus() { return terminal != null && terminal.hasFocus(); }
+    public boolean hasTerminalFocus() { return !disposed && activeHost && terminal != null && terminal.hasFocus(); }
     /** Restore an existing terminal's focus only; never queue a late focus steal or request the IME. */
-    public boolean restoreTerminalFocus() { return activeHost && terminal != null && terminal.requestFocus(); }
+    public boolean restoreTerminalFocus() { return !disposed && activeHost && terminal != null && terminal.requestFocus(); }
     private void sendKey(String text) {
+        if (disposed || !activeHost || !isShown() || !isAttachedToWindow()) return;
         if(text.equals("\u0003") && terminal!=null && terminal.isSelectingText()) {
             runtime.copyText(terminal.getSelectedText());terminal.stopTextSelectionMode();return;
         }
@@ -135,8 +137,8 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         updateBlink();
     }
     public void hostActive(boolean active) { activeHost = active;if(!active)keyboardRequest.cancel();updateBlink(); }
-    public void dispose() { keyboardRequest.cancel();runtime.detach(this); if (terminal != null) { runtime.saveHistoryTopRow(terminal.getTopRow());terminal.setTerminalCursorBlinkerState(false, false); } }
-    @Override protected void onAttachedToWindow() { super.onAttachedToWindow(); runtime.attach(this); changed(); }
+    public void dispose() { disposed=true;keyboardRequest.cancel();runtime.detach(this); if (terminal != null) { runtime.saveHistoryTopRow(terminal.getTopRow());terminal.setTerminalCursorBlinkerState(false, false); } }
+    @Override protected void onAttachedToWindow() { super.onAttachedToWindow(); disposed=false;runtime.attach(this); changed(); }
     @Override protected void onDetachedFromWindow() { dispose(); super.onDetachedFromWindow(); }
     private void updateBlink() {
         if (terminal == null) return;
@@ -172,6 +174,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         if (terminal == null) {
             TerminalView ready = new TerminalView(getContext(), null);
             ready.setOnKeyListener((v,code,event) -> {
+                if (!isTerminalViewSelected()) return !event.isSystem();
                 // View.OnKeyListener runs before Termux clears the selected text in onKeyDown.
                 if(event.getAction()==KeyEvent.ACTION_DOWN && event.isCtrlPressed() && code==KeyEvent.KEYCODE_C && ready.isSelectingText()) {
                     runtime.copyText(ready.getSelectedText());ready.stopTextSelectionMode();return true;
@@ -226,7 +229,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         TerminalView target=terminal;
         if (target == null) return;
         // Keyboard/focus is UI state, independent of the startup guard on bytes sent to the PTY.
-        keyboardRequest.show(target,()->activeHost&&terminal==target&&runtime.session()==target.getCurrentSession());
+        keyboardRequest.show(target,()->!disposed&&activeHost&&terminal==target&&runtime.session()==target.getCurrentSession());
     }
     @Override public float onScale(float scale) { setPreferences(Math.max(10, Math.min(24, Math.round(fontSp * scale))), animations); return 1f; }
     @Override public void onSingleTapUp(MotionEvent e) { showKeyboard(); }
@@ -236,6 +239,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     @Override public boolean isTerminalViewSelected() { return isShown() && hasTerminalFocus(); }
     @Override public void copyModeChanged(boolean copyMode) { }
     @Override public boolean onKeyDown(int code, KeyEvent e, TerminalSession s) {
+        if (!isTerminalViewSelected()) return !e.isSystem();
         if(e.isCtrlPressed() && code==KeyEvent.KEYCODE_C)return runtime.filterInput("\u0003");
         if(e.isCtrlPressed() && code==KeyEvent.KEYCODE_D)return runtime.filterInput("\u0004");
         return !runtime.acceptsInput() && !e.isSystem();
@@ -247,6 +251,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     @Override public boolean readShiftKey() { return false; }
     @Override public boolean readFnKey() { return false; }
     @Override public boolean onCodePoint(int code, boolean ctrl, TerminalSession s) {
+        if (!isTerminalViewSelected()) return true;
         if(ctrl && (code=='c'||code=='C'||code==3))return runtime.filterInput("\u0003");
         if(ctrl && (code=='d'||code=='D'||code==4))return runtime.filterInput("\u0004");
         return !runtime.acceptsInput();

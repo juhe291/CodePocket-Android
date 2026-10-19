@@ -724,7 +724,7 @@ class MainActivity : Activity() {
         if (stamp == null || isDestroyed || loadedPath != activePath || editorRegion.visibility != View.VISIBLE) return
         val port = editorPort ?: return
         if (!stamp.matches(port.navigationSnapshot(), false)) return
-        val focused = focusEditor && !input.hasFocus() && editor.requestFocus()
+        val focused = focusEditor && !input.hasFocus() && shellPane?.hasTerminalFocus() != true && editor.requestFocus()
         val current = port.navigationSnapshot() ?: return
         port.restoreViewport(if (focused) stamp.copy(interaction = current.interaction) else stamp)
     }
@@ -767,7 +767,7 @@ class MainActivity : Activity() {
         panelResize.cancelGesture(); hideCompletion()
         val stamp = capturePanelViewport()
         if (maximized) clearSnippet()
-        if (maximized && !input.hasFocus()) { hideKeyboard(); outputRegion.requestFocus() }
+        if (maximized && !input.hasFocus() && shellPane?.hasTerminalFocus() != true) { hideKeyboard(); outputRegion.requestFocus() }
         panelVisible = true; panelState = panelState.copy(maximized = maximized)
         updateImeLayout(); persistPanel()
         if (!maximized) restorePanelViewport(stamp, true)
@@ -775,7 +775,11 @@ class MainActivity : Activity() {
     }
 
     private fun revealEditor() {
-        if (panelState.maximized) setPanelMaximized(false)
+        if (panelState.maximized) {
+            setPanelMaximized(false)
+            // Explicit code navigation differs from merely restoring the terminal panel size.
+            if (editorRegion.visibility == View.VISIBLE) editor.requestFocus()
+        }
         if (editorRegion.visibility != View.VISIBLE) closePanel()
     }
 
@@ -2251,6 +2255,7 @@ class MainActivity : Activity() {
     private fun ensureShellPane() {
         val selected = terminalRegistry.catalog.selected() ?: return
         if (shellPaneId == selected.id && shellPane != null) return
+        val hadTerminalFocus = shellPane?.hasTerminalFocus() == true
         shellPane?.let { it.dispose(); outputRegion.removeView(it) }
         shellPaneId = selected.id
         shellPane = ShellTerminalPane(this, selected.value.directory, settings.terminalFontSize, settings.animations,
@@ -2258,6 +2263,11 @@ class MainActivity : Activity() {
                 pane.setEmbedded(true)
                 outputRegion.addView(pane, LinearLayout.LayoutParams(-1, 0, 1f))
             }
+        // Publish the pane first: its focus callback resolves IME layout through shellPane.
+        if (hadTerminalFocus && shellPane?.restoreTerminalFocus() != true) {
+            // No View yet: keep keys away from code without a delayed focus/IME request.
+            hideKeyboard(); outputRegion.requestFocus()
+        }
     }
 
     private fun showOutput(type: Int) {

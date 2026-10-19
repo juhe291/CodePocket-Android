@@ -122,4 +122,72 @@ public class ShellTerminalTouchTest {
             assertSame(session,terminal.getCurrentSession());
         } finally {ReflectionHelpers.setField(session,"mShellPid",0);}
     }
+    private Object queue() {return ReflectionHelpers.getField(session,"mTerminalToProcessIOQueue");}
+    private String drain() {
+        byte[] bytes=new byte[1024];
+        int length=ReflectionHelpers.callInstanceMethod(queue(),"read",ReflectionHelpers.ClassParameter.from(byte[].class,bytes),
+            ReflectionHelpers.ClassParameter.from(boolean.class,false));
+        return new String(bytes,0,Math.max(0,length),java.nio.charset.StandardCharsets.UTF_8);
+    }
+    private android.view.inputmethod.InputConnection connection() {
+        return terminal.onCreateInputConnection(new android.view.inputmethod.EditorInfo());
+    }
+    @Test public void hiddenHostRejectsLateImeTextAndControlKeys() {
+        control.input=true;tap();android.view.inputmethod.InputConnection old=connection();
+        ReflectionHelpers.setField(session,"mShellPid",1);
+        try {
+            pane.hostActive(false);old.commitText("late",1);
+            pane.onKeyDown(android.view.KeyEvent.KEYCODE_C,new android.view.KeyEvent(0,0,android.view.KeyEvent.ACTION_DOWN,
+                android.view.KeyEvent.KEYCODE_C,0,android.view.KeyEvent.META_CTRL_ON),session);
+            assertEquals("",drain());assertEquals(0,control.stopped);
+        } finally {ReflectionHelpers.setField(session,"mShellPid",0);}
+    }
+    @Test public void focusLostBeforeCompositionFinishesDoesNotWriteToTerminal() {
+        control.input=true;tap();android.view.inputmethod.InputConnection old=connection();
+        old.setComposingText("未确认",1);editor.requestFocus();
+        ReflectionHelpers.setField(session,"mShellPid",1);
+        try {old.finishComposingText();assertEquals("",drain());assertEquals("",editor.getText().toString());}
+        finally {ReflectionHelpers.setField(session,"mShellPid",0);}
+    }
+    @Test public void closedConnectionDropsCompositionAndCannotCommitLater() {
+        control.input=true;tap();android.view.inputmethod.InputConnection old=connection();old.setComposingText("pending",1);
+        ReflectionHelpers.setField(session,"mShellPid",1);
+        try {old.closeConnection();old.commitText("late",1);assertEquals("",drain());}
+        finally {ReflectionHelpers.setField(session,"mShellPid",0);}
+    }
+    @Test public void newerConnectionInvalidatesPreviousBufferOnSameView() {
+        control.input=true;tap();android.view.inputmethod.InputConnection old=connection();old.setComposingText("old",1);
+        android.view.inputmethod.InputConnection current=connection();
+        ReflectionHelpers.setField(session,"mShellPid",1);
+        try {old.finishComposingText();old.commitText("late",1);current.commitText("new",1);assertEquals("new",drain());}
+        finally {ReflectionHelpers.setField(session,"mShellPid",0);}
+    }
+    @Test public void refocusingDoesNotReviveOldCompositionConnection() {
+        control.input=true;tap();android.view.inputmethod.InputConnection old=connection();old.setComposingText("old",1);
+        editor.requestFocus();assertTrue(pane.restoreTerminalFocus());
+        ReflectionHelpers.setField(session,"mShellPid",1);
+        try {old.finishComposingText();assertEquals("",drain());connection().commitText("fresh",1);assertEquals("fresh",drain());}
+        finally {ReflectionHelpers.setField(session,"mShellPid",0);}
+    }
+    @Test public void replacementSessionCannotReceivePreviousInputConnection() {
+        control.input=true;tap();android.view.inputmethod.InputConnection old=connection();old.setComposingText("old",1);
+        TerminalSession previous=session;
+        com.codepocket.ide.terminal.shell.ShellLaunchPlan plan=runtime.plan();
+        session=new TerminalSession(ShellLaunchPlan.EXECUTABLE,plan.directory.getPath(),plan.arguments,plan.environment,2000,runtime);
+        ReflectionHelpers.setField(session,"mEmulator",new TerminalEmulator(session,60,8,13,15,2000,runtime));
+        ReflectionHelpers.setField(session,"mSessionClosed",true);ReflectionHelpers.setField(runtime,"session",session);previous.finishIfRunning();
+        TerminalView same=terminal;pane.changed();assertSame(same,ReflectionHelpers.getField(pane,"terminal"));
+        ReflectionHelpers.setField(session,"mShellPid",1);
+        try {old.finishComposingText();old.commitText("late",1);assertEquals("",drain());connection().commitText("fresh",1);assertEquals("fresh",drain());}
+        finally {ReflectionHelpers.setField(session,"mShellPid",0);}
+    }
+    @Test public void disposedPaneRejectsLateImeAndExplicitControlShortcut() {
+        control.input=true;tap();android.view.inputmethod.InputConnection old=connection();pane.dispose();
+        ReflectionHelpers.setField(session,"mShellPid",1);
+        try {
+            old.commitText("late",1);
+            ReflectionHelpers.callInstanceMethod(pane,"sendKey",ReflectionHelpers.ClassParameter.from(String.class,"\u0003"));
+            assertEquals("",drain());assertEquals(0,control.stopped);
+        } finally {ReflectionHelpers.setField(session,"mShellPid",0);}
+    }
 }

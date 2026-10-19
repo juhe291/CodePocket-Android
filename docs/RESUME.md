@@ -1,6 +1,14 @@
 # CodePocket 当前交接状态
 
-## 最新：Python启动期间键盘拦截与ART环境回修（2026-10-19）
+## 最新：终端焦点/过期输入连接/会话选择（2026-10-19）
+
+- 基线a78dd6c；用户反馈“行了，继续吧”后继续终端操作。最大化与视口恢复不再抢终端焦点，明确代码导航/关闭面板仍可回编辑器。切换已有会话移交焦点，新会话无View时聚焦面板并清旧IME，不向源码误输、不排队迟到焦点；先发布新pane再触发其焦点回调。
+- 真正Termux InputConnection绑定创建代次及Session，关闭/失焦/移除/更换/新连接时失效，不把旧组合词提交到新终端。Pane额外拦截inactive/disposed文本与控制键。组件仅增47行，原输入类型/渲染/手势保持；上游LF保留，累计补丁从固定归档生成，真实git apply重放10个累计修改源码/配置通过，许可与UPSTREAM保持。
+- 修复前17项中9失败，最终9场景全部通过；App373中372通过/1既有跳过，旧357全部保持、新增16。核心146缓存保持，Python源码/最终APK字节码各29、Shell4、模板各7，Lint0错/11旧警告。最终原库构建1m11s，签名/CRC/16KB/桥类/许可/旧dist通过，native库与上一版逐字节相同。
+- [APK](../dist/CodePocket-terminal-focus-debug.apk)：22,678,342字节，SHA256 06057a8ce583bfca62e2f10d55254d73fec259eb71ea4503edff0d259875772c，同旧Debug证书。[报告](P1_TERMINAL_FOCUS_LIFECYCLE.md)，证据verification/terminal-focus-lifecycle-2026-10-19/；round-01/02保留中间构建。
+- 上版用户可用反馈不是本版或其他设备完整验收；本轮未接设备/模拟器，无新增Android链路、IME/键鼠/卓易通/FPS证据。既有保存/SAF/Python运行与停止/超时后端、Gradle/Actions/原需求保持，原P1动画与P2/P3继续保留。无push/发布/远端Actions，不清理旧工具/产物/证据/设备备份。
+
+## 历史：Python启动期间键盘拦截与ART环境回修（2026-10-19）
 
 - 基线59551f1，用户确认上一APK仍不能输入，状态仍为启动阶段。本轮把键盘显示与进程写入保护拆开；真实PTY输入保护保留，明确不把主机测试当作手机已经解决。
 - ShellLaunchPlan继承明确名单内的实际Android ART/I18N/TZDATA/APEX与boot路径，修正native clearenv后app_process缺少运行环境；不猜系统路径，不继承任意秘密或loader设置。TerminalKeyboard等待窗口+View焦点，显式点击才清HIDDEN状态，保留resize，失焦/移除/暂停/超时取消，返回关闭后不重开。
