@@ -1,6 +1,15 @@
 # CodePocket 当前交接状态
 
-## 最新：提示符覆盖、终端IME与短窗口回修（2026-10-19）
+## 最新：Python启动期间键盘拦截与ART环境回修（2026-10-19）
+
+- 基线59551f1，用户确认上一APK仍不能输入，状态仍为启动阶段。本轮把键盘显示与进程写入保护拆开；真实PTY输入保护保留，明确不把主机测试当作手机已经解决。
+- ShellLaunchPlan继承明确名单内的实际Android ART/I18N/TZDATA/APEX与boot路径，修正native clearenv后app_process缺少运行环境；不猜系统路径，不继承任意秘密或loader设置。TerminalKeyboard等待窗口+View焦点，显式点击才清HIDDEN状态，保留resize，失焦/移除/暂停/超时取消，返回关闭后不重开。
+- 启动脚本真实发出OSC133 C后，才结合提示符和内核前台确认桥早退；避免readline重绘/程序输出/旧运行误判。Python单一真实终端、C++云端限制、保存/目录/SAF/原输入数据不变；未改成熟Termux组件。
+- 最终原库构建1m22s，357项中356通过/1既有跳过，原342全保留，新增15；核心146缓存保持，真实主机Shell4、Python源码/打包字节码各29、模板各7、Lint0错/11旧警告；签名/完整性/许可/类/16KB及旧dist哈希通过。
+- [本轮APK](../dist/CodePocket-terminal-running-input-debug.apk)，22,678,342字节，SHA256 ae4faaf4fdca1955cd9fb5fbb1fc559be01797907b78d0e139c27dfb66508978；同旧Debug证书。[报告](P1_TERMINAL_RUNNING_INPUT_FIX.md)，证据verification/terminal-running-input-2026-10-19/；round-01保留355项中间版本。
+- 手机/平板/模拟器未连接；Android PTY/app_process/FD/Chaquopy与物理IME/键鼠/卓易通/FPS没有本轮实测。先验证print真实输出，再做input/Enter/EOF/停止/重跑。原P1/P2/P3保留，动画暂停。无push/发布/远端Actions，不删除.tools/旧dist/verification/设备备份。
+
+## 历史：提示符覆盖、终端IME与短窗口回修（2026-10-19）
 
 - 用户手机真实记录为系统目录提示符、Python等待Shell标记超时，平板相同。确认系统mkshrc覆盖PS1；上一批View尺寸修复未覆盖此路径。每会话私有ENV rc先加载系统配置再设置OSC133标记，并补齐清理，保留启动/超时/身份保护。
 - 统一真实Shell/Python面板不变；Python无预填，C++仍真实云端预填。新增48dp键盘按钮与点击焦点延后请求、隐藏/失焦取消；按字号和窗口紧凑显示，空间不足临时全终端，不覆写用户布局偏好；会话焦点白名单补入terminal，恢复已有终端时不转回编辑器或强制IME。

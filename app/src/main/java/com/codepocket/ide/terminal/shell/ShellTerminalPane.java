@@ -223,8 +223,10 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
                     .setPositiveButton("知道了", null).show();
     }
     public void showKeyboard() {
-        if (terminal == null || !runtime.acceptsInput()) return;
-        keyboardRequest.show(terminal,()->activeHost&&runtime.acceptsInput());
+        TerminalView target=terminal;
+        if (target == null) return;
+        // Keyboard/focus is UI state, independent of the startup guard on bytes sent to the PTY.
+        keyboardRequest.show(target,()->activeHost&&terminal==target&&runtime.session()==target.getCurrentSession());
     }
     @Override public float onScale(float scale) { setPreferences(Math.max(10, Math.min(24, Math.round(fontSp * scale))), animations); return 1f; }
     @Override public void onSingleTapUp(MotionEvent e) { showKeyboard(); }

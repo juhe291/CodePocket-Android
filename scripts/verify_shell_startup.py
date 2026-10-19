@@ -23,6 +23,9 @@ def main():
     assert len(fixtures) == 1, "Expected exact Java-generated startup fixture"
     startup = base64.b64decode(fixtures[0], validate=True)
     prompt = b"\x01\r\x01\x1b]133;A\x07\x01CodePocket $ \x01\x1b]133;B\x07\x01"
+    started_fixtures = re.findall(r"^CODEPOCKET_SHELL_STARTED=(.+)$", suite.findtext("system-out", ""), re.MULTILINE)
+    assert len(started_fixtures) == 1, "Expected exact Java-generated command-start marker"
+    started = base64.b64decode(started_fixtures[0], validate=True)
     shell = str(Path(args.shell).resolve()) if Path(args.shell).exists() else args.shell
     env = os.environ.copy()
     for key in ("ENV", "BASH_ENV", "PS1", "PS2"):
@@ -54,11 +57,18 @@ def main():
         assert ordered.stdout == prompt + b"\nhello\n", repr(ordered.stdout)
         assert not ordered.stderr, repr(ordered.stderr)
         rows.append({"case": "system_rc_runs_before_application_prompt", "passed": True})
+        run_start = root / "command-start.sh"
+        run_start.write_bytes(started + b"printf 'hello from actual shell\\n'\n")
+        launched = subprocess.run([shell, "-c", '. "$1"', "test", run_start.as_posix()], env=env,
+                                  capture_output=True, timeout=10, check=True)
+        assert launched.stdout == b"\x1b]133;C\x07hello from actual shell\n", repr(launched.stdout)
+        assert not launched.stderr, repr(launched.stderr)
+        rows.append({"case": "command_started_is_emitted_before_executed_output", "passed": True})
     result = {"host_shell": shell, "startup_sha256": hashlib.sha256(startup).hexdigest(),
               "cases": rows, "android_mksh_pty_executed": False, "chaquopy_executed": False}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("Host shell startup regressions: 3/3 passed (not Android PTY or Chaquopy execution)")
+    print("Host shell startup regressions: 4/4 passed (not Android PTY or Chaquopy execution)")
 
 
 if __name__ == "__main__":

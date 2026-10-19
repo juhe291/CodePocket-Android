@@ -34,7 +34,7 @@ public class TerminalKeyboardTest {
         LinearLayout layout=new LinearLayout(activity);layout.setOrientation(LinearLayout.VERTICAL);
         editor=new EditText(activity);terminal=new EditText(activity);
         layout.addView(editor);layout.addView(terminal);activity.setContentView(layout);
-        shadowOf(Looper.getMainLooper()).idle();editor.requestFocus();
+        controller.windowFocusChanged(true);shadowOf(Looper.getMainLooper()).idle();editor.requestFocus();
         InputMethodManager manager=(InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         ime=shadowOf(manager);manager.hideSoftInputFromWindow(editor.getWindowToken(),0);
         keyboard=new TerminalKeyboard();
@@ -58,5 +58,33 @@ public class TerminalKeyboardTest {
         assertFalse(ime.isSoftInputVisible());
         boolean[] allowed={true};keyboard.show(terminal,()->allowed[0]);allowed[0]=false;
         shadowOf(Looper.getMainLooper()).idle();assertFalse(ime.isSoftInputVisible());
+    }
+    @Test public void waitsForWindowFocusAfterMenuDismissAndRunsOnlyOnce() {
+        controller.windowFocusChanged(false);keyboard.show(terminal,()->true);
+        shadowOf(Looper.getMainLooper()).idle();assertFalse(ime.isSoftInputVisible());
+        controller.windowFocusChanged(true);shadowOf(Looper.getMainLooper()).idle();assertTrue(ime.isSoftInputVisible());
+        InputMethodManager manager=(InputMethodManager)controller.get().getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.hideSoftInputFromWindow(terminal.getWindowToken(),0);
+        controller.windowFocusChanged(false);controller.windowFocusChanged(true);
+        shadowOf(Looper.getMainLooper()).idle();assertFalse(ime.isSoftInputVisible());
+    }
+    @Test public void clearsHiddenStateOnlyForExplicitRequestAndRetainsResize() {
+        android.view.Window window=controller.get().getWindow();
+        window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        keyboard.show(terminal,()->true);shadowOf(Looper.getMainLooper()).idle();
+        assertEquals(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE,window.getAttributes().softInputMode);
+        assertTrue(ime.isSoftInputVisible());
+    }
+    @Test public void expiredWindowRequestDoesNotShowOnLaterResume() {
+        controller.windowFocusChanged(false);keyboard.show(terminal,()->true);
+        shadowOf(Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(3));
+        controller.windowFocusChanged(true);shadowOf(Looper.getMainLooper()).idle();assertFalse(ime.isSoftInputVisible());
+    }
+    @Test public void focusChangeOrDetachCancelsWindowWait() {
+        controller.windowFocusChanged(false);keyboard.show(terminal,()->true);editor.requestFocus();
+        controller.windowFocusChanged(true);shadowOf(Looper.getMainLooper()).idle();assertFalse(ime.isSoftInputVisible());
+        controller.windowFocusChanged(false);keyboard.show(terminal,()->true);
+        ((android.view.ViewGroup)terminal.getParent()).removeView(terminal);
+        controller.windowFocusChanged(true);shadowOf(Looper.getMainLooper()).idle();assertFalse(ime.isSoftInputVisible());
     }
 }

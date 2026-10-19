@@ -1,8 +1,10 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-19：修正系统 Shell 覆盖提示符导致的 Python 启动等待，补齐终端触屏键盘与短窗口布局。** 同一个真实PTY承载Shell和Python，不增加第二个运行终端；新增“键盘”按钮与焦点延后请求，紧凑/大字体窗口保留终端，恢复页面时保留终端焦点。App341通过/1既有跳过、核心146、源码/实际打包Python各29、Shell启动3项、模板各7；Lint0错/11既有警告，原仓库Debug构建1m9s。[最新APK](dist/CodePocket-terminal-prompt-ime-debug.apk) 21.63MiB；[原因、修改、证据与设备边界](docs/P1_TERMINAL_PROMPT_IME_FIX.md)。Android整链、手机/平板IME与卓易通仍待实测，动画保持暂停。
+**2026-10-19：继续修正“Python 运行时点击终端不弹键盘”。** 用户确认仍停在启动阶段；已拆开键盘显示与进程输入门控，保留必要 Android ART/boot 环境，补齐窗口焦点等待及桥提前退出识别。App356通过/1既有跳过（357项），新增15项；真实主机Shell4、源码/打包Python各29，Lint0错/11旧警告；原仓库Debug构建1分22秒。[本轮APK](dist/CodePocket-terminal-running-input-debug.apk) 21.63MiB；[原因、修改、测试与设备边界](docs/P1_TERMINAL_RUNNING_INPUT_FIX.md)。同一真实终端，原数据与功能保留；手机/平板IME和Android全链仍未复测，不能视为设备故障已闭环，动画仍暂停。
 
-**此前2026-10-18：Python启动等待修正，取消Python预填模式。** 修复Shell依赖终端View测量及代码键盘隐藏面板导致等待的路径；点击运行显示终端，Python只在同一真实终端交互，C++仍云端预填。[最新Debug APK](dist/CodePocket-terminal-startup-debug.apk) 21.63MiB；[修正与验证](docs/P1_TERMINAL_STARTUP_FIX.md)。App327通过/1既有跳过、核心146、实际Python字节码29通过，Lint0错/11既有警告。手机上的输出恢复仍待验证，动画暂停。
+**此前2026-10-19：修正系统 Shell 覆盖提示符导致的 Python 启动等待，补齐终端触屏键盘与短窗口布局。** 同一个真实PTY承载Shell和Python，不增加第二个运行终端；新增“键盘”按钮与焦点延后请求，紧凑/大字体窗口保留终端，恢复页面时保留终端焦点。App341通过/1既有跳过、核心146、源码/实际打包Python各29、Shell启动3项、模板各7；Lint0错/11既有警告，原仓库Debug构建1m9s。[此前APK](dist/CodePocket-terminal-prompt-ime-debug.apk) 21.63MiB；[原因、修改、证据与设备边界](docs/P1_TERMINAL_PROMPT_IME_FIX.md)。Android整链、手机/平板IME与卓易通仍待实测，动画保持暂停。
+
+**此前2026-10-18：Python启动等待修正，取消Python预填模式。** 修复Shell依赖终端View测量及代码键盘隐藏面板导致等待的路径；点击运行显示终端，Python只在同一真实终端交互，C++仍云端预填。[此前Debug APK](dist/CodePocket-terminal-startup-debug.apk) 21.63MiB；[修正与验证](docs/P1_TERMINAL_STARTUP_FIX.md)。App327通过/1既有跳过、核心146、实际Python字节码29通过，Lint0错/11既有警告。手机上的输出恢复仍待验证，动画暂停。
 
 **此前：Shell视图初始化闪退修复（2026-10-18）。** 字号/字体初始化顺序导致空绘制器，新增实际View主机回归、完整启动异常保护及可复制的本机错误记录。[修复版Debug APK](dist/CodePocket-shell-crash-fixed-debug.apk) 21.63MiB；App286通过/1既有跳过、Lint0错误/11既有警告。见[崩溃栈、修复及验证范围](docs/P1_SHELL_CRASH_FIX.md)。尚无手机日志/PTY实测，不能据此排除设备其他故障；动画暂停，统一终端界面待接续。
 

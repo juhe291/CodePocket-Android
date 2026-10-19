@@ -69,4 +69,29 @@ public class ShellLaunchPlanTest {
         assertTrue(a.startup.delete());
         assertTrue(b.startup.isFile());
     }
+    @Test public void inheritedArtEnvironmentSurvivesNativeClearenv() throws Exception {
+        java.util.Map<String,String> supplied=new java.util.HashMap<>();
+        supplied.put("ANDROID_ART_ROOT","/apex/com.android.art");supplied.put("ANDROID_I18N_ROOT","/apex/com.android.i18n");
+        supplied.put("ANDROID_TZDATA_ROOT","/apex/com.android.tzdata");supplied.put("ANDROID_RUNTIME_ROOT","/apex/com.android.runtime");
+        supplied.put("BOOTCLASSPATH","/apex/com.android.art/javalib/core-oj.jar:/system/framework/framework.jar");
+        supplied.put("DEX2OATBOOTCLASSPATH","/system/framework/framework.jar");
+        ShellLaunchPlan plan=ShellLaunchPlan.prepare(temp.newFolder("files"),temp.newFolder("cache"),null,supplied);
+        for(java.util.Map.Entry<String,String> entry:supplied.entrySet())
+            assertTrue(Arrays.asList(plan.environment).contains(entry.getKey()+"="+entry.getValue()));
+    }
+    @Test public void runtimeAllowlistKeepsPrivatePathsAndDoesNotInheritArbitrarySettings() throws Exception {
+        java.util.Map<String,String> supplied=new java.util.HashMap<>();
+        for(String key:new String[]{"HOME","TMPDIR","PATH","ENV","PS1","CLASSPATH","LD_PRELOAD","SECRET_TOKEN"})supplied.put(key,"untrusted");
+        ShellLaunchPlan plan=ShellLaunchPlan.prepare(temp.newFolder("files"),temp.newFolder("cache"),null,supplied);
+        assertFalse(Arrays.toString(plan.environment).contains("untrusted"));
+        assertTrue(Arrays.asList(plan.environment).contains("HOME="+plan.home));
+        assertTrue(Arrays.asList(plan.environment).contains("ENV="+plan.startup));
+        assertTrue(Arrays.asList(plan.environment).contains("ANDROID_ROOT=/system"));
+        assertTrue(Arrays.asList(plan.environment).contains("ANDROID_DATA=/data"));
+        assertFalse(Arrays.toString(plan.environment).contains("/apex/")); // No guessed APEX layout on old systems.
+    }
+    @Test public void exportActualRunStartedMarkerForHostShellExecution() {
+        System.out.println("CODEPOCKET_SHELL_STARTED="+java.util.Base64.getEncoder().encodeToString(
+            com.codepocket.ide.terminal.bridge.BridgeCommand.STARTED.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+    }
 }

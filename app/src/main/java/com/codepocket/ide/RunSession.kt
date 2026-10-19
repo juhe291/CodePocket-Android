@@ -86,6 +86,10 @@ object RunSession {
                     TerminalRunClock.State.RUNNING -> if(interactive)"Python · 运行中 · Ctrl+C停止" else "Python · 使用预填输入 · Ctrl+C停止"
                     else -> "Python · $startupStage"
                 }
+            override fun shellPromptReturned() {
+                if(tickets.accepts(id)&&terminalClock?.state==TerminalRunClock.State.STARTING)
+                    finish(id,RunSession.terminal(RunKind.SERVICE,"Python前台桥在启动完成前已退出（$startupStage）。请查看终端中的启动错误；可以修改后重新运行。"))
+            }
             override fun closed(){if(tickets.accepts(id))finish(id,RunSession.terminal(RunKind.CANCELLED,"所属终端已结束，程序已停止"))}
         }
         terminalControl=control
@@ -136,7 +140,7 @@ object RunSession {
                 runCatching {
                     val directory=File(app.filesDir,"terminal-launch").apply { if(!isDirectory&&!mkdirs())error("无法创建终端启动目录") }
                     val script=File(directory,"run-${java.util.UUID.randomUUID()}.sh")
-                    script.writeText(broker.command(app.applicationInfo.sourceDir)+"\n")
+                    script.writeText(BridgeCommand.STARTED+broker.command(app.applicationInfo.sourceDir)+"\n")
                     android.system.Os.chmod(script.path,384) // 0600: sourced data, never an app-writable executable.
                     terminalLaunchFile=script
                     startup("等待 Shell 提示符")

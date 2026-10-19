@@ -23,9 +23,10 @@ public final class ShellRuntime implements TerminalSessionClient {
         boolean output(int bytes);
         String label();
         void closed();
+        default void shellPromptReturned() { }
     }
     private RunControl foreground;
-    private boolean promptSeen, promptReady;
+    private boolean promptSeen, promptReady, foregroundCommandDispatched, foregroundCommandStarted;
     private int historyTopRow;
     public int historyTopRow() { return historyTopRow; }
     public void saveHistoryTopRow(int row) { historyTopRow=Math.min(0,row); }
@@ -105,11 +106,11 @@ public final class ShellRuntime implements TerminalSessionClient {
     public boolean beginForeground(RunControl control) {
         if(foreground!=null)return false;
         if(session!=null&&session.getPid()>0&&promptSeen&&(!promptReady||!session.isShellForeground()))return false;
-        foreground=control;notifyObserver();return true;
+        foreground=control;foregroundCommandDispatched=false;foregroundCommandStarted=false;notifyObserver();return true;
     }
     public void clearForeground(RunControl control) {
         if(foreground!=control)return;
-        foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;notifyObserver();
+        foreground=null;foregroundCommandDispatched=false;foregroundCommandStarted=false;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;notifyObserver();
     }
     public boolean filterInput(String text) {
         RunControl control=foreground;if(control==null)return false;
@@ -134,7 +135,7 @@ public final class ShellRuntime implements TerminalSessionClient {
         pendingCommand=null;pendingCommandFailure=null;
         if(!session.isShellForeground()) { failure.accept("当前终端有前台命令，请先结束该命令或新建终端");return; }
         // Clear both halves of a partially edited mksh line without interrupting a foreground job.
-        promptReady=false;writeRaw("\u0015\u000b"+command+"\n");
+        foregroundCommandDispatched=true;foregroundCommandStarted=false;promptReady=false;writeRaw("\u0015\u000b"+command+"\n");
         if(dispatched!=null)dispatched.run();
     }
     public void appendExternal(String text) {
@@ -173,7 +174,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     }
     public void close() {
         generation++;
-        RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;externalOutput.setLength(0);
+        RunControl control=foreground;foreground=null;foregroundCommandDispatched=false;foregroundCommandStarted=false;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;externalOutput.setLength(0);
         TerminalSession old = session;
         if(plan!=null)plan.startup.delete();
         session = null; plan = null; state = State.EMPTY;promptSeen=false;promptReady=false;
@@ -187,7 +188,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     }
     public void fail(Throwable failure) {
         generation++;
-        RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;
+        RunControl control=foreground;foreground=null;foregroundCommandDispatched=false;foregroundCommandStarted=false;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;
         TerminalSession old = session;
         if(plan!=null)plan.startup.delete();
         session = null; plan = null; state = State.FAILED;promptSeen=false;promptReady=false;
@@ -209,11 +210,24 @@ public final class ShellRuntime implements TerminalSessionClient {
         catch (java.io.IOException | SecurityException failure) { return "无法读取本机终端错误记录：" + failure.getMessage(); }
     }
     public void copyFailureDetails() { copy(failureDetails()); }
-    @Override public void onTextChanged(TerminalSession s) { if (s == session) { flushExternal();pumpCommand();notifyObserver(); } }
+    // Kept separate so host tests can verify the state transition without pretending to run a PTY.
+    void checkReturnedPrompt(boolean shellForeground) {
+        if (!foregroundCommandDispatched || !foregroundCommandStarted || !promptReady || foreground==null || !shellForeground) return;
+        foregroundCommandDispatched=false;foregroundCommandStarted=false;
+        foreground.shellPromptReturned();
+    }
+    @Override public void onTextChanged(TerminalSession s) {
+        if (s != session) return;
+        flushExternal();
+        // Validate the kernel foreground owner too: user output containing OSC 133 isn't a process exit.
+        if (foregroundCommandStarted && promptReady && s.getPid()>0)checkReturnedPrompt(s.isShellForeground());
+        pumpCommand();notifyObserver();
+    }
     @Override public void onShellIntegration(TerminalSession s,String marker) {
         if(s!=session)return;
         if(marker.equals("B")) { promptSeen=true;promptReady=true; }
-        else if(marker.equals("A")||marker.equals("C"))promptReady=false;
+        else if(marker.equals("C")) { promptReady=false;if(foregroundCommandDispatched)foregroundCommandStarted=true; }
+        else if(marker.equals("A"))promptReady=false;
     }
     @Override public void onTerminalInput(TerminalSession s,byte[] bytes,int offset,int count) {
         if(s!=session)return;
@@ -224,7 +238,7 @@ public final class ShellRuntime implements TerminalSessionClient {
     @Override public void onSessionFinished(TerminalSession s) {
         if (s == session) {
             if(plan!=null)plan.startup.delete();
-            state = State.EXITED;RunControl control=foreground;foreground=null;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;
+            state = State.EXITED;RunControl control=foreground;foreground=null;foregroundCommandDispatched=false;foregroundCommandStarted=false;pendingCommand=null;pendingCommandFailure=null;commandDispatched=null;
             if(control!=null)control.closed();notifyObserver();
         }
     }
