@@ -1,0 +1,4 @@
+<resources>
+    <item name="workbench_motion" type="id" />
+    <item name="workbench_key" type="id" />
+</resources>

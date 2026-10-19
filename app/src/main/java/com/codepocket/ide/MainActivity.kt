@@ -343,7 +343,7 @@ class MainActivity : Activity() {
         shellPane?.hostActive(false)
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         explorerResizeHandle?.cancelGesture(); projectSearch?.cancel()
-        listOfNotNull(explorerPane, activityBar).forEach(Animations::cancel)
+        cancelWorkbenchMotion()
         handler.removeCallbacks(refreshEditor); editorAnalysis?.cancel(); editorPort?.cancelNavigation(); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
         currentGeometry?.let { updateExplorerLayout(ExplorerLayout.resolve(it, explorerWidth)) }
         persist()
@@ -351,7 +351,7 @@ class MainActivity : Activity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (!hasFocus) { editorAnalysis?.cancel(); hideCompletion(); completionConsumedKeys.clear() }
+        if (!hasFocus) { cancelWorkbenchMotion(); editorAnalysis?.cancel(); hideCompletion(); completionConsumedKeys.clear() }
         else if (::editor.isInitialized) { handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
     }
 
@@ -385,8 +385,7 @@ class MainActivity : Activity() {
         projectSearch?.cancel(); explorerResizeHandle?.cancelGesture()
         toolDialog?.dismiss(); commandMenu?.dismiss(); commandMenu = null
         hideCompletion(); completionExecutor.shutdownNow(); signatureExecutor.shutdownNow(); completionConsumedKeys.clear()
-        listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
-            if (::outputRegion.isInitialized) outputRegion else null).forEach { it.animate().cancel() }
+        cancelWorkbenchMotion()
         explorerDialog?.dismiss()
     }
 
@@ -419,7 +418,7 @@ class MainActivity : Activity() {
         hideCompletion(); clearSnippet(); completionPopup = null; signaturePopup = null
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         explorerResizeHandle?.cancelGesture()
-        listOfNotNull(activityBar, explorerPane).forEach(Animations::cancel)
+        cancelWorkbenchMotion()
         activityBar = null; explorerPane = null; explorerResizeHandle = null
         sidebarExplorerList = null; overlayExplorerList = null; currentGeometry = null
         panelDragViewport = null; panelLayout = null
@@ -701,7 +700,7 @@ class MainActivity : Activity() {
         imeVisible = visible
         val height = (root.height / resources.displayMetrics.density).toInt()
         val layout = ImeLayoutPolicy.resolve(visible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, height, panelVisible, settings.collapsePanelOnIme)
-        if (visible) listOfNotNull(explorerPane, tabsRow, outputRegion).forEach(Animations::cancel)
+        if (visible) cancelWorkbenchMotion()
         suggestionScroll.visibility = if (WorkspaceLayoutPolicy.showSnippet(snippetSession != null, visible, height)) View.VISIBLE else View.GONE
         keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
         statusBarComponent.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
@@ -1121,56 +1120,56 @@ class MainActivity : Activity() {
             }
     }
 
-    private fun renderExplorer() {
-        listOfNotNull(sidebarExplorerList, overlayExplorerList).forEach(::renderExplorerList)
+    private fun renderExplorer(animate: Boolean = false) {
+        listOfNotNull(sidebarExplorerList, overlayExplorerList).forEach { renderExplorerList(it, animate) }
     }
 
-    private fun renderExplorerList(explorerList: LinearLayout) {
-        explorerList.removeAllViews()
-        val rootLabel = label(workspace.title, 12f, muted, true).apply {
-            decorateFileLabel(this, IdeIcon.FOLDER_OPEN, workspace.title)
-            setPadding(dp(10), dp(8), 0, dp(8))
-            setOnClickListener { currentDirectory = ""; persistNavigation(); status.text = "新建位置：项目根目录" }
-        }
-        explorerList.addView(rootLabel)
+    private fun renderExplorerList(explorerList: LinearLayout, animate: Boolean) {
+        data class Entry(val file: File, val path: String, val depth: Int, val folder: Boolean, val open: Boolean)
+        val entries = linkedMapOf<String, Entry>()
         fun visit(directory: File, level: Int) {
             if (level > 20) return
             workspace.children(directory).forEach { file ->
-                val relative = workspace.path(file)
+                val path = workspace.path(file)
                 val folder = file.isDirectory
-                val open = relative in expanded
-                val icon = if (folder) (if (open) IdeIcon.FOLDER_OPEN else IdeIcon.FOLDER) else IdeIconDrawable.file(relative)
-                val item = label(file.name, 13f, if (relative == activePath) accent else textForeground).apply {
-                    decorateFileLabel(this, icon, relative + if (folder) (if (open) "，已展开" else "，已折叠") else "")
-                    minHeight = dp(DesignTokens.TOUCH)
-                    setPadding(dp(12 + level * 15), dp(8), dp(4), dp(8))
-                    if (relative == activePath) background = shape(editorBackground, 3)
-                    isClickable = true; isFocusable = true
-                    setOnClickListener {
-                        if (workspaceBusy) return@setOnClickListener
-                        if (folder) {
-                            currentDirectory = relative
-                            if (open) expanded.remove(relative) else expanded.add(relative)
-                            persistNavigation(); renderExplorer(); animateDecoration(explorerList)
-                        } else { switchFile(relative); explorerDialog?.dismiss(); explorerDialog = null }
-                    }
-                    setOnLongClickListener { fileMenu(file); true }
-                    setOnGenericMotionListener { _, event ->
-                        if (event.actionMasked == MotionEvent.ACTION_BUTTON_PRESS &&
-                            event.buttonState and MotionEvent.BUTTON_SECONDARY != 0) {
-                            fileMenu(file); true
-                        } else false
-                    }
-                }
-                explorerList.addView(item)
+                val open = path in expanded
+                entries["entry:$path"] = Entry(file, path, level, folder, open)
                 if (folder && open) visit(file, level + 1)
             }
         }
         visit(workspace.root, 0)
-        val hint = label("点击文件打开 · 长按或鼠标右键管理", 10f, muted).apply {
-            setPadding(dp(10), dp(13), dp(4), dp(10))
+        val moving = animate && motionEnabled()
+        KeyedViews.update(explorerList, listOf("root") + entries.keys + "hint", { key ->
+            when (key) {
+                "root" -> label(workspace.title, 12f, muted, true).apply {
+                    decorateFileLabel(this, IdeIcon.FOLDER_OPEN, workspace.title)
+                    minHeight = dp(DesignTokens.TOUCH); setPadding(dp(10), dp(8), 0, dp(8))
+                    setOnClickListener { currentDirectory = ""; persistNavigation(); status.text = "新建位置：项目根目录" }
+                }
+                "hint" -> label("点击文件打开 · 长按或鼠标右键管理", 10f, muted).apply {
+                    setPadding(dp(10), dp(13), dp(4), dp(10))
+                }
+                else -> ExplorerRow(this, palette)
+            }
+        }) { view, key, added ->
+            val entry = entries[key] ?: return@update
+            (view as ExplorerRow).bind(entry.path, entry.depth, entry.folder, entry.open, entry.path == activePath, moving)
+            view.setOnClickListener {
+                if (workspaceBusy) return@setOnClickListener
+                if (entry.folder) {
+                    currentDirectory = entry.path
+                    if (!expanded.remove(entry.path)) expanded.add(entry.path)
+                    persistNavigation(); renderExplorer(animate = true)
+                } else { switchFile(entry.path); explorerDialog?.dismiss(); explorerDialog = null }
+            }
+            view.setOnLongClickListener { fileMenu(entry.file); true }
+            view.setOnGenericMotionListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_BUTTON_PRESS && event.buttonState and MotionEvent.BUTTON_SECONDARY != 0) {
+                    fileMenu(entry.file); true
+                } else false
+            }
+            if (added && moving) Animations.fadeIn(view, 120)
         }
-        explorerList.addView(hint)
     }
 
     private fun fileMenu(file: File) {
@@ -1341,7 +1340,7 @@ class MainActivity : Activity() {
                     activePath = relative
                     if (newlyOpened) opened.add(relative)
                     if (loadActive(content, draft)) {
-                        refreshTabs(); renderExplorer(); animateDecoration(tabsRow); after?.invoke()
+                        refreshTabs(); renderExplorer(); after?.invoke()
                     } else {
                         activePath = previousPath
                         if (newlyOpened) opened.remove(relative)
@@ -1382,21 +1381,13 @@ class MainActivity : Activity() {
     private fun refreshTabs() {
         if (!::tabsRow.isInitialized) return
         updateShellTitle()
-        tabsRow.removeAllViews()
-        opened.toList().forEach { path ->
-            if (!workspace.resolve(path).isFile) { opened.remove(path); return@forEach }
-            val one = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; background = shape(if (path == activePath) editorBackground else surface, 0) }
-            val name = label("${if (path == activePath && dirty) "● " else ""}${path.substringAfterLast('/')}", 12f,
-                if (path == activePath) accent else textForeground).apply {
-                decorateFileLabel(this, IdeIconDrawable.file(path), path)
-                maxWidth = dp(240); setPadding(dp(8), 0, dp(4), 0)
-                setOnClickListener { switchFile(path) }
-                setOnLongClickListener { alert(path); true }
-            }
-            one.addView(name, LinearLayout.LayoutParams(-2, dp(DesignTokens.TOUCH)))
-            one.addView(IdeControls.icon(this, palette, IdeIcon.CLOSE, "关闭 $path") { closeTab(path) },
-                LinearLayout.LayoutParams(dp(DesignTokens.TOUCH), dp(DesignTokens.TOUCH)))
-            tabsRow.addView(one)
+        opened.toList().forEach { if (!workspace.resolve(it).isFile) opened.remove(it) }
+        val existing = tabsRow.childCount > 0
+        KeyedViews.update(tabsRow, opened.toList(), { path ->
+            EditorTab(this, palette, path, { switchFile(path) }, { closeTab(path) }, { alert(path) })
+        }) { view, path, added ->
+            (view as EditorTab).bind(path == activePath, path == activePath && dirty)
+            if (added && existing && motionEnabled()) Animations.fadeIn(view, 120)
         }
     }
 
@@ -1804,8 +1795,7 @@ class MainActivity : Activity() {
         if (::sessions.isInitialized && loadedPath == activePath && settings.wordWrap) {
             val file = sessions.file(activePath); file.view = file.view.copy(scrollX = 0)
         }
-        if (!settings.animations) listOfNotNull(explorerPane, if (::tabsRow.isInitialized) tabsRow else null,
-            if (::outputRegion.isInitialized) outputRegion else null).forEach(Animations::cancel)
+        if (!motionEnabled()) cancelWorkbenchMotion()
         currentGeometry?.let { updateExplorerLayout(ExplorerLayout.resolve(it, explorerWidth)) }
         updateImeLayout(); updateNumbers(); refreshTabs()
         handler.removeCallbacks(autosave)
@@ -1821,13 +1811,15 @@ class MainActivity : Activity() {
             0, value.length, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
 
+    private fun cancelWorkbenchMotion() {
+        listOfNotNull(explorerPane, activityBar, sidebarExplorerList, overlayExplorerList,
+            if (::tabsRow.isInitialized) tabsRow else null,
+            if (::editorRegion.isInitialized) editorRegion else null,
+            if (::outputRegion.isInitialized) outputRegion else null).forEach(Animations::cancelTree)
+    }
+
     private fun animateDecoration(view: View?) {
-        if (view == null) return
-        view.animate().cancel(); view.alpha = 1f
-        if (motionEnabled()) {
-            view.alpha = .88f
-            view.animate().alpha(1f).setDuration(120).start()
-        }
+        if (view != null) Animations.fadeIn(view, 120, enabled = motionEnabled())
     }
 
     private fun motionEnabled(): Boolean {

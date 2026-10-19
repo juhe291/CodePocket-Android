@@ -1,6 +1,7 @@
 package com.codepocket.ide
 
 import android.app.Activity
+import com.codepocket.ide.animation.Animations
 import com.codepocket.editor.surface.EditorSurface
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -63,7 +64,7 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         enterTransition = null; exitTransition = null
         setBackgroundDrawable(GradientDrawable().apply { setColor(backgroundColor); setStroke(dp(1), muted) })
         if (Build.VERSION.SDK_INT >= 29) setIsLaidOutInScreen(true)
-        setOnDismissListener { content.animate().cancel(); content.alpha = 1f; dismissed() }
+        setOnDismissListener { Animations.cancel(content); dismissed() }
     }
     val isShowing get() = popup.isShowing
 
@@ -81,14 +82,12 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
     }
 
     fun show(batch: CompletionBatch, animate: Boolean): Boolean {
+        val alreadyShowing = isShowing
         document = batch.request.document; revision = batch.request.revision; offset = batch.request.caret
         items = batch.items; selectedIndex = 0; explicitSelection = false
         adapter.notifyDataSetChanged(); updateDetails()
         if (!reposition()) return false
-        if (animate) {
-            content.alpha = .85f
-            content.animate().alpha(1f).setDuration(90).start()
-        }
+        Animations.popup(content, alreadyShowing, animate)
         return true
     }
 
@@ -129,5 +128,5 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         return true
     }
 
-    fun dismiss() { content.animate().cancel(); content.alpha = 1f; popup.dismiss() }
+    fun dismiss() { Animations.cancel(content); popup.dismiss() }
 }

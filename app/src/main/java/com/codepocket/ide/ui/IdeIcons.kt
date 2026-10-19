@@ -8,7 +8,7 @@ import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 
 /** Original 20dp line icons; no external icon font or emoji dependency. */
-enum class IdeIcon { SEARCH, SAVE, UNDO, REDO, ADD_FILE, ADD_FOLDER, CLEAR, EXPLORER, MORE, RUN, STOP, CLOSE, MAXIMIZE, RESTORE, INPUT, FOLDER, FOLDER_OPEN, FILE, PYTHON, CPP }
+enum class IdeIcon { CHEVRON_RIGHT, SEARCH, SAVE, UNDO, REDO, ADD_FILE, ADD_FOLDER, CLEAR, EXPLORER, MORE, RUN, STOP, CLOSE, MAXIMIZE, RESTORE, INPUT, FOLDER, FOLDER_OPEN, FILE, PYTHON, CPP }
 
 class IdeIconDrawable(private val icon: IdeIcon, color: Int, private val size: Int) : Drawable() {
     private val pen = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -31,6 +31,7 @@ class IdeIconDrawable(private val icon: IdeIcon, color: Int, private val size: I
             canvas.drawPath(p, pen)
         }
         when (icon) {
+            IdeIcon.CHEVRON_RIGHT -> path(7f, 5f, 12f, 10f, 7f, 15f)
             IdeIcon.SEARCH -> { canvas.drawCircle(8f, 8f, 5f, pen); line(12f, 12f, 17f, 17f) }
             IdeIcon.SAVE -> { canvas.drawRect(3f, 3f, 17f, 17f, pen); canvas.drawRect(7f, 3f, 13f, 8f, pen); canvas.drawRect(6f, 12f, 14f, 17f, pen) }
             IdeIcon.UNDO -> { path(7f, 4f, 3f, 8f, 7f, 12f); path(3f, 8f, 12f, 8f, 16f, 11f, 16f, 16f) }

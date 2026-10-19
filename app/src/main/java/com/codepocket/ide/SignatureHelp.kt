@@ -26,7 +26,7 @@ object BuiltinSignatures {
             mapOf("sep" to 1, "end" to 2, "file" to 3, "flush" to 4), 0)),
             "Python 3.13：输出文本；分隔符等选项须用关键字指定。", python + "print"),
         BuiltinSignature("input", false, listOf(form(), SignatureForm(listOf("prompt", "/"), listOf(0))),
-            "Python 3.13：读取一行；当前 App 使用预填 stdin。", python + "input"),
+            "Python 3.13：读取一行；运行时在终端输入，Enter 提交。", python + "input"),
         BuiltinSignature("len", false, listOf(SignatureForm(listOf("object", "/"), listOf(0))),
             "Python 3.13：返回元素数量。", python + "len"),
         BuiltinSignature("range", false, listOf(SignatureForm(listOf("stop", "/"), listOf(0)),

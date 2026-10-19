@@ -34,7 +34,7 @@ object LexicalCompletion {
     private val pythonHelp = mapOf(
         "print" to "print(*objects, sep=' ', end='\\n', file=None, flush=False)\nPython 3.13 内置参考：向文本流输出。局部同名对象的签名可能不同。",
         "len" to "len(object, /)\nPython 3.13 内置参考：返回对象的元素个数。局部同名对象的签名可能不同。",
-        "input" to "input() / input(prompt, /)\nPython 3.13 内置参考：读取一行并去掉末尾换行。本 App 当前使用预填 stdin。"
+        "input" to "input() / input(prompt, /)\nPython 3.13 内置参考：读取一行并去掉末尾换行。运行时在终端输入，Enter 提交。"
     )
     private fun part(ch: Char) = ch in 'A'..'Z' || ch in 'a'..'z' || ch in '0'..'9' || ch == '_'
 

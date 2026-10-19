@@ -1,6 +1,7 @@
 package com.codepocket.ide
 
 import android.app.Activity
+import com.codepocket.ide.animation.Animations
 import com.codepocket.editor.surface.EditorSurface
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -46,7 +47,7 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         elevation = dp(6).toFloat(); animationStyle = 0; enterTransition = null; exitTransition = null
         setBackgroundDrawable(GradientDrawable().apply { setColor(backgroundColor); setStroke(dp(1), muted) })
         if (Build.VERSION.SDK_INT >= 29) setIsLaidOutInScreen(true)
-        setOnDismissListener { content.animate().cancel(); content.alpha = 1f }
+        setOnDismissListener { Animations.cancel(content) }
     }
     val isShowing get() = popup.isShowing
 
@@ -68,11 +69,12 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
     }
 
     fun show(next: SignatureResult, animate: Boolean): Boolean {
+        val alreadyShowing = isShowing
         if (result?.request?.document != next.request.document || result?.openOffset != next.openOffset ||
             result?.reference?.name != next.reference.name) variant = 0
         result = next; render()
         if (!reposition()) return false
-        if (animate) { content.alpha = .85f; content.animate().alpha(1f).setDuration(90).start() }
+        Animations.popup(content, alreadyShowing, animate)
         return true
     }
 
@@ -129,5 +131,5 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         return true
     }
 
-    fun dismiss() { content.animate().cancel(); content.alpha = 1f; popup.dismiss() }
+    fun dismiss() { Animations.cancel(content); popup.dismiss() }
 }
