@@ -1,8 +1,15 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-20：整套UI改版和交互修复已完成代码与主机验证，实机验收后置。** 主工作台、文件树、全部App内二级菜单/弹窗、分类设置中心统一改版；补齐本地Lucide与文件类型图标、根目录收起、终端快捷按钮和五种配色，普通打字/退格光标约60ms过渡。App471通过/1旧跳过（472项，新增24），源码/打包Python各29，Lint0错/11旧警告；Debug APK已构建并检查。
+**2026-10-20：修复上一版 UI APK 打开即闪退。** 首页终端等6个图标的8段矢量坐标转换错误，已复现并修正。新增原生图形解析与完整启动回归：修复前7失败、修复后7通过，覆盖手机/平板和深浅主题；最终App478通过/1旧跳过，Lint0错/11旧警告，Debug APK构建及产物检查通过。
 
-- [下载本次Debug APK](dist/CodePocket-ui-complete-2026-10-20-debug.apk)（约21.63MiB，Android7.0+ / arm64，同旧Debug证书）
+- [下载启动修复版 APK](dist/CodePocket-ui-startup-fixed-2026-10-20-debug.apk)（21.63MiB，同原Debug签名，可覆盖安装）
+- [根因、修改与完整验证记录](docs/UI_STARTUP_CRASH_FIX_2026-10-20.md)
+
+此前 `CodePocket-ui-complete-2026-10-20-debug.apk` 有启动缺陷，请使用上面的修复版。当前验证为主机原生图形与生命周期回归，尚未复测实际设备；Python/PTY、IME、键鼠、卓易通及帧率的实机边界保持。
+
+**此前2026-10-20：整套UI改版和交互修复已完成代码与主机验证，实机验收后置。** 主工作台、文件树、全部App内二级菜单/弹窗、分类设置中心统一改版；补齐本地Lucide与文件类型图标、根目录收起、终端快捷按钮和五种配色，普通打字/退格光标约60ms过渡。App471通过/1旧跳过（472项，新增24），源码/打包Python各29，Lint0错/11旧警告；Debug APK已构建并检查。
+
+- [此前UI APK（已发现启动闪退，勿安装）](dist/CodePocket-ui-complete-2026-10-20-debug.apk)（约21.63MiB，Android7.0+ / arm64，同旧Debug证书）
 - [完整可点击设计预览](docs/ui-preview/index.html) · [浏览器截图与边界](docs/ui-preview/README.md) · [修改/测试/已知问题](docs/UI_COMPLETE_2026-10-20.md)
 
 预览中的文件与输出均是明确标注的设计示例；原生App继续使用真实PTY、Python与Wandbox。未声称实机像素、IME/键鼠、卓易通或帧率通过，原P2/P3需求保留。

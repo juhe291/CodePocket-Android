@@ -1,5 +1,7 @@
 # CodePocket 完整 UI 改版与交互修复（2026-10-20）
 
+> 后续缺陷记录：本页旧APK的6个矢量图标包含非法路径，已复现启动闪退。请使用[启动修复版及验证报告](UI_STARTUP_CRASH_FIX_2026-10-20.md)。本页保留原交付记录；此前472项旧图形测试不能作为原生图标解析/完整启动通过的证据。
+
 本批在基线 `4e4fd34b` 上完成计划内的原生界面代码、主机回归与 Debug APK 交付。**实机输入、实际像素效果和帧率没有在本轮验证。** 原 P2/P3 与深度语义补全继续保留。
 
 - [Debug APK](../dist/CodePocket-ui-complete-2026-10-20-debug.apk)：22,682,264 字节（21.63 MiB），Android 7.0+ / arm64-v8a，Debug，包名 `com.codepocket.ide`。
