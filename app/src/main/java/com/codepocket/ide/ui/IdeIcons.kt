@@ -36,6 +36,7 @@ enum class IdeIcon(val resource: Int) {
     CONFIG(R.drawable.lucide_file_json),
     TEXT(R.drawable.lucide_file_text),
     TERMINAL(R.drawable.lucide_terminal),
+    ADD(R.drawable.lucide_plus),
     SETTINGS(R.drawable.lucide_settings_2),
     LOCATE(R.drawable.lucide_crosshair),
     COLLAPSE(R.drawable.lucide_list_collapse),

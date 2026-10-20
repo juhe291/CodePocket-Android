@@ -20,8 +20,10 @@ internal object NativeEditorSurface {
         val window = Rect(); editor.getWindowVisibleDisplayFrame(window)
         val visible = PopupGeometry.visible(EditorSurface.Bounds(clip.left, clip.top, clip.right, clip.bottom), root[0], root[1],
             EditorSurface.Bounds(window.left, window.top, window.right, window.bottom),
-            EditorSurface.Bounds(origin[0] + editor.totalPaddingLeft, origin[1] + editor.totalPaddingTop,
-                origin[0] + editor.width - editor.totalPaddingRight, origin[1] + editor.height - editor.totalPaddingBottom)) ?: return null
+            // totalPaddingBottom includes the blank space below a short document. The popup belongs
+            // to the text viewport, not just the ink bounds of its last line.
+            EditorSurface.Bounds(origin[0] + editor.compoundPaddingLeft, origin[1] + editor.compoundPaddingTop,
+                origin[0] + editor.width - editor.compoundPaddingRight, origin[1] + editor.height - editor.compoundPaddingBottom)) ?: return null
         val offset = editor.selectionStart
         if (offset > editor.length()) return null
         val line = layout.getLineForOffset(offset)

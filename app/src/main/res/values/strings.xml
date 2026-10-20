@@ -11,7 +11,7 @@
     <string name="completion_no_space">光标附近空间不足，已收起补全；可收起面板或调整窗口</string>
     <string name="completion_key_help">Enter 默认换行；开启接受后仍须先用方向键选中候选。Shift+Tab 反缩进，Esc 关闭。中文组合输入时不接受候选，不改写组合区；软键盘保留原生确认/换行。点击候选可直接插入。片段中 Tab/Shift+Tab 跳转，Esc 结束；主动补全候选优先。片段菜单提供触屏导航；编辑离开当前字段会结束导航。</string>
     <string name="panel_title">终端</string>
-    <string name="panel_size_menu">面板操作与尺寸</string>
+    <string name="panel_size_menu">终端与面板操作</string>
     <string name="panel_clear_input">清空当前文件的标准输入</string>
     <string name="panel_resize_width">调整运行面板宽度；左方向键增大，右方向键减小；点击打开尺寸菜单</string>
     <string name="panel_resize_height">调整运行面板高度；上方向键增大，下方向键减小；点击打开尺寸菜单</string>

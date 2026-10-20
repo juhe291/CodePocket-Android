@@ -16,6 +16,10 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import com.codepocket.ide.ui.TerminalChrome;
+import com.codepocket.ide.ui.IdeIcon;
+import com.codepocket.ide.ui.IdePalette;
+import com.codepocket.ide.ui.DesignTokens;
 import com.termux.terminal.TerminalSession;
 import com.termux.view.TerminalView;
 import com.termux.view.TerminalViewClient;
@@ -37,6 +41,9 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private TerminalView terminal;
     private final TerminalKeyboard keyboardRequest=new TerminalKeyboard();
     private boolean compact;
+    private boolean controlsExpanded;
+    private Runnable chromeChanged=()->{};
+    public void setOnChromeChanged(Runnable callback) { chromeChanged=callback; }
     private String colorTheme="FOLLOW_UI";
     private boolean darkTheme=true;
     private boolean appearanceInitialized;
@@ -46,7 +53,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         TerminalAppearance.Palette colors=TerminalAppearance.INSTANCE.apply(runtime.session(),name,dark);
         if(changed) {
             appearanceInitialized=true;
-            setBackgroundColor(colors.getBackground());caption.setTextColor(colors.getForeground());placeholder.setTextColor(colors.getForeground());runCaption.setTextColor(colors.getForeground());
+            setBackgroundColor(colors.getBackground());caption.setTextColor(colors.getForeground());placeholder.setTextColor(colors.getForeground());runCaption.setTextColor(DesignTokens.INSTANCE.palette(dark).getMuted());
             if(terminal!=null)terminal.invalidate();
         }
     }
@@ -54,8 +61,8 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     public int minimumHeightDp(boolean small) {
         android.graphics.Paint paint=new android.graphics.Paint();paint.setTypeface(Typeface.MONOSPACE);
         paint.setTextSize(fontSp*getResources().getDisplayMetrics().scaledDensity);
-        int rows=(int)Math.ceil((4*paint.getFontSpacing()+dp(8))/getResources().getDisplayMetrics().density);
-        return 48+(small?0:48)+rows;
+        int rows=(int)Math.ceil((4*paint.getFontSpacing()+dp(16))/getResources().getDisplayMetrics().density);
+        return 48+(controlsExpanded?48:0)+(small?0:28)+rows;
     }
     private int fontSp;
     private boolean animations;
@@ -88,10 +95,10 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         addView(heading);
         runCaption = new TextView(context);
         runCaption.setTextColor(0xffaab7c9);runCaption.setTextSize(11);
-        runCaption.setMinHeight(dp(48));runCaption.setGravity(Gravity.CENTER_VERTICAL);runCaption.setMaxLines(2);
+        runCaption.setMinHeight(dp(28));runCaption.setGravity(Gravity.CENTER_VERTICAL);runCaption.setMaxLines(1);
         runCaption.setEllipsize(android.text.TextUtils.TruncateAt.END);
         runCaption.setPadding(dp(10),dp(5),dp(10),dp(5));
-        runCaption.setOnClickListener(v -> showKeyboard());
+        runCaption.setAccessibilityLiveRegion(ACCESSIBILITY_LIVE_REGION_POLITE);
         addView(runCaption,new LayoutParams(-1,-2));
         viewport = new FrameLayout(context) {
             @Override protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -102,31 +109,44 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
                 }
             }
         };
+        viewport.setPadding(dp(12),dp(8),dp(12),dp(8));
         placeholder = new TextView(context);
         placeholder.setTextColor(0xffaab7c9); placeholder.setTextSize(12); placeholder.setPadding(dp(14), dp(8), dp(14), dp(8));
         viewport.addView(placeholder, new FrameLayout.LayoutParams(-1, -1));
         addView(viewport, new LayoutParams(-1, 0, 1));
-        LinearLayout keys = new LinearLayout(context);
-        Button imeButton=action("键盘",this::showKeyboard);imeButton.setContentDescription("显示终端虚拟键盘");
-
-        String[][] shortcuts = {{"Ctrl+C","\u0003"},{"Ctrl+D","\u0004"},{"Tab","\t"},{"Esc","\u001b"},{"↑","\u001b[A"},{"↓","\u001b[B"},{"←","\u001b[D"},{"→","\u001b[C"}};
-        for (String[] shortcut : shortcuts) {
-            String label = shortcut[0], text = shortcut[1];
-            Button key = action(label, () -> { sendKey(text); if (terminal != null) terminal.requestFocus(); });
-            key.setContentDescription("发送 " + label);
-            keys.addView(key, new LayoutParams(dp(label.length() > 3 ? 70 : 48), dp(48)));
+        IdePalette chrome=DesignTokens.INSTANCE.forContext(context);
+        LinearLayout keys=new LinearLayout(context);
+        keys.setPadding(dp(5),0,dp(5),0);
+        String[][] shortcuts={{"Ctrl+C","\u0003"},{"Ctrl+D","\u0004"},{"Tab","\t"},{"Esc","\u001b"},{"↑","\u001b[A"},{"↓","\u001b[B"},{"←","\u001b[D"},{"→","\u001b[C"}};
+        for(String[] shortcut:shortcuts){
+            String label=shortcut[0],text=shortcut[1];
+            TextView key=TerminalChrome.INSTANCE.key(context,chrome,label,"发送 "+label,()->{sendKey(text);if(terminal!=null)terminal.requestFocus();});
+            keys.addView(key,new LayoutParams(dp(label.length()>3?76:48),dp(48)));
         }
-        keys.addView(action("到底部", () -> {
-            if(terminal!=null) { terminal.stopTextSelectionMode();terminal.setTopRow(0);terminal.invalidate(); }
-        }), new LayoutParams(dp(70),dp(48)));
-        HorizontalScrollView keyboard = new HorizontalScrollView(context);
-        keyboard.setHorizontalScrollBarEnabled(false); keyboard.addView(keys);
-        LinearLayout footer=new LinearLayout(context);footer.setGravity(Gravity.CENTER_VERTICAL);
-        footer.addView(imeButton,new LayoutParams(dp(56),dp(48)));
-        final boolean[] controls={context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).getBoolean("terminalControlsExpanded",false)};
-        Button toggle=action("Ctrl",()->{controls[0]=!controls[0];keyboard.setVisibility(controls[0]?VISIBLE:GONE);context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).edit().putBoolean("terminalControlsExpanded",controls[0]).apply();});
-        toggle.setContentDescription("展开或收起终端控制键");footer.addView(toggle,new LayoutParams(dp(56),dp(48)));
-        keyboard.setVisibility(controls[0]?VISIBLE:GONE);footer.addView(keyboard,new LayoutParams(0,dp(48),1));addView(footer,new LayoutParams(-1,dp(48)));
+        HorizontalScrollView keyboard=new HorizontalScrollView(context);
+        keyboard.setHorizontalScrollBarEnabled(false);keyboard.addView(keys);
+        controlsExpanded=context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).getBoolean("terminalControlsExpanded",false);
+        keyboard.setVisibility(controlsExpanded?VISIBLE:GONE);
+        LinearLayout footer=new LinearLayout(context);footer.setOrientation(VERTICAL);footer.setBackgroundColor(chrome.getPanel());
+        LinearLayout dock=new LinearLayout(context);dock.setGravity(Gravity.CENTER_VERTICAL);dock.setPadding(dp(5),0,dp(5),0);
+        TextView imeButton=TerminalChrome.INSTANCE.key(context,chrome,"键盘","显示终端虚拟键盘",this::showKeyboard);
+        imeButton.setCompoundDrawablesWithIntrinsicBounds(new com.codepocket.ide.ui.IdeIconDrawable(context,IdeIcon.INPUT,chrome.getMuted(),dp(17)),null,null,null);
+        imeButton.setCompoundDrawablePadding(dp(6));imeButton.setTypeface(null);
+        dock.addView(imeButton,new LayoutParams(dp(92),dp(48)));
+        TextView toggle=TerminalChrome.INSTANCE.key(context,chrome,"控制键","展开或收起终端控制键",()->{
+            controlsExpanded=!controlsExpanded;keyboard.setVisibility(controlsExpanded?VISIBLE:GONE);
+            context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).edit().putBoolean("terminalControlsExpanded",controlsExpanded).apply();
+            for(int i=0;i<dock.getChildCount();i++)if("展开或收起终端控制键".contentEquals(dock.getChildAt(i).getContentDescription()))dock.getChildAt(i).setSelected(controlsExpanded);
+            chromeChanged.run();requestLayout();
+        });
+        toggle.setSelected(controlsExpanded);toggle.setTypeface(null);dock.addView(toggle,new LayoutParams(dp(80),dp(48)));
+        dock.addView(new android.view.View(context),new LayoutParams(0,1,1));
+        dock.addView(TerminalChrome.INSTANCE.action(context,chrome,IdeIcon.COPY,"复制终端记录",runtime::copyTranscript),new LayoutParams(dp(48),dp(48)));
+        dock.addView(TerminalChrome.INSTANCE.action(context,chrome,IdeIcon.DOWN,"滚动到终端底部",()->{
+            if(terminal!=null){terminal.stopTextSelectionMode();terminal.setTopRow(0);terminal.invalidate();}
+        }),new LayoutParams(dp(48),dp(48)));
+        footer.addView(dock,new LayoutParams(-1,dp(48)));footer.addView(keyboard,new LayoutParams(-1,dp(48)));
+        addView(footer,new LayoutParams(-1,-2));
         changed();
     }
     private int dp(int value) { return Math.round(value * getResources().getDisplayMetrics().density); }
@@ -162,7 +182,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         updateBlink();
     }
     public void hostActive(boolean active) { activeHost = active;if(!active)keyboardRequest.cancel();updateBlink(); }
-    public void dispose() { disposed=true;keyboardRequest.cancel();runtime.detach(this); if (terminal != null) { runtime.saveHistoryTopRow(terminal.getTopRow());terminal.setTerminalCursorBlinkerState(false, false); } }
+    public void dispose() { chromeChanged=()->{};disposed=true;keyboardRequest.cancel();runtime.detach(this); if (terminal != null) { runtime.saveHistoryTopRow(terminal.getTopRow());terminal.setTerminalCursorBlinkerState(false, false); } }
     @Override protected void onAttachedToWindow() { super.onAttachedToWindow(); disposed=false;runtime.attach(this); changed(); }
     @Override protected void onDetachedFromWindow() { dispose(); super.onDetachedFromWindow(); }
     private void updateBlink() {
@@ -212,7 +232,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
             ready.setTextSize(Math.round(fontSp * getResources().getDisplayMetrics().scaledDensity));
             ready.setTypeface(Typeface.MONOSPACE);
             terminal = ready;
-            terminal.setPadding(dp(10), dp(4), dp(10), dp(4));
+            terminal.setPadding(0, 0, 0, 0); // FrameLayout owns the actual text inset; Termux draws from its canvas origin.
             terminal.setFocusableInTouchMode(true);
             terminal.setOnFocusChangeListener((v, focused) -> { if (focused) focusChanged.run(); else keyboardRequest.cancel(); updateBlink(); });
             viewport.addView(terminal, new FrameLayout.LayoutParams(-1, -1));

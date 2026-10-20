@@ -89,6 +89,7 @@ class MainActivity : Activity() {
     private var result: RunResult? = null
     private var selectedOutput = 3
     private var completionPopup: CompletionPopup? = null
+    private var completionTabButton: View? = null
     private var completionBatch: CompletionBatch? = null
     private var completionSuppressed: CompletionRequest? = null
     private var completionExplicit = false
@@ -193,6 +194,7 @@ class MainActivity : Activity() {
     private val outputDisplay = OutputDisplayState()
     private lateinit var mainToolbar: MainToolbar
     private lateinit var outputTabs: LinearLayout
+    private var terminalSessionStrip: LinearLayout? = null
     private lateinit var outputRegion: LinearLayout
     private lateinit var editorRegion: LinearLayout
 
@@ -504,8 +506,9 @@ class MainActivity : Activity() {
                 IdeCommand.RIGHT -> "→"
                 else -> command.title.substringBefore("  ")
             }
-            keyRow.addView(IdeControls.key(this, palette, name, command.title) { dispatchCommand(command) },
-                LinearLayout.LayoutParams(-2, dp(DesignTokens.TOUCH)))
+            val key=IdeControls.key(this,palette,name,command.title) {dispatchCommand(command)}
+            if(command==IdeCommand.TAB)completionTabButton=key
+            keyRow.addView(key,LinearLayout.LayoutParams(-2,dp(DesignTokens.TOUCH)))
         }
         keyboardToolbar.addView(keyRow)
 
@@ -912,11 +915,13 @@ class MainActivity : Activity() {
         val width = (splitHost.width / density).toInt(); val height = (splitHost.height / density).toInt()
         // Before first measure, hiding stdin would make restoreSession.requestFocus() silently fail.
         if (width <= 0 || height <= 0) return
-        val expandedTerminalMinimum = 96 + (shellPane?.minimumHeightDp(false) ?: 168)
+        val headerWidth = (outputRegion.width / density).toInt().takeIf { it > 0 } ?: width
+        val headerMinimum = panelToolbar.expandedChromeHeightDp(headerWidth)
+        val expandedTerminalMinimum = headerMinimum + (shellPane?.minimumHeightDp(false) ?: 168)
         val terminalCompact = selectedOutput == 3 && PanelLayoutPolicy.terminalCompact(height,
             expandedTerminalMinimum, imeVisible && shellPane?.hasTerminalFocus() == true)
         shellPane?.setCompact(terminalCompact)
-        val terminalMinimum=if(selectedOutput==3) (if(terminalCompact)48 else 96)+(shellPane?.minimumHeightDp(terminalCompact)?:168) else 0
+        val terminalMinimum=if(selectedOutput==3) (if(terminalCompact)48 else headerMinimum)+(shellPane?.minimumHeightDp(terminalCompact)?:168) else 0
         val spec = PanelLayoutPolicy.resolve(panelState, panelVisible, width, height,
             imeVisible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, settings.collapsePanelOnIme, settings.panelPreferSide,terminalMinimum)
         val previous = panelLayout
@@ -943,7 +948,8 @@ class MainActivity : Activity() {
         val panelHeight = if (side || full) height else spec.extent
         val preset = WorkspaceLayoutPolicy.preset(presetInputExpanded, imeVisible, input.hasFocus(), panelHeight)
         panelInputHeading.visibility = if (preset.showCaption && selectedOutput == 3 && isCpp()) View.VISIBLE else View.GONE
-        panelOutputScroll.visibility = if (preset.showTabs && !terminalCompact) View.VISIBLE else View.GONE
+        panelOutputScroll.visibility = View.VISIBLE
+        panelToolbar.setCompact(terminalCompact)
         input.visibility = if (preset.showInput && selectedOutput == 3 && isCpp()) View.VISIBLE else View.GONE
         input.layoutParams?.let { old ->
             val target = dp(preset.inputHeight)
@@ -1110,12 +1116,14 @@ class MainActivity : Activity() {
         }
         panelToolbar = PanelToolbar(this, palette, { setPresetInputExpanded(!presetInputExpanded) },
             { dispatchCommand(IdeCommand.MAXIMIZE_TERMINAL) }, { dispatchCommand(IdeCommand.CLOSE_TERMINAL) },
-            { showContextCommands(it, IdeCommands.terminalMenuItems) }, { dispatchCommand(IdeCommand.CLEAR_TERMINAL) })
-        outputRegion.addView(panelToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
+            { showTerminalActions(it) }, { dispatchCommand(IdeCommand.CLEAR_TERMINAL) })
+        outputRegion.addView(panelToolbar, LinearLayout.LayoutParams(-1, -2))
         outputTabs = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         panelOutputScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(outputTabs) }
-        outputRegion.addView(panelOutputScroll, LinearLayout.LayoutParams(-1, dp(48)))
-        val stdinCaption = label("每文件预填输入 · 下次预填模式运行生效", 11f, muted).apply { setPadding(dp(10), dp(3), 0, dp(3)) }
+        terminalSessionStrip = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+        panelToolbar.bindNavigation(panelOutputScroll, terminalSessionStrip!!)
+        panelToolbar.setCloseSessionAction(::closeCurrentShell)
+        val stdinCaption = label("C++ 云端标准输入 · 随请求一起发送", 11f, muted).apply { setPadding(dp(10), dp(3), 0, dp(3)) }
         val inputHeading = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         inputHeading.addView(stdinCaption, LinearLayout.LayoutParams(0, -2, 1f))
         inputHeading.addView(button("清空输入") { input.setText("") })
@@ -1124,7 +1132,7 @@ class MainActivity : Activity() {
         input = EditText(this).apply {
             typeface = Typeface.MONOSPACE; textSize = 12f
             setTextColor(textForeground); setHintTextColor(muted)
-            gravity = Gravity.TOP or Gravity.START; hint = "C++ / Python预填模式读取；交互输入请点击终端"
+            gravity = Gravity.TOP or Gravity.START; hint = "C++ 云端预填输入；Python 请直接在终端输入"
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             background = shape(editorBackground, 4, border)
             setPadding(dp(7), dp(5), dp(7), dp(5))
@@ -2209,6 +2217,20 @@ class MainActivity : Activity() {
         toolDialog?.dismiss(); toolDialog = dialog; DialogMotion.show(dialog, motionAllowed())
     }
 
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if(event.actionMasked==MotionEvent.ACTION_DOWN&&completionPopup?.isShowing==true) {
+            val tab=completionTabButton
+            val location=IntArray(2)
+            val touchesTab=tab!=null&&tab.isShown&&run {
+                tab.getLocationOnScreen(location)
+                event.rawX>=location[0]&&event.rawX<location[0]+tab.width&&
+                    event.rawY>=location[1]&&event.rawY<location[1]+tab.height
+            }
+            if(!touchesTab)hideCompletion()
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (shellPane?.hasTerminalFocus() == true) {
             if(event.action==KeyEvent.ACTION_DOWN && toolDialog?.isShowing!=true && explorerDialog?.isShowing!=true) {
@@ -2509,7 +2531,8 @@ class MainActivity : Activity() {
         com.codepocket.ide.terminal.shell.TerminalAppearance.apply(selected.value.runtime.session(), settings.terminalTheme.name, dark)
         shellPane = ShellTerminalPane(this, selected.value.directory, settings.terminalFontSize, motionForeground && motionAllowed() && settings.cursorBlink,
             { hideCompletion(); clearSnippet(); lastFocus = "terminal"; updateImeLayout() }, selected.value.runtime).also { pane ->
-        shellPane?.setAppearance(settings.terminalTheme.name, dark)
+                pane.setAppearance(settings.terminalTheme.name, dark)
+                pane.setOnChromeChanged { applyPanelLayout() }
                 pane.setEmbedded(true)
                 outputRegion.addView(pane, LinearLayout.LayoutParams(-1, 0, 1f))
             }
@@ -2538,24 +2561,27 @@ class MainActivity : Activity() {
         input.visibility = if (target == 3 && presetInputExpanded && isCpp()) View.VISIBLE else View.GONE
         panelInputHeading.visibility = input.visibility
         outputTabs.removeAllViews()
-        fun tab(title: String, selected: Boolean, action: () -> Unit) = button(title, action).apply {
-            minHeight = dp(48); background = shape(if (selected) editorBackground else surface, 0)
-            if (selected) setTextColor(accent)
-        }
-        outputTabs.addView(tab("终端", target != 1) {
-            showOutput(3)
-            shellPane?.ensureSession()
+        outputTabs.addView(TerminalChrome.channel(this,palette,"终端",IdeIcon.TERMINAL,target!=1) {
+            showOutput(3); shellPane?.ensureSession()
         })
-        outputTabs.addView(tab("问题", target == 1) { showOutput(1) })
-        if (target != 1) {
-            val entry = terminalRegistry.catalog.selected()
-            outputTabs.addView(button((entry?.name() ?: "暂无终端") + " ▾") { showTerminalChoices(outputTabs) }.apply {
-                minHeight = dp(48); maxWidth = dp(160); setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.END
-                contentDescription = if (entry == null) "暂无终端，点击加号创建" else "选择终端会话，当前${entry.name()}，初始目录${entry.value.directory?.path ?: "应用终端主目录"}"
-            })
-            outputTabs.addView(button("＋") { newShellSession() }.apply { minWidth = dp(48); minHeight = dp(48); contentDescription = "新建终端，初始目录为当前项目" })
-            outputTabs.addView(button("⋯") { showTerminalActions(outputTabs) }.apply { minWidth = dp(48); minHeight = dp(48); contentDescription = "当前终端会话操作" })
-        } else outputTabs.addView(button("定位错误") { gotoError() }.apply { minHeight = dp(48); isEnabled = result?.errorLine != null })
+        outputTabs.addView(TerminalChrome.channel(this,palette,"问题",IdeIcon.INFO,target==1) { showOutput(1) })
+        panelToolbar.setSessionNavigationVisible(target!=1)
+        panelToolbar.setCurrentSessionAvailable(terminalRegistry.catalog.selected()!=null)
+        terminalSessionStrip?.apply {
+            removeAllViews()
+            if(target!=1) {
+                val entry=terminalRegistry.catalog.selected()
+                addView(TerminalChrome.session(this@MainActivity,palette,entry?.name() ?: "选择终端",
+                    if(entry==null)"暂无终端，点击新建终端" else "选择终端会话，当前${entry.name()}，初始目录${entry.value.directory?.path ?: "应用终端主目录"}") {
+                    showTerminalChoices(this)
+                },LinearLayout.LayoutParams(0,dp(48),1f))
+                addView(TerminalChrome.action(this@MainActivity,palette,IdeIcon.ADD,"新建终端，初始目录为当前项目",Runnable {newShellSession()}),LinearLayout.LayoutParams(dp(48),dp(48)))
+                addView(TerminalChrome.action(this@MainActivity,palette,IdeIcon.DELETE,"关闭当前终端会话",Runnable {closeCurrentShell()}).apply {
+                    isEnabled=entry!=null;alpha=if(isEnabled)1f else .35f
+                },LinearLayout.LayoutParams(dp(48),dp(48)))
+            }
+        }
+        if(target==1)outputTabs.addView(TerminalChrome.channel(this,palette,"定位",IdeIcon.LOCATE,false) {gotoError()}.apply {isEnabled=result?.errorLine!=null})
         if (shell) return
         val current = result
         consoleText.setOutput(if (target == 1) current?.stderr?.ifBlank { "没有错误诊断。" } ?: "尚无错误诊断。"
@@ -2619,10 +2645,17 @@ class MainActivity : Activity() {
     private fun showTerminalActions(anchor: View) {
         val entry = terminalRegistry.catalog.selected()
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
-        if (entry == null) { newShellSession(); return }
+        if (entry == null) {
+            menu.menu.add("新建终端").setOnMenuItemClickListener {newShellSession();true}
+            menu.menu.add("收起运行面板").setOnMenuItemClickListener {togglePanel();true}
+            menu.show();return
+        }
         val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证", "终端配色",
             ) + if(isCpp())listOf("编辑 C++ 云端预填输入")else emptyList()
         titles.forEachIndexed { index, title -> menu.menu.add(0, index, index, title) }
+        menu.menu.add(0,20,20,"新建终端")
+        menu.menu.add(0,21,21,"调整面板尺寸")
+        menu.menu.add(0,22,22,"收起运行面板")
         menu.setOnMenuItemClickListener { item ->
             if (terminalRegistry.catalog.selected() === entry) when (item.itemId) {
                 0 -> shellPane?.showKeyboard()
@@ -2630,21 +2663,29 @@ class MainActivity : Activity() {
                 2 -> entry.value.runtime.paste()
                 3 -> entry.value.runtime.clearScreen()
                 4 -> nameDialog("重命名终端会话", entry.name()) { name, dismiss -> terminalRegistry.catalog.rename(entry.id, name); showOutput(selectedOutput); dismiss() }
-                5 -> AlertDialog.Builder(this).setTitle("结束 ${entry.name()}？")
-                    .setMessage("会关闭这个 Shell 及其正在运行的 Python。收起面板不结束会话，其他终端保留。")
-                    .setNegativeButton("取消", null).setPositiveButton("结束") { _, _ ->
-                        terminalRegistry.end(entry.id)
-                        showOutput(3); updateImeLayout()
-                    }.showAnimated()
+                5 -> closeCurrentShell()
                 6 -> AlertDialog.Builder(this).setTitle("本机终端错误").setMessage(entry.value.runtime.failureDetails())
                     .setNegativeButton("关闭", null).setPositiveButton("复制") { _, _ -> entry.value.runtime.copyFailureDetails() }.showAnimated()
                 7 -> shellPane?.ensureSession()
                 8 -> shellPane?.showAbout()
                 9 -> showTerminalPalette(anchor)
                 10 -> setPresetInputExpanded(true)
+                20 -> newShellSession()
+                21 -> showPanelSizeMenu(anchor)
+                22 -> togglePanel()
             }
             true
         }; menu.show()
+    }
+
+    private fun closeCurrentShell() {
+        val entry=terminalRegistry.catalog.selected() ?: return
+        AlertDialog.Builder(this).setTitle("关闭 ${entry.name()}？")
+            .setMessage("将结束当前 Shell 及其正在运行的程序。编辑文件和其他终端会话保留。")
+            .setNegativeButton("取消",null).setPositiveButton("关闭终端") {_,_->
+                terminalRegistry.end(entry.id)
+                showOutput(3);updateImeLayout()
+            }.showAnimated()
     }
 
     private fun gotoError() {

@@ -63,7 +63,8 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         setOnItemClickListener { _, _, index, _ -> accept(index) }
     }
     private val popup = PopupWindow(content, 1, 1, false).apply {
-        isOutsideTouchable = true; inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+        // Activity dismisses outside touches, preserving the toolbar Tab acceptance gesture.
+        isOutsideTouchable = false; inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
         softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
         elevation = dp(6).toFloat(); animationStyle = 0
         enterTransition = null; exitTransition = null
@@ -75,9 +76,9 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         }
     }
     val isShowing get() = popup.isShowing
+    private val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
 
     init {
-        val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
         heading.addView(TextView(activity).apply {
             setText(R.string.completion_lexical); textSize = 11f; setTextColor(muted); setPadding(dp(8), 0, 0, 0)
         }, LinearLayout.LayoutParams(0, dp(48), 1f))
@@ -119,7 +120,8 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         val visible = anchor.visible
         val desired = dp(48 + minOf(items.size, 5) * 48 + 60)
         val placed = CompletionGeometry.place(CompletionBounds(visible.left, visible.top, visible.right, visible.bottom),
-            anchor.x, anchor.top, anchor.bottom, dp(380), desired, dp(96), dp(3)) ?: run { dismiss(false); return false }
+            anchor.x, anchor.top, anchor.bottom, dp(380), desired, dp(48), dp(3)) ?: run { dismiss(false); return false }
+        heading.visibility = if (placed.height >= dp(96)) View.VISIBLE else View.GONE
         details.visibility = if (placed.height >= dp(48 + 2 * 48 + 60)) View.VISIBLE else View.GONE
         var popupX = placed.x; var popupY = placed.y
         if (Build.VERSION.SDK_INT < 29) {

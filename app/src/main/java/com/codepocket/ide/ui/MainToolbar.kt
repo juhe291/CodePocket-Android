@@ -67,57 +67,84 @@ class MainToolbar(context: Context, private val palette: IdePalette,
 class PanelToolbar(context: Context, private val palette: IdePalette,
     onInput: () -> Unit, onMaximize: () -> Unit, onClose: () -> Unit,
     onMenu: (View) -> Unit, onClear: () -> Unit) : LinearLayout(context) {
-    private fun dp(value: Int) = IdeControls.dp(context, value)
-    private val titleView = TextView(context).apply {
-        text = context.getString(R.string.panel_title); textSize = 12f; setTextColor(palette.muted); gravity = Gravity.CENTER_VERTICAL
-        setSingleLine(); ellipsize = TextUtils.TruncateAt.END; setPadding(dp(8), 0, 0, 0)
-        IdeControls.describe(this, "终端工作台：在同一个真实终端中运行程序")
+    private fun dp(value: Int)=IdeControls.dp(context,value)
+    private val bar=LinearLayout(context).apply{gravity=Gravity.CENTER_VERTICAL}
+    private val sessionRow=LinearLayout(context).apply{gravity=Gravity.CENTER_VERTICAL;visibility=GONE}
+    private val inlineSessionParams=LayoutParams(dp(280),dp(48))
+    private val stackedSessionParams=LayoutParams(-1,dp(48))
+    private var navigation: View?=null
+    private var sessions: View?=null
+    private var sessionNavigation=true
+    private var compact=false
+    private var closeSessionAction:(()->Unit)?=null
+    private val titleView=TextView(context).apply{
+        text=context.getString(R.string.panel_title);textSize=12f;setTextColor(palette.foreground)
+        gravity=Gravity.CENTER_VERTICAL;setSingleLine();setPadding(dp(12),0,0,0)
     }
-    private val clear = IdeControls.icon(context, palette, IdeIcon.CLEAR, "清空输出显示；保留结果和预设输入", onClear)
-    private val preset = IdeControls.icon(context, palette, IdeIcon.INPUT, "展开预设输入", onInput)
-    private val maximize = IdeControls.icon(context, palette, IdeIcon.MAXIMIZE, context.getString(R.string.panel_maximize), onMaximize)
-    private val close = IdeControls.icon(context, palette, IdeIcon.CLOSE, context.getString(R.string.panel_close), onClose)
-    val menuAnchor = IdeControls.icon(context, palette, IdeIcon.MORE, context.getString(R.string.panel_size_menu)) {}
-    private var inputAvailable = true
-    fun setInputAvailable(available:Boolean) { inputAvailable=available;requestLayout() }
-    private var shellMode = false
-    fun setShellMode(shell: Boolean) {
-        shellMode = shell
-        titleView.text = context.getString(R.string.panel_title)
-        IdeControls.describe(titleView, if (shell) "真实 Android Shell 会话" else "终端工作台：在同一个真实终端中运行程序")
-        IdeControls.describe(clear, if (shell) "清空当前终端显示（不向程序发送输入）" else "清空输出显示；保留结果和预设输入")
+    private val clear=TerminalChrome.action(context,palette,IdeIcon.CLEAR,"清空当前终端显示（不向程序发送输入）",Runnable(onClear))
+    private val preset=TerminalChrome.action(context,palette,IdeIcon.INPUT,"展开预设输入",Runnable(onInput))
+    private val maximize=TerminalChrome.action(context,palette,IdeIcon.MAXIMIZE,context.getString(R.string.panel_maximize),Runnable(onMaximize))
+    private val close=TerminalChrome.action(context,palette,IdeIcon.DOWN,context.getString(R.string.panel_close),Runnable(onClose))
+    private val endSession=TerminalChrome.action(context,palette,IdeIcon.DELETE,"关闭当前终端会话",Runnable{closeSessionAction?.invoke()}).apply{visibility=GONE}
+    val menuAnchor=TerminalChrome.action(context,palette,IdeIcon.MORE,context.getString(R.string.panel_size_menu),Runnable{})
+    private var inputAvailable=true
+    private var maximized: Boolean?=null
+    private var expanded: Boolean?=null
+    init {
+        orientation=VERTICAL;setBackgroundColor(palette.panel);setPadding(dp(4),0,dp(4),0)
+        bar.addView(titleView,LayoutParams(0,dp(48),1f))
+        listOf(preset,clear,endSession,maximize,close,menuAnchor).forEach{bar.addView(it,LayoutParams(dp(48),dp(48)))}
+        addView(bar,LayoutParams(-1,dp(48)));addView(sessionRow,LayoutParams(-1,dp(48)))
+        menuAnchor.setOnClickListener{onMenu(it)}
+    }
+    fun bindNavigation(tabs: View, sessionStrip: View) {
+        navigation=tabs;sessions=sessionStrip;bar.removeView(titleView)
+        bar.addView(tabs,0,LayoutParams(0,dp(48),1f));sessionRow.addView(sessionStrip,stackedSessionParams)
         requestLayout()
     }
-    private var maximized: Boolean? = null
-    private var expanded: Boolean? = null
-    init {
-        menuAnchor.setOnClickListener { onMenu(it) }
-        gravity = Gravity.CENTER_VERTICAL; setBackgroundColor(palette.panel)
-        addView(titleView, LayoutParams(0, -1, 1f))
-        listOf(preset, clear, maximize, close, menuAnchor).forEach { addView(it, LayoutParams(dp(48), -1)) }
+    fun setCloseSessionAction(action:()->Unit){closeSessionAction=action;requestLayout()}
+    fun setCurrentSessionAvailable(available:Boolean){endSession.isEnabled=available;endSession.alpha=if(available)1f else .35f}
+    fun setSessionNavigationVisible(visible: Boolean){if(sessionNavigation!=visible){sessionNavigation=visible;requestLayout()}}
+    fun setCompact(value: Boolean){if(compact!=value){compact=value;requestLayout()}}
+    fun expandedChromeHeightDp(widthDp: Int): Int = if(navigation!=null&&sessionNavigation&&
+        !(widthDp>=600&&resources.configuration.fontScale<=1.3f))96 else 48
+    fun chromeHeightDp(widthDp: Int): Int = if(compact)48 else expandedChromeHeightDp(widthDp)
+    fun setInputAvailable(available: Boolean){if(inputAvailable!=available){inputAvailable=available;requestLayout()}}
+    fun setShellMode(shell: Boolean) {
+        IdeControls.describe(titleView,if(shell)"真实 Android Shell 会话" else "终端工作台")
+        IdeControls.describe(clear,if(shell)"清空当前终端显示（不向程序发送输入）" else "清空输出显示；保留结果和预设输入")
     }
-    fun setState(isMaximized: Boolean, inputExpanded: Boolean) {
-        if (maximized != isMaximized) {
-            maximized = isMaximized
-            maximize.setImageDrawable(IdeIconDrawable(context, if (isMaximized) IdeIcon.RESTORE else IdeIcon.MAXIMIZE,
-                palette.foreground, dp(20)))
-            IdeControls.describe(maximize, context.getString(if (isMaximized) R.string.panel_restore else R.string.panel_maximize))
+    fun setState(isMaximized: Boolean,inputExpanded: Boolean) {
+        if(maximized!=isMaximized){
+            maximized=isMaximized
+            maximize.setImageDrawable(IdeIconDrawable(context,if(isMaximized)IdeIcon.RESTORE else IdeIcon.MAXIMIZE,palette.muted,dp(20)))
+            IdeControls.describe(maximize,context.getString(if(isMaximized)R.string.panel_restore else R.string.panel_maximize))
         }
-        if (expanded != inputExpanded) {
-            expanded = inputExpanded; preset.isSelected = inputExpanded
-            IdeControls.describe(preset, if (inputExpanded) "收起预设输入" else "展开预设输入")
-            preset.setImageDrawable(IdeIconDrawable(context, IdeIcon.INPUT, if (inputExpanded) palette.accent else palette.foreground, dp(20)))
+        if(expanded!=inputExpanded){
+            expanded=inputExpanded;preset.isSelected=inputExpanded
+            IdeControls.describe(preset,if(inputExpanded)"收起预设输入" else "展开预设输入")
         }
     }
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        val budget = (width / resources.displayMetrics.density).toInt()
-        val spec = WorkspaceLayoutPolicy.panelToolbar(budget)
-        clear.visibility = if (spec.clear) VISIBLE else GONE
-        preset.visibility = if (spec.preset && inputAvailable) VISIBLE else GONE
-        maximize.visibility = if (spec.maximize) VISIBLE else GONE
-        close.visibility = if (spec.close) VISIBLE else GONE
-        listOf(preset, clear, maximize, close, menuAnchor).forEach { it.layoutParams.width = minOf(dp(48), width) }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    override fun onMeasure(widthMeasureSpec: Int,heightMeasureSpec: Int) {
+        val width=MeasureSpec.getSize(widthMeasureSpec)
+        val budget=(width/resources.displayMetrics.density).toInt()
+        val spec=WorkspaceLayoutPolicy.panelToolbar(budget)
+        val integrated=navigation!=null
+        clear.visibility=if(if(integrated)budget>=840 else spec.clear)VISIBLE else GONE
+        preset.visibility=if(inputAvailable&&if(integrated)budget>=840 else spec.preset)VISIBLE else GONE
+        maximize.visibility=if(spec.maximize&&(!integrated||!compact||budget>=400))VISIBLE else GONE
+        endSession.visibility=if(compact&&sessionNavigation&&closeSessionAction!=null)VISIBLE else GONE
+        close.visibility=if(spec.close)VISIBLE else GONE
+        sessions?.let { strip ->
+            val inline=budget>=600&&resources.configuration.fontScale<=1.3f&&!compact
+            val parent=if(inline)bar else sessionRow
+            if(strip.parent!==parent){(strip.parent as? android.view.ViewGroup)?.removeView(strip)
+                if(inline)bar.addView(strip,1,inlineSessionParams)
+                else sessionRow.addView(strip,stackedSessionParams)}
+            strip.visibility=if(sessionNavigation&&!compact)VISIBLE else GONE
+            sessionRow.visibility=if(!inline&&sessionNavigation&&!compact)VISIBLE else GONE
+        }
+        listOf(preset,clear,endSession,maximize,close,menuAnchor).forEach{it.layoutParams.width=minOf(dp(48),width)}
+        super.onMeasure(widthMeasureSpec,heightMeasureSpec)
     }
 }
