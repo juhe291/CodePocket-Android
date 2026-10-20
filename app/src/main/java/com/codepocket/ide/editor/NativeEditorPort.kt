@@ -27,6 +27,9 @@ class NativeEditorPort(
 ) : DocumentEditorPort {
     private class SyntaxSpan(color: Int) : ForegroundColorSpan(color), NoCopySpan
     private class BracketSpan(color: Int) : BackgroundColorSpan(color), NoCopySpan
+    var diagnosticsChanged: (() -> Unit)? = null
+    var pythonDocument: (() -> Boolean)? = null
+    var runtimeDiagnostics: ((EditorFrame) -> List<InlineIssue>)? = null
     private var closed = false
     private var replacing = false
     private var interaction = 0L
@@ -155,7 +158,7 @@ class NativeEditorPort(
         if (closed || replacing) return null
         val (key, revision) = document() ?: return null
         return EditorFrame(EditorSnapshot(key, revision, editor.text.toString(), editor.selectionStart,
-            editor.selectionEnd), cpp(), dark(), BaseInputConnection.getComposingSpanStart(editor.text) >= 0)
+            editor.selectionEnd), cpp(), dark(), BaseInputConnection.getComposingSpanStart(editor.text) >= 0, pythonDocument?.invoke() ?: !cpp())
     }
 
     override fun replaceDocument(text: String): Boolean {
@@ -197,13 +200,13 @@ class NativeEditorPort(
         val current = snapshot() ?: return false
         if (!analysis.canApplyTo(current)) return false
         val value = editor.text
-        if (analysis.tokens.any { it.start < 0 || it.end <= it.start || it.end > value.length } ||
+        if ((analysis.tokens + analysis.extraTokens).any { it.start < 0 || it.end <= it.start || it.end > value.length } ||
             analysis.brackets?.let { it.first !in 0 until value.length || it.second !in 0 until value.length } == true) return false
         val previous = coloredFrame
         if (coloredText !== value || previous == null || !previous.buffer.sameBuffer(current.buffer) ||
             previous.cpp != current.cpp || previous.dark != current.dark || coloredFallback != analysis.fallback) {
             value.getSpans(0, value.length, SyntaxSpan::class.java).forEach(value::removeSpan)
-            for (token in analysis.tokens) {
+            for (token in analysis.tokens + analysis.extraTokens) {
                 val color = color(token.kind, current.dark) ?: continue
                 value.setSpan(SyntaxSpan(color), token.start, token.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
@@ -215,6 +218,9 @@ class NativeEditorPort(
             for (position in listOf(first, second)) value.setSpan(BracketSpan(color), position, position + 1,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
+        editor.setDiagnostics(analysis.syntax.copy(issues =
+            ((runtimeDiagnostics?.invoke(current) ?: emptyList()) + analysis.syntax.issues).distinctBy { it.start }.take(40)), current.dark)
+        diagnosticsChanged?.invoke()
         return true
     }
 
@@ -226,7 +232,18 @@ class NativeEditorPort(
         observed = null; coloredText = null; coloredFrame = null; coloredFallback = null
     }
 
-    private fun color(kind: String, dark: Boolean): Int? = when (kind) {
+    private fun color(kind: String, dark: Boolean): Int? {
+        if (kind.startsWith("bracket")) {
+            val depth = kind.removePrefix("bracket").toIntOrNull() ?: return null
+            val colors = if (dark) intArrayOf(0xFFD9C184.toInt(), 0xFFA99BC8.toInt(), 0xFF8AB5C5.toInt(), 0xFFC799A3.toInt(), 0xFF91BAA2.toInt(), 0xFFB8AC8D.toInt())
+                else intArrayOf(0xFF805F16.toInt(), 0xFF71559B.toInt(), 0xFF246D86.toInt(), 0xFF9C4962.toInt(), 0xFF377450.toInt(), 0xFF795D3E.toInt())
+            return colors.getOrNull(depth)
+        }
+        return when (kind) {
+        "variable" -> if (dark) 0xFF9DC5DF.toInt() else 0xFF28557D.toInt()
+        "parameter" -> if (dark) 0xFFD0BEA0.toInt() else 0xFF775B2E.toInt()
+        "property" -> if (dark) 0xFFBAADD0.toInt() else 0xFF75518F.toInt()
+        "constant" -> if (dark) 0xFFB4C7A0.toInt() else 0xFF4F6F32.toInt()
         "keyword" -> if (dark) 0xFF569CD6.toInt() else 0xFF0000FF.toInt()
         "type" -> if (dark) 0xFF4EC9B0.toInt() else 0xFF267F99.toInt()
         "function" -> if (dark) 0xFFDCDCAA.toInt() else 0xFF795E26.toInt()
@@ -235,5 +252,6 @@ class NativeEditorPort(
         "comment" -> if (dark) 0xFF6A9955.toInt() else 0xFF008000.toInt()
         "preprocessor" -> if (dark) 0xFFC586C0.toInt() else 0xFFAF00DB.toInt()
         else -> null
+        }
     }
 }

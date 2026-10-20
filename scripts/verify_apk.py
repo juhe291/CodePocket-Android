@@ -44,20 +44,30 @@ def main():
         with zipfile.ZipFile(io.BytesIO(archive.read("assets/chaquopy/app.imy"))) as app_archive:
             runner_entry = next(n for n in app_archive.namelist() if n == "runner.pyc")
             bytecode = app_archive.read(runner_entry)
+            diagnostics_bytecode = app_archive.read("diagnostics.pyc")
 
     assert bytecode[:4] == importlib.util.MAGIC_NUMBER, "Host Python must match the APK bytecode version"
     bundled_runner = types.ModuleType("runner")
     bundled_runner.__file__ = f"{args.apk}!assets/chaquopy/app.imy!{runner_entry}"
     exec(marshal.loads(bytecode[16:]), bundled_runner.__dict__)
     bundled_runner.__packaged_bytecode__ = bytecode
+    assert diagnostics_bytecode[:4] == importlib.util.MAGIC_NUMBER
+    bundled_diagnostics = types.ModuleType("diagnostics")
+    bundled_diagnostics.__file__ = f"{args.apk}!assets/chaquopy/app.imy!diagnostics.pyc"
+    exec(marshal.loads(diagnostics_bytecode[16:]), bundled_diagnostics.__dict__)
+    sys.modules["diagnostics"] = bundled_diagnostics
     sys.modules["runner"] = bundled_runner
     sys.path.insert(0, str(root / "tests"))
     import test_runner
     assert test_runner.run_code is bundled_runner.run_code, "Tests must use APK bytecode"
     import test_terminal_runner
     assert test_terminal_runner.runner is bundled_runner
-    suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromModule(test_runner),
+    import test_diagnostics
+    assert test_diagnostics.diagnostics is bundled_diagnostics
+    runner_suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromModule(test_runner),
         unittest.defaultTestLoader.loadTestsFromModule(test_terminal_runner)])
+    runner_count = runner_suite.countTestCases()
+    suite = unittest.TestSuite([runner_suite, unittest.defaultTestLoader.loadTestsFromModule(test_diagnostics)])
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     report = {
@@ -68,7 +78,9 @@ def main():
         "abis": abis,
         "python_archives_checked": checked_archives,
         "bundled_runner": runner_entry,
-        "bundled_runner_tests": result.testsRun,
+        "bundled_runner_tests": runner_count,
+        "bundled_diagnostics_tests": result.testsRun - runner_count,
+        "bundled_total_tests": result.testsRun,
         "test_failures": len(result.failures),
         "test_errors": len(result.errors),
         "device_execution": False,

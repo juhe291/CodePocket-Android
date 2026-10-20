@@ -66,6 +66,7 @@ import org.json.JSONArray
 
 /** VS Code-inspired, responsive native Android learning IDE. */
 class MainActivity : Activity() {
+    private var diagnosticPopup: DiagnosticPopup? = null
     private lateinit var workspace: Workspace
     private val prefs by lazy { getSharedPreferences("codepocket_v2", MODE_PRIVATE) }
     private var motionObserver: MotionEnvironment? = null
@@ -386,6 +387,7 @@ class MainActivity : Activity() {
         explorerResizeHandle?.cancelGesture(); projectSearch?.cancel()
         cancelWorkbenchMotion()
         completionPopup?.dismiss(false); signaturePopup?.dismiss(false)
+        diagnosticPopup?.dismiss()
         handler.removeCallbacks(refreshEditor); editorAnalysis?.cancel(); editorPort?.cancelNavigation(); hideCompletion(); clearSnippet(); completionConsumedKeys.clear()
         currentGeometry?.let { updateExplorerLayout(ExplorerLayout.resolve(it, explorerWidth)) }
         persist()
@@ -393,7 +395,7 @@ class MainActivity : Activity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (!hasFocus) { cancelWorkbenchMotion(); completionPopup?.dismiss(false); signaturePopup?.dismiss(false); editorAnalysis?.cancel(); hideCompletion(); completionConsumedKeys.clear() }
+        if (!hasFocus) { diagnosticPopup?.dismiss(); cancelWorkbenchMotion(); completionPopup?.dismiss(false); signaturePopup?.dismiss(false); editorAnalysis?.cancel(); hideCompletion(); completionConsumedKeys.clear() }
         else if (::editor.isInitialized) { refreshMotionPolicy(); handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
     }
 
@@ -428,6 +430,7 @@ class MainActivity : Activity() {
         motionObserver?.stop(); motionObserver = null
         settingsApplyFailure = null
         themeSnapshot?.release(); themeSnapshot = null
+        diagnosticPopup?.dismiss(); diagnosticPopup = null
         super.onDestroy()
         shellPane?.dispose(); shellPane = null
         if (isFinishing) ShellSessionRegistry.finishAll()
@@ -469,6 +472,7 @@ class MainActivity : Activity() {
 
     private fun createUi() {
         commandMenu?.dismiss(); commandMenu = null
+        diagnosticPopup?.dismiss(); diagnosticPopup = null
         hideCompletion(); clearSnippet(); completionPopup = null; signaturePopup = null
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         explorerResizeHandle?.cancelGesture()
@@ -643,8 +647,14 @@ class MainActivity : Activity() {
         val language = if (activePath.endsWith(".py", true)) "Python" else "C++"
         val (line, column) = InteractionState.caret(editor.text.toString(), editor.selectionStart)
         val state = InteractionState.status(running, workspaceBusy, saving, dirty, status.text.toString())
+        val report = editor.diagnosticReport
+        val detailedState = when {
+            report.issues.isNotEmpty() -> "$state · ${report.issues.size} 处问题，点击红线查看"
+            report.status.isNotEmpty() -> "$state · ${report.status}"
+            else -> state
+        }
         statusBarComponent.setStatus(StatusBarLayout(language, line, column,
-            if (settings.useSpaces) "空格 ${settings.tabWidth}" else "Tab ${settings.tabWidth}", "UTF-8", state))
+            if (settings.useSpaces) "空格 ${settings.tabWidth}" else "Tab ${settings.tabWidth}", "UTF-8", detailedState))
         if (::editorToolbar.isInitialized) editorToolbar.setState(commandContext())
     }
 
@@ -1045,7 +1055,18 @@ class MainActivity : Activity() {
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
             }
         }
-        editorAnalysis = EditorAnalysisController(editorPort!!, { handler.post(it) })
+        (editorPort as NativeEditorPort).apply {
+            diagnosticsChanged = ::updateStatusBar
+            pythonDocument = { activePath.endsWith(".py", true) }
+            runtimeDiagnostics = { frame ->
+                val origin = result
+                val sameWorkspace = origin?.workspaceId == workspace.identity
+                val sameFile = origin?.errorFile?.let { DiagnosticFiles.relative(workspace, it, origin.projectRoot) == activePath } ?: true
+                com.codepocket.ide.editor.InlineRunDiagnostics.resolve(frame, origin, sameWorkspace && sameFile)
+            }
+        }
+        val analyzer = com.codepocket.ide.editor.EditorAnalyzer(pythonSyntax = com.codepocket.ide.editor.PythonSyntaxChecker(applicationContext)::check)
+        editorAnalysis = EditorAnalysisController(editorPort!!, { handler.post(it) }, analyze = analyzer::analyze)
         editorBody.addView(editor, LinearLayout.LayoutParams(0, -1, 1f))
         editorRegion.addView(editorBody, LinearLayout.LayoutParams(-1, 0, 1f))
         editorRegion.addView(editorToolbar, LinearLayout.LayoutParams(-1, dp(48)))
@@ -1055,10 +1076,11 @@ class MainActivity : Activity() {
         suggestScroll.addView(suggestionRow)
         editorRegion.addView(suggestScroll, LinearLayout.LayoutParams(-1, dp(DesignTokens.SNIPPET_HINT)))
         editor.viewTreeObserver.addOnScrollChangedListener {
-            numbers.scrollY = editor.scrollY; completionPopup?.let { if (it.isShowing) it.reposition() }
+            diagnosticPopup?.dismiss(); numbers.scrollY = editor.scrollY; completionPopup?.let { if (it.isShowing) it.reposition() }
             signaturePopup?.let { if (it.isShowing) it.reposition() }
         }
         editor.viewTreeObserver.addOnGlobalLayoutListener {
+            diagnosticPopup?.dismiss()
             if (settings.wordWrap) updateNumbers()
             completionPopup?.let { if (it.isShowing) it.reposition() }
             signaturePopup?.let { if (it.isShowing) it.reposition() }
@@ -1077,6 +1099,7 @@ class MainActivity : Activity() {
                 }
             }
             override fun afterTextChanged(s: Editable?) {
+                diagnosticPopup?.dismiss()
                 if (quietEdit) return
                 editorAnalysis?.cancel()
                 hideCompletion()
@@ -1093,14 +1116,22 @@ class MainActivity : Activity() {
             }
         })
         editor.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
-            if (focused) { lastFocus = "editor"; updateImeLayout() } else hideCompletion()
+            if (focused) { lastFocus = "editor"; updateImeLayout() } else { diagnosticPopup?.dismiss(); hideCompletion() }
         }
-        editor.setOnClickListener { updateSuggestions(); updateSignatureHelp() }
+        editor.setOnClickListener {
+            val issue = editor.diagnosticAtCaret()
+            if (issue != null) {
+                hideCompletion(true)
+                val popup = diagnosticPopup ?: DiagnosticPopup(this, editor, editorPort!!).also { diagnosticPopup = it }
+                popup.show(issue)
+            } else { diagnosticPopup?.dismiss(); updateSuggestions(); updateSignatureHelp() }
+        }
         completionHint = label("", 11f, muted)
         suggestionRow.addView(completionHint)
         editor.onCaretChanged = {
             updateStatusBar()
             if (!quietEdit) {
+                diagnosticPopup?.dismiss()
                 editorAnalysis?.cancel()
                 if (!snippetTextChanging) { validSnippet(); updateSnippetHint() }
                 hideCompletion()
@@ -1732,6 +1763,7 @@ class MainActivity : Activity() {
         editor.text.toString(), editor.selectionStart, editor.selectionEnd, isCpp())
 
     private fun hideCompletion(suppress: Boolean = false) {
+        if (suppress) diagnosticPopup?.dismiss()
         hideSignatureHelp(suppress)
         if (suppress && ::sessions.isInitialized && ::editor.isInitialized) completionSuppressed = completionRequest()
         completionGeneration++; completionTask?.cancel(true); completionTask = null
@@ -1741,6 +1773,7 @@ class MainActivity : Activity() {
 
     private fun updateSuggestions(force: Boolean = false) {
         if (!::editor.isInitialized || !::sessions.isInitialized) return
+        if (diagnosticPopup?.isShowing == true) { if (!force) return else diagnosticPopup?.dismiss() }
         if (isFinishing || !hasWindowFocus() || workspaceBusy || loadedPath != activePath || !editor.hasFocus() || !editor.isShown ||
             toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
             BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || editor.selectionStart != editor.selectionEnd ||
@@ -1791,6 +1824,7 @@ class MainActivity : Activity() {
     }
 
     private fun updateSignatureHelp(force: Boolean = false) {
+        if (diagnosticPopup?.isShowing == true) { if (!force) return else diagnosticPopup?.dismiss() }
         if (!::editor.isInitialized || !::sessions.isInitialized) return
         if (isFinishing || isDestroyed || !hasWindowFocus() || workspaceBusy || loadedPath != activePath ||
             !editor.hasFocus() || !editor.isShown || editor.length() > 45000 ||
@@ -2515,6 +2549,7 @@ class MainActivity : Activity() {
         updateMainToolbarState()
         outputDisplay.synchronize(RunSession.result, running)
         result = RunSession.result
+        editorAnalysis?.request()
         showOutput(selectedOutput)
         if (running) status.text = if (RunSession.waitingForInput) "等待终端输入 · Enter 提交 / Ctrl+D 结束输入" else "正在执行，请稍候…"
         else result?.let { response ->

@@ -11,7 +11,7 @@ interface EditorPort {
     fun applyDecorations(analysis: EditorAnalysis): Boolean
 }
 
-data class EditorFrame(val buffer: EditorSnapshot, val cpp: Boolean, val dark: Boolean, val composing: Boolean = false)
+data class EditorFrame(val buffer: EditorSnapshot, val cpp: Boolean, val dark: Boolean, val composing: Boolean = false, val python: Boolean = !cpp)
 
 enum class HighlightFallback { NONE, TEXT_LIMIT, SPAN_LIMIT, ANALYSIS_FAILED }
 
@@ -19,35 +19,43 @@ data class EditorAnalysis(
     val source: EditorFrame,
     val tokens: List<EditorFeatures.Token>,
     val brackets: Pair<Int, Int>?,
-    val fallback: HighlightFallback = HighlightFallback.NONE
+    val fallback: HighlightFallback = HighlightFallback.NONE,
+    val extraTokens: List<EditorFeatures.Token> = emptyList(),
+    val syntax: SyntaxReport = SyntaxReport()
 ) {
     fun canApplyTo(current: EditorFrame): Boolean = !source.composing && !current.composing &&
-        source.buffer.sameBuffer(current.buffer) && source.cpp == current.cpp && source.dark == current.dark &&
+        source.buffer.sameBuffer(current.buffer) && source.cpp == current.cpp && source.python == current.python && source.dark == current.dark &&
         source.buffer.start == current.buffer.start && source.buffer.end == current.buffer.end
 }
 
 /** Worker-owned single-document cache. Caret/theme changes reuse the lexical scan. Not semantic analysis. */
-class EditorAnalyzer(private val tokenize: (String, Boolean) -> List<EditorFeatures.Token> = EditorFeatures::tokens) {
+class EditorAnalyzer(private val pythonSyntax: ((String) -> SyntaxReport)? = null, private val tokenize: (String, Boolean) -> List<EditorFeatures.Token> = EditorFeatures::tokens) {
     private var cached: EditorFrame? = null
     private var cachedTokens = emptyList<EditorFeatures.Token>()
+    private var decorations = DecorationScan(emptyList(), emptyList())
+    private var syntax = SyntaxReport()
 
     fun analyze(frame: EditorFrame): EditorAnalysis {
         val code = frame.buffer.text
         if (code.length > MAX_HIGHLIGHT_CHARS) {
             cached = null; cachedTokens = emptyList()
-            return EditorAnalysis(frame, emptyList(), null, HighlightFallback.TEXT_LIMIT)
+            return EditorAnalysis(frame, emptyList(), null, HighlightFallback.TEXT_LIMIT, syntax = SyntaxReport(status = "文件超过 4.5 万字符，已暂停编辑诊断"))
         }
         val previous = cached
-        if (previous == null || !previous.buffer.sameBuffer(frame.buffer) || previous.cpp != frame.cpp) {
+        if (previous == null || !previous.buffer.sameBuffer(frame.buffer) || previous.cpp != frame.cpp || previous.python != frame.python) {
             cachedTokens = tokenize(code, frame.cpp)
+            decorations = EditorDecorations.scan(code, frame.cpp, cachedTokens)
+            syntax = if (frame.python && pythonSyntax != null) pythonSyntax.invoke(code)
+                else SyntaxReport(status = if (frame.cpp) "C++ 基础括号检查 · 完整诊断需运行编译" else "")
+            syntax = syntax.copy(issues = (syntax.issues + decorations.issues).distinctBy { it.start }.take(40))
             cached = frame
         }
         val brackets = if (frame.buffer.start == frame.buffer.end)
             EditorFeatures.matchingBrackets(code, frame.buffer.start, cachedTokens) else null
         // Applying tens of thousands of spans on the UI thread can still stall input.
-        return if (cachedTokens.size > MAX_HIGHLIGHT_SPANS)
-            EditorAnalysis(frame, emptyList(), brackets, HighlightFallback.SPAN_LIMIT)
-        else EditorAnalysis(frame, cachedTokens, brackets)
+        return if (cachedTokens.size + decorations.tokens.size > MAX_HIGHLIGHT_SPANS)
+            EditorAnalysis(frame, emptyList(), brackets, HighlightFallback.SPAN_LIMIT, syntax = syntax)
+        else EditorAnalysis(frame, cachedTokens, brackets, extraTokens = decorations.tokens, syntax = syntax)
     }
 
     companion object {

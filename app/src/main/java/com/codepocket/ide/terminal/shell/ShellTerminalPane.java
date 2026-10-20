@@ -136,7 +136,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         TextView toggle=TerminalChrome.INSTANCE.key(context,chrome,"控制键","展开或收起终端控制键",()->{
             controlsExpanded=!controlsExpanded;keyboard.setVisibility(controlsExpanded?VISIBLE:GONE);
             context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).edit().putBoolean("terminalControlsExpanded",controlsExpanded).apply();
-            for(int i=0;i<dock.getChildCount();i++)if("展开或收起终端控制键".contentEquals(dock.getChildAt(i).getContentDescription()))dock.getChildAt(i).setSelected(controlsExpanded);
+            for(int i=0;i<dock.getChildCount();i++)if(android.text.TextUtils.equals("展开或收起终端控制键",dock.getChildAt(i).getContentDescription()))dock.getChildAt(i).setSelected(controlsExpanded);
             chromeChanged.run();requestLayout();
         });
         toggle.setSelected(controlsExpanded);toggle.setTypeface(null);dock.addView(toggle,new LayoutParams(dp(80),dp(48)));

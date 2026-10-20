@@ -12,14 +12,19 @@ import android.view.MotionEvent
 class CodeEditor(context: Context) : EditText(context, null, 0, R.style.WorkbenchEditor), MotionParticipant {
     // Native cursor remains visible to insertion/selection controllers; only its drawable is transparent.
     private var caretMotion: EditorCaretMotion? = null
-    init { caretMotion = EditorCaretMotion(this) }
+    private var issueLayer: com.codepocket.ide.editor.EditorIssueLayer? = null
+    init { caretMotion = EditorCaretMotion(this); issueLayer = com.codepocket.ide.editor.EditorIssueLayer(this) }
+    val diagnosticReport get() = issueLayer?.report ?: com.codepocket.ide.editor.SyntaxReport()
+    fun setDiagnostics(report: com.codepocket.ide.editor.SyntaxReport, dark: Boolean) { issueLayer?.update(report, dark) }
+    fun diagnosticAtCaret() = issueLayer?.at(selectionStart)
+
     fun configureMotion(enabled: Boolean, move: Boolean, blink: Boolean, color: Int) {
         caretMotion?.configure(enabled, move, blink, color)
     }
     override fun finishMotion() { caretMotion?.reset() }
-    override fun onDraw(canvas: Canvas) { super.onDraw(canvas); caretMotion?.draw(canvas) }
+    override fun onDraw(canvas: Canvas) { super.onDraw(canvas); issueLayer?.draw(canvas); caretMotion?.draw(canvas) }
     override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-        super.onTextChanged(text, start, before, count); caretMotion?.textChanged(start, before, count)
+        super.onTextChanged(text, start, before, count); issueLayer?.clear(); caretMotion?.textChanged(start, before, count)
     }
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt); caretMotion?.reset()

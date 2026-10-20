@@ -40,6 +40,29 @@ object EditorSearch {
         require(text.length.toLong() - (right - left) + replacement.length <= Workspace.MAX_CHARS) { "替换后超过 20 万字符，未修改内容" }
         return TextChange(left, right, replacement, left + replacement.length)
     }
+    /** Non-overlapping matches, identical to replace-all, computed only on a worker. */
+    fun matches(text: String, query: String, ignoreCase: Boolean = false, wholeWord: Boolean = false): List<IntRange> {
+        if (query.isEmpty()) return emptyList()
+        val result = ArrayList<IntRange>()
+        var at = 0
+        while (at <= text.length - query.length) {
+            if (Thread.currentThread().isInterrupted) throw InterruptedException()
+            val hit = text.indexOf(query, at, ignoreCase)
+            if (hit < 0) break
+            if (!wholeWord || boundary(text, hit, hit + query.length)) result.add(hit until hit + query.length)
+            at = hit + query.length
+        }
+        return result
+    }
+
+    /** Replace the selected match or the next match in one guarded editor transaction. */
+    fun replaceNext(state: EditorSnapshot, query: String, replacement: String,
+        ignoreCase: Boolean = false, wholeWord: Boolean = false): TextChange? {
+        return replaceSelection(state.text, query, replacement, state.start, state.end, ignoreCase, wholeWord)
+            ?: find(state.text, query, maxOf(state.start, state.end), ignoreCase = ignoreCase, wholeWord = wholeWord)
+                ?.let { replaceSelection(state.text, query, replacement, it.first, it.last + 1, ignoreCase, wholeWord) }
+    }
+
     fun replaceAll(text: String, query: String, replacement: String, ignoreCase: Boolean = false,
         wholeWord: Boolean = false): Replacement? {
         if (query.isEmpty()) return null

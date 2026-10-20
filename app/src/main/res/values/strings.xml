@@ -65,4 +65,7 @@
     <string name="workbench_breadcrumb">%1$s  ›  %2$s</string>
     <string name="explorer_creation_hint">新建到：%1$s\n长按或右键管理文件</string>
     <string name="move_target_path">目标：%1$s</string>
+    <string name="search_current_file">当前文件 · %1$s</string>
+    <string name="search_type_to_find">输入即查找 · Enter 下一个</string>
+    <string name="search_replace_undo">%1$s · 可撤销</string>
 </resources>

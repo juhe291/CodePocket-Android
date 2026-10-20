@@ -1,5 +1,14 @@
 # CodePocket 当前交接状态
 
+## 最新：控制键闪退与编辑反馈（2026-10-20）
+
+- 已复现并修复“控制键”展开时遍历空占位View的NPE；查找替换改即时计数与一步替换。
+- 混合括号按层级配色；变量/参数/属性/常量采用词法角色色。编辑区增加红色波浪线和可复制来源提示；Python本地compile-only语法检查，C++基础括号+真实运行后源码校验的诊断，未实现完整LSP。
+- App517项516通过/1旧跳过，新增21；源码/资源44、实际APK字节码39（runner29+diagnostics10）、Shell4、模板各7通过；Lint0错/11旧警告，最终Debug构建1m29s。原496项、204份受保护文件和41个旧APK保持；终端核心146为缓存结果。
+- [最新APK](../dist/CodePocket-editor-feedback-2026-10-20-debug.apk)，23,020,188字节，SHA256 `c3499b07d0c21c4c7391afc0b8376bbf1764e486e80aeaea12136d009c4e0e2f`；[完整报告](EDITOR_FEEDBACK_2026-10-20.md)、[局部原生主机预览](editor-feedback-preview/README.md)。同旧签名；此前terminal-polish版有控制键闪退，请使用本版。
+- 单一真实PTY与原Python/Wandbox、保存和文件安全保持。实机、IME/键鼠、卓易通/帧率继续后置；主机测试没有验证Android主进程CPython桥首次加载。原P2/P3继续保留，无push/远端Actions。
+
+
 ## 最新：终端设计、关闭快捷按钮与Tab补全（2026-10-20）
 
 - 已统一终端标签、会话选择、新建/关闭、底部键盘与控制键样式；手机/大字体两行、实际终端宽度600dp起单行。垃圾桶关闭当前会话，先确认；向下箭头收起面板。紧凑模式保留直接关闭入口；真实PTY、Python与Wandbox保留。
