@@ -2068,6 +2068,24 @@ class MainActivity : Activity() {
         else { applyEditorPreferences(); restoreSession(); status.text = "设置已保存"; onApplied(true) }
     }
 
+    /** Change only font metrics: retain Editable, undo, document revision, focus and terminal sessions. */
+    private fun zoomEditor(delta: Int) {
+        if (workspaceBusy || loadedPath != activePath || !editor.hasFocus() ||
+            BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+        val size = (settings.fontSize + delta).coerceIn(10, 28)
+        if (size == settings.fontSize) { status.text = getString(R.string.editor_font_limit, size); return }
+        hideCompletion(true)
+        editorPort?.cancelNavigation()
+        editor.finishMotion()
+        settings = settings.copy(fontSize = size)
+        prefs.edit().putString("settings", settings.toJson()).apply()
+        editor.textSize = size.toFloat(); numbers.textSize = size.toFloat()
+        updateTabStops(); updateNumbers()
+        // Layout is asynchronous; the existing cancellable pre-draw queue reveals the real caret.
+        editorPort?.revealCaret()
+        status.text = getString(R.string.editor_font_size, size)
+    }
+
     private fun applyEditorPreferences() {
         editor.textSize = settings.fontSize.toFloat(); numbers.textSize = settings.fontSize.toFloat()
         consoleText.textSize = settings.terminalFontSize.toFloat()
@@ -2280,6 +2298,11 @@ class MainActivity : Activity() {
             return super.dispatchKeyEvent(event)
         if (event.action == KeyEvent.ACTION_UP && completionConsumedKeys.remove(event.keyCode)) return true
         if (event.action == KeyEvent.ACTION_DOWN && editor.hasFocus()) {
+            val zoom = EditorFontKeys.delta(event.keyCode, event.isCtrlPressed, event.isAltPressed,
+                event.isMetaPressed, event.flags and KeyEvent.FLAG_SOFT_KEYBOARD != 0)
+            if (zoom != null) {
+                zoomEditor(zoom); completionConsumedKeys.add(event.keyCode); return true
+            }
             val key = when (event.keyCode) {
                 KeyEvent.KEYCODE_TAB -> CompletionKey.TAB
                 KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER -> CompletionKey.ENTER

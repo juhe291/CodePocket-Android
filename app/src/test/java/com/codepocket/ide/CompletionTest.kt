@@ -65,13 +65,13 @@ class CompletionTest {
         assertTrue(builtins.items.any { it.label == "print" })
     }
 
-    @Test fun keyboardDefaultsKeepNewlineAndAutomaticArrowMovementNative() {
+    @Test fun keyboardDefaultsNavigateVisibleCandidatesAndKeepNewlineNative() {
         fun action(key: CompletionKey, settings: AppSettings = AppSettings(), explicit: Boolean = false,
             selected: Boolean = false, composing: Boolean = false, selection: Boolean = false, modified: Boolean = false) =
             CompletionKeys.action(key, settings, true, explicit, selected, composing, selection, modified)
         assertEquals(CompletionAction.ACCEPT, action(CompletionKey.TAB))
         assertEquals(CompletionAction.PASS, action(CompletionKey.ENTER))
-        assertEquals(CompletionAction.PASS, action(CompletionKey.DOWN))
+        assertEquals(CompletionAction.NEXT, action(CompletionKey.DOWN))
         assertEquals(CompletionAction.NEXT, action(CompletionKey.DOWN, explicit = true))
         assertEquals(CompletionAction.PREVIOUS, action(CompletionKey.UP, AppSettings(completionArrows = CompletionArrows.WHEN_VISIBLE)))
         assertEquals(CompletionAction.PASS, action(CompletionKey.UP, AppSettings(completionArrows = CompletionArrows.OFF), explicit = true))
@@ -101,9 +101,28 @@ class CompletionTest {
 
     @Test fun completionPreferencesMigrateAndRoundTripWithoutChangingDefaults() {
         val old = AppSettings.fromJson("""{"version":1,"fontSize":18}""")
-        assertTrue(old.completionTab); assertFalse(old.completionEnter); assertEquals(CompletionArrows.EXPLICIT, old.completionArrows)
+        assertTrue(old.completionTab); assertFalse(old.completionEnter); assertEquals(CompletionArrows.WHEN_VISIBLE, old.completionArrows)
         val configured = old.copy(completionTab = false, completionEnter = true, completionArrows = CompletionArrows.OFF)
         assertEquals(configured, AppSettings.fromJson(configured.toJson()))
-        assertEquals(CompletionArrows.EXPLICIT, AppSettings.fromJson("""{"completionArrows":"future"}""").completionArrows)
+        assertEquals(CompletionArrows.WHEN_VISIBLE, AppSettings.fromJson("""{"completionArrows":"future"}""").completionArrows)
     }
+    @Test fun legacyExplicitModeMigratesButOffAndOtherSettingsArePreserved() {
+        val old = AppSettings.fromJson("""{"version":8,"completionArrows":"EXPLICIT","fontSize":18,"completionEnter":true,"completionTab":false,"terminalTheme":"NORD","autoSave":false}""")
+        assertEquals(CompletionArrows.WHEN_VISIBLE,old.completionArrows)
+        assertEquals(18,old.fontSize);assertTrue(old.completionEnter);assertFalse(old.completionTab)
+        assertFalse(old.autoSave);assertEquals(TerminalTheme.NORD,old.terminalTheme)
+        assertEquals(CompletionArrows.OFF,AppSettings.fromJson("""{"version":8,"completionArrows":"OFF"}""").completionArrows)
+        assertEquals(9,org.json.JSONObject(old.toJson()).getInt("version"))
+        assertEquals(old,AppSettings.fromJson(old.toJson()))
+    }
+    @Test fun allThreeArrowChoicesRemainConfigurableInCurrentSettings() {
+        for(mode in CompletionArrows.values()) {
+            val configured=AppSettings(completionArrows=mode)
+            assertEquals(configured,AppSettings.fromJson(configured.toJson()))
+        }
+        val explicit=AppSettings(completionArrows=CompletionArrows.EXPLICIT)
+        assertEquals(CompletionAction.PASS,CompletionKeys.action(CompletionKey.DOWN,explicit,true,false,false,false,false,false))
+        assertEquals(CompletionAction.NEXT,CompletionKeys.action(CompletionKey.DOWN,explicit,true,true,false,false,false,false))
+    }
+
 }

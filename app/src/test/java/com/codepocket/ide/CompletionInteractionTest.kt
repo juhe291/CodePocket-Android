@@ -34,7 +34,9 @@ class CompletionInteractionTest {
     @Before fun openPythonEditor() {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("activeFile","main.py")
-            .putString("settings",AppSettings(autoSave=false,animations=false).toJson()).commit()
+            // Seed an actual v8 install, whose always-serialized EXPLICIT was the old default.
+            .putString("settings",org.json.JSONObject(AppSettings(autoSave=false,animations=false).toJson())
+                .put("version",8).put("completionArrows","EXPLICIT").toString()).commit()
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible()
         main=controller.get()
         WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS)
@@ -129,4 +131,122 @@ class CompletionInteractionTest {
         assertTrue("Committed composition must resume completion: ${diagnostics()}",visible())
         assertEquals(-1,BaseInputConnection.getComposingSpanStart(editor.text))
     }
+    private fun popup() = ReflectionHelpers.getField<CompletionPopup>(main,"completionPopup")
+    private fun key(code:Int,meta:Int=0,repeat:Int=0) {
+        val time=android.os.SystemClock.uptimeMillis()
+        main.dispatchKeyEvent(KeyEvent(time,time,KeyEvent.ACTION_DOWN,code,repeat,meta,7,0,0,android.view.InputDevice.SOURCE_KEYBOARD))
+        main.dispatchKeyEvent(KeyEvent(time,time,KeyEvent.ACTION_UP,code,0,0,7,0,0,android.view.InputDevice.SOURCE_KEYBOARD))
+    }
+    private fun multiplePythonCandidates() {
+        editor.setText("p");editor.setSelection(1);settle();assertTrue(diagnostics(),visible())
+        assertEquals(listOf("pass","print"),ReflectionHelpers.getField<CompletionBatch>(main,"completionBatch").items.take(2).map{it.label})
+    }
+    @Test fun automaticCandidatesAcceptPhysicalArrowsAndTabWithoutMovingCaret() {
+        multiplePythonCandidates()
+        key(KeyEvent.KEYCODE_DPAD_DOWN)
+        assertTrue("Automatic candidate list should retain arrows: ${diagnostics()}",visible())
+        assertEquals(1,popup().selectedIndex);assertEquals(1,editor.selectionStart);assertEquals("p",editor.text.toString())
+        key(KeyEvent.KEYCODE_DPAD_UP);assertEquals(0,popup().selectedIndex)
+        key(KeyEvent.KEYCODE_DPAD_DOWN);key(KeyEvent.KEYCODE_TAB)
+        assertEquals("print",editor.text.toString());assertFalse(visible())
+    }
+    @Test @Config(qualifiers="w1000dp-h800dp") fun tabletAutomaticCandidatesAlsoRetainPhysicalArrows() {
+        multiplePythonCandidates();key(KeyEvent.KEYCODE_DPAD_DOWN)
+        assertTrue(diagnostics(),visible());assertEquals(1,popup().selectedIndex);assertEquals(1,editor.selectionStart)
+        key(KeyEvent.KEYCODE_TAB);assertEquals("print",editor.text.toString())
+    }
+    @Test fun holdingArrowClampsAtListEdgesAndEscReturnsToCodeNavigation() {
+        editor.setText("p\nxyz");editor.setSelection(1);settle();assertTrue(visible())
+        val size=ReflectionHelpers.getField<CompletionBatch>(main,"completionBatch").items.size
+        repeat(20){key(KeyEvent.KEYCODE_DPAD_DOWN,repeat=it)}
+        assertTrue(visible());assertEquals(size-1,popup().selectedIndex);assertEquals(1,editor.selectionStart)
+        repeat(20){key(KeyEvent.KEYCODE_DPAD_UP,repeat=it)};assertEquals(0,popup().selectedIndex)
+        key(KeyEvent.KEYCODE_ESCAPE);assertFalse(visible())
+        key(KeyEvent.KEYCODE_DPAD_DOWN);assertTrue("After Esc, arrows should navigate code",editor.selectionStart>1)
+        assertEquals("p\nxyz",editor.text.toString())
+    }
+    @Test fun enterStillCreatesNewlineByDefaultEvenAfterCandidateNavigation() {
+        multiplePythonCandidates();key(KeyEvent.KEYCODE_DPAD_DOWN)
+        key(KeyEvent.KEYCODE_ENTER);assertEquals("p\n",editor.text.toString())
+    }
+    @Test fun configuredEnterAcceptsTheArrowSelectedCandidate() {
+        ReflectionHelpers.setField(main,"settings",AppSettings(autoSave=false,animations=false,completionEnter=true))
+        multiplePythonCandidates();key(KeyEvent.KEYCODE_DPAD_DOWN);key(KeyEvent.KEYCODE_ENTER)
+        assertEquals("print",editor.text.toString())
+    }
+    @Test fun explicitAndOffModesRemainAvailableAfterTheDefaultChanges() {
+        ReflectionHelpers.setField(main,"settings",AppSettings(autoSave=false,animations=false,completionArrows=CompletionArrows.EXPLICIT))
+        multiplePythonCandidates()
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle();assertTrue(visible())
+        key(KeyEvent.KEYCODE_DPAD_DOWN);assertTrue(visible());assertEquals(1,popup().selectedIndex)
+        key(KeyEvent.KEYCODE_ESCAPE)
+        ReflectionHelpers.setField(main,"settings",AppSettings(autoSave=false,animations=false,completionArrows=CompletionArrows.OFF))
+        editor.setText("p\nxyz");editor.setSelection(1);settle();assertTrue(visible())
+        key(KeyEvent.KEYCODE_DPAD_DOWN);assertTrue(editor.selectionStart>1)
+    }
+    @Test fun ctrlEqualsAndMinusResizeOnlyCodeAndRememberTheSetting() {
+        editor.setText("abc\ndef");editor.setSelection(1,3)
+        val original=ReflectionHelpers.getField<AppSettings>(main,"settings")
+        val port=ReflectionHelpers.getField<com.codepocket.ide.editor.DocumentEditorPort>(main,"editorPort")
+        val snapshot=port.snapshot()!!.buffer
+        val registry=ReflectionHelpers.getField<com.codepocket.ide.terminal.shell.ShellSessionRegistry>(main,"terminalRegistry")
+        val sessions=registry.catalog.entries().map{it.id to it.value.runtime}
+        val panel=ReflectionHelpers.getField<PanelState>(main,"panelState")
+        key(KeyEvent.KEYCODE_EQUALS,KeyEvent.META_CTRL_ON)
+        assertEquals(original.fontSize+1,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+        assertEquals(snapshot,port.snapshot()!!.buffer);assertSame(editor,ReflectionHelpers.getField<CodeEditor>(main,"editor"))
+        assertEquals(panel,ReflectionHelpers.getField<PanelState>(main,"panelState"))
+        assertEquals(sessions,registry.catalog.entries().map{it.id to it.value.runtime})
+        val saved=AppSettings.fromJson(main.getSharedPreferences("codepocket_v2",0).getString("settings",null))
+        assertEquals(original.fontSize+1,saved.fontSize);assertEquals(original.terminalFontSize,saved.terminalFontSize)
+        assertEquals((original.fontSize+1)*editor.resources.displayMetrics.scaledDensity,editor.textSize,0.01f)
+        val numbers=ReflectionHelpers.getField<android.widget.TextView>(main,"numbers")
+        assertEquals(editor.textSize,numbers.textSize,0.01f)
+        key(KeyEvent.KEYCODE_MINUS,KeyEvent.META_CTRL_ON);assertEquals(original.fontSize,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+        assertEquals(snapshot,port.snapshot()!!.buffer)
+    }
+    @Test fun shiftedPlusNumpadAndRepeatedZoomRespectFontLimits() {
+        val ctrl=KeyEvent.META_CTRL_ON
+        val original=ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize
+        key(KeyEvent.KEYCODE_EQUALS,ctrl or KeyEvent.META_SHIFT_ON)
+        key(KeyEvent.KEYCODE_NUMPAD_ADD,ctrl)
+        assertEquals(original+2,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+        repeat(25){key(KeyEvent.KEYCODE_PLUS,ctrl,it)}
+        assertEquals(28,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+        repeat(30){key(KeyEvent.KEYCODE_NUMPAD_SUBTRACT,ctrl,it)}
+        assertEquals(10,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+    }
+    @Test fun fontZoomDoesNotDestroyTheNativeUndoHistory() {
+        editor.setText("abc");editor.setSelection(3)
+        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("d",1)
+        assertEquals("abcd",editor.text.toString())
+        key(KeyEvent.KEYCODE_PLUS,KeyEvent.META_CTRL_ON)
+        assertTrue(editor.onTextContextMenuItem(android.R.id.undo));assertEquals("abc",editor.text.toString())
+    }
+    @Test fun fontZoomWaitsForCompositionAndIgnoresNonEditorFocus() {
+        val original=ReflectionHelpers.getField<AppSettings>(main,"settings")
+        val connection=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
+        connection.setComposingText("拼",1)
+        val composing=editor.text.toString();val start=BaseInputConnection.getComposingSpanStart(editor.text)
+        key(KeyEvent.KEYCODE_PLUS,KeyEvent.META_CTRL_ON)
+        assertEquals(original.fontSize,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+        assertEquals(composing,editor.text.toString());assertEquals(start,BaseInputConnection.getComposingSpanStart(editor.text))
+        connection.finishComposingText()
+        val input=ReflectionHelpers.getField<android.widget.EditText>(main,"input")
+        input.visibility=View.VISIBLE;input.requestFocus()
+        key(KeyEvent.KEYCODE_PLUS,KeyEvent.META_CTRL_ON)
+        assertEquals(original.fontSize,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+    }
+
+    @Test fun cppAutomaticArrowsChoosePrivateInsteadOfTheFirstPrintfItem() {
+        val method=main.javaClass.declaredMethods.single{it.name=="switchFile"}
+        method.isAccessible=true;method.invoke(main,"main.cpp",null)
+        WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS);shadowOf(Looper.getMainLooper()).idle()
+        editor=ReflectionHelpers.getField(main,"editor");editor.requestFocus()
+        editor.setText("pri");editor.setSelection(3);settle();assertTrue(diagnostics(),visible())
+        assertEquals(listOf("printf","private"),ReflectionHelpers.getField<CompletionBatch>(main,"completionBatch").items.take(2).map{it.label})
+        key(KeyEvent.KEYCODE_DPAD_DOWN);assertTrue(visible());assertEquals(1,popup().selectedIndex)
+        key(KeyEvent.KEYCODE_TAB);assertEquals("private",editor.text.toString())
+    }
+
 }

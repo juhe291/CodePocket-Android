@@ -46,7 +46,7 @@ object SettingsDialog {
         toggle(2,activity.getString(R.string.signature_setting),"显示支持的函数参数与简短说明",{it.signatureHelp},{s,v->s.copy(signatureHelp=v)})
         toggle(2,"Tab 接受补全","关闭时 Tab 始终执行缩进",{it.completionTab},{s,v->s.copy(completionTab=v)})
         toggle(2,"Enter 接受选中候选","只接受方向键明确选中的候选",{it.completionEnter},{s,v->s.copy(completionEnter=v)})
-        choice(2,"候选方向键","决定上下键控制代码还是候选",listOf("主动触发后导航候选","候选可见时导航","始终移动代码光标"),{it.completionArrows.ordinal},{s,i->s.copy(completionArrows=CompletionArrows.values()[i])})
+        choice(2,"候选方向键","默认上下键选择候选；Esc 关闭后移动代码光标",listOf("主动触发后导航候选","候选可见时导航","始终移动代码光标"),{it.completionArrows.ordinal},{s,i->s.copy(completionArrows=CompletionArrows.values()[i])})
         toggle(2,"编程符号栏","代码输入时显示 Tab、括号等快捷操作",{it.symbolBar},{s,v->s.copy(symbolBar=v)})
         toggle(3,"自动保存","编辑停顿后写回；失败时保留恢复草稿",{it.autoSave},{s,v->s.copy(autoSave=v)})
         choice(3,"自动保存延迟","离开页面仍保留现有保存保护",listOf("700 ms","1500 ms","3000 ms"),{listOf(700,1500,3000).indexOf(it.autoSaveDelayMs).coerceAtLeast(0)},{s,i->s.copy(autoSaveDelayMs=listOf(700,1500,3000)[i])})

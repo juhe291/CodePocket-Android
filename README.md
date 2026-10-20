@@ -1,6 +1,14 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-20：修复展开终端控制键闪退，简化查找替换，新增编辑区配色与错误红线。** 即时查找计数、一键替换；混合括号分层，变量/参数/常量分色；Python本地真实语法检查，C++基础括号检查和真实运行结果定位。App516通过/1旧跳过，Lint0错/11旧警告，Debug APK与实际打包Python39项测试通过。
+**2026-10-20：修正实体键盘候选导航，新增Ctrl加减代码字号。** 自动候选默认↑/↓选择、Tab接受、Esc关闭；Ctrl+加号/减号缩放代码并记住字号，兼容Ctrl+=和小键盘。旧配置迁移保留OFF，其他按键策略可在设置中选择。
+
+- [下载本轮键盘与字号修复APK](dist/CodePocket-keyboard-navigation-zoom-2026-10-20-debug.apk)（约21.95MiB，同旧签名，可覆盖安装）
+- [修改、设置迁移与真实测试记录](docs/KEYBOARD_NAVIGATION_ZOOM_2026-10-20.md)
+
+App531通过/1原有跳过，Lint0错/11旧警告，Debug构建和实际APK检查通过。主机已覆盖手机/平板、Python/C++实际键盘事件；真实蓝牙键盘、输入法和卓易通仍待统一实机验收。
+
+
+**此前2026-10-20：修复展开终端控制键闪退，简化查找替换，新增编辑区配色与错误红线。** 即时查找计数、一键替换；混合括号分层，变量/参数/常量分色；Python本地真实语法检查，C++基础括号检查和真实运行结果定位。App516通过/1旧跳过，Lint0错/11旧警告，Debug APK与实际打包Python39项测试通过。
 
 - [下载本轮修复与编辑反馈 APK](dist/CodePocket-editor-feedback-2026-10-20-debug.apk)（约21.95MiB，同原签名，可覆盖安装）
 - [修改、测试和限制](docs/EDITOR_FEEDBACK_2026-10-20.md) · [手机/平板深浅主题原生局部预览](docs/editor-feedback-preview/README.md)

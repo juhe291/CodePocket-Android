@@ -29,7 +29,7 @@ data class AppSettings(
     val cursorBlink: Boolean = true,
     val completionTab: Boolean = true,
     val completionEnter: Boolean = false,
-    val completionArrows: CompletionArrows = CompletionArrows.EXPLICIT,
+    val completionArrows: CompletionArrows = CompletionArrows.WHEN_VISIBLE,
     val signatureHelp: Boolean = true,
     val panelPreferSide: Boolean = false  // P1-B: Bottom-first strategy
 ) {
@@ -38,7 +38,7 @@ data class AppSettings(
     fun isDark(systemDark: Boolean) = when (theme) { UiTheme.DARK -> true; UiTheme.LIGHT -> false; UiTheme.SYSTEM -> systemDark }
     fun syntaxIsDark(uiDark: Boolean) = when (syntax) { SyntaxTheme.DARK -> true; SyntaxTheme.LIGHT -> false; SyntaxTheme.FOLLOW_UI -> uiDark }
     fun toJson(): String = normalized().let { s -> JSONObject().apply {
-        put("version", 8); put("terminalTheme", s.terminalTheme.name); put("theme", s.theme.name); put("syntax", s.syntax.name)
+        put("version", 9); put("terminalTheme", s.terminalTheme.name); put("theme", s.theme.name); put("syntax", s.syntax.name)
         put("fontSize", s.fontSize); put("terminalFontSize", s.terminalFontSize); put("tabWidth", s.tabWidth)
         put("useSpaces", s.useSpaces); put("lineNumbers", s.lineNumbers); put("wordWrap", s.wordWrap)
         put("autoIndent", s.autoIndent); put("autoPairs", s.autoPairs); put("autoCompletion", s.autoCompletion)
@@ -69,7 +69,10 @@ data class AppSettings(
                 signatureHelp = j.optBoolean("signatureHelp", defaults.signatureHelp),
                 completionTab = j.optBoolean("completionTab", defaults.completionTab),
                 completionEnter = j.optBoolean("completionEnter", defaults.completionEnter),
-                completionArrows = runCatching { CompletionArrows.valueOf(j.optString("completionArrows")) }.getOrDefault(defaults.completionArrows),
+                // v8 always serialized EXPLICIT, even when never chosen by the user.
+                // Migrate that legacy mode for the corrected default; v9 saves all three choices verbatim.
+                completionArrows = runCatching { CompletionArrows.valueOf(j.optString("completionArrows")) }.getOrDefault(defaults.completionArrows)
+                    .let { if (j.optInt("version", 0) < 9 && it == CompletionArrows.EXPLICIT) CompletionArrows.WHEN_VISIBLE else it },
                 panelPreferSide = j.optBoolean("panelPreferSide", defaults.panelPreferSide)
             ).normalized()
         }
