@@ -74,11 +74,15 @@ class MainActivity : Activity() {
     private var dark = true
     private var settings = AppSettings()
     private var toolDialog: AlertDialog? = null
+    private var pendingSettingsState: String? = null
+    private var settingsApplyFailure: (() -> Unit)? = null
     private val syntaxDark get() = settings.syntaxIsDark(dark)
-    private val codeBackground get() = Color.parseColor(if (syntaxDark) "#1E1E1E" else "#FFFFFF")
+    private val codeBackground get() = Color.parseColor(if (syntaxDark) "#1E242E" else "#FFFFFF")
     private val codeForeground get() = Color.parseColor(if (syntaxDark) "#D4D4D4" else "#242424")
     private var activePath = "main.cpp"
     private var currentDirectory = ""
+    private var explorerSelection: String? = null
+    private var pathBreadcrumb: TextView? = null
     private val expanded = mutableSetOf("")
     private val opened = mutableListOf<String>()
     private val running get() = RunSession.running
@@ -208,6 +212,7 @@ class MainActivity : Activity() {
         dark = settings.isDark(isSystemDark())
         setTheme(if (dark) R.style.Theme_CodePocket else R.style.Theme_CodePocket_Light)
         super.onCreate(savedInstanceState)
+        pendingSettingsState = savedInstanceState?.getString("settingsDraft")
         themeSnapshot = lastNonConfigurationInstance as? SurfaceMotion.Snapshot
         startupPanelPending = savedInstanceState?.getBoolean("panelStartupPending", true) ?: true
         selectedOutput = savedInstanceState?.getInt("outputChannel", 3)?.coerceIn(0, 3) ?: 3
@@ -268,6 +273,7 @@ class MainActivity : Activity() {
                         activePath = ready.active; loadedPath = null; dirty = false
                         currentDirectory = prefs.getString(prefKey("directory"), "") ?: ""
                         restoreExplorerViewport(saved)
+                        reconcileExplorerSelection()
                         explorerVisible = prefs.getBoolean("explorerVisible", true)
                         if (!::root.isInitialized) {
                             panelVisible = saved?.getBoolean("panelVisible", false) ?: false
@@ -284,6 +290,7 @@ class MainActivity : Activity() {
                         exportPath = saved?.getString("exportPath")
                         if (tree != null) rememberWorkspace(tree, workspace.title)
                         renderRunState()
+                        if (pendingSettingsState != null) handler.post { if (!isDestroyed) showSettings() }
                         themeSnapshot?.let { snapshot ->
                             themeSnapshot = null
                             if (motionAllowed()) SurfaceMotion.play(root, snapshot,
@@ -347,6 +354,7 @@ class MainActivity : Activity() {
         outState.putString("exportPath", exportPath)
         outState.putInt("outputChannel", selectedOutput)
         saveExplorerViewport(outState)
+        SettingsDialog.checkpoint(toolDialog)?.let { outState.putString("settingsDraft", it) }
         outState.putBoolean("panelVisible", panelVisible)
         outState.putBoolean("panelStartupPending", startupPanelPending)
         outState.putString("panelState", panelState.toJson())
@@ -401,6 +409,7 @@ class MainActivity : Activity() {
             .putString(prefKey("activeFile"), activePath).putString(prefKey("directory"), currentDirectory)
             .putBoolean("dark", dark).putBoolean("explorerVisible", explorerVisible)
             .putString(prefKey("opened"), JSONArray(opened).toString())
+            .putString(prefKey("explorerUi"), explorerUiCheckpoint().toJson())
             .putBoolean(prefKey("presetInputExpanded"), presetInputExpanded)
             .putBoolean("panelVisible", panelVisible).putString("panelLayout", panelState.toJson()).apply()
     }
@@ -415,6 +424,7 @@ class MainActivity : Activity() {
 
     override fun onDestroy() {
         motionObserver?.stop(); motionObserver = null
+        settingsApplyFailure = null
         themeSnapshot?.release(); themeSnapshot = null
         super.onDestroy()
         shellPane?.dispose(); shellPane = null
@@ -475,7 +485,7 @@ class MainActivity : Activity() {
 
         mainToolbar = MainToolbar(this, palette,
             { dispatchCommand(IdeCommand.EXPLORER) }, { dispatchCommand(IdeCommand.RUN_STOP) },
-            ::showCommandMenu, { dispatchCommand(IdeCommand.WORKSPACE) }, { dispatchCommand(IdeCommand.SEARCH) })
+            ::showCommandMenu, { dispatchCommand(IdeCommand.WORKSPACE) }, { dispatchCommand(IdeCommand.SEARCH) }, ::openTerminal)
         root.addView(mainToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         updateShellTitle()
         keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
@@ -546,13 +556,13 @@ class MainActivity : Activity() {
         applyEditorPreferences()
         if (Build.VERSION.SDK_INT >= 30) {
             root.setOnApplyWindowInsetsListener { _, insets ->
-                updateImeLayout(insets.isVisible(WindowInsets.Type.ime()))
+                updateImeLayout(WorkspaceLayoutPolicy.imeOccludesEditor(insets.isVisible(WindowInsets.Type.ime()), (insets.getInsets(WindowInsets.Type.ime()).bottom / resources.displayMetrics.density).toInt()))
                 insets
             }
         }
         root.viewTreeObserver.addOnGlobalLayoutListener {
             if (Build.VERSION.SDK_INT >= 30) {
-                root.rootWindowInsets?.let { updateImeLayout(it.isVisible(WindowInsets.Type.ime())) }
+                root.rootWindowInsets?.let { updateImeLayout(WorkspaceLayoutPolicy.imeOccludesEditor(it.isVisible(WindowInsets.Type.ime()), (it.getInsets(WindowInsets.Type.ime()).bottom / resources.displayMetrics.density).toInt())) }
             } else {
                 val bounds = android.graphics.Rect()
                 window.decorView.getWindowVisibleDisplayFrame(bounds)
@@ -574,9 +584,10 @@ class MainActivity : Activity() {
     }
 
     private fun updateExplorerLayout(layout: ExplorerLayout) {
+        if (::mainToolbar.isInitialized) mainToolbar.setSidebarPresent(layout.mode == ExplorerMode.SIDEBAR)
         if (layout.mode == ExplorerMode.SIDEBAR) {
             if (activityBar == null) {
-                activityBar = ActivityBar(this, palette) { dispatchCommand(IdeCommand.EXPLORER) }.also {
+                activityBar = ActivityBar(this, palette, { dispatchCommand(IdeCommand.SEARCH) }, ::showSettings) { dispatchCommand(IdeCommand.EXPLORER) }.also {
                     contentHost.addView(it, 0, LinearLayout.LayoutParams(dp(48), -1))
                 }
             }
@@ -636,7 +647,7 @@ class MainActivity : Activity() {
 
     private fun decorateFileLabel(view: TextView, icon: IdeIcon, fullPath: String) {
         view.setSingleLine(); view.ellipsize = android.text.TextUtils.TruncateAt.END
-        val drawable = IdeIconDrawable(icon, muted, dp(DesignTokens.ICON)).apply { setBounds(0, 0, dp(20), dp(20)) }
+        val drawable = IdeIconDrawable(this, icon, muted, dp(DesignTokens.ICON)).apply { setBounds(0, 0, dp(20), dp(20)) }
         view.setCompoundDrawablesRelative(drawable, null, null, null); view.compoundDrawablePadding = dp(6)
         IdeControls.describe(view, fullPath)
     }
@@ -659,6 +670,7 @@ class MainActivity : Activity() {
     private fun updateShellTitle() {
         if (!::mainToolbar.isInitialized) return
         mainToolbar.setTitle("${if (dirty) "● " else ""}${activePath.substringAfterLast('/')}", "${workspace.title} / $activePath")
+        pathBreadcrumb?.text = getString(R.string.workbench_breadcrumb, workspace.title.substringBefore(" · ").substringBefore("（"), activePath.replace("/", "  ›  "))
         updateMainToolbarState()
     }
 
@@ -751,7 +763,7 @@ class MainActivity : Activity() {
         suggestionScroll.visibility = if (WorkspaceLayoutPolicy.showSnippet(snippetSession != null, visible, height)) View.VISIBLE else View.GONE
         keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
         statusBarComponent.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
-        editorToolbar.visibility = if (keyboardToolbar.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        editorToolbar.visibility = View.VISIBLE
         applyPanelLayout()
         if (changed && visible && editor.hasFocus()) editorPort?.revealCaret()
     }
@@ -996,7 +1008,8 @@ class MainActivity : Activity() {
         tabs.addView(tabsRow)
         editorRegion.addView(tabs, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         editorToolbar = EditorToolbar(this, palette, ::dispatchCommand) { showContextCommands(it, IdeCommands.editorMenuItems) }
-        editorRegion.addView(editorToolbar, LinearLayout.LayoutParams(-1, dp(48)))
+        pathBreadcrumb = label("", 11f, muted).apply { setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.MIDDLE; setPadding(dp(14), 0, dp(12), 0); gravity = Gravity.CENTER_VERTICAL }
+        editorRegion.addView(pathBreadcrumb, LinearLayout.LayoutParams(-1, dp(28)))
 
         val editorBody = LinearLayout(this).apply { setBackgroundColor(editorBackground); orientation = LinearLayout.HORIZONTAL }
         numbers = label("1", 13.5f, muted).apply {
@@ -1029,6 +1042,7 @@ class MainActivity : Activity() {
         editorAnalysis = EditorAnalysisController(editorPort!!, { handler.post(it) })
         editorBody.addView(editor, LinearLayout.LayoutParams(0, -1, 1f))
         editorRegion.addView(editorBody, LinearLayout.LayoutParams(-1, 0, 1f))
+        editorRegion.addView(editorToolbar, LinearLayout.LayoutParams(-1, dp(48)))
         val suggestScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
         suggestionScroll = suggestScroll
         suggestionRow = LinearLayout(this).apply { setPadding(dp(5), dp(2), dp(5), dp(2)); setBackgroundColor(surface) }
@@ -1153,14 +1167,64 @@ class MainActivity : Activity() {
             if (characters + path.length <= 32768) { paths.add(path); characters += path.length }
         }
         outState.putStringArrayList("expandedDirectories", paths)
+        outState.putString("explorerSelected", explorerSelection)
         val visible = if (explorerDialog?.isShowing == true) overlayExplorerList else sidebarExplorerList
         outState.putInt("explorerScroll", (visible?.parent as? ScrollView)?.scrollY ?: restoredExplorerScroll)
     }
 
+    private fun explorerUiCheckpoint(): com.codepocket.ide.ui.ExplorerUiState {
+        val visible = if (explorerDialog?.isShowing == true) overlayExplorerList else sidebarExplorerList
+        val scroll = (visible?.parent as? ScrollView)?.scrollY ?: restoredExplorerScroll
+        return com.codepocket.ide.ui.ExplorerUiState(expanded.toSet(), explorerSelection, scroll).normalized()
+    }
+
+    private fun reconcileExplorerSelection() {
+        val wanted = explorerSelection ?: activePath
+        val item = runCatching { workspace.resolve(wanted) }.getOrNull()?.takeIf { it.exists() }
+        explorerSelection = if (item == null) activePath else wanted
+        currentDirectory = if (item?.isDirectory == true) wanted else explorerSelection!!.substringBeforeLast('/', "")
+    }
+
+    private fun expandExplorerParents(path: String) {
+        expanded.add("")
+        val parts = path.split('/')
+        for (i in 1 until parts.size) expanded.add(parts.take(i).joinToString("/"))
+    }
+
+    private fun revealCurrentFileInTree() {
+        expandExplorerParents(activePath)
+        explorerSelection = activePath
+        currentDirectory = activePath.substringBeforeLast('/', "")
+        renderExplorer(); persistNavigation()
+        listOfNotNull(sidebarExplorerList, overlayExplorerList).forEach { rows ->
+            rows.post { (0 until rows.childCount).map { rows.getChildAt(it) }
+                .firstOrNull { it.getTag(R.id.workbench_key) == "entry:$activePath" }?.let { item ->
+                    (rows.parent as? ScrollView)?.smoothScrollTo(0, item.top)
+                } }
+        }
+    }
+
+    private fun showExplorerCommands(anchor: View) {
+        val menu = DialogMotion.menu(this, anchor, motionAllowed())
+        menu.menu.add(0, 100, 0, "定位当前文件")
+        menu.menu.add(0, 101, 1, "折叠全部目录")
+        IdeCommands.explorerMenuItems.forEachIndexed { index, command -> menu.menu.add(1, index, index + 2, command.title).isEnabled = IdeCommands.enabled(command, commandContext()) }
+        menu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                100 -> revealCurrentFileInTree()
+                101 -> { expanded.clear(); renderExplorer(animate = true); persistNavigation() }
+                else -> IdeCommands.explorerMenuItems.getOrNull(item.itemId)?.let(::dispatchCommand)
+            }; true
+        }; menu.show()
+    }
+
     private fun restoreExplorerViewport(saved: Bundle?) {
-        expanded.clear(); expanded.add("")
-        saved?.getStringArrayList("expandedDirectories")?.take(512)?.forEach { expanded.add(it) }
-        restoredExplorerScroll = saved?.getInt("explorerScroll", 0)?.coerceAtLeast(0) ?: 0
+        val stored = com.codepocket.ide.ui.ExplorerUiState.fromJson(if (::workspace.isInitialized) prefs.getString(prefKey("explorerUi"), null) else null)
+        expanded.clear()
+        val paths = saved?.getStringArrayList("expandedDirectories")
+        expanded.addAll(paths?.take(512) ?: stored.expanded)
+        explorerSelection = saved?.getString("explorerSelected") ?: stored.selected
+        restoredExplorerScroll = saved?.getInt("explorerScroll", stored.scroll)?.coerceAtLeast(0) ?: stored.scroll
     }
 
     private fun makeExplorerPane(sidebar: Boolean): LinearLayout {
@@ -1172,9 +1236,13 @@ class MainActivity : Activity() {
             row.addView(IdeControls.icon(this, palette, if (command == IdeCommand.NEW_FILE) IdeIcon.ADD_FILE else IdeIcon.ADD_FOLDER,
                 command.title) { dispatchCommand(command) }, LinearLayout.LayoutParams(dp(48), dp(48)))
         }
-        row.addView(IdeControls.icon(this, palette, IdeIcon.MORE, "文件与工作区命令") { showContextCommands(row, IdeCommands.explorerMenuItems) },
+        row.addView(IdeControls.icon(this, palette, IdeIcon.MORE, "文件与工作区命令") { showExplorerCommands(row) },
             LinearLayout.LayoutParams(dp(48), dp(48)))
+        if (!sidebar) row.addView(IdeControls.icon(this, palette, IdeIcon.CLOSE, "关闭资源管理器") { explorerDialog?.dismiss() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         panelView.addView(row)
+        panelView.addView(label(if (workspace.external) "已授权目录 · 保存写回原目录" else "应用内项目 · 请导出备份", 11f, muted).apply {
+            setPadding(dp(16), dp(4), dp(12), dp(8))
+        })
         val scroll = ScrollView(this).apply { isFillViewport = true }
         val fileList = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         if (sidebar) sidebarExplorerList = fileList else overlayExplorerList = fileList
@@ -1212,11 +1280,15 @@ class MainActivity : Activity() {
         }
         if (explorerDialog?.isShowing == true) { explorerDialog?.dismiss(); return }
         val content = makeExplorerPane(false)
-        explorerDialog = AlertDialog.Builder(this).setTitle("项目文件 · CodePocket").setView(content)
-            .setPositiveButton("完成", null).create().also { dialog ->
+        explorerDialog = AlertDialog.Builder(this).setView(content).create().also { dialog ->
                 dialog.setOnDismissListener { overlayExplorerList = null; if (explorerDialog === dialog) explorerDialog = null }
                 DialogMotion.show(dialog, motionAllowed(), drawer = true)
-                dialog.window?.setLayout(-1, -1)
+                val available = root.width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels
+                dialog.window?.setLayout(minOf(dp(360), (available * .9f).toInt()), -1)
+                dialog.window?.setGravity(Gravity.START or Gravity.TOP)
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(surface))
+                dialog.window?.setDimAmount(.35f)
+                dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             }
     }
 
@@ -1237,31 +1309,54 @@ class MainActivity : Activity() {
                 if (folder && open) visit(file, level + 1)
             }
         }
-        visit(workspace.root, 0)
+        if ("" in expanded) visit(workspace.root, 0)
         val moving = animate && entries.size + 2 <= LayoutMotion.MAX_TREE_ITEMS && motionEnabled()
         LayoutMotion.begin(explorerList, moving)
         KeyedViews.update(explorerList, listOf("root") + entries.keys + "hint", { key ->
             when (key) {
-                "root" -> label(workspace.title, 12f, muted, true).apply {
-                    decorateFileLabel(this, IdeIcon.FOLDER_OPEN, workspace.title)
-                    minHeight = dp(DesignTokens.TOUCH); setPadding(dp(10), dp(8), 0, dp(8))
-                    setOnClickListener { currentDirectory = ""; persistNavigation(); status.text = "新建位置：项目根目录" }
-                }
+                "root" -> ExplorerRow(this, palette)
                 "hint" -> label("点击文件打开 · 长按或鼠标右键管理", 10f, muted).apply {
                     setPadding(dp(10), dp(13), dp(4), dp(10))
                 }
                 else -> ExplorerRow(this, palette)
             }
         }) { view, key, _ ->
+            if (key == "root") {
+                (view as ExplorerRow).bind("", 0, true, "" in expanded, explorerSelection == "", moving,
+                    workspace.title.substringBefore(" · ").substringBefore("（"))
+                view.setOnClickListener {
+                    if (!workspaceBusy) {
+                        explorerSelection = ""; currentDirectory = ""
+                        if (!expanded.remove("")) expanded.add("")
+                        persistNavigation(); renderExplorer(animate = true)
+                    }
+                }
+                view.setMenuAction { showExplorerCommands(view) }
+                view.setOnLongClickListener { showExplorerCommands(view); true }
+                view.setOnGenericMotionListener { _, event ->
+                    if (event.actionMasked == MotionEvent.ACTION_BUTTON_PRESS && event.buttonState and MotionEvent.BUTTON_SECONDARY != 0) { showExplorerCommands(view); true } else false
+                }
+                return@update
+            }
+            if (key == "hint") {
+                (view as TextView).text = getString(R.string.explorer_creation_hint, currentDirectory.ifBlank { "项目根目录" })
+                return@update
+            }
             val entry = entries[key] ?: return@update
-            (view as ExplorerRow).bind(entry.path, entry.depth, entry.folder, entry.open, entry.path == activePath, moving)
+            (view as ExplorerRow).bind(entry.path, entry.depth + 1, entry.folder, entry.open,
+                entry.path == (explorerSelection ?: activePath), moving)
+            view.setMenuAction { fileMenu(entry.file) }
             view.setOnClickListener {
                 if (workspaceBusy) return@setOnClickListener
+                explorerSelection = entry.path
                 if (entry.folder) {
                     currentDirectory = entry.path
                     if (!expanded.remove(entry.path)) expanded.add(entry.path)
                     persistNavigation(); renderExplorer(animate = true)
-                } else { switchFile(entry.path); explorerDialog?.dismiss(); explorerDialog = null }
+                } else {
+                    currentDirectory = entry.path.substringBeforeLast('/', ""); persistNavigation()
+                    switchFile(entry.path); explorerDialog?.dismiss(); explorerDialog = null
+                }
             }
             view.setOnLongClickListener { fileMenu(entry.file); true }
             view.setOnGenericMotionListener { _, event ->
@@ -1290,60 +1385,90 @@ class MainActivity : Activity() {
         }.showAnimated()
     }
 
-    private fun nameDialog(title: String, value: String = "", onConfirm: (String) -> Unit) {
+    private fun nameDialog(title: String, value: String = "", onConfirm: (String, () -> Unit) -> Unit) {
         val field = EditText(this).apply { setSingleLine(); setText(value); setSelection(text.length); setPadding(dp(18), dp(12), dp(18), dp(12)) }
-        AlertDialog.Builder(this).setTitle(title).setView(field).setNegativeButton("取消", null)
-            .setPositiveButton("确定") { _, _ ->
-                try { onConfirm(field.text.toString()) } catch (e: Exception) { alert(e.message ?: "操作失败") }
-            }.showAnimated()
+        val dialog = AlertDialog.Builder(this).setTitle(title).setView(field).setNegativeButton("取消", null)
+            .setPositiveButton("确定", null).showAnimated()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            field.error = null
+            try { onConfirm(field.text.toString()) { dialog.dismiss() } }
+            catch (e: Exception) { field.error = e.message ?: "操作失败" }
+        }
     }
 
     private fun askCreate(directory: Boolean) {
         if (!allowFileOperation()) return
         val parent = runCatching { workspace.resolve(currentDirectory) }.getOrDefault(workspace.root)
             .let { if (it.isDirectory) it else workspace.root }
-        nameDialog(if (directory) "新建文件夹" else "新建代码文件",
-            if (directory) "" else "untitled.${if (isCpp()) "cpp" else "py"}") { name ->
+        nameDialog((if (directory) "新建文件夹" else "新建代码文件") + " · " + workspace.path(parent).ifBlank { "项目根目录" },
+            if (directory) "" else "untitled.${if (isCpp()) "cpp" else "py"}") { name, dismiss ->
+            Workspace.validateName(name)
             saveActive {
                 ioAction("正在创建…", { workspace.create(parent, name, directory) }) { item ->
                     if (directory) {
                         expanded.add(workspace.path(item)); currentDirectory = workspace.path(item); persistNavigation()
                     }
                     else switchFile(workspace.path(item))
-                    expanded.add(workspace.path(parent)); renderExplorer()
+                    expandExplorerParents(workspace.path(item)); expanded.add(workspace.path(parent)); explorerSelection = workspace.path(item)
+                    renderExplorer(); persistNavigation(); dismiss()
                 }
             }
         }
     }
 
-    private fun askRename(file: File) = nameDialog("重命名", file.name) { newName ->
+    private fun askRename(file: File) = nameDialog("重命名", file.name) { newName, dismiss ->
+        Workspace.validateName(newName)
         if (!allowFileOperation()) return@nameDialog
         saveActive {
             captureSession()
             val old = workspace.path(file)
             ioAction("正在重命名…", { workspace.rename(file, newName) }) { renamed ->
                 rebasePaths(old, workspace.path(renamed)); loadedPath = activePath
-                renderExplorer(); refreshTabs(); updateShellTitle()
+                renderExplorer(); refreshTabs(); updateShellTitle(); dismiss()
             }
         }
     }
 
     private fun askMove(file: File) {
         if (!allowFileOperation()) return
-        val folders = workspace.folders().filter { dest ->
-            !(file.isDirectory && (dest == file || dest.path.startsWith(file.path + File.separator)))
+        var destination = workspace.root
+        val content = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(16), dp(8), dp(16), dp(8)) }
+        val origin = label("来源：${workspace.path(file)}", 12f, muted)
+        val path = label("", 13f, textForeground, true)
+        val directories = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        val scroll = ScrollView(this).apply { addView(directories) }
+        content.addView(origin); content.addView(path, LinearLayout.LayoutParams(-1, dp(48)))
+        content.addView(scroll, LinearLayout.LayoutParams(-1, dp(240)))
+        val dialog = AlertDialog.Builder(this).setTitle("移动到文件夹").setView(content)
+            .setNegativeButton("取消", null).setPositiveButton("移动到此处", null).showAnimated()
+        fun render() {
+            path.text = getString(R.string.move_target_path, workspace.path(destination).ifBlank { "项目根目录" })
+            directories.removeAllViews()
+            if (destination != workspace.root) directories.addView(WorkbenchStyle.menuRow(this, "返回上一级").apply {
+                setOnClickListener { if (!workspaceBusy) { destination = destination.parentFile!!; render() } }
+            })
+            val folders = workspace.children(destination).filter { it.isDirectory &&
+                !(file.isDirectory && (it == file || it.path.startsWith(file.path + File.separator))) }
+            folders.forEach { directory -> directories.addView(WorkbenchStyle.menuRow(this, directory.name + "/").apply {
+                setOnClickListener { if (!workspaceBusy) { destination = directory; render() } }
+            }) }
+            if (folders.isEmpty()) directories.addView(label("此目录没有可选子文件夹", 12f, muted).apply { setPadding(dp(12), dp(12), 0, dp(12)) })
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = destination != file.parentFile
         }
-        AlertDialog.Builder(this).setTitle("移动到文件夹")
-            .setItems(folders.map { workspace.path(it).ifBlank { "/ 工作区" } }.toTypedArray()) { _, which ->
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            if (allowFileOperation()) {
+                val target = destination
                 saveActive {
-                    captureSession()
-                    val old = workspace.path(file)
-                    ioAction("正在移动…", { workspace.move(file, folders[which]) }) { moved ->
+                    captureSession(); val old = workspace.path(file)
+                    ioAction("正在移动…", { workspace.move(file, target) }) { moved ->
                         rebasePaths(old, workspace.path(moved)); loadedPath = activePath
-                        expanded.add(workspace.path(folders[which])); renderExplorer(); refreshTabs()
+                        expandExplorerParents(workspace.path(moved)); expanded.add(workspace.path(target)); explorerSelection = workspace.path(moved)
+                        renderExplorer(); refreshTabs(); persistNavigation(); dialog.dismiss()
                     }
                 }
-            }.showAnimated()
+            }
+        }
+        render()
     }
 
     private fun askDelete(file: File) {
@@ -1364,6 +1489,7 @@ class MainActivity : Activity() {
                             activePath = opened.last(); loadedPath = null; loadActive()
                         } else persistNavigation()
                         expanded.removeAll { it == path || it.startsWith("$path/") }
+                        if (explorerSelection == path || explorerSelection?.startsWith("$path/") == true) explorerSelection = currentDirectory
                         renderExplorer(); refreshTabs()
                     }
                 }
@@ -1391,6 +1517,7 @@ class MainActivity : Activity() {
         for (i in opened.indices) opened[i] = rebase(opened[i])
         val oldExpanded = expanded.toList(); expanded.clear(); expanded.addAll(oldExpanded.map(::rebase))
         currentDirectory = rebase(currentDirectory)
+        explorerSelection = explorerSelection?.let(::rebase)
         handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
         persistNavigation()
     }
@@ -1565,6 +1692,7 @@ class MainActivity : Activity() {
                     refreshTabs()
                     if (next != null) saveActive(next)
                 }.onFailure { error ->
+                    settingsApplyFailure?.invoke(); settingsApplyFailure = null
                     status.text = "保存失败，编辑内容和恢复草稿仍保留：${error.message}"
                     if (next != null) alert("${error.message}\n已阻止切换/关闭/运行。可导出当前草稿，或重新授权后重试。")
                 }
@@ -1873,13 +2001,18 @@ class MainActivity : Activity() {
         toolDialog?.dismiss()
         hideCompletion(true)
         clearSnippet()
-        toolDialog = SettingsDialog.show(this, settings, ::applySettings)
+        val restored = pendingSettingsState; pendingSettingsState = null
+        toolDialog = SettingsDialog.show(this, settings, { applySettings(it) }, restored) { next, done -> applySettings(next, done) }
     }
 
-    private fun applySettings(next: AppSettings) {
-        if (workspaceBusy) return
+    private fun applySettings(next: AppSettings, onApplied: (Boolean) -> Unit = {}) {
+        if (workspaceBusy || isDestroyed) { onApplied(false); return }
         val themeChanged = next.isDark(isSystemDark()) != dark
-        if (themeChanged && (dirty || saving)) { saveActive { applySettings(next) }; return }
+        if (themeChanged && (dirty || saving)) {
+            if (loadedPath != activePath) { onApplied(false); return }
+            settingsApplyFailure = { onApplied(false) }
+            saveActive { settingsApplyFailure = null; applySettings(next, onApplied) }; return
+        }
         hideCompletion()
         captureSession(); persistSessions()
         if (themeChanged && ::root.isInitialized) {
@@ -1889,13 +2022,17 @@ class MainActivity : Activity() {
         settings = next.normalized()
         dark = settings.isDark(isSystemDark())
         prefs.edit().putString("settings", settings.toJson()).putBoolean("dark", dark).apply()
-        if (themeChanged) { persist(); recreate() }
-        else { applyEditorPreferences(); restoreSession(); status.text = "设置已保存" }
+        if (themeChanged) { onApplied(true); persist(); recreate() }
+        else { applyEditorPreferences(); restoreSession(); status.text = "设置已保存"; onApplied(true) }
     }
 
     private fun applyEditorPreferences() {
         editor.textSize = settings.fontSize.toFloat(); numbers.textSize = settings.fontSize.toFloat()
         consoleText.textSize = settings.terminalFontSize.toFloat()
+        if (::terminalRegistry.isInitialized) terminalRegistry.catalog.entries().forEach {
+            com.codepocket.ide.terminal.shell.TerminalAppearance.apply(it.value.runtime.session(), settings.terminalTheme.name, dark)
+        }
+        shellPane?.setAppearance(settings.terminalTheme.name, dark)
         shellPane?.setPreferences(settings.terminalFontSize, motionForeground && motionAllowed() && settings.cursorBlink)
         refreshMotionPolicy()
         numbers.visibility = if (settings.lineNumbers) View.VISIBLE else View.GONE
@@ -2369,8 +2506,10 @@ class MainActivity : Activity() {
         val hadTerminalFocus = shellPane?.hasTerminalFocus() == true
         shellPane?.let { it.dispose(); outputRegion.removeView(it) }
         shellPaneId = selected.id
+        com.codepocket.ide.terminal.shell.TerminalAppearance.apply(selected.value.runtime.session(), settings.terminalTheme.name, dark)
         shellPane = ShellTerminalPane(this, selected.value.directory, settings.terminalFontSize, motionForeground && motionAllowed() && settings.cursorBlink,
             { hideCompletion(); clearSnippet(); lastFocus = "terminal"; updateImeLayout() }, selected.value.runtime).also { pane ->
+        shellPane?.setAppearance(settings.terminalTheme.name, dark)
                 pane.setEmbedded(true)
                 outputRegion.addView(pane, LinearLayout.LayoutParams(-1, 0, 1f))
             }
@@ -2429,6 +2568,16 @@ class MainActivity : Activity() {
         } else consoleText.movementMethod = null
     }
 
+    private fun openTerminal() {
+        if (!::terminalRegistry.isInitialized || !::outputRegion.isInitialized) return
+        startupPanelPending = false; panelVisible = true
+        if (terminalRegistry.catalog.selected() == null) newShellSession()
+        else { showOutput(3); shellPane?.ensureSession() }
+        applyPanelLayout()
+        if (shellPane?.restoreTerminalFocus() != true) outputRegion.requestFocus()
+        if (::root.isInitialized) updateImeLayout()
+    }
+
     private fun showTerminalChoices(anchor: View) {
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
         val choices = terminalRegistry.catalog.entries().map { e -> e.id to e.name() }
@@ -2454,11 +2603,24 @@ class MainActivity : Activity() {
         } catch (failure: IllegalStateException) { alert(failure.message ?: "无法新建终端") }
     }
 
+    private fun showTerminalPalette(anchor: View): android.widget.PopupMenu {
+        val menu = DialogMotion.menu(this, anchor, motionAllowed())
+        val themes = TerminalTheme.values()
+        val names = listOf("跟随界面配色", "CodePocket Dark 配色", "Nord 配色", "Dracula 配色", "Light 配色")
+        themes.forEachIndexed { index, theme -> menu.menu.add(0, index, index, names[index]).apply {
+            isCheckable = true; isChecked = settings.terminalTheme == theme
+        } }
+        menu.setOnMenuItemClickListener { item ->
+            themes.getOrNull(item.itemId)?.let { applySettings(settings.copy(terminalTheme = it)) }; true
+        }
+        menu.show(); return menu
+    }
+
     private fun showTerminalActions(anchor: View) {
         val entry = terminalRegistry.catalog.selected()
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
         if (entry == null) { newShellSession(); return }
-        val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证",
+        val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证", "终端配色",
             ) + if(isCpp())listOf("编辑 C++ 云端预填输入")else emptyList()
         titles.forEachIndexed { index, title -> menu.menu.add(0, index, index, title) }
         menu.setOnMenuItemClickListener { item ->
@@ -2467,7 +2629,7 @@ class MainActivity : Activity() {
                 1 -> entry.value.runtime.copyTranscript()
                 2 -> entry.value.runtime.paste()
                 3 -> entry.value.runtime.clearScreen()
-                4 -> nameDialog("重命名终端会话", entry.name()) { name -> terminalRegistry.catalog.rename(entry.id, name); showOutput(selectedOutput) }
+                4 -> nameDialog("重命名终端会话", entry.name()) { name, dismiss -> terminalRegistry.catalog.rename(entry.id, name); showOutput(selectedOutput); dismiss() }
                 5 -> AlertDialog.Builder(this).setTitle("结束 ${entry.name()}？")
                     .setMessage("会关闭这个 Shell 及其正在运行的 Python。收起面板不结束会话，其他终端保留。")
                     .setNegativeButton("取消", null).setPositiveButton("结束") { _, _ ->
@@ -2478,7 +2640,8 @@ class MainActivity : Activity() {
                     .setNegativeButton("关闭", null).setPositiveButton("复制") { _, _ -> entry.value.runtime.copyFailureDetails() }.showAnimated()
                 7 -> shellPane?.ensureSession()
                 8 -> shellPane?.showAbout()
-                9 -> setPresetInputExpanded(true)
+                9 -> showTerminalPalette(anchor)
+                10 -> setPresetInputExpanded(true)
             }
             true
         }; menu.show()

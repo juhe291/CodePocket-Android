@@ -22,7 +22,11 @@ def main():
     fixtures = re.findall(r"^CODEPOCKET_SHELL_RC=(.+)$", suite.findtext("system-out", ""), re.MULTILINE)
     assert len(fixtures) == 1, "Expected exact Java-generated startup fixture"
     startup = base64.b64decode(fixtures[0], validate=True)
-    prompt = b"\x01\r\x01\x1b]133;A\x07\x01CodePocket $ \x01\x1b]133;B\x07\x01"
+    prompt_fixtures = re.findall(r"^CODEPOCKET_SHELL_PROMPT=(.+)$", suite.findtext("system-out", ""), re.MULTILINE)
+    assert len(prompt_fixtures) == 1
+    prompt = base64.b64decode(prompt_fixtures[0], validate=True)
+    assert prompt.startswith(b"\x01\r\x01\x1b]133;A\x07") and prompt.endswith(b"\x1b]133;B\x07\x01")
+    assert b"CodePocket" in prompt and b"${PWD}" in prompt and b"\x1b[0m" in prompt
     started_fixtures = re.findall(r"^CODEPOCKET_SHELL_STARTED=(.+)$", suite.findtext("system-out", ""), re.MULTILINE)
     assert len(started_fixtures) == 1, "Expected exact Java-generated command-start marker"
     started = base64.b64decode(started_fixtures[0], validate=True)

@@ -5,15 +5,14 @@ import java.io.IOException;
 
 /** Launches a real Android shell; no user source is interpolated into a command. */
 public final class ShellLaunchPlan {
-    public static final String PROMPT = "\u0001\r\u0001\u001b]133;A\u0007\u0001CodePocket $ \u0001\u001b]133;B\u0007\u0001";
+    public static final String PROMPT = "\u0001\r\u0001\u001b]133;A\u0007\u001b[34m\u0001CodePocket\u0001\u001b[36m\u0001 ${PWD}\u0001\u001b[32m\u0001 $ \u0001\u001b[0m\u001b]133;B\u0007\u0001";
     public static final String EXECUTABLE = "/system/bin/sh";
     public final File home;
     public final File temporary;
     public final File directory;
     public final File startup;
     // mksh uses ENV instead of its default /system/etc/mkshrc. Preserve system setup, then set our markers.
-    public static final String STARTUP = "if [ -r /system/etc/mkshrc ]; then . /system/etc/mkshrc; fi\n"+
-        "PS1=$(printf '\\001\\r\\001\\033]133;A\\007\\001CodePocket $ \\001\\033]133;B\\007\\001')\nexport PS1\nPS2='> '\n";
+    public static final String STARTUP = "if [ -r /system/etc/mkshrc ]; then . /system/etc/mkshrc; fi\nPS1=$(printf '\\001\\r\\001\\033]133;A\\007\\033[34m\\001CodePocket\\001\\033[36m\\001 ${PWD}\\001\\033[32m\\001 $ \\001\\033[0m\\033]133;B\\007\\001')\nexport PS1\nPS2='> '\n";
     public final String[] arguments;
     public final String[] environment;
 

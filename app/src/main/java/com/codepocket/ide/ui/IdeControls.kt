@@ -23,7 +23,7 @@ object IdeControls {
             background = feedback(context, palette)
             setPadding(dp(context, 14), dp(context, 14), dp(context, 14), dp(context, 14))
             minimumWidth = 0; minimumHeight = 0
-            setImageDrawable(IdeIconDrawable(icon, palette.foreground, dp(context, DesignTokens.ICON)))
+            setImageDrawable(IdeIconDrawable(context, icon, palette.foreground, dp(context, DesignTokens.ICON)))
             describe(this, description)
             setOnClickListener { action() }
         }

@@ -115,10 +115,18 @@ class FullWorkbenchMotionTest {
         var saved:AppSettings?=null
         val original=AppSettings()
         val first=SettingsDialog.show(activity,original){saved=it}
-        switches(first.window!!.decorView).filter {it.text.toString().contains("光标")}.forEach {it.isChecked=false}
+        fun search(view:View):android.widget.EditText? {
+            if(view is android.widget.EditText)return view
+            if(view is android.view.ViewGroup)for(i in 0 until view.childCount)search(view.getChildAt(i))?.let{return it}
+            return null
+        }
+        search(first.window!!.decorView)!!.setText("光标")
+        switches(first.window!!.decorView).filter {it.contentDescription?.toString()?.contains("光标")==true}.forEach {it.isChecked=false}
         first.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();shadowOf(Looper.getMainLooper()).idle();assertNull(saved)
+        first.dismiss()
         val second=SettingsDialog.show(activity,original){saved=it}
-        switches(second.window!!.decorView).filter {it.text.toString().contains("光标")}.forEach {it.isChecked=false}
+        search(second.window!!.decorView)!!.setText("光标")
+        switches(second.window!!.decorView).filter {it.contentDescription?.toString()?.contains("光标")==true}.forEach {it.isChecked=false}
         second.getButton(AlertDialog.BUTTON_POSITIVE).performClick();shadowOf(Looper.getMainLooper()).idle()
         assertFalse(saved!!.cursorMovement);assertFalse(saved!!.cursorBlink);assertEquals(saved,AppSettings.fromJson(saved!!.toJson()))
     }
@@ -182,7 +190,7 @@ class FullWorkbenchMotionTest {
         val state=android.os.Bundle().apply {putInt("explorerScroll",-50);putStringArrayList("expandedDirectories",ArrayList((0..800).map {"folder$it"}))}
         ReflectionHelpers.callInstanceMethod<Any?>(main,"restoreExplorerViewport",ReflectionHelpers.ClassParameter.from(android.os.Bundle::class.java,state))
         assertEquals(0,ReflectionHelpers.getField<Int>(main,"restoredExplorerScroll"))
-        assertEquals(513,ReflectionHelpers.getField<MutableSet<String>>(main,"expanded").size)
+        assertEquals(512,ReflectionHelpers.getField<MutableSet<String>>(main,"expanded").size)
         val expanded=ReflectionHelpers.getField<MutableSet<String>>(main,"expanded")
         expanded.clear();expanded.addAll((0..800).map {"folder$it/"+"x".repeat(1000)})
         val checkpoint=android.os.Bundle()

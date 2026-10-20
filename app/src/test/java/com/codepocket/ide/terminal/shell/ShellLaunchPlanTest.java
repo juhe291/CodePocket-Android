@@ -60,6 +60,7 @@ public class ShellLaunchPlanTest {
         String script=new String(bytes,java.nio.charset.StandardCharsets.UTF_8);
         assertTrue(script.indexOf(". /system/etc/mkshrc") < script.indexOf("PS1="));
         // Consumed by scripts/verify_shell_startup.py to execute the exact generated startup file.
+        System.out.println("CODEPOCKET_SHELL_PROMPT="+java.util.Base64.getEncoder().encodeToString(ShellLaunchPlan.PROMPT.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
         System.out.println("CODEPOCKET_SHELL_RC="+java.util.Base64.getEncoder().encodeToString(bytes));
     }
     @Test public void sessionsHaveIndependentStartupFiles() throws Exception {

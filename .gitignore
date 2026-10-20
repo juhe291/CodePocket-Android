@@ -15,3 +15,7 @@ dist/
 
 # Android external native build intermediates.
 **/.cxx/
+
+# Local browser verification artifacts; reviewed preview images live under docs/ui-preview.
+.playwright-cli/
+output/playwright/

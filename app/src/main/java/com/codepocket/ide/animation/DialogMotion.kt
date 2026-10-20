@@ -18,8 +18,9 @@ object DialogMotion {
         dialog.show()
         // AlertDialog installs its decor/theme during show; reapply after that installation as well.
         dialog.window?.setWindowAnimations(style)
+        com.codepocket.ide.ui.WorkbenchStyle.dialog(dialog)
         return dialog
     }
-    fun menu(context: Context, anchor: View, enabled: Boolean): PopupMenu = PopupMenu(context, anchor, Gravity.NO_GRAVITY,
-        0, if (MotionEnvironment.enabled(context, enabled)) R.style.WorkbenchPopupMotion else R.style.WorkbenchPopupStatic)
+    fun menu(context: Context, anchor: View, enabled: Boolean): PopupMenu =
+        com.codepocket.ide.ui.WorkbenchMenu(context, anchor, enabled)
 }

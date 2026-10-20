@@ -19,7 +19,7 @@ class CodeEditor(context: Context) : EditText(context, null, 0, R.style.Workbenc
     override fun finishMotion() { caretMotion?.reset() }
     override fun onDraw(canvas: Canvas) { super.onDraw(canvas); caretMotion?.draw(canvas) }
     override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-        super.onTextChanged(text, start, before, count); caretMotion?.textChanged()
+        super.onTextChanged(text, start, before, count); caretMotion?.textChanged(start, before, count)
     }
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt); caretMotion?.reset()

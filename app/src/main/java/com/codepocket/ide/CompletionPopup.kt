@@ -44,14 +44,17 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val row = (convertView as? TextView) ?: TextView(activity).apply {
                 textSize = 13f; typeface = Typeface.MONOSPACE; gravity = Gravity.CENTER_VERTICAL
-                setPadding(dp(8), 0, dp(8), 0); minHeight = dp(44); setSingleLine()
+                setPadding(dp(8), 0, dp(8), 0); minHeight = dp(48); setSingleLine()
                 ellipsize = android.text.TextUtils.TruncateAt.END
             }
             val item = items[position]
-            row.text = activity.getString(R.string.completion_item, item.kind.icon, item.label)
+            row.text = activity.getString(R.string.completion_item, "", item.label).trim()
+            val icon = when(item.kind){CompletionKind.SNIPPET->com.codepocket.ide.ui.IdeIcon.BRACKETS;CompletionKind.TYPE->com.codepocket.ide.ui.IdeIcon.HEADER;CompletionKind.IDENTIFIER->com.codepocket.ide.ui.IdeIcon.TEXT;else->com.codepocket.ide.ui.IdeIcon.CODE}
+            row.setCompoundDrawablesWithIntrinsicBounds(com.codepocket.ide.ui.IdeIconDrawable(activity,icon,muted,dp(18)),null,null,null)
+            row.compoundDrawablePadding=dp(8)
             row.contentDescription = activity.getString(R.string.completion_accessibility, item.label, item.kind.title)
-            row.setTextColor(if (position == selectedIndex) android.graphics.Color.WHITE else foregroundColor)
-            row.setBackgroundColor(if (position == selectedIndex) accent else backgroundColor)
+            row.setTextColor(if (position == selectedIndex) foregroundColor else foregroundColor)
+            row.setBackgroundColor(if (position == selectedIndex) com.codepocket.ide.ui.DesignTokens.forContext(activity).selection else backgroundColor)
             return row
         }
     }
@@ -64,7 +67,7 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
         elevation = dp(6).toFloat(); animationStyle = 0
         enterTransition = null; exitTransition = null
-        setBackgroundDrawable(GradientDrawable().apply { setColor(backgroundColor); setStroke(dp(1), muted) })
+        setBackgroundDrawable(GradientDrawable().apply { setColor(backgroundColor); cornerRadius = dp(8).toFloat(); setStroke(dp(1), com.codepocket.ide.ui.DesignTokens.forContext(activity).border) })
         if (Build.VERSION.SDK_INT >= 29) setIsLaidOutInScreen(true)
         setOnDismissListener {
             recentlyClosedDocument = document; recentlyClosedAt = android.os.SystemClock.uptimeMillis()
@@ -77,12 +80,9 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
         heading.addView(TextView(activity).apply {
             setText(R.string.completion_lexical); textSize = 11f; setTextColor(muted); setPadding(dp(8), 0, 0, 0)
-        }, LinearLayout.LayoutParams(0, dp(32), 1f))
-        heading.addView(TextView(activity).apply {
-            text = "×"; textSize = 20f; setTextColor(foregroundColor); gravity = Gravity.CENTER
-            setPadding(dp(8), 0, dp(8), 0); contentDescription = activity.getString(R.string.completion_close)
-            setOnClickListener { dismiss() }
-        }, LinearLayout.LayoutParams(dp(44), dp(32)))
+        }, LinearLayout.LayoutParams(0, dp(48), 1f))
+        heading.addView(com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),com.codepocket.ide.ui.IdeIcon.CLOSE,
+            activity.getString(R.string.completion_close)) { dismiss() }, LinearLayout.LayoutParams(dp(48),dp(48)))
         content.addView(heading); content.addView(list, LinearLayout.LayoutParams(-1, 0, 1f)); content.addView(details)
     }
 
@@ -117,10 +117,10 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         val matches = anchor.matches(document, revision, offset)
         if (!matches) { dismiss(false); return false }
         val visible = anchor.visible
-        val desired = dp(32 + minOf(items.size, 5) * 44 + 60)
+        val desired = dp(48 + minOf(items.size, 5) * 48 + 60)
         val placed = CompletionGeometry.place(CompletionBounds(visible.left, visible.top, visible.right, visible.bottom),
-            anchor.x, anchor.top, anchor.bottom, dp(380), desired, dp(76), dp(3)) ?: run { dismiss(false); return false }
-        details.visibility = if (placed.height >= dp(32 + 2 * 44 + 60)) View.VISIBLE else View.GONE
+            anchor.x, anchor.top, anchor.bottom, dp(380), desired, dp(96), dp(3)) ?: run { dismiss(false); return false }
+        details.visibility = if (placed.height >= dp(48 + 2 * 48 + 60)) View.VISIBLE else View.GONE
         var popupX = placed.x; var popupY = placed.y
         if (Build.VERSION.SDK_INT < 29) {
             val screen = IntArray(2); val local = IntArray(2)

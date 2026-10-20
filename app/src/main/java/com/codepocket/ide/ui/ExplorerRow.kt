@@ -20,7 +20,7 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
     private fun dp(value: Int) = IdeControls.dp(context, value)
     private val guide = Paint().apply { color = palette.border; strokeWidth = dp(1).toFloat() }
     private val arrow = ImageView(context).apply {
-        setImageDrawable(IdeIconDrawable(IdeIcon.CHEVRON_RIGHT, palette.muted, dp(16)))
+        setImageDrawable(IdeIconDrawable(context, IdeIcon.CHEVRON_RIGHT, palette.muted, dp(16)))
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     }
     private val name = TextView(context).apply {
@@ -28,6 +28,8 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
         setSingleLine(); ellipsize = TextUtils.TruncateAt.END; compoundDrawablePadding = dp(6)
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     }
+    private val more = IdeControls.icon(context, palette, IdeIcon.MORE, "文件操作") {}.apply { visibility = View.GONE }
+    fun setMenuAction(action: () -> Unit) { more.setOnClickListener { action() } }
     private var depth = 0
     private var bound = false
 
@@ -37,27 +39,29 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
         setWillNotDraw(false); foreground = IdeControls.feedback(context, palette)
         addView(arrow, LayoutParams(dp(20), dp(20)))
         addView(name, LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
+        addView(more, LayoutParams(dp(48), dp(48)))
     }
 
-    fun bind(path: String, level: Int, directory: Boolean, expanded: Boolean, selected: Boolean, animate: Boolean) {
+    fun bind(path: String, level: Int, directory: Boolean, expanded: Boolean, selected: Boolean, animate: Boolean, displayName: String? = null) {
         depth = level.coerceIn(0, 20)
-        val title = path.substringAfterLast('/')
+        val title = displayName ?: path.substringAfterLast('/')
         if (name.text.toString() != title) name.text = title
         name.setTextColor(if (selected) palette.accentText else palette.foreground)
         val icon = if (directory) (if (expanded) IdeIcon.FOLDER_OPEN else IdeIcon.FOLDER) else IdeIconDrawable.file(path)
-        name.setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(icon,
-            if (selected) palette.accentText else palette.muted, dp(20)), null, null, null)
+        name.setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(context, icon,
+            IdeIconDrawable.color(icon, palette), dp(20)), null, null, null)
         Animations.rotate(arrow, if (expanded && directory) 90f else 0f, animate && bound && directory)
         arrow.visibility = if (directory) View.VISIBLE else View.INVISIBLE
-        background = if (selected) GradientDrawable().apply { setColor(palette.editor); cornerRadius = dp(3).toFloat() } else null
-        IdeControls.describe(this, path + if (directory) (if (expanded) "，已展开" else "，已折叠") else "")
+        background = if (selected) GradientDrawable().apply { setColor(palette.selection); cornerRadius = dp(3).toFloat() } else null
+        IdeControls.describe(this, (if(path.isEmpty())title else path) + if (directory) (if (expanded) "，已展开" else "，已折叠") else "")
+        more.visibility = if (selected || path.isEmpty()) View.VISIBLE else View.GONE
         isSelected = selected; bound = true; invalidate()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         // Deep nesting must still leave room for the file name in a narrow phone drawer or large font.
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val budget = (width - dp(144)).coerceAtLeast(0)
+        val budget = (width - dp(192)).coerceAtLeast(0)
         val indent = dp(8) + minOf(dp(depth * 12), dp(96), budget)
         if (paddingLeft != indent) setPadding(indent, dp(6), dp(8), dp(6))
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)

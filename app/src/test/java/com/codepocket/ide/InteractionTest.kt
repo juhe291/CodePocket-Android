@@ -29,7 +29,8 @@ class InteractionTest {
             assertTrue(IdeCommand.PANEL in items)
             assertFalse(IdeCommand.SAVE in items)
         }
-        assertEquals(IdeCommands.settingsMenuItems, IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(400), true))
+        assertEquals(listOf(IdeCommand.SEARCH) + IdeCommands.settingsMenuItems, IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(400), true))
+        assertEquals(IdeCommands.settingsMenuItems, IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(500), true))
     }
     @Test fun contextMenusAreShortAndDataActionsAreDistinct() {
         for (items in listOf(IdeCommands.editorMenuItems, IdeCommands.explorerMenuItems, IdeCommands.terminalMenuItems))

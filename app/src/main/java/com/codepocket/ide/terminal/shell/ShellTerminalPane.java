@@ -37,6 +37,19 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private TerminalView terminal;
     private final TerminalKeyboard keyboardRequest=new TerminalKeyboard();
     private boolean compact;
+    private String colorTheme="FOLLOW_UI";
+    private boolean darkTheme=true;
+    private boolean appearanceInitialized;
+    public void setAppearance(String name, boolean dark) {
+        boolean changed=!appearanceInitialized||!colorTheme.equals(name)||darkTheme!=dark;
+        colorTheme=name;darkTheme=dark;
+        TerminalAppearance.Palette colors=TerminalAppearance.INSTANCE.apply(runtime.session(),name,dark);
+        if(changed) {
+            appearanceInitialized=true;
+            setBackgroundColor(colors.getBackground());caption.setTextColor(colors.getForeground());placeholder.setTextColor(colors.getForeground());runCaption.setTextColor(colors.getForeground());
+            if(terminal!=null)terminal.invalidate();
+        }
+    }
     public void setCompact(boolean value) { if(compact!=value){compact=value;changed();} }
     public int minimumHeightDp(boolean small) {
         android.graphics.Paint paint=new android.graphics.Paint();paint.setTypeface(Typeface.MONOSPACE);
@@ -95,7 +108,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         addView(viewport, new LayoutParams(-1, 0, 1));
         LinearLayout keys = new LinearLayout(context);
         Button imeButton=action("键盘",this::showKeyboard);imeButton.setContentDescription("显示终端虚拟键盘");
-        keys.addView(imeButton,new LayoutParams(dp(48),dp(48)));
+
         String[][] shortcuts = {{"Ctrl+C","\u0003"},{"Ctrl+D","\u0004"},{"Tab","\t"},{"Esc","\u001b"},{"↑","\u001b[A"},{"↓","\u001b[B"},{"←","\u001b[D"},{"→","\u001b[C"}};
         for (String[] shortcut : shortcuts) {
             String label = shortcut[0], text = shortcut[1];
@@ -108,13 +121,18 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         }), new LayoutParams(dp(70),dp(48)));
         HorizontalScrollView keyboard = new HorizontalScrollView(context);
         keyboard.setHorizontalScrollBarEnabled(false); keyboard.addView(keys);
-        addView(keyboard, new LayoutParams(-1, dp(48)));
+        LinearLayout footer=new LinearLayout(context);footer.setGravity(Gravity.CENTER_VERTICAL);
+        footer.addView(imeButton,new LayoutParams(dp(56),dp(48)));
+        final boolean[] controls={context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).getBoolean("terminalControlsExpanded",false)};
+        Button toggle=action("Ctrl",()->{controls[0]=!controls[0];keyboard.setVisibility(controls[0]?VISIBLE:GONE);context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).edit().putBoolean("terminalControlsExpanded",controls[0]).apply();});
+        toggle.setContentDescription("展开或收起终端控制键");footer.addView(toggle,new LayoutParams(dp(56),dp(48)));
+        keyboard.setVisibility(controls[0]?VISIBLE:GONE);footer.addView(keyboard,new LayoutParams(0,dp(48),1));addView(footer,new LayoutParams(-1,dp(48)));
         changed();
     }
     private int dp(int value) { return Math.round(value * getResources().getDisplayMetrics().density); }
     private Button action(String title, Runnable callback) {
         Button button = new Button(getContext()); button.setText(title); button.setTextSize(10); button.setAllCaps(false);
-        button.setTextColor(0xffb8c9df); button.setBackgroundColor(0xff161c25); button.setPadding(dp(6), 0, dp(6), 0);
+        button.setTextColor(com.codepocket.ide.ui.DesignTokens.INSTANCE.forContext(getContext()).getForeground()); button.setBackground(com.codepocket.ide.ui.IdeControls.INSTANCE.feedback(getContext(),com.codepocket.ide.ui.DesignTokens.INSTANCE.forContext(getContext()))); button.setPadding(dp(6), 0, dp(6), 0);
         button.setMinWidth(0); button.setMinimumWidth(0); button.setMinHeight(dp(48));
         button.setOnClickListener(v -> callback.run()); return button;
     }
@@ -132,8 +150,9 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     }
     public void clearScreen() { runtime.clearScreen(); }
     public void setPreferences(int fontSp, boolean animations) {
+        boolean fontChanged = this.fontSp != fontSp;
         this.fontSp = fontSp; this.animations = animations;
-        if (terminal != null) terminal.setTextSize(Math.round(fontSp * getResources().getDisplayMetrics().scaledDensity));
+        if (terminal != null && fontChanged) terminal.setTextSize(Math.round(fontSp * getResources().getDisplayMetrics().scaledDensity));
         updateBlink();
     }
     /** Motion policy changes must not rebuild the renderer or resize the PTY. */
@@ -165,6 +184,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         post(() -> runtime.failIfCurrent(expected, failure));
     }
     private void renderSession() {
+        setAppearance(colorTheme,darkTheme);
         runCaption.setText(runtime.foregroundLabel());
         runCaption.setVisibility(runtime.foregroundLabel().isEmpty() || compact ? GONE : VISIBLE);
         TerminalSession session = runtime.session();
@@ -204,8 +224,13 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         start.setVisibility(runtime.state() == ShellRuntime.State.EXITED ? VISIBLE : GONE);
         updateBlink();
     }
+    private AlertDialog.Builder dialogBuilder() {
+        return new AlertDialog.Builder(getContext()) {
+            @Override public AlertDialog show() { return com.codepocket.ide.animation.DialogMotion.INSTANCE.show(create(), animations, false); }
+        };
+    }
     private void showMenu(android.view.View anchor) {
-        PopupMenu menu = new PopupMenu(getContext(), anchor);
+        PopupMenu menu = com.codepocket.ide.animation.DialogMotion.INSTANCE.menu(getContext(), anchor, animations);
         String[] labels = {"显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "结束当前 Shell", "终端说明与许可证", "查看上次终端错误"};
         for (int i = 0; i < labels.length; i++) menu.getMenu().add(0, i, i, labels[i]);
         menu.setOnMenuItemClickListener(item -> {
@@ -214,11 +239,11 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
                 case 1: runtime.copyTranscript(); break;
                 case 2: runtime.paste(); break;
                 case 3: clearScreen(); break;
-                case 4: new AlertDialog.Builder(getContext()).setTitle("结束当前 Shell？")
+                case 4: dialogBuilder().setTitle("结束当前 Shell？")
                     .setMessage("将关闭当前终端及其正在运行的程序，编辑器文件保留。")
                     .setNegativeButton("取消", null).setPositiveButton("结束", (d, w) -> runtime.close()).show(); break;
                 case 5: showAbout(); break;
-                case 6: new AlertDialog.Builder(getContext()).setTitle("上次终端错误（本机记录）")
+                case 6: dialogBuilder().setTitle("上次终端错误（本机记录）")
                     .setMessage(runtime.failureDetails())
                     .setNegativeButton("关闭", null)
                     .setPositiveButton("复制", (d, w) -> runtime.copyFailureDetails()).show(); break;
@@ -227,7 +252,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         }); menu.show();
     }
     public void showAbout() {
-        new AlertDialog.Builder(getContext()).setTitle("真实 Android Shell")
+        dialogBuilder().setTitle("真实 Android Shell")
                     .setMessage("使用本地 /system/bin/sh 和 Termux 终端组件，无需另装 Termux。\n\n命令以应用 UID 执行，可修改本应用有权访问的文件；终端只读取磁盘上已保存的内容。系统目录权限仍由 Android 控制，不是 root。\n\nSAF URI 不能直接作为 Shell 目录；外部项目仍由文件管理器授权和写回。Python 运行按钮把 Chaquopy 独立进程接入当前 PTY，支持真实输入输出并返回 Shell。未安装 python、pip 或 clang/g++ 命令。C++ 通过 Wandbox 预填输入运行，完成后返回。\n\nTermux v0.118.3 / 5b657c6，保留 GPLv3 与 Apache 2.0 来源及通知；完整许可见 App 资产 terminal-licenses 和仓库 third-party/termux。")
                     .setPositiveButton("知道了", null).show();
     }

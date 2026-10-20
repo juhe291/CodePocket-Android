@@ -31,10 +31,8 @@ object IdeCommands {
     val terminalToolbarItems = listOf(IdeCommand.CLEAR_TERMINAL, IdeCommand.MAXIMIZE_TERMINAL, IdeCommand.CLOSE_TERMINAL)
     val terminalMenuItems = listOf(IdeCommand.PRESET_INPUT, IdeCommand.CLEAR_INPUT, IdeCommand.CLEAR_TERMINAL,
         IdeCommand.PANEL_SIZE, IdeCommand.MAXIMIZE_TERMINAL, IdeCommand.CLOSE_TERMINAL, IdeCommand.HIDE_KEYBOARD)
-    val symbolBarItems = listOf(IdeCommand.SAVE, IdeCommand.UNDO, IdeCommand.REDO, IdeCommand.FIND,
-        IdeCommand.TAB, IdeCommand.UNINDENT, IdeCommand.BRACES, IdeCommand.BRACKETS, IdeCommand.PARENS,
-        IdeCommand.SEMICOLON, IdeCommand.EQUALS, IdeCommand.COLON, IdeCommand.LEFT, IdeCommand.RIGHT,
-        IdeCommand.COMPLETE, IdeCommand.SIGNATURE, IdeCommand.SNIPPET)
+    val symbolBarItems = listOf(IdeCommand.TAB, IdeCommand.UNINDENT, IdeCommand.BRACES, IdeCommand.BRACKETS, IdeCommand.PARENS,
+        IdeCommand.SEMICOLON, IdeCommand.EQUALS, IdeCommand.COLON, IdeCommand.LEFT, IdeCommand.RIGHT)
     fun globalMenu(layout: ToolbarLayout, panelVisible: Boolean): List<IdeCommand> = buildList {
         // Width fallbacks and a recovery entry keep hidden controls reachable without a giant command menu.
         if (!layout.run) add(IdeCommand.RUN_STOP)

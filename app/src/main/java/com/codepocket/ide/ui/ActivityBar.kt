@@ -14,6 +14,8 @@ import android.widget.LinearLayout
 class ActivityBar(
     context: Context,
     private val palette: IdePalette,
+    onSearch: (() -> Unit)? = null,
+    onSettings: (() -> Unit)? = null,
     private val onExplorer: () -> Unit
 ) : LinearLayout(context) {
 
@@ -33,10 +35,13 @@ class ActivityBar(
             isSelected = true // Explorer active by default
         }
 
+        onSearch?.let { action -> addView(IdeControls.icon(context,palette,IdeIcon.SEARCH,"项目搜索",action),LayoutParams(IdeControls.dp(context,48),IdeControls.dp(context,48))) }
         addView(explorerButton, LayoutParams(
             IdeControls.dp(context, DesignTokens.TOUCH),
             IdeControls.dp(context, DesignTokens.TOUCH)
         ))
+        addView(android.view.View(context),LayoutParams(1,0,1f))
+        onSettings?.let { action -> addView(IdeControls.icon(context,palette,IdeIcon.SETTINGS,"设置",action),LayoutParams(IdeControls.dp(context,48),IdeControls.dp(context,48))) }
     }
 
     fun setExplorerActive(active: Boolean) {

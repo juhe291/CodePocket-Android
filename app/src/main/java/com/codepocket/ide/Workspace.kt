@@ -183,7 +183,7 @@ class Workspace private constructor(directory: File, seedSamples: Boolean, priva
             documents.scan(ws.root)
             ws.documents = documents
             ws.identity = id
-            ws.title = gateway.root.name + " · 系统目录" + documents.warning.takeIf { it.isNotBlank() }?.let { " · $it" }.orEmpty()
+            ws.title = gateway.root.name + " · 已授权目录" + documents.warning.takeIf { it.isNotBlank() }?.let { " · $it" }.orEmpty()
             return ws
         }
 

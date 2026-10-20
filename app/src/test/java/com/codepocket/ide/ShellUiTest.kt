@@ -38,8 +38,8 @@ class ShellUiTest {
     @Test fun normalPhoneHasTouchSizedExplorerRunMenuAndElasticSingleLineTitleBudget() {
         for (width in listOf(240, 320, 360, 393, 600, 840, 1200)) {
             val spec = WorkspaceLayoutPolicy.toolbar(width)
-            assertTrue(spec.explorer); assertTrue(spec.run); assertTrue(spec.title)
-            assertEquals(48, spec.control); assertEquals(if (width >= 288) 192 else 144, spec.controlsWidth)
+            assertTrue(spec.explorer); assertTrue(spec.run); assertTrue(spec.terminal); assertEquals(width >= 256, spec.title)
+            assertEquals(48, spec.control); assertEquals(if (width >= 408) 240 else 192, spec.controlsWidth)
         }
     }
 
@@ -47,7 +47,7 @@ class ShellUiTest {
         val mini = WorkspaceLayoutPolicy.toolbar(80)
         assertFalse(mini.run); assertFalse(mini.explorer)
         val narrow = WorkspaceLayoutPolicy.toolbar(180)
-        assertTrue(narrow.run); assertFalse(narrow.explorer); assertTrue(narrow.title)
+        assertTrue(narrow.run); assertTrue(narrow.terminal); assertFalse(narrow.explorer); assertFalse(narrow.title)
         // Commands are now organized by context rather than all in one menu
         val fallback = IdeCommands.globalMenu(mini, false)
         assertTrue(IdeCommand.RUN_STOP in fallback)

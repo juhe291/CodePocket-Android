@@ -21,7 +21,7 @@ class EditorTab(context: Context, private val palette: IdePalette, val path: Str
         textSize = 12f; gravity = Gravity.CENTER_VERTICAL; includeFontPadding = false
         maxWidth = dp(240); setSingleLine(); ellipsize = TextUtils.TruncateAt.END
         setPadding(dp(10), 0, dp(6), 0); compoundDrawablePadding = dp(6)
-        setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(IdeIconDrawable.file(path), palette.muted, dp(20)), null, null, null)
+        setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(context, IdeIconDrawable.file(path), IdeIconDrawable.color(IdeIconDrawable.file(path), palette), dp(20)), null, null, null)
         background = IdeControls.feedback(context, palette)
         isFocusable = true; setOnClickListener { open() }; setOnLongClickListener { describe(); true }
         IdeControls.describe(this, path)
@@ -36,7 +36,7 @@ class EditorTab(context: Context, private val palette: IdePalette, val path: Str
         activeTab = active; name.isSelected = active
         val title = "${if (dirty) "● " else ""}${path.substringAfterLast('/')}"
         if (name.text.toString() != title) name.text = title
-        name.setTextColor(if (active) palette.accentText else palette.foreground)
+        name.setTextColor(if (active) palette.foreground else palette.muted)
         setBackgroundColor(if (active) palette.editor else palette.surface); invalidate()
     }
     override fun onDraw(canvas: Canvas) {

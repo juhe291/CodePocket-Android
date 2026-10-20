@@ -69,13 +69,14 @@ class EditorCaretMotionTest {
         ReflectionHelpers.getField<android.animation.ValueAnimator>(motion,"movement").setCurrentFraction(1f)
         assertEquals(motion.logicalBounds()!!.top,ReflectionHelpers.getField<RectF>(motion,"current").top,.1f)
     }
-    @Test fun typingSnapsTheVisibleCaretAndDoesNotDelayNativeText(){
+    @Test fun typingAnimatesOnlyTheVisibleCaretAndDoesNotDelayNativeText(){
         editor.setSelection(3);frame()
         editor.text.insert(3,"x");editor.setSelection(4);frame()
         assertEquals("firxst line\n你好😀 second line",editor.text.toString())
         assertEquals(4,editor.selectionStart)
+        val tween=ReflectionHelpers.getField<android.animation.ValueAnimator>(motion,"movement")
+        assertEquals(60L,tween.duration);tween.setCurrentFraction(1f)
         assertEquals(motion.logicalBounds(),ReflectionHelpers.getField<RectF>(motion,"current"))
-        assertNull(ReflectionHelpers.getField<android.animation.ValueAnimator?>(motion,"movement"))
     }
     @Test fun composingInputIsNativeAndNeverInterpolatesTheInsertionPoint(){
         val connection=editor.onCreateInputConnection(EditorInfo())!!

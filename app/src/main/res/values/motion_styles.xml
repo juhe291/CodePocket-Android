@@ -7,8 +7,6 @@
         <item name="android:windowEnterAnimation">@anim/workbench_enter</item>
         <item name="android:windowExitAnimation">@anim/workbench_exit</item>
     </style>
-    <style name="WorkbenchPopupMotion" parent="android:style/Widget.Material.PopupMenu"><item name="android:popupAnimationStyle">@style/WorkbenchWindowMotion</item></style>
-    <style name="WorkbenchPopupStatic" parent="android:style/Widget.Material.PopupMenu"><item name="android:popupAnimationStyle">@null</item></style>
     <style name="WorkbenchDrawerWindowMotion">
         <item name="android:windowEnterAnimation">@anim/workbench_drawer_enter</item>
         <item name="android:windowExitAnimation">@anim/workbench_drawer_exit</item>

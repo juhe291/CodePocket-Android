@@ -1,18 +1,27 @@
 package com.codepocket.ide.ui
 
-data class IdePalette(val editor: Int, val surface: Int, val panel: Int, val foreground: Int,
-    val muted: Int, val border: Int, val accent: Int, val accentText: Int, val success: Int, val error: Int)
+import android.content.Context
+import com.codepocket.ide.AppSettings
 
-/** Shared shell colors and dimensions. Syntax colors still belong to the language theme. */
+data class IdePalette(val editor: Int, val surface: Int, val panel: Int, val foreground: Int,
+    val muted: Int, val border: Int, val accent: Int, val accentText: Int, val success: Int, val error: Int) {
+    val overlay: Int get() = if (editor == 0xFFFFFFFF.toInt()) 0xFFFFFFFF.toInt() else 0xFF252D38.toInt()
+    val selection: Int get() = if (editor == 0xFFFFFFFF.toInt()) 0xFFE2ECF7.toInt() else 0xFF2A3B50.toInt()
+}
 object DesignTokens {
     const val TOUCH = 48
     const val ICON = 20
     const val GAP = 4
     const val SNIPPET_HINT = 28
-    fun palette(dark: Boolean) = if (dark) IdePalette(0xFF1F1F1F.toInt(), 0xFF181818.toInt(),
-        0xFF181818.toInt(), 0xFFCCCCCC.toInt(), 0xFF9D9D9D.toInt(), 0xFF2B2B2B.toInt(),
-        0xFF0078D4.toInt(), 0xFF4DAAFC.toInt(), 0xFF89D185.toInt(), 0xFFF48771.toInt())
-    else IdePalette(0xFFFFFFFF.toInt(), 0xFFF8F8F8.toInt(), 0xFFF8F8F8.toInt(),
-        0xFF1F1F1F.toInt(), 0xFF616161.toInt(), 0xFFE5E5E5.toInt(),
-        0xFF005FB8.toInt(), 0xFF005FB8.toInt(), 0xFF237A3B.toInt(), 0xFFBA1A1A.toInt())
+    fun palette(dark: Boolean) = if (dark) IdePalette(0xFF1E242E.toInt(), 0xFF171D26.toInt(),
+        0xFF1B222C.toInt(), 0xFFD7DFEA.toInt(), 0xFFA5B1C2.toInt(), 0xFF323D4D.toInt(),
+        0xFF6189B7.toInt(), 0xFF9ABCE5.toInt(), 0xFFA4C8AC.toInt(), 0xFFE7A09F.toInt())
+    else IdePalette(0xFFFFFFFF.toInt(), 0xFFEEF2F7.toInt(), 0xFFF5F7FA.toInt(),
+        0xFF263445.toInt(), 0xFF596A7D.toInt(), 0xFFD8E0EA.toInt(),
+        0xFF376797.toInt(), 0xFF315F90.toInt(), 0xFF326B46.toInt(), 0xFFAB3B3B.toInt())
+    fun forContext(context: Context): IdePalette {
+        val prefs = context.getSharedPreferences("codepocket_v2", Context.MODE_PRIVATE)
+        val dark = context.resources.configuration.uiMode and 0x30 == 0x20
+        return palette(AppSettings.fromJson(prefs.getString("settings", null), prefs.getBoolean("dark", true)).isDark(dark))
+    }
 }

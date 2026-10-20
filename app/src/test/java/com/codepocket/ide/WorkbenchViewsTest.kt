@@ -151,4 +151,45 @@ class WorkbenchViewsTest {
         update((0..61).map {"file$it"})
         assertSame(rows,scroll.getChildAt(0));assertEquals(240,scroll.scrollY)
     }
+
+    @Test fun projectRootReallyCollapsesAndReopensWithoutChangingActiveDocument() {
+        val (main,ws)=mainFixture();val folder=ws.create(ws.root,"src",true);ws.create(folder,"a.py",false)
+        val list=LinearLayout(main).apply{orientation=LinearLayout.VERTICAL};main.setContentView(list)
+        ReflectionHelpers.setField(main,"sidebarExplorerList",list)
+        fun render(){ReflectionHelpers.callInstanceMethod<Any?>(main,"renderExplorer",ReflectionHelpers.ClassParameter.from(Boolean::class.javaPrimitiveType!!,false))}
+        render();val root=key(list,"root");val active=ReflectionHelpers.getField<String>(main,"activePath")
+        root.performClick();assertEquals(2,list.childCount);assertEquals(active,ReflectionHelpers.getField<String>(main,"activePath"))
+        assertFalse(ReflectionHelpers.getField<MutableSet<String>>(main,"expanded").contains(""))
+        root.performClick();assertNotNull(key(list,"entry:src"));assertSame(root,key(list,"root"))
+    }
+    @Test fun rootCollapseSurvivesCheckpointAndKeepsDescendantExpansion() {
+        val (main,ws)=mainFixture();ws.create(ws.root,"src",true)
+        ReflectionHelpers.setField(main,"expanded",mutableSetOf("src"))
+        val saved=android.os.Bundle()
+        ReflectionHelpers.callInstanceMethod<Any?>(main,"saveExplorerViewport",ReflectionHelpers.ClassParameter.from(android.os.Bundle::class.java,saved))
+        ReflectionHelpers.getField<MutableSet<String>>(main,"expanded").add("")
+        ReflectionHelpers.callInstanceMethod<Any?>(main,"restoreExplorerViewport",ReflectionHelpers.ClassParameter.from(android.os.Bundle::class.java,saved))
+        assertEquals(setOf("src"),ReflectionHelpers.getField<MutableSet<String>>(main,"expanded"))
+    }
+    @Test fun selectingFolderUpdatesCreationTargetAndDoesNotOpenItAsCode() {
+        val (main,ws)=mainFixture();ws.create(ws.root,"src",true)
+        val list=LinearLayout(main);main.setContentView(list);ReflectionHelpers.setField(main,"sidebarExplorerList",list)
+        ReflectionHelpers.callInstanceMethod<Any?>(main,"renderExplorer",ReflectionHelpers.ClassParameter.from(Boolean::class.javaPrimitiveType!!,false))
+        key(list,"entry:src").performClick()
+        assertEquals("src",ReflectionHelpers.getField<String>(main,"currentDirectory"))
+        assertEquals("src",ReflectionHelpers.getField<String>(main,"explorerSelection"));assertTrue(key(list,"entry:src").isSelected)
+    }
+
+    @Test fun legacyNavigationUsesSelectedFileParentAsCreationTarget() {
+        val (main,ws)=mainFixture();val src=ws.create(ws.root,"src",true);ws.create(src,"a.py",false)
+        ReflectionHelpers.setField(main,"activePath","src/a.py");ReflectionHelpers.setField(main,"currentDirectory","")
+        ReflectionHelpers.callInstanceMethod<Any?>(main,"reconcileExplorerSelection")
+        assertEquals("src/a.py",ReflectionHelpers.getField<String>(main,"explorerSelection"))
+        assertEquals("src",ReflectionHelpers.getField<String>(main,"currentDirectory"))
+    }
+    @Test fun revealAndCreationExpandAllNecessaryAncestors() {
+        val (main,_)=mainFixture();ReflectionHelpers.setField(main,"expanded",mutableSetOf<String>())
+        ReflectionHelpers.callInstanceMethod<Any?>(main,"expandExplorerParents",ReflectionHelpers.ClassParameter.from(String::class.java,"src/deep/include/a.hpp"))
+        assertEquals(setOf("","src","src/deep","src/deep/include"),ReflectionHelpers.getField<MutableSet<String>>(main,"expanded"))
+    }
 }

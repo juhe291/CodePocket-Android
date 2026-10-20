@@ -15,12 +15,13 @@ import java.util.concurrent.Future
 object SearchDialog {
     fun show(activity: Activity, replace: Boolean, snapshot: () -> EditorSnapshot,
         select: (EditorSnapshot, Int, Int) -> Boolean, apply: (EditorSnapshot, TextChange, Boolean) -> Boolean, animations: Boolean = true): AlertDialog {
-        val content = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL; setPadding(28, 8, 28, 8) }
+        val content = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL; setPadding(com.codepocket.ide.ui.IdeControls.dp(activity,16), 8, com.codepocket.ide.ui.IdeControls.dp(activity,16), 8) }
         val query = EditText(activity).apply { hint = "查找文本（非正则）"; setSingleLine(); filters = arrayOf(InputFilter.LengthFilter(10000)) }
         val replacement = EditText(activity).apply { hint = "替换为"; setSingleLine(); filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS)) }
         val initial = snapshot()
         if (initial.start != initial.end) query.setText(initial.text.substring(minOf(initial.start, initial.end), maxOf(initial.start, initial.end)).take(10000))
-        val matchCase = CheckBox(activity).apply { text = "区分大小写" }
+        val matchCase = CheckBox(activity).apply { text = "区分大小写"; compoundDrawablePadding=com.codepocket.ide.ui.IdeControls.dp(activity,8)
+            setCompoundDrawablesWithIntrinsicBounds(com.codepocket.ide.ui.IdeIconDrawable(activity,com.codepocket.ide.ui.IdeIcon.CASE,com.codepocket.ide.ui.DesignTokens.forContext(activity).muted,com.codepocket.ide.ui.IdeControls.dp(activity,18)),null,null,null) }
         val wholeWord = CheckBox(activity).apply { text = "全字匹配" }
         val feedback = TextView(activity)
         content.addView(query); if (replace) content.addView(replacement)
@@ -66,7 +67,10 @@ object SearchDialog {
             }
         }
         for ((text, kind) in listOf("下一个" to 0, "上一个" to 1) + if (replace) listOf("替换选中项" to 2, "全部替换" to 3) else emptyList()) {
-            buttons.addView(Button(activity).apply { this.text = text; setOnClickListener { operation(kind) } })
+            if (kind == 0 || kind == 2) buttons.addView(LinearLayout(activity))
+            (buttons.getChildAt(buttons.childCount - 1) as LinearLayout).addView(Button(activity).apply {
+                this.text = text; setOnClickListener { operation(kind) }
+            }, LinearLayout.LayoutParams(0, com.codepocket.ide.ui.IdeControls.dp(activity,48), 1f))
         }
         dialog.setOnDismissListener { request++; pending?.cancel(true); executor.shutdownNow() }
         com.codepocket.ide.animation.DialogMotion.show(dialog, animations)

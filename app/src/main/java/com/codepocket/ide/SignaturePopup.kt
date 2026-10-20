@@ -47,7 +47,7 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         isOutsideTouchable = false; inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
         softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
         elevation = dp(6).toFloat(); animationStyle = 0; enterTransition = null; exitTransition = null
-        setBackgroundDrawable(GradientDrawable().apply { setColor(backgroundColor); setStroke(dp(1), muted) })
+        setBackgroundDrawable(GradientDrawable().apply { setColor(backgroundColor); cornerRadius = dp(8).toFloat(); setStroke(dp(1), com.codepocket.ide.ui.DesignTokens.forContext(activity).border) })
         if (Build.VERSION.SDK_INT >= 29) setIsLaidOutInScreen(true)
         setOnDismissListener {
             recentlyClosedDocument = result?.request?.document; recentlyClosedAt = android.os.SystemClock.uptimeMillis()
@@ -58,15 +58,13 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
 
     init {
         val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0) }
-        heading.addView(title, LinearLayout.LayoutParams(0, dp(44), 1f))
-        fun control(label: String, description: Int, action: () -> Unit) = TextView(activity).apply {
-            text = label; textSize = 18f; gravity = Gravity.CENTER; setTextColor(foregroundColor)
-            contentDescription = activity.getString(description); setOnClickListener { action() }
-            heading.addView(this, LinearLayout.LayoutParams(dp(44), dp(44)))
+        heading.addView(title, LinearLayout.LayoutParams(0, dp(48), 1f))
+        fun control(icon:com.codepocket.ide.ui.IdeIcon,description:Int,action:()->Unit) {
+            heading.addView(com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),icon,activity.getString(description),action),LinearLayout.LayoutParams(dp(48),dp(48)))
         }
-        control("‹", R.string.signature_previous) { cycle(-1) }
-        control("›", R.string.signature_next) { cycle(1) }
-        control("×", R.string.signature_close) { close() }
+        control(com.codepocket.ide.ui.IdeIcon.BACK,R.string.signature_previous) { cycle(-1) }
+        control(com.codepocket.ide.ui.IdeIcon.NEXT,R.string.signature_next) { cycle(1) }
+        control(com.codepocket.ide.ui.IdeIcon.CLOSE,R.string.signature_close) { close() }
         content.addView(heading)
         content.addView(scroll, LinearLayout.LayoutParams(-1, dp(44)))
         content.addView(details, LinearLayout.LayoutParams(-1, 0, 1f))

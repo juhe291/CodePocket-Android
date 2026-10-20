@@ -168,4 +168,14 @@ class TerminalWorkbenchViewTest {
         assertFalse(ReflectionHelpers.getField<Boolean>(activity,"startupPanelPending"))
     }
 
+
+    @Test fun repeatedTerminalShortcutRevealsSameSessionAndPaneWithoutTogglingClosed(){
+        val entry=registry.catalog.selected()!!
+        ReflectionHelpers.setField(entry.value.runtime,"state",com.codepocket.ide.terminal.shell.ShellRuntime.State.PREPARING)
+        ReflectionHelpers.callInstanceMethod<Any?>(activity,"openTerminal")
+        val pane=ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane")
+        ReflectionHelpers.callInstanceMethod<Any?>(activity,"openTerminal")
+        assertTrue(ReflectionHelpers.getField<Boolean>(activity,"panelVisible"));assertFalse(ReflectionHelpers.getField<Boolean>(activity,"startupPanelPending"))
+        assertEquals(1,registry.catalog.entries().size);assertSame(entry,registry.catalog.selected());assertSame(pane,ReflectionHelpers.getField(activity,"shellPane"))
+    }
 }

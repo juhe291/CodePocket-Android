@@ -4,6 +4,7 @@ import org.json.JSONObject
 
 enum class UiTheme { DARK, LIGHT, SYSTEM }
 enum class SyntaxTheme { FOLLOW_UI, DARK, LIGHT }
+enum class TerminalTheme { FOLLOW_UI, CODEPOCKET_DARK, NORD, DRACULA, LIGHT }
 
 /** Versioned preferences; unknown values fall back without losing project/session preferences. */
 data class AppSettings(
@@ -11,6 +12,7 @@ data class AppSettings(
     val syntax: SyntaxTheme = SyntaxTheme.FOLLOW_UI,
     val fontSize: Int = 14,
     val terminalFontSize: Int = 12,
+    val terminalTheme: TerminalTheme = TerminalTheme.FOLLOW_UI,
     val tabWidth: Int = 4,
     val useSpaces: Boolean = true,
     val lineNumbers: Boolean = true,
@@ -36,7 +38,7 @@ data class AppSettings(
     fun isDark(systemDark: Boolean) = when (theme) { UiTheme.DARK -> true; UiTheme.LIGHT -> false; UiTheme.SYSTEM -> systemDark }
     fun syntaxIsDark(uiDark: Boolean) = when (syntax) { SyntaxTheme.DARK -> true; SyntaxTheme.LIGHT -> false; SyntaxTheme.FOLLOW_UI -> uiDark }
     fun toJson(): String = normalized().let { s -> JSONObject().apply {
-        put("version", 7); put("theme", s.theme.name); put("syntax", s.syntax.name)
+        put("version", 8); put("terminalTheme", s.terminalTheme.name); put("theme", s.theme.name); put("syntax", s.syntax.name)
         put("fontSize", s.fontSize); put("terminalFontSize", s.terminalFontSize); put("tabWidth", s.tabWidth)
         put("useSpaces", s.useSpaces); put("lineNumbers", s.lineNumbers); put("wordWrap", s.wordWrap)
         put("autoIndent", s.autoIndent); put("autoPairs", s.autoPairs); put("autoCompletion", s.autoCompletion)
@@ -53,6 +55,7 @@ data class AppSettings(
             return defaults.copy(
                 theme = runCatching { UiTheme.valueOf(j.optString("theme")) }.getOrDefault(defaults.theme),
                 syntax = runCatching { SyntaxTheme.valueOf(j.optString("syntax")) }.getOrDefault(defaults.syntax),
+                terminalTheme = runCatching { TerminalTheme.valueOf(j.optString("terminalTheme")) }.getOrDefault(defaults.terminalTheme),
                 fontSize = j.optInt("fontSize", defaults.fontSize), terminalFontSize = j.optInt("terminalFontSize", defaults.terminalFontSize),
                 tabWidth = j.optInt("tabWidth", defaults.tabWidth), useSpaces = j.optBoolean("useSpaces", defaults.useSpaces),
                 lineNumbers = j.optBoolean("lineNumbers", defaults.lineNumbers), wordWrap = j.optBoolean("wordWrap", defaults.wordWrap),

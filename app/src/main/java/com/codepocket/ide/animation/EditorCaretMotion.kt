@@ -25,6 +25,7 @@ class EditorCaretMotion(private val editor: CodeEditor) {
     private var movement: ValueAnimator? = null
     private var blinking: ValueAnimator? = null
     private var opacity = 1f
+    private var typedMove = false
     private val beginBlink = Runnable {
         if (eligible() && enabled && blink && !composing()) {
             blinking = ValueAnimator.ofFloat(0f, 1f).apply {
@@ -57,7 +58,7 @@ class EditorCaretMotion(private val editor: CodeEditor) {
         editor.removeCallbacks(beginBlink); blinking?.cancel(); blinking = null; opacity = 1f
     }
     fun reset() {
-        snap = true; movement?.cancel(); movement = null; stopBlink()
+        snap = true; typedMove = false; movement?.cancel(); movement = null; stopBlink()
         target?.let { current = RectF(it) }; redraw()
         if (eligible() && enabled && blink && !composing()) editor.postDelayed(beginBlink, 600)
     }
@@ -67,7 +68,12 @@ class EditorCaretMotion(private val editor: CodeEditor) {
         if (eligible() && enabled && blink && !composing()) editor.postDelayed(beginBlink, 600)
         redraw()
     }
-    fun textChanged() { reset() }
+    fun textChanged(start: Int, before: Int, count: Int) {
+        if (!enabled || !move || composing() || before > 2 || count > 2 || abs(start - editor.selectionStart) > maxOf(before, count) + 1 || current == null) { typedMove = false; reset(); return }
+        // Text and selection are already committed by EditText. Only retain the previous drawn caret.
+        typedMove = true; snap = false; stopBlink(); redraw()
+        if (eligible() && blink) editor.postDelayed(beginBlink, 600)
+    }
     fun stop() {
         movement?.cancel(); movement = null; stopBlink(); snap = true
         if (lastDrawn != null) { redraw(); lastDrawn = null }
@@ -105,14 +111,14 @@ class EditorCaretMotion(private val editor: CodeEditor) {
             if (!snap && enabled && move && shortMove && !composing()) {
                 val from = RectF(previous!!)
                 movement = ValueAnimator.ofFloat(0f, 1f).apply {
-                    duration = 80; interpolator = DecelerateInterpolator()
+                    duration = if (typedMove) 60 else 80; interpolator = DecelerateInterpolator()
                     addUpdateListener { val t = it.animatedValue as Float
                         current = RectF(from.left + (next.left - from.left) * t, from.top + (next.top - from.top) * t,
                             from.right + (next.right - from.right) * t, from.bottom + (next.bottom - from.bottom) * t); redraw() }
                     start()
                 }
             } else current = RectF(next)
-            snap = false
+            snap = false; typedMove = false
         }
         val caret = current ?: next
         val checkpoint = canvas.save()
