@@ -249,4 +249,76 @@ class CompletionInteractionTest {
         key(KeyEvent.KEYCODE_TAB);assertEquals("private",editor.text.toString())
     }
 
+    private fun viewTree(view:View):List<View> = listOf(view)+if(view is android.view.ViewGroup)
+        (0 until view.childCount).flatMap{viewTree(view.getChildAt(it))} else emptyList()
+    private fun openTouchZoomMenu():Pair<android.widget.PopupMenu,android.widget.PopupWindow> {
+        viewTree(main.findViewById(android.R.id.content)).single{it.contentDescription=="编辑操作"}.performClick()
+        val menu=ReflectionHelpers.getField<android.widget.PopupMenu>(main,"commandMenu")
+        return menu to ReflectionHelpers.getField(menu,"window")
+    }
+    private fun touchZoom(label:String) {
+        val (menu,window)=openTouchZoomMenu()
+        val entry=viewTree(window.contentView).singleOrNull{it.contentDescription?.toString()?.startsWith("代码字号")==true}
+        assertNotNull("One hidden font-size entry should exist in the actual editor overflow",entry)
+        assertTrue(entry!!.isEnabled);entry.performClick();shadowOf(Looper.getMainLooper()).idle();menu.dismiss()
+        val dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+        assertTrue(dialog.isShowing)
+        val decor=dialog.window!!.decorView
+        decor.measure(View.MeasureSpec.makeMeasureSpec(main.resources.displayMetrics.widthPixels,View.MeasureSpec.AT_MOST),
+            View.MeasureSpec.makeMeasureSpec(main.resources.displayMetrics.heightPixels,View.MeasureSpec.AT_MOST))
+        decor.layout(0,0,decor.measuredWidth,decor.measuredHeight)
+        val button=viewTree(decor).single{it.contentDescription==label}
+        assertTrue("Font button should be enabled away from its boundary",button.isEnabled)
+        assertTrue("Actual native touch target must be at least 48dp",button.height>=com.codepocket.ide.ui.IdeControls.dp(main,48))
+        button.performClick();shadowOf(Looper.getMainLooper()).idle()
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();shadowOf(Looper.getMainLooper()).idle()
+    }
+    @Test fun phoneHiddenMenuZoomsCodeAndPreservesNativeHistoryAndSelection() {
+        editor.setText("abc");editor.setSelection(3)
+        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("d",1)
+        val original=ReflectionHelpers.getField<AppSettings>(main,"settings")
+        val port=ReflectionHelpers.getField<com.codepocket.ide.editor.DocumentEditorPort>(main,"editorPort")
+        val source=port.snapshot()!!.buffer
+        val registry=ReflectionHelpers.getField<com.codepocket.ide.terminal.shell.ShellSessionRegistry>(main,"terminalRegistry")
+        val sessions=registry.catalog.entries().map{it.id to it.value.runtime}
+        // No extra always-visible zoom buttons: the entry is behind the real editor overflow.
+        assertFalse(viewTree(main.findViewById(android.R.id.content)).any{it.contentDescription?.toString()?.startsWith("代码字号")==true})
+        touchZoom("放大代码")
+        assertEquals(original.fontSize+1,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+        assertEquals(source,port.snapshot()!!.buffer);assertSame(editor,ReflectionHelpers.getField<CodeEditor>(main,"editor"))
+        assertEquals(sessions,registry.catalog.entries().map{it.id to it.value.runtime})
+        val saved=AppSettings.fromJson(main.getSharedPreferences("codepocket_v2",0).getString("settings",null))
+        assertEquals(original.fontSize+1,saved.fontSize)
+        touchZoom("缩小代码");assertEquals(original.fontSize,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+        assertTrue(editor.onTextContextMenuItem(android.R.id.undo));assertEquals("abc",editor.text.toString())
+    }
+    @Test @Config(qualifiers="w1000dp-h800dp") fun tabletHiddenZoomRetainsInputFocusAndRespectsComposition() {
+        val method=main.javaClass.declaredMethods.single{it.name=="switchFile"}
+        method.isAccessible=true;method.invoke(main,"main.cpp",null)
+        WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS);shadowOf(Looper.getMainLooper()).idle()
+        editor=ReflectionHelpers.getField(main,"editor")
+        ReflectionHelpers.setField(main,"presetInputExpanded",true)
+        ReflectionHelpers.setField(main,"panelVisible",true)
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"applyPanelLayout")
+        val original=ReflectionHelpers.getField<AppSettings>(main,"settings")
+        val text=editor.text.toString()
+        val input=ReflectionHelpers.getField<android.widget.EditText>(main,"input")
+        input.visibility=View.VISIBLE;assertTrue(input.requestFocus())
+        touchZoom("放大代码")
+        assertEquals(original.fontSize+1,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+        assertTrue(input.hasFocus());assertEquals(text,editor.text.toString())
+        assertEquals(original.terminalFontSize,ReflectionHelpers.getField<AppSettings>(main,"settings").terminalFontSize)
+        val connection=input.onCreateInputConnection(android.view.inputmethod.EditorInfo())
+        connection.setComposingText("拼",1)
+        val inputText=input.text.toString();val start=BaseInputConnection.getComposingSpanStart(input.text)
+        val (menu,window)=openTouchZoomMenu()
+        try {
+            val row=viewTree(window.contentView).single{it.contentDescription?.toString()?.startsWith("代码字号")==true}
+            assertFalse(row.isEnabled)
+            row.performClick();shadowOf(Looper.getMainLooper()).idle()
+            assertEquals(original.fontSize+1,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
+            assertEquals(inputText,input.text.toString());assertEquals(start,BaseInputConnection.getComposingSpanStart(input.text))
+        }finally{menu.dismiss();connection.finishComposingText()}
+    }
+
 }

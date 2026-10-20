@@ -717,6 +717,7 @@ class MainActivity : Activity() {
             IdeCommand.RECOVER -> recoverDrafts()
             IdeCommand.REPLACE -> showSearch(true)
             IdeCommand.GOTO_LINE -> showGoToLine()
+            IdeCommand.FONT_SIZE -> showCodeFontSize()
             IdeCommand.UNDO, IdeCommand.REDO -> {
                 clearSnippet(); hideCompletion()
                 val action = if (command == IdeCommand.UNDO) HistoryAction.UNDO else HistoryAction.REDO
@@ -2068,9 +2069,31 @@ class MainActivity : Activity() {
         else { applyEditorPreferences(); restoreSession(); status.text = "设置已保存"; onApplied(true) }
     }
 
+    private fun showCodeFontSize() {
+        hideCompletion(true)
+        val controls = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(16), dp(8), dp(16), dp(8)) }
+        val value = label(getString(R.string.editor_font_value, settings.fontSize), 18f, textForeground).apply { gravity = Gravity.CENTER }
+        val minus = IdeControls.key(this, palette, "A−", getString(R.string.editor_font_smaller)) {}
+        val plus = IdeControls.key(this, palette, "A+", getString(R.string.editor_font_larger)) {}
+        fun refresh() {
+            value.text = getString(R.string.editor_font_value, settings.fontSize)
+            minus.isEnabled = settings.fontSize > 10; plus.isEnabled = settings.fontSize < 28
+            listOf(minus, plus).forEach { it.alpha = if (it.isEnabled) 1f else .4f }
+        }
+        minus.setOnClickListener { zoomEditor(-1, requireEditorFocus = false); refresh() }
+        plus.setOnClickListener { zoomEditor(1, requireEditorFocus = false); refresh() }
+        controls.addView(minus, LinearLayout.LayoutParams(dp(56), dp(48)))
+        controls.addView(value, LinearLayout.LayoutParams(0, dp(48), 1f))
+        controls.addView(plus, LinearLayout.LayoutParams(dp(56), dp(48)))
+        toolDialog?.dismiss()
+        toolDialog = AlertDialog.Builder(this).setTitle(R.string.editor_font_title).setMessage(R.string.editor_font_touch_help)
+            .setView(controls).setPositiveButton("完成", null).showAnimated()
+        refresh()
+    }
+
     /** Change only font metrics: retain Editable, undo, document revision, focus and terminal sessions. */
-    private fun zoomEditor(delta: Int) {
-        if (workspaceBusy || loadedPath != activePath || !editor.hasFocus() ||
+    private fun zoomEditor(delta: Int, requireEditorFocus: Boolean = true) {
+        if (workspaceBusy || loadedPath != activePath || (requireEditorFocus && !editor.hasFocus()) ||
             BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
         val size = (settings.fontSize + delta).coerceIn(10, 28)
         if (size == settings.fontSize) { status.text = getString(R.string.editor_font_limit, size); return }
@@ -2082,7 +2105,7 @@ class MainActivity : Activity() {
         editor.textSize = size.toFloat(); numbers.textSize = size.toFloat()
         updateTabStops(); updateNumbers()
         // Layout is asynchronous; the existing cancellable pre-draw queue reveals the real caret.
-        editorPort?.revealCaret()
+        if (editor.hasFocus()) editorPort?.revealCaret()
         status.text = getString(R.string.editor_font_size, size)
     }
 

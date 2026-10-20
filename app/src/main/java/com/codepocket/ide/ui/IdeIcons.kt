@@ -95,6 +95,7 @@ class IdeIconDrawable(context: Context, private val icon: IdeIcon, color: Int, p
             }
         }
         fun forTitle(title:String):IdeIcon=when {
+            title.startsWith("代码字号")->IdeIcon.CASE
             title.contains("删除")||title.contains("结束")->IdeIcon.DELETE
             title.contains("新建文件夹")->IdeIcon.ADD_FOLDER
             title.contains("新建")->IdeIcon.ADD_FILE

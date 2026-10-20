@@ -14,7 +14,8 @@ enum class IdeCommand(val title: String, val editorOnly: Boolean = false) {
     PANEL("显示运行输出"), PANEL_SIZE("调整面板尺寸"), CLEAR_TERMINAL("清空输出显示"),
     MAXIMIZE_TERMINAL("最大化 / 还原面板"), CLOSE_TERMINAL("收起运行面板"),
     PRESET_INPUT("编辑预设输入"), CLEAR_INPUT("清空当前文件预设输入"), HIDE_KEYBOARD("收起虚拟键盘"),
-    THEME("切换深浅主题"), SETTINGS("设置"), SHORTCUTS("快捷键说明"), HELP("使用说明")
+    THEME("切换深浅主题"), SETTINGS("设置"), SHORTCUTS("快捷键说明"), HELP("使用说明"),
+    FONT_SIZE("代码字号  A±")
 }
 data class CommandContext(val busy: Boolean, val loaded: Boolean, val editorFocused: Boolean,
     val inputFocused: Boolean, val composing: Boolean, val running: Boolean, val saving: Boolean)
@@ -23,7 +24,7 @@ data class CommandContext(val busy: Boolean, val loaded: Boolean, val editorFocu
 object IdeCommands {
     val settingsMenuItems = listOf(IdeCommand.THEME, IdeCommand.SETTINGS, IdeCommand.SHORTCUTS, IdeCommand.HELP)
     val editorToolbarItems = listOf(IdeCommand.SAVE, IdeCommand.UNDO, IdeCommand.REDO, IdeCommand.FIND)
-    val editorMenuItems = listOf(IdeCommand.REPLACE, IdeCommand.GOTO_LINE, IdeCommand.COMPLETE,
+    val editorMenuItems = listOf(IdeCommand.FONT_SIZE, IdeCommand.REPLACE, IdeCommand.GOTO_LINE, IdeCommand.COMPLETE,
         IdeCommand.SIGNATURE, IdeCommand.SNIPPET, IdeCommand.HIDE_KEYBOARD)
     val explorerToolbarItems = listOf(IdeCommand.NEW_FILE, IdeCommand.NEW_FOLDER)
     val explorerMenuItems = listOf(IdeCommand.WORKSPACE, IdeCommand.IMPORT_COPY, IdeCommand.EXPORT,
@@ -46,6 +47,7 @@ object IdeCommands {
         if (state.busy) return false
         if (command in settingsMenuItems) return true
         if (!state.loaded) return false
+        if (command == IdeCommand.FONT_SIZE) return !state.composing
         if (command.editorOnly && (!state.editorFocused || state.composing)) return false
         if (command in setOf(IdeCommand.UNDO, IdeCommand.REDO) &&
             ((!state.editorFocused && !state.inputFocused) || state.composing)) return false
