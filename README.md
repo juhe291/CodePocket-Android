@@ -1,9 +1,13 @@
 # CodePocket · Android C++ / Python IDE
 
+**2026-10-21后续计划调整：优先整合进同一个CodePocket，交付一个主APK。** 直接将已验证的Sora、辅助与存储适配接入现有主工作台，贯通文件/多标签、设置/搜索/诊断及真实运行，再完成UI/动画收尾和主程序回归。editor-lab保留为内部测试工具；后续不继续扩展独立实验功能页或作为第二个产品交付。
+
+[完整后续计划与验收条件](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)。原P2/P3及全部既有需求保留，功能收尾后统一实机。本次只改计划，没有新功能或新APK；当前主包仍为原生编辑器基线。以下日期条目及实验包保留为历史实现/验证资料，不能视为主程序集成完成。
+
 **2026-10-21：Sora实验接通真实内部项目与SAF文件会话。** 临时草稿页“项目 / SAF”进入文件实验，可切文件、保存/Ctrl+S、恢复草稿并保留选区/视口；提供方失败、冲突或读取期间继续输入会阻止错误切换。原保存实现七份源码逐字节共享，默认IDE仍用原生编辑器，真实PTY/Python/Wandbox保持。
 
 - [当前主IDE APK](dist/CodePocket-editor-sora-documents-2026-10-21-debug.apk)（约21.63MiB，同旧签名）
-- [独立Sora文件实验APK](dist/CodePocket-Sora-documents-2026-10-21-lab-debug.apk)（约4.84MiB，独立应用；真实写回用户授权目录）
+- [历史内部Sora文件实验APK](dist/CodePocket-Sora-documents-2026-10-21-lab-debug.apk)（约4.84MiB，独立应用；真实写回用户授权目录）
 - [修改文件、真实验证与已知边界](docs/P1_SORA_DOCUMENTS_2026-10-21.md)
 
 主App539通过/1既有跳过，实验133/133（新增25）；Lint均0错、无新增警告，共享存储库0错0警告，两个APK已构建并核对实际内容。实验仍未接完整生产Port/默认迁移，当前辅助是词法/内置参考；设备IME、实体键鼠、手机/平板/卓易通与FPS按约定统一后置。

@@ -1,5 +1,7 @@
 # CodePocket Editor Lab
 
+> 2026-10-21计划调整：本模块冻结为内部回归工具，源码/旧测试/旧APK保留；不再扩展独立功能页或交付为第二个产品。后续直接将已验证实现接入主程序，按[主程序集成计划](../docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)执行。下文描述当前实验基线，当前仍未完成主程序集成；本次仅更新计划。
+
 独立安装的 Sora 适配实验，applicationId 为 `com.codepocket.ide.editorlab`。默认 CodePocket 继续使用原生编辑器；本实验不连接 Python、Wandbox 或 PTY，不是主 IDE 的替代安装包。
 
 ## 当前两个入口
@@ -9,7 +11,7 @@
 
 两个应用共享 workspace-core 的同一份工作区/SAF/草稿安全实现，七份原源码逐字节不变。实验自己的内部项目不属于主 IDE 私有项目；只能通过系统选择器授权访问外部目录，不申请广泛存储或网络权限。文件页为非导出 Activity。
 
-[最新实验APK](../dist/CodePocket-Sora-documents-2026-10-21-lab-debug.apk) · [本批文件清单、测试、边界](../docs/P1_SORA_DOCUMENTS_2026-10-21.md)。133项通过（原108保持，新25）；Lint0错误/6旧警告。真实 Sora/Android View、ContentResolver 和主机磁盘操作已运行；实际设备输入法、蓝牙键鼠、卓易通与FPS未验收。
+[历史内部实验APK](../dist/CodePocket-Sora-documents-2026-10-21-lab-debug.apk) · [本批文件清单、测试、边界](../docs/P1_SORA_DOCUMENTS_2026-10-21.md)。133项通过（原108保持，新25）；Lint0错误/6旧警告。真实 Sora/Android View、ContentResolver 和主机磁盘操作已运行；实际设备输入法、蓝牙键鼠、卓易通与FPS未验收。
 
 ## 构建与依赖
 
