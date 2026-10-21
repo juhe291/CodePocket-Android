@@ -1,5 +1,15 @@
 # CodePocket 当前交接状态
 
+## 最新：Sora真实项目与SAF文件会话（2026-10-21）
+
+- 新增workspace-core本地Android库：Workspace/WorkspaceIo/DocumentTree/SafGateway/DraftStore/DraftRecovery/EditorSessions七份源码逐字节移动，原包名与全部保存/路径保护保持；主程序和实验共享实现，各自应用私有目录仍独立。
+- 独立实验“项目 / SAF”进入真实文件页：内部项目、系统目录授权、切文件、保存/Ctrl+S/返回先保存、恢复检查点、稳定ID/选区/视口/最后活动路径。内容/身份/组合/窗口改变拒绝旧读取，保存期间的新输入保留草稿及正确新基线；补齐动态语法预算与语法资源释放。
+- App540项539通过/1旧跳过，原540状态保持；Sora133/133，原108保持、新25通过；Lint主0错11旧警告/实验0错6旧警告/库0错0警告，两个Debug构建及实际产物检查通过。源码资源44、打包Python39、Shell4、模板各7；终端146缓存非重跑。最终Gradle 42s。
+- [主包](../dist/CodePocket-editor-sora-documents-2026-10-21-debug.apk) · [Sora文件实验包](../dist/CodePocket-Sora-documents-2026-10-21-lab-debug.apk) · [完整报告/文件清单](P1_SORA_DOCUMENTS_2026-10-21.md)。862非目标文件、48旧APK、28Python/native归档和主包1889旧类保持；仅新增共享库空R类。第三方资产不变，第一方范围说明更新；测试库不打包。
+- 下一批接完整生产Port、工作台文件树/多标签/设置/搜索/诊断/运行联动，再评估默认迁移。文件实验仅列表，撤销历史不跨文件保存，文件页暂关闭光标动画；主IDE原功能保持。超20万字符直接输入保留屏幕文本但源文件/草稿拒绝，须缩减或复制。
+- 本轮真实Sora/完整Activity/原生主机图形、实际ContentResolver与磁盘IO通过；Robolectric未实现rename以test-only真实主机原子替换桥补足，不等同设备POSIX验收。IME/键鼠/卓易通/手机平板/FPS仍统一后置；P2/P3保留。Actions/主Manifest/插件及运行源码保持，无push/远端Actions。
+
+
 ## 最新：Sora共享补全、片段与参数参考（2026-10-21）
 
 - 新增纯Kotlin/JVM editor-assist，把现有词法/高亮、片段、字段、内置参数和TextChange搬入共享模块，默认IDE与Sora复用同一规则；保留包名/入口及AppSettings JSON v9。3份算法正文完全保持，另2份只解耦设置契约。

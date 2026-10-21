@@ -65,6 +65,7 @@ public final class EditorLabActivity extends Activity {
         title.setPadding(dp(12), dp(8), dp(12), dp(8)); root.addView(title);
         HorizontalScrollView scroll = new HorizontalScrollView(this);
         LinearLayout tools = new LinearLayout(this); scroll.addView(tools);
+        action(tools, "项目 / SAF", () -> startActivity(new android.content.Intent(this, DocumentLabActivity.class)));
         action(tools, "原生 / Sora", this::switchEditor);
         action(tools, "插入 ()", () -> insert("()"));
         action(tools, "缩进", () -> insert("    "));

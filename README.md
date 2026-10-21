@@ -1,5 +1,14 @@
 # CodePocket · Android C++ / Python IDE
 
+**2026-10-21：Sora实验接通真实内部项目与SAF文件会话。** 临时草稿页“项目 / SAF”进入文件实验，可切文件、保存/Ctrl+S、恢复草稿并保留选区/视口；提供方失败、冲突或读取期间继续输入会阻止错误切换。原保存实现七份源码逐字节共享，默认IDE仍用原生编辑器，真实PTY/Python/Wandbox保持。
+
+- [当前主IDE APK](dist/CodePocket-editor-sora-documents-2026-10-21-debug.apk)（约21.63MiB，同旧签名）
+- [独立Sora文件实验APK](dist/CodePocket-Sora-documents-2026-10-21-lab-debug.apk)（约4.84MiB，独立应用；真实写回用户授权目录）
+- [修改文件、真实验证与已知边界](docs/P1_SORA_DOCUMENTS_2026-10-21.md)
+
+主App539通过/1既有跳过，实验133/133（新增25）；Lint均0错、无新增警告，共享存储库0错0警告，两个APK已构建并核对实际内容。实验仍未接完整生产Port/默认迁移，当前辅助是词法/内置参考；设备IME、实体键鼠、手机/平板/卓易通与FPS按约定统一后置。
+
+
 **2026-10-21：Sora实验接入共享补全、片段和内置参数参考。** 主程序与实验复用现有规则；实验支持方向键/Tab、字段追踪、参数形式切换及真实光标窗口定位，修复布局未就绪时显式请求丢失。默认IDE继续使用原生编辑器，设置JSON和原运行/保存保持。
 
 - [下载当前主程序APK](dist/CodePocket-editor-sora-assistance-2026-10-21-debug.apk)（约21.63MiB，同旧签名）
@@ -173,9 +182,10 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 
 | 模块 | 职责 |
 | --- | --- |
+| workspace-core（本地Android库） | 原有Workspace/SAF/会话/草稿存储，七份源码原样共享；两个App私有目录仍独立 |
 | editor-surface（本地Java库） | View/文本无关的光标锚点、屏幕可用区域与弹窗放置规则，原生/Sora共用 |
 | editor-assist（本地Kotlin/JVM库） | 原有词法、高亮、片段/字段、内置参数及TextChange；无Android/保存/运行依赖，两编辑器共用 |
-| editor-lab（显式启用） | 独立Sora/原生比较，真实共享代码辅助与定位；不连接项目或运行器 |
+| editor-lab（显式启用） | 独立Sora/原生比较、共享辅助与定位、内部项目/SAF文件实验；不接运行器，未替换主IDE |
 | ui/MainToolbar / IdeCommandMenu / IdeCommands / WorkspaceLayoutPolicy | 实测宽度的单排主栏、原生命令入口与焦点/状态策略 |
 | ui/EditorToolbar / InteractionState | 上下文编辑入口、返回/状态/只清显示规则 |
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |

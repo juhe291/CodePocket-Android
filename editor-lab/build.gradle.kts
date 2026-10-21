@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":workspace-core"))
     implementation(project(":editor-surface"))
     implementation(project(":editor-assist"))
     implementation("io.github.rosemoe:editor:0.23.7")

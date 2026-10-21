@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application android:allowBackup="false" android:label="CodePocket Editor Lab"
         android:supportsRtl="true" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <activity android:name=".DocumentLabActivity" android:exported="false" android:resizeableActivity="true" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".EditorLabActivity" android:exported="true"
             android:resizeableActivity="true" android:windowSoftInputMode="adjustResize">
             <intent-filter>

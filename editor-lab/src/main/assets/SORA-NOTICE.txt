@@ -11,7 +11,8 @@ Kotlin stdlib 2.1.21: Apache License 2.0; JetBrains annotations 13.0: Apache Lic
 Embedded dependency license resources are retained. This experiment does not decide CodePocket's own license.
 
 临时草稿不读写 CodePocket 的项目、SAF、运行器或设置。切换组件只传递文本与归一化选区，组件间撤销历史不迁移；旋转保留文本，进程结束后草稿清空。
-当前Sora实验已接编辑事务、光标定位与TextMate C++/Python语法；默认IDE仍用原生编辑器，尚未接完整生产EditorPort、语义补全或运行后端。触屏/键鼠/IME/卓易通/FPS 仍待统一设备验收。
+“项目 / SAF”打开独立文件实验：内部示例位于本实验应用私有目录，系统选择器授权后可读写所选真实目录。它复用原IDE的Workspace/SAF/草稿保护；退出检查保存，旋转与磁盘草稿恢复，和临时草稿的行为分别标明。实验应用不直接访问主IDE的私有项目，不连接运行器。
+当前Sora实验已接编辑事务、光标定位、TextMate C++/Python语法、共享词法候选/片段/内置参数参考，以及独立项目/SAF文件会话；默认IDE仍用原生编辑器，尚未接完整生产EditorPort、语义补全或运行后端。触屏/键鼠/IME/卓易通/FPS 仍待统一设备验收。
 
 
 TextMate syntax experiment (not semantic completion):

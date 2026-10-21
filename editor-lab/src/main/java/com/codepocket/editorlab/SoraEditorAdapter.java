@@ -102,6 +102,14 @@ final class SoraEditorAdapter implements EditorSurface, AutoCloseable {
         return buffer.viewport(editor.getOffsetX(), editor.getOffsetY(), interaction, editor.hasComposingText(),
             editor.isAttachedToWindow() && editor.isShown() && editor.getWidth() > 0 && editor.getHeight() > 0 && editor.getLayout() != null && !layoutBusy());
     }
+    /** Restore a loaded file's saved coordinates, guarded by the new real Content identity. */
+    boolean restoreViewport(int x, int y) {
+        if (!available()) return false;
+        SoraBuffer.Viewport source = buffer.viewport(Math.max(0, x), Math.max(0, y), interaction,
+            editor.hasComposingText(), false);
+        return restoreViewport(source);
+    }
+
     boolean restoreViewport(SoraBuffer.Viewport source) {
         if (source == null || !source.matches(viewport(), false)) return false;
         cancelNavigation(); return navigation.submit(source, false);

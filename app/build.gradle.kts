@@ -45,6 +45,7 @@ chaquopy {
 }
 
 dependencies {
+    implementation(project(":workspace-core"))
     implementation(project(":editor-surface"))
     implementation(project(":editor-assist"))
     implementation(project(":terminal-view"))

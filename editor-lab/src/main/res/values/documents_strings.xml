@@ -1,0 +1,19 @@
+<resources>
+    <string name="documents_initial">Sora 文件会话实验 · 正在载入</string>
+    <string name="documents_files">文件</string>
+    <string name="documents_save">保存</string>
+    <string name="documents_tree">授权目录</string>
+    <string name="documents_internal">内部项目</string>
+    <string name="documents_undo">撤销</string>
+    <string name="documents_redo">重做</string>
+    <string name="documents_completion">补全</string>
+    <string name="documents_loading">文件操作进行中，请稍候</string>
+    <string name="documents_composing">请先完成输入法组合输入</string>
+    <string name="documents_picker_unavailable">系统未提供文件夹选择器；当前文件和草稿已保留</string>
+    <string name="documents_no_grant">未取得读取授权，已保留当前项目</string>
+    <string name="documents_temporary_grant">提供方仅允许本次访问；再次打开需重新授权</string>
+    <string name="documents_modified">%1$s · 已编辑（保存前会检查外部冲突）</string>
+    <string name="documents_path">文件 · %1$s</string>
+    <string name="documents_title">%1$s\n%2$s · Sora 文件会话实验</string>
+    <string name="documents_status">%1$s\n%2$s</string>
+</resources>
