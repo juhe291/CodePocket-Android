@@ -15,6 +15,10 @@ final class SoraBuffer implements AutoCloseable {
         final String key, text;
         final long revision;
         final int start, end;
+        boolean matches(Snapshot other) {
+            return other != null && owner == other.owner && !owner.closed && revision == other.revision &&
+                start == other.start && end == other.end && text.equals(other.text);
+        }
         private Snapshot(SoraBuffer owner) {
             this.owner = owner; key = owner.key; revision = owner.revision(); text = owner.content.toString();
             start = owner.content.getCursor().getLeft(); end = owner.content.getCursor().getRight();
@@ -73,13 +77,15 @@ final class SoraBuffer implements AutoCloseable {
     static final class Viewport {
         private final SoraBuffer owner;
         final long revision, interaction;
-        final int start, end, x, y;
+        final int start, end, x, y, length;
         final boolean composing, visible;
         private Viewport(SoraBuffer owner, int x, int y, long interaction, boolean composing, boolean visible) {
             this.owner = owner; revision = owner.revision(); this.interaction = interaction;
             start = owner.content.getCursor().getLeft(); end = owner.content.getCursor().getRight();
-            this.x = x; this.y = y; this.composing = composing; this.visible = visible;
+            this.x = x; this.y = y; this.length = owner.content.length(); this.composing = composing; this.visible = visible;
         }
+        boolean sameOwner(Viewport other) { return other != null && owner == other.owner && !owner.closed; }
+        String document() { return owner.key; }
         boolean matches(Viewport current, boolean requireVisible) {
             return current != null && owner == current.owner && !owner.closed && !composing && !current.composing &&
                 (!requireVisible || current.visible) && revision == current.revision &&

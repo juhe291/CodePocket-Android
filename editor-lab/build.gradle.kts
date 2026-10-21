@@ -13,6 +13,14 @@ android {
         versionName = "0.1-experiment"
     }
     sourceSets.getByName("test").resources.srcDir("src/main/assets")
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            providers.gradleProperty("codepocket.testRepository").orNull?.let { repository ->
+                it.systemProperty("robolectric.dependency.repo.url", repository)
+            }
+        }
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
@@ -22,8 +30,10 @@ android {
 
 dependencies {
     implementation(project(":editor-surface"))
+    implementation(project(":editor-assist"))
     implementation("io.github.rosemoe:editor:0.23.7")
     implementation("io.github.rosemoe:language-textmate:0.23.7")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.14.1")
 }

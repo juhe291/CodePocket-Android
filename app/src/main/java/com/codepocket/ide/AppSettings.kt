@@ -13,8 +13,8 @@ data class AppSettings(
     val fontSize: Int = 14,
     val terminalFontSize: Int = 12,
     val terminalTheme: TerminalTheme = TerminalTheme.FOLLOW_UI,
-    val tabWidth: Int = 4,
-    val useSpaces: Boolean = true,
+    override val tabWidth: Int = 4,
+    override val useSpaces: Boolean = true,
     val lineNumbers: Boolean = true,
     val wordWrap: Boolean = false,
     val autoIndent: Boolean = true,
@@ -27,12 +27,12 @@ data class AppSettings(
     val animations: Boolean = true,
     val cursorMovement: Boolean = true,
     val cursorBlink: Boolean = true,
-    val completionTab: Boolean = true,
-    val completionEnter: Boolean = false,
-    val completionArrows: CompletionArrows = CompletionArrows.WHEN_VISIBLE,
+    override val completionTab: Boolean = true,
+    override val completionEnter: Boolean = false,
+    override val completionArrows: CompletionArrows = CompletionArrows.WHEN_VISIBLE,
     val signatureHelp: Boolean = true,
     val panelPreferSide: Boolean = false  // P1-B: Bottom-first strategy
-) {
+) : AssistOptionsContract {
     fun normalized() = copy(fontSize = fontSize.coerceIn(10, 28), terminalFontSize = terminalFontSize.coerceIn(10, 24),
         tabWidth = tabWidth.takeIf { it in listOf(2, 4, 8) } ?: 4, autoSaveDelayMs = autoSaveDelayMs.coerceIn(300, 10000))
     fun isDark(systemDark: Boolean) = when (theme) { UiTheme.DARK -> true; UiTheme.LIGHT -> false; UiTheme.SYSTEM -> systemDark }

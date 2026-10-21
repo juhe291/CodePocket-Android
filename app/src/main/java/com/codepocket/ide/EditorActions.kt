@@ -1,7 +1,5 @@
 package com.codepocket.ide
 
-data class TextChange(val start: Int, val end: Int, val text: String, val selectionStart: Int, val selectionEnd: Int = selectionStart)
-
 /** Editing rules independent of Android input methods, so they can be regression tested. */
 object EditorActions {
     fun indent(code: String, anchor: Int, caret: Int, reverse: Boolean, tabWidth: Int = 4, useSpaces: Boolean = true): TextChange {

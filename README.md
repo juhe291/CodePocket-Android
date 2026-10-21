@@ -1,5 +1,14 @@
 # CodePocket · Android C++ / Python IDE
 
+**2026-10-21：Sora实验接入共享补全、片段和内置参数参考。** 主程序与实验复用现有规则；实验支持方向键/Tab、字段追踪、参数形式切换及真实光标窗口定位，修复布局未就绪时显式请求丢失。默认IDE继续使用原生编辑器，设置JSON和原运行/保存保持。
+
+- [下载当前主程序APK](dist/CodePocket-editor-sora-assistance-2026-10-21-debug.apk)（约21.63MiB，同旧签名）
+- [Sora代码辅助实验APK](dist/CodePocket-Sora-assistance-2026-10-21-lab-debug.apk)（约4.78MiB，仅临时草稿，不接项目/运行）
+- [本批修改、测试与已知边界](docs/P1_SORA_ASSISTANCE_2026-10-21.md)
+
+主App539通过/1旧跳过，实验108通过，包含6项真实Sora View/InputConnection主机回归；Lint均0错误、无新增警告，两个APK已构建检查。当前是词法/模板/内置参考，深度语义与完整项目会话尚未完成；手机/平板/卓易通和实际输入法/键鼠/FPS仍统一后置。
+
+
 **2026-10-21：继续P1-C成熟编辑器适配，完成Sora导航首批。** 独立实验增加跳转行、换行重排保护和可取消视口恢复；日常IDE保持原生编辑器，复用导航保护，现有终端/Tab候选/触屏字号保留。
 
 - [下载当前主IDE APK](dist/CodePocket-editor-sora-navigation-2026-10-21-debug.apk)（约21.96MiB，同旧签名）
@@ -165,7 +174,8 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 | 模块 | 职责 |
 | --- | --- |
 | editor-surface（本地Java库） | View/文本无关的光标锚点、屏幕可用区域与弹窗放置规则，原生/Sora共用 |
-| editor-lab（显式启用） | 同一工程的独立Sora/原生比较与共享定位探针；不连接项目或运行器 |
+| editor-assist（本地Kotlin/JVM库） | 原有词法、高亮、片段/字段、内置参数及TextChange；无Android/保存/运行依赖，两编辑器共用 |
+| editor-lab（显式启用） | 独立Sora/原生比较，真实共享代码辅助与定位；不连接项目或运行器 |
 | ui/MainToolbar / IdeCommandMenu / IdeCommands / WorkspaceLayoutPolicy | 实测宽度的单排主栏、原生命令入口与焦点/状态策略 |
 | ui/EditorToolbar / InteractionState | 上下文编辑入口、返回/状态/只清显示规则 |
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |

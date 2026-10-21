@@ -1,5 +1,14 @@
 # CodePocket 开发进度与接续顺序
 
+## 最新：Sora共享补全、片段与参数参考（2026-10-21）
+
+- 新增纯Kotlin/JVM editor-assist，把现有词法/高亮、片段、字段、内置参数和TextChange搬入共享模块，默认IDE与Sora复用同一规则；保留包名/入口及AppSettings JSON v9。3份算法正文完全保持，另2份只解耦设置契约。
+- Sora已接自动/主动候选、Tab/方向键、片段与真实字段追踪、内置参数窗口和形式切换；后台单线程/1等待任务、4.5万预算、版本/身份/组合/生命周期保护。修复异步布局中显式请求过早丢弃。仍是词法/内置参考，非语义，默认IDE仍原生。
+- App540项539通过/1旧跳过；Sora108/108，新30项全过（4共享、20核心、6真实View/InputConnection原生窗口）。原536/82项保持；Lint0错/主11旧警告/实验6旧警告，两个Debug APK及打包Python39/源码资源44/Shell4/模板各7通过；终端146缓存非重跑。
+- [主包](../dist/CodePocket-editor-sora-assistance-2026-10-21-debug.apk) · [独立Sora实验包](../dist/CodePocket-Sora-assistance-2026-10-21-lab-debug.apk) · [完整报告/文件清单](P1_SORA_ASSISTANCE_2026-10-21.md)。851非目标文件、46旧APK、28Python/native归档、原主包1887类保持。主包仍无Sora，测试库不打包。
+- 下一批接项目/SAF会话与完整生产Port，再评估默认迁移。主机已运行Sora真实View/native graphics，设备IME/蓝牙键鼠/手机平板/卓易通/FPS仍未验收，继续统一后置；原P2/P3保留。Actions/Manifest/插件版本/保存与运行源码保持，无push/远端Actions。
+
+
 ## 最新：Sora导航适配首批（2026-10-21）
 
 - 按现有P1-C接续：真实Sora选区/严格跳转行、轻量视口快照及布局后恢复；实际缓冲身份/版本/组合/交互保护，输入/切文档/生命周期取消。默认IDE仍为原生编辑器，复用同一个导航队列，未整体迁移。

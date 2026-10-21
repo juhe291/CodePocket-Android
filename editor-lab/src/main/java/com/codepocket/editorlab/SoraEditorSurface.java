@@ -18,7 +18,7 @@ final class SoraEditorSurface implements EditorSurface {
 
     @Override public Anchor anchor() {
         if (!editor.isAttachedToWindow() || !editor.isShown() || !editor.hasFocus() || editor.getWidth() <= 0 ||
-            editor.getHeight() <= 0 || editor.hasComposingText() || editor.getCursor().isSelected() || editor.getLayout() == null) return null;
+            editor.getHeight() <= 0 || (editor.getEditable() && !editor.isEditable()) || editor.hasComposingText() || editor.getCursor().isSelected() || editor.getLayout() == null) return null;
         Rect clip = new Rect();
         if (!editor.getGlobalVisibleRect(clip)) return null;
         int[] root = new int[2], origin = new int[2];

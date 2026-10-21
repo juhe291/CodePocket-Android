@@ -12,9 +12,9 @@ data class CompletionEdit(val change: TextChange, val snippet: SnippetExpansion?
 data class CompletionRequest(val document: String, val revision: Long, val code: String, val caret: Int, val end: Int, val cpp: Boolean)
 data class CompletionBatch(val request: CompletionRequest, val start: Int, val end: Int, val items: List<CompletionItem>) {
     fun edit(current: CompletionRequest, index: Int, maxChars: Int = 200000): TextChange? =
-        insertion(current, index, AppSettings(), maxChars)?.change
+        insertion(current, index, AssistOptions(), maxChars)?.change
 
-    fun insertion(current: CompletionRequest, index: Int, settings: AppSettings, maxChars: Int = 200000): CompletionEdit? {
+    fun insertion(current: CompletionRequest, index: Int, settings: AssistOptionsContract, maxChars: Int = 200000): CompletionEdit? {
         if (request != current || current.caret != current.end) return null
         val item = items.getOrNull(index) ?: return null
         if (item.snippetId != null) {
@@ -88,7 +88,7 @@ object LexicalCompletion {
 enum class CompletionKey { TAB, ENTER, UP, DOWN, ESC, OTHER }
 enum class CompletionAction { PASS, ACCEPT, PREVIOUS, NEXT, DISMISS }
 object CompletionKeys {
-    fun action(key: CompletionKey, settings: AppSettings, visible: Boolean, explicitRequest: Boolean,
+    fun action(key: CompletionKey, settings: AssistOptionsContract, visible: Boolean, explicitRequest: Boolean,
         explicitSelection: Boolean, composing: Boolean, selectedText: Boolean, modified: Boolean, softKeyboard: Boolean = false): CompletionAction {
         if (!visible || composing || selectedText || modified || softKeyboard) return CompletionAction.PASS
         val arrows = settings.completionArrows == CompletionArrows.WHEN_VISIBLE ||

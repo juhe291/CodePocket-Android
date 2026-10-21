@@ -51,13 +51,13 @@ object CodeSnippets {
         }
     }
 
-    fun expand(id: String, request: CompletionRequest, settings: AppSettings, maxChars: Int = 200000): SnippetExpansion? {
+    fun expand(id: String, request: CompletionRequest, settings: AssistOptionsContract, maxChars: Int = 200000): SnippetExpansion? {
         val descriptor = templates.firstOrNull { it.id == id && it.cpp == request.cpp } ?: return null
         val (start, end) = replacement(request) ?: return null
         val lineStart = if (start == 0) 0 else request.code.lastIndexOf('\n', start - 1) + 1
         val base = request.code.substring(lineStart, start)
-        val normalized = settings.normalized()
-        val unit = if (normalized.useSpaces) " ".repeat(normalized.tabWidth) else "\t"
+        val width = settings.tabWidth.takeIf { it in listOf(2, 4, 8) } ?: 4
+        val unit = if (settings.useSpaces) " ".repeat(width) else "\t"
         val builder = TemplateBuilder(base, unit, if (request.code.contains("\r\n")) "\r\n" else "\n")
         with(builder) {
             when (descriptor.id) {
