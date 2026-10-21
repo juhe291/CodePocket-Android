@@ -26,7 +26,6 @@ import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.SelectionChangeEvent;
 import io.github.rosemoe.sora.event.ScrollEvent;
 import com.codepocket.editor.surface.TextEdits;
-import io.github.rosemoe.sora.widget.CodeEditor;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -36,7 +35,7 @@ import java.util.concurrent.Executors;
 /** Opt-in, separately installed comparison. Does not accept files, URI grants or project text. */
 public final class EditorLabActivity extends Activity {
     private static final String SAMPLE = "# 临时测试草稿：中文 / 😀\nprint('hello')\n";
-    private CodeEditor sora;
+    private SoraInputEditor sora;
     private SurfaceProbe surfaceProbe;
     private SoraEditorAdapter soraAdapter;
     private SoraSyntaxController syntax;
@@ -50,10 +49,10 @@ public final class EditorLabActivity extends Activity {
     private boolean useSora = true, dark = true, animate = true, motionAllowed;
 
     private static final class Scratch {
-        final String text; final int start, end; final boolean sora, dark, animate; final SyntaxLanguage language;
-        Scratch(String text, int start, int end, boolean sora, boolean dark, boolean animate, SyntaxLanguage language) {
+        final String text; final int start, end; final boolean sora, dark, animate, wrap; final SyntaxLanguage language;
+        Scratch(String text, int start, int end, boolean sora, boolean dark, boolean animate, SyntaxLanguage language, boolean wrap) {
             this.text = text; this.start = start; this.end = end;
-            this.sora = sora; this.dark = dark; this.animate = animate; this.language = language;
+            this.sora = sora; this.dark = dark; this.animate = animate; this.language = language; this.wrap = wrap;
         }
     }
 
@@ -69,11 +68,17 @@ public final class EditorLabActivity extends Activity {
         action(tools, "插入 ()", () -> insert("()"));
         action(tools, "缩进", () -> insert("    "));
         action(tools, "撤销", () -> history(false)); action(tools, "重做", () -> history(true));
+        action(tools, "跳转行", this::jumpToLine);
+        action(tools, "自动换行", () -> {
+            if (!useSora || composing()) { message("请在Sora中完成组合输入后操作"); return; }
+            SoraBuffer.Viewport saved = soraAdapter.viewport();
+            sora.setWordwrap(!sora.isWordwrap()); soraAdapter.restoreViewport(saved);
+        });
         action(tools, "语法", this::chooseLanguage);
         action(tools, "深浅色", () -> { dark = !dark; appearance(); });
         action(tools, "光标动画", () -> { animate = !animate; appearance(); });
         action(tools, "重置", () -> new AlertDialog.Builder(this).setMessage("丢弃当前临时草稿？")
-            .setNegativeButton("取消", null).setPositiveButton("重置", (d, w) -> load(new Scratch(SAMPLE, 0, 0, useSora, dark, animate, syntaxLanguage))).show());
+            .setNegativeButton("取消", null).setPositiveButton("重置", (d, w) -> load(new Scratch(SAMPLE, 0, 0, useSora, dark, animate, syntaxLanguage, false))).show());
         action(tools, "光标定位", () -> {
             if (!useSora) { message(getString(R.string.surface_probe_sora)); return; }
             sora.requestFocus();
@@ -90,7 +95,7 @@ public final class EditorLabActivity extends Activity {
         nativeEditor.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         nativeEditor.setGravity(Gravity.TOP | Gravity.START); nativeEditor.setTypeface(Typeface.MONOSPACE);
         nativeEditor.setTextSize(15); nativeEditor.setHorizontallyScrolling(true); nativeEditor.setSaveEnabled(false);
-        sora = new CodeEditor(this); sora.setTypefaceText(Typeface.MONOSPACE); sora.setTextSize(15);
+        sora = new SoraInputEditor(this); sora.setTypefaceText(Typeface.MONOSPACE); sora.setTextSize(15);
         sora.setSaveEnabled(false); sora.setLineNumberEnabled(true);
         soraAdapter = new SoraEditorAdapter(sora);
         syntax = new SoraSyntaxController(sora, ignored -> updateStatus());
@@ -111,7 +116,7 @@ public final class EditorLabActivity extends Activity {
         sora.addOnLayoutChangeListener((view, l, t, r, b, oldL, oldT, oldR, oldB) -> surfaceProbe.reposition());
         setContentView(root);
         Scratch retained = (Scratch) getLastNonConfigurationInstance();
-        load(retained == null ? new Scratch(SAMPLE, 0, 0, true, true, true, SyntaxLanguage.PYTHON) : retained);
+        load(retained == null ? new Scratch(SAMPLE, 0, 0, true, true, true, SyntaxLanguage.PYTHON, false) : retained);
         var assets = getApplicationContext().getAssets();
         syntaxLoader.execute(() -> {
             try {
@@ -135,7 +140,7 @@ public final class EditorLabActivity extends Activity {
     private Scratch capture() {
         return new Scratch(useSora ? sora.getText().toString() : nativeEditor.getText().toString(),
             useSora ? sora.getCursor().getLeft() : nativeEditor.getSelectionStart(),
-            useSora ? sora.getCursor().getRight() : nativeEditor.getSelectionEnd(), useSora, dark, animate, syntaxLanguage);
+            useSora ? sora.getCursor().getRight() : nativeEditor.getSelectionEnd(), useSora, dark, animate, syntaxLanguage, sora.isWordwrap());
     }
     private boolean load(Scratch value) {
         if (composing()) { message("请先完成输入法组合输入"); return false; }
@@ -148,6 +153,7 @@ public final class EditorLabActivity extends Activity {
             int[] selection = TextEdits.restoreSelection(value.text, value.start, value.end);
             nativeEditor.setText(value.text); nativeEditor.setSelection(selection[0], selection[1]);
         }
+        sora.setWordwrap(value.wrap);
         documentGeneration++;
         useSora = value.sora; dark = value.dark; animate = value.animate; syntaxLanguage = value.language;
         sora.setVisibility(useSora ? View.VISIBLE : View.GONE);
@@ -158,7 +164,7 @@ public final class EditorLabActivity extends Activity {
     private void switchEditor() {
         if (composing()) { message("请先完成输入法组合输入"); return; }
         Scratch old = capture();
-        if (load(new Scratch(old.text, Math.min(old.start, old.end), Math.max(old.start, old.end), !useSora, dark, animate, syntaxLanguage)))
+        if (load(new Scratch(old.text, Math.min(old.start, old.end), Math.max(old.start, old.end), !useSora, dark, animate, syntaxLanguage, old.wrap)))
             message("已切换；文本与选区保留，撤销历史按组件重新开始");
     }
     private void insert(String text) {
@@ -181,6 +187,23 @@ public final class EditorLabActivity extends Activity {
         if (useSora) { if (!soraAdapter.history(soraAdapter.snapshot(), redo)) message("当前没有可执行的历史操作"); }
         else nativeEditor.onTextContextMenuItem(redo ? android.R.id.redo : android.R.id.undo);
         updateStatus();
+    }
+    private void jumpToLine() {
+        if (!useSora || composing()) { message("请在Sora中完成组合输入后操作"); return; }
+        SoraBuffer.Snapshot source = soraAdapter.snapshot();
+        EditText input = new EditText(this); input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setSingleLine(true); input.setHint("从1开始的真实行号");
+        input.setPadding(dp(16), dp(12), dp(16), dp(12));
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("跳转行 · Sora导航适配")
+            .setView(input).setNegativeButton("取消", null).setPositiveButton("跳转", null).create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            int line;
+            try { line = Integer.parseInt(input.getText().toString().trim()); }
+            catch (NumberFormatException error) { input.setError("请输入有效行号"); return; }
+            if (!soraAdapter.jumpToLine(source, line)) { input.setError("行号不存在、草稿已变化或正在组合输入"); return; }
+            dialog.dismiss();
+        }));
+        dialog.show();
     }
     private void chooseLanguage() {
         if (composing()) { message("请先完成输入法组合输入"); return; }
@@ -257,8 +280,9 @@ public final class EditorLabActivity extends Activity {
     @Override public void onWindowFocusChanged(boolean focused) {
         super.onWindowFocusChanged(focused); if (focused && sora != null) updateMotion();
         if (!focused && surfaceProbe != null) surfaceProbe.dismiss();
+        if (!focused && soraAdapter != null) soraAdapter.interactionChanged();
     }
-    @Override protected void onPause() { if (syntax != null) syntax.pause(); if (surfaceProbe != null) surfaceProbe.dismiss(); motionAllowed = false; if (sora != null) sora.setCursorAnimationEnabled(false); super.onPause(); }
+    @Override protected void onPause() { if (soraAdapter != null) soraAdapter.interactionChanged(); if (syntax != null) syntax.pause(); if (surfaceProbe != null) surfaceProbe.dismiss(); motionAllowed = false; if (sora != null) sora.setCursorAnimationEnabled(false); super.onPause(); }
     @Override protected void onDestroy() {
         syntaxLoader.shutdownNow();
         if (surfaceProbe != null) surfaceProbe.dismiss();

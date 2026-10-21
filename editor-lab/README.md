@@ -1,5 +1,12 @@
 # CodePocket Editor Lab
 
+## 2026-10-21 导航适配首批
+
+新增“跳转行”和“自动换行”：行号从1开始，非法或已过期输入保留并显示错误；重排通过真实Sora布局/滚动接口恢复视口。选区校验覆盖UTF-16/CRLF、版本、缓冲身份和组合输入；可取消的pre-draw队列与生产原生编辑器共用。换行选择随临时草稿旋转/切换交接，实验进程结束不保存。
+
+[下载本批实验APK](../dist/CodePocket-Sora-navigation-2026-10-21-lab-debug.apk) · [完整报告](../docs/P1_SORA_NAVIGATION_2026-10-21.md)。真实Sora核心回归82/82，Lint0错误/6旧警告，构建与APK检查通过。Android View/InputConnection和实际IME/折行/旋转/焦点/触屏键鼠/FPS仍未执行，不将主机核心测试当作设备结果；本实验仍不接项目、SAF、真实候选或运行，不代表默认IDE迁移。
+
+
 现有工程的可选Sora隔离原型，仅用临时草稿比较原生EditText与Sora基础编辑。默认IDE继续使用原生编辑器，独立应用ID为com.codepocket.ide.editorlab，不连接项目/SAF/运行器。
 
 构建：`./gradlew :editor-lab:testDebugUnitTest :editor-lab:lintDebug :editor-lab:assembleDebug -Pcodepocket.editorLab=true`。Windows使用gradlew.bat。未传开关时settings不包含本模块；正常App及原CI依赖图不变。

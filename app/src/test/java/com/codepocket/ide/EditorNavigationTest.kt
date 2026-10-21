@@ -167,4 +167,30 @@ class EditorNavigationTest {
         h.current = saved.copy(visible = true)
         h.drain(); assertEquals(listOf(saved to false), h.applied)
     }
+    @Test fun invalidLaterRequestDoesNotCancelAnAlreadyAcceptedRestore() {
+        val h = ViewportHarness()
+        assertTrue(h.queue.submit(h.current!!))
+        assertFalse(h.queue.submit(h.current!!.copy(x = -1)))
+        h.drain()
+        assertEquals(listOf(h.current!! to false), h.applied)
+    }
+
+    @Test fun reentrantRevealSurvivesAndAnOldCallbackCannotConsumeIt() {
+        val h = ViewportHarness()
+        val tasks = mutableListOf<() -> Unit>()
+        val committed = mutableListOf<Boolean>()
+        lateinit var queue: EditorViewportQueue
+        queue = EditorViewportQueue({ tasks.add(it) }, { h.current }) { source, reveal ->
+            committed.add(reveal)
+            if (!reveal) assertTrue(queue.submit(source, reveal = true))
+        }
+        assertTrue(queue.submit(h.current!!))
+        val first = tasks[0]
+        first(); first()
+        assertEquals(listOf(false), committed)
+        tasks[1](); first(); tasks[1]()
+        assertEquals(listOf(false, true), committed)
+        queue.close()
+    }
+
 }

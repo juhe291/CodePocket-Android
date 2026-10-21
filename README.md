@@ -1,6 +1,15 @@
 # CodePocket · Android C++ / Python IDE
 
-**新增手机隐藏字号入口：代码区底部⋮（编辑操作）→代码字号→A− / A+。** 显示当前字号、可连续调整并立即保存；与Ctrl加减共用字号，行号同步，终端字号保持。
+**2026-10-21：继续P1-C成熟编辑器适配，完成Sora导航首批。** 独立实验增加跳转行、换行重排保护和可取消视口恢复；日常IDE保持原生编辑器，复用导航保护，现有终端/Tab候选/触屏字号保留。
+
+- [下载当前主IDE APK](dist/CodePocket-editor-sora-navigation-2026-10-21-debug.apk)（约21.96MiB，同旧签名）
+- [独立Sora导航实验APK](dist/CodePocket-Sora-navigation-2026-10-21-lab-debug.apk)（约4.67MiB，仅临时草稿，不接项目或运行）
+- [本批修改、真实测试和未验证项](docs/P1_SORA_NAVIGATION_2026-10-21.md)
+
+主App535通过/1旧跳过，Sora实验82通过；Lint均0错误、无新增警告，两份APK构建/签名/归档检查通过。Sora候选/文件会话和默认迁移尚未完成，P2/P3保留；实机输入与帧率按约定后置。
+
+
+**此前：新增手机隐藏字号入口：代码区底部⋮（编辑操作）→代码字号→A− / A+。** 显示当前字号、可连续调整并立即保存；与Ctrl加减共用字号，行号同步，终端字号保持。
 
 - [下载触屏字号版APK](dist/CodePocket-touch-font-zoom-2026-10-20-debug.apk)（约21.96MiB，同原签名，可覆盖安装）
 - [修改与真实验证记录](docs/TOUCH_FONT_ZOOM_2026-10-20.md)

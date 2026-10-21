@@ -50,21 +50,14 @@ object EditorNavigation {
 class EditorViewportQueue(private val post: (() -> Unit) -> Unit,
     private val current: () -> EditorViewportSnapshot?,
     private val commit: (EditorViewportSnapshot, Boolean) -> Unit) : AutoCloseable {
-    private var generation = 0L
-    private var closed = false
+    private val requests = com.codepocket.editor.surface.ViewportRequests<EditorViewportSnapshot>(
+        { action -> post { action.run() } },
+        { source -> source.x >= 0 && source.y >= 0 },
+        { source, visible -> source.matches(current(), visible) },
+        { source, reveal -> commit(source, reveal) }
+    )
 
-    fun submit(source: EditorViewportSnapshot, reveal: Boolean = false): Boolean {
-        if (closed || source.x < 0 || source.y < 0 || !source.matches(current(), false)) return false
-        val ticket = ++generation
-        post {
-            if (!closed && ticket == generation) {
-                generation++ // Consume even a rejected callback; a native observer may be reattached.
-                if (source.matches(current(), true)) commit(source, reveal)
-            }
-        }
-        return true
-    }
-
-    fun cancel() { generation++ }
-    override fun close() { closed = true; cancel() }
+    fun submit(source: EditorViewportSnapshot, reveal: Boolean = false): Boolean = requests.submit(source, reveal)
+    fun cancel() = requests.cancel()
+    override fun close() = requests.close()
 }
