@@ -1039,6 +1039,7 @@ class MainActivity : Activity() {
         editorBody.addView(numbers, LinearLayout.LayoutParams(dp(42), -1))
         editorAnalysis?.close(); editorPort?.close()
         editor = WorkbenchEditor(this)
+        editor.setInputRejected { if (!isDestroyed) status.setText(R.string.editor_input_limit) }
         editorPort = SoraEditorPort(editor,
             { if (loadedPath != activePath || !::sessions.isInitialized) null
                 else sessions.key(activePath) to editRevision },

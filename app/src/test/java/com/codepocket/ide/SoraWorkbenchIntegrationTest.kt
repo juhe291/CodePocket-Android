@@ -263,19 +263,139 @@ class SoraWorkbenchIntegrationTest {
     @Test fun nativeOversizedPasteDoesNotOverwriteTheFileOrClaimAnUnwrittenRecoveryDraft() {
         loadText("print('safe')");key(KeyEvent.KEYCODE_S,KeyEvent.META_CTRL_ON);settleIo()
         val disk=workspace.resolve("main.py").readText();editor.setSelection(editor.length())
-        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("x".repeat(200001),1)
-        assertTrue(editor.length()>Workspace.MAX_CHARS)
-        key(KeyEvent.KEYCODE_S,KeyEvent.META_CTRL_ON);settleIo()
-        assertEquals(disk,workspace.resolve("main.py").readText());assertTrue(field("dirty"))
+        val before=port.snapshot()!!
+        assertFalse(editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("x".repeat(200001),1))
+        assertEquals(before,port.snapshot());assertEquals(disk,workspace.resolve("main.py").readText())
         val message=field<android.widget.TextView>("status").text.toString()
-        assertTrue(message,message.contains("本次恢复草稿未写入"));assertTrue(message,message.contains("20万"))
-        switch("main.cpp");assertEquals("main.py",field<String>("activePath"))
-        val dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
-        assertNotNull(dialog)
-        val detail=dialog.findViewById<android.widget.TextView>(android.R.id.message).text.toString()
-        assertTrue(detail,detail.contains("20万"));assertTrue(detail,detail.contains("已阻止切换"))
-        dialog.dismiss();editor.requestFocus()
-        assertTrue(editor.history(false));assertEquals(disk,editor.text.toString())
+        assertTrue(message,message.contains("20万"));assertTrue(message,message.contains("本次输入未写入"))
+        switch("main.cpp");assertEquals("main.cpp",field<String>("activePath"))
+    }
+
+
+    private fun native(name:String,vararg parameters:Pair<Class<*>,Any?>):Any? =
+        Class.forName("io.github.rosemoe.sora.widget.CodeEditor").getMethod(name,*parameters.map{it.first}.toTypedArray())
+            .invoke(editor.inputView(),*parameters.map{it.second}.toTypedArray())
+    private fun composingLimitContract() {
+        loadText("x".repeat(199999));editor.setSelection(editor.length())
+        val ic=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
+        assertTrue(ic.setComposingText("中",1));assertTrue(editor.isComposing);assertEquals(200000,editor.length())
+        val source=editor.text.toString();val selection=editor.selectionStart
+        assertFalse(ic.setComposingText("中文",1));assertEquals(source,editor.text.toString());assertEquals(selection,editor.selectionStart)
+        assertTrue(editor.isComposing);assertTrue(ic.commitText("文",1))
+        assertEquals("x".repeat(199999)+"文",editor.text.toString());assertFalse(editor.isComposing)
+    }
+    @Test fun composingReplacementAtLimitKeepsTheActualPreeditAndThenCommits() = composingLimitContract()
+    @Test @Config(sdk=[28]) fun olderAndroidComposingRangeUsesTheSamePublicContract() = composingLimitContract()
+    @Test fun exactlyAtLimitRejectsFurtherTypingButAllowsSelectionReplacementAndDeletion() {
+        loadText("x".repeat(199999));editor.setSelection(editor.length())
+        val ic=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
+        assertTrue(ic.commitText("y",1));assertEquals(200000,editor.length())
+        val frame=port.snapshot()!!;assertFalse(ic.commitText("z",1));assertEquals(frame,port.snapshot())
+        assertTrue(ic.setSelection(199998,200000));assertTrue(ic.commitText("文",1));assertEquals(199999,editor.length())
+        assertTrue(ic.deleteSurroundingText(1,0));assertEquals(199998,editor.length())
+    }
+    @Test fun emojiPasteIsRejectedAsAWholeAndNativeClipboardAndAccessibilityAreBounded() {
+        loadText("x".repeat(199999));editor.setSelection(editor.length());val before=port.snapshot()!!
+        val ic=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo());assertFalse(ic.commitText("😀",1));assertEquals(before,port.snapshot())
+        val clipboard=main.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        clipboard.setPrimaryClip(android.content.ClipData.newPlainText("test","ab"))
+        ic.performContextMenuAction(android.R.id.paste);assertEquals(before,port.snapshot());assertEquals("ab",clipboard.primaryClip!!.getItemAt(0).text.toString())
+        val args=android.os.Bundle().apply{putCharSequence(android.view.accessibility.AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,"x".repeat(200001))}
+        assertFalse(editor.inputView().performAccessibilityAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_SET_TEXT,args))
+        assertEquals(before,port.snapshot())
+    }
+    @Test fun nativeIndentDuplicateAndInsertionDoNotPartiallyChangeAnOverBudgetOperation() {
+        loadText("x".repeat(199998)+"\ny");editor.setSelection(0,editor.length());val before=port.snapshot()!!
+        native("indentLines",Boolean::class.javaPrimitiveType!! to false);assertEquals(before,port.snapshot())
+        native("duplicateSelection",String::class.java to "",Boolean::class.javaPrimitiveType!! to true);assertEquals(before,port.snapshot())
+        native("insertText",String::class.java to "x".repeat(200001),Int::class.javaPrimitiveType!! to 0);assertEquals(before,port.snapshot())
+        loadText("\t\t "+"x".repeat(199997));editor.setSelection(0,editor.length());val mixed=port.snapshot()!!
+        native("unindentSelection");assertEquals(mixed,port.snapshot())
+    }
+    @Test fun generationAwareInputConnectionCannotEditTheNextDocumentOrEndItsBatch() {
+        loadText("old");val old=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo());old.beginBatchEdit()
+        switch("main.cpp");editor.requestFocus();awaitEditor();val current=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
+        val before=port.snapshot()!!
+        assertFalse(old.commitText("late",1));assertFalse(old.setComposingText("旧",1));assertFalse(old.deleteSurroundingText(1,0))
+        assertFalse(old.setSelection(0,0));assertFalse(old.endBatchEdit());old.closeConnection();assertEquals(before,port.snapshot())
+        assertTrue(current.commitText("a",1))
+        val newer=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo());assertFalse(current.commitText("old connection",1));assertTrue(newer.commitText("b",1))
+        val text=editor.text.toString();port.close();assertFalse(newer.commitText("destroyed",1));assertEquals(text,editor.text.toString())
+    }
+    @Test @Config(qualifiers="w1000dp-h800dp") fun tabletAutomaticExtrasAtTheBoundaryKeepRawTextAndGlobalSettings() {
+        loadText("x".repeat(199999));editor.setSelection(editor.length());awaitEditor()
+        val settings=field<AppSettings>("settings")
+        native("commitText",CharSequence::class.java to "(",Boolean::class.javaPrimitiveType!! to true,Boolean::class.javaPrimitiveType!! to true)
+        assertEquals(200000,editor.length());assertEquals('(',editor.text.last());assertEquals(settings,field<AppSettings>("settings"))
+        key(KeyEvent.KEYCODE_Z,KeyEvent.META_CTRL_ON);assertEquals(199999,editor.length())
+        editor.setSelection(0);key(KeyEvent.KEYCODE_A)
+        assertEquals(200000,editor.length());assertEquals('a',editor.text.first())
+        val full=port.snapshot()!!;key(KeyEvent.KEYCODE_ENTER,KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON)
+        assertEquals(full,port.snapshot())
+        loadText("    "+"x".repeat(199995));editor.setSelection(editor.length())
+        native("commitText",CharSequence::class.java to "\n",Boolean::class.javaPrimitiveType!! to true,Boolean::class.javaPrimitiveType!! to true)
+        assertEquals(200000,editor.length());assertTrue(editor.text.toString().endsWith("\n"))
+        loadText("value = ");editor.setSelection(editor.length());waitForTextMate()
+        native("commitText",CharSequence::class.java to "(",Boolean::class.javaPrimitiveType!! to true,Boolean::class.javaPrimitiveType!! to true)
+        assertEquals("value = ()",editor.text.toString())
+        loadText("    value = 1");editor.setSelection(editor.length());waitForTextMate()
+        native("commitText",CharSequence::class.java to "\n",Boolean::class.javaPrimitiveType!! to true,Boolean::class.javaPrimitiveType!! to true)
+        assertEquals("    value = 1\n    ",editor.text.toString())
+    }
+    @Test fun genuineDraftIoFailureStillReportsThatTheNewCheckpointWasNotWritten() {
+        loadText("print('safe')");key(KeyEvent.KEYCODE_S,KeyEvent.META_CTRL_ON);settleIo();val disk=workspace.resolve("main.py").readText()
+        val blocked=java.io.File(main.cacheDir,"draft-parent-is-file").apply{writeText("occupied")}
+        ReflectionHelpers.setField(main,"drafts",DraftStore(blocked){a,b->android.system.Os.rename(a.path,b.path)})
+        editor.setSelection(editor.length());editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("# new",1)
+        switch("main.cpp");assertEquals("main.py",field<String>("activePath"));assertEquals(disk,workspace.resolve("main.py").readText())
+        assertTrue(field<android.widget.TextView>("status").text.toString().contains("本次恢复草稿未写入"))
+        val dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();assertNotNull(dialog);dialog.dismiss()
+    }
+
+    @Test @android.annotation.TargetApi(34) fun modernImeOverloadsAndReplaceTextRespectTheSameLimit() {
+        loadText("x".repeat(199999));editor.setSelection(editor.length())
+        val ic=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo());val attr=android.view.inputmethod.TextAttribute.Builder().build()
+        assertTrue(ic.commitText("a",1,attr));val before=port.snapshot()!!
+        assertFalse(ic.setComposingText("中",1,attr));assertEquals(before,port.snapshot())
+        assertTrue(ic.setComposingRegion(199999,200000,attr));assertTrue(ic.setComposingText("文",1,attr))
+        val composing=port.snapshot()!!;assertTrue(composing.composing)
+        assertFalse(ic.replaceText(0,1,"ab",1,attr));assertEquals(composing,port.snapshot())
+        assertTrue(ic.replaceText(0,2,"国",1,attr));assertEquals(199999,editor.length());assertEquals('国',editor.text.first())
+    }
+    @Test fun compositionRangeOutsideTheSelectionIsReadFromTheRealConnection() {
+        loadText("中"+"x".repeat(199998)+"文");editor.setSelection(200000)
+        val ic=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
+        assertTrue(ic.setComposingRegion(0,1));assertTrue(ic.setSelection(199999,200000));assertTrue(editor.isComposing)
+        assertTrue(ic.commitText("abc",1).not());assertEquals(200000,editor.length());assertTrue(editor.isComposing)
+        assertTrue(ic.commitText("ab",1));assertEquals(200000,editor.length());assertFalse(editor.isComposing)
+    }
+    private fun mousePoint(column:Int):Pair<Float,Float> {
+        editor.setSelection(column);val anchor=port.anchor()!!;val position=IntArray(2);editor.inputView().getLocationOnScreen(position)
+        return (anchor.x-position[0]).toFloat() to ((anchor.top+anchor.bottom)/2-position[1]).toFloat()
+    }
+    private fun mouseDragCopy(from:Pair<Float,Float>,to:Pair<Float,Float>) {
+        // Native double-click detection uses uptime, not MotionEvent's timestamps.
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(1000))
+        val view=editor.inputView();val time=android.os.SystemClock.uptimeMillis()
+        view.dispatchKeyEvent(KeyEvent(time,time,KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_CTRL_LEFT,0,KeyEvent.META_CTRL_ON))
+        val meta=native("getKeyMetaStates")!!;assertTrue(meta.javaClass.getMethod("isCtrlPressed").invoke(meta) as Boolean)
+        fun send(action:Int,offset:Long,point:Pair<Float,Float>) {
+            val properties=android.view.MotionEvent.PointerProperties().apply{id=0;toolType=android.view.MotionEvent.TOOL_TYPE_MOUSE}
+            val coords=android.view.MotionEvent.PointerCoords().apply{x=point.first;y=point.second;pressure=1f;size=1f}
+            val event=android.view.MotionEvent.obtain(time,time+offset,action,1,arrayOf(properties),arrayOf(coords),KeyEvent.META_CTRL_ON,
+                if(action==android.view.MotionEvent.ACTION_UP)0 else android.view.MotionEvent.BUTTON_PRIMARY,1f,1f,0,0,android.view.InputDevice.SOURCE_MOUSE,0)
+            try{view.dispatchTouchEvent(event)}finally{event.recycle()}
+        }
+        send(android.view.MotionEvent.ACTION_DOWN,0,from);send(android.view.MotionEvent.ACTION_MOVE,300,to);send(android.view.MotionEvent.ACTION_UP,600,to)
+        view.dispatchKeyEvent(KeyEvent(time,time+601,KeyEvent.ACTION_UP,KeyEvent.KEYCODE_CTRL_LEFT,0,0))
+    }
+    @Test fun realMouseCtrlDragCannotCopySelectionPastTheLimitButStillCopiesWhenItFits() {
+        for(size in listOf(200000,199998)) {
+            loadText("x".repeat(size));editor.requestFocus();awaitEditor()
+            val from=mousePoint(2);val to=mousePoint(12);editor.setSelection(1,3);val before=port.snapshot()!!
+            mouseDragCopy(from,to)
+            if(size==200000) assertEquals(before,port.snapshot()) else assertEquals(200000,editor.length())
+        }
     }
 
 }

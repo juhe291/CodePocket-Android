@@ -28,7 +28,7 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     private final SoraSyntaxController syntax;
     private final ExecutorService syntaxLoader = Executors.newSingleThreadExecutor();
     private Changes changes;
-    private Runnable caretChanged, scrolled, compositionEnded;
+    private Runnable caretChanged, scrolled, compositionEnded, inputRejected;
     private boolean closed, replacing;
     private String key = "unloaded";
     private int previousLength;
@@ -39,6 +39,7 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
         setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
         editor = new SoraInputEditor(context);
         editor.installDecorations();
+        editor.limitInput(200_000, () -> { if (!closed && inputRejected != null) inputRejected.run(); });
         editor.setSaveEnabled(false);
         editor.setTypefaceText(Typeface.MONOSPACE);
         editor.setTypefaceLineNumber(Typeface.MONOSPACE);
@@ -96,6 +97,7 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     public void setCaretChanged(Runnable value) { caretChanged = value; }
     public void setScrolled(Runnable value) { scrolled = value; }
     public void setCompositionEnded(Runnable value) { compositionEnded = value; }
+    public void setInputRejected(Runnable value) { inputRejected = value; }
     public void setEditorFocusListener(OnFocusChangeListener listener) { editor.setOnFocusChangeListener(listener); }
     public void setEditorClickListener(Runnable listener) { editor.setOnClickListener(v -> listener.run()); }
     @Override public boolean requestFocus(int direction, Rect previous) { return editor != null && editor.requestFocus(direction, previous); }
@@ -170,7 +172,7 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     public void resume() { syntax.resume(); }
     @Override public void close() {
         if (closed) return;
-        closed = true; changes = null; caretChanged = null; scrolled = null; compositionEnded = null;
+        closed = true; changes = null; caretChanged = null; scrolled = null; compositionEnded = null; inputRejected = null;
         syntaxLoader.shutdownNow(); adapter.close(); editor.release(); syntax.close();
     }
 }
