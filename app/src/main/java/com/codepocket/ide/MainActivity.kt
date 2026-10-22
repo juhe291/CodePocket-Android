@@ -1694,8 +1694,10 @@ class MainActivity : Activity() {
         captureSession(); persistSessions()
         status.text = "正在保存…"
         WorkspaceIo.executor.execute {
+            var checkpointed = false
             val saved = runCatching {
                 drafts.put(key, path, text, base)
+                checkpointed = true
                 workspace.write(workspace.resolve(path), text, base)
                 drafts.removeIfMatches(key, text)
             }
@@ -1711,8 +1713,10 @@ class MainActivity : Activity() {
                     if (next != null) saveActive(next)
                 }.onFailure { error ->
                     settingsApplyFailure?.invoke(); settingsApplyFailure = null
-                    status.text = "保存失败，编辑内容和恢复草稿仍保留：${error.message}"
-                    if (next != null) alert("${error.message}\n已阻止切换/关闭/运行。可导出当前草稿，或重新授权后重试。")
+                    val reason = if (text.length > Workspace.MAX_CHARS) "内容超过20万字符，请缩减或复制当前代码" else error.message
+                    status.text = if (checkpointed) "保存失败，编辑内容和恢复草稿仍保留：$reason"
+                        else "保存失败，当前代码仍在编辑器中；本次恢复草稿未写入：$reason"
+                    if (next != null) alert("$reason\n已阻止切换/关闭/运行。可导出当前草稿，或重新授权后重试。")
                 }
             }
         }

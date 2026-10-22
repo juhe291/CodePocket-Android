@@ -38,6 +38,7 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
         setSaveEnabled(false);
         setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
         editor = new SoraInputEditor(context);
+        editor.installDecorations();
         editor.setSaveEnabled(false);
         editor.setTypefaceText(Typeface.MONOSPACE);
         editor.setTypefaceLineNumber(Typeface.MONOSPACE);
@@ -57,6 +58,7 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
             int inserted = event.getAction() == ContentChangeEvent.ACTION_INSERT ? event.getChangedText().length() : 0;
             if (event.getAction() == ContentChangeEvent.ACTION_SET_NEW_TEXT) { start = 0; removed = previousLength; inserted = now; }
             previousLength = now;
+            editor.clearDecorations();
             editor.setDiagnostics(null);
             syntax.request();
             if (!closed && !replacing && changes != null) changes.changed(start, removed, inserted, event.isCausedByUndoManager());
@@ -154,6 +156,9 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
         if (!enabled) finishMotion();
     }
     public void finishMotion() { editor.getCursorAnimator().cancel(); }
+    public boolean decorate(String source, int[] starts, int[] ends, int[] colors, int first, int second, int background) {
+        return !closed && editor.decorate(source, starts, ends, colors, first, second, background);
+    }
     public void diagnostics(int[] starts, int[] ends) {
         DiagnosticsContainer result = new DiagnosticsContainer();
         for (int i = 0; i < starts.length; i++)

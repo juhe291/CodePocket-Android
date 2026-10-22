@@ -17,6 +17,21 @@ final class SoraInputEditor extends CodeEditor {
     Predicate<KeyEvent> assistanceKeys;
     SoraInputEditor(Context context) { super(context); }
     private boolean suppressFocus;
+    private SoraDecorations decorations;
+    void installDecorations() { decorations = new SoraDecorations(this); }
+    boolean decorate(String source, int[] starts, int[] ends, int[] colors, int first, int second, int background) {
+        return decorations != null && decorations.apply(source, starts, ends, colors, first, second, background);
+    }
+    void clearDecorations() { if (decorations != null) decorations.clear(); }
+    @Override public void setStyles(io.github.rosemoe.sora.lang.styling.Styles styles) {
+        if (decorations != null && styles != null) decorations.wrap(styles);
+        super.setStyles(styles);
+    }
+    @Override public void updateStyles(io.github.rosemoe.sora.lang.styling.Styles styles,
+            io.github.rosemoe.sora.lang.analysis.StyleUpdateRange range) {
+        if (decorations != null && styles != null) decorations.wrap(styles);
+        super.updateStyles(styles, range);
+    }
     <T> T withoutFocusRequests(Supplier<T> action) {
         boolean previous = suppressFocus; suppressFocus = true;
         try { return action.get(); } finally { suppressFocus = previous; }

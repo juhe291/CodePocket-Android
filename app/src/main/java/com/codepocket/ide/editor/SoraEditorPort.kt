@@ -70,7 +70,13 @@ class SoraEditorPort(
     override fun applyDecorations(analysis: EditorAnalysis): Boolean {
         val frame = snapshot() ?: return false
         if (!analysis.canApplyTo(frame)) return false
-        // Sora/TextMate owns syntax styles. Existing real Python/basic C++ and runtime diagnostics remain.
+        // Keep TextMate grammar styles; add only the existing lexical role/bracket layer.
+        val extra = analysis.extraTokens.mapNotNull { token -> EditorPalette.color(token.kind, frame.dark)?.let { token to it } }
+        val brackets = analysis.brackets
+        if (!editor.decorate(frame.buffer.text, extra.map { it.first.start }.toIntArray(),
+                extra.map { it.first.end }.toIntArray(), extra.map { it.second }.toIntArray(),
+                brackets?.first ?: -1, brackets?.second ?: -1,
+                if (frame.dark) 0xFF3A3D41.toInt() else 0xFFD6EBFF.toInt())) return false
         report = analysis.syntax.copy(issues = ((runtimeDiagnostics?.invoke(frame) ?: emptyList()) + analysis.syntax.issues)
             .distinctBy { it.start }.take(40))
         editor.diagnostics(report.issues.map { it.start }.toIntArray(), report.issues.map { it.end }.toIntArray())

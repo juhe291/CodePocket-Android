@@ -140,4 +140,142 @@ class SoraWorkbenchIntegrationTest {
         assertEquals(before,registry.catalog.entries().map{it.id})
         assertSame(editor,field<WorkbenchEditor>("editor"));assertTrue(editor.hasFocus())
     }
+    /** Inspect the actual runtime Sora spans through its public API without exposing Kotlin-2 types to app compilation. */
+    private fun colorAt(offset:Int, background:Boolean=false):Int {
+        val view=editor.inputView()
+        val styles=view.javaClass.getMethod("getStyles").invoke(view) ?: return 0
+        val spans=styles.javaClass.getField("spans").get(styles)
+        val reader=Class.forName("io.github.rosemoe.sora.lang.styling.Spans").getMethod("read").invoke(spans)
+        val code=editor.text.toString();val line=code.take(offset).count{it=='\n'}
+        val column=offset-(code.lastIndexOf('\n',offset-1)+1)
+        val list=Class.forName("io.github.rosemoe.sora.lang.styling.Spans\$Reader").getMethod("getSpansOnLine",Int::class.javaPrimitiveType).invoke(reader,line) as List<*>
+        val spanType=Class.forName("io.github.rosemoe.sora.lang.styling.Span")
+        val span=list.last{ (spanType.getMethod("getColumn").invoke(it) as Int)<=column }!!
+        val scheme=view.javaClass.getMethod("getColorScheme").invoke(view)
+        val schemeType=Class.forName("io.github.rosemoe.sora.widget.schemes.EditorColorScheme")
+        val resolver=spanType.getMethod("getSpanExt",Int::class.javaPrimitiveType).invoke(span,0)
+        if(resolver!=null) {
+            val color=Class.forName("io.github.rosemoe.sora.lang.styling.span.SpanColorResolver")
+                .getMethod(if(background) "getBackgroundColor" else "getForegroundColor",spanType).invoke(resolver,span)
+            if(color!=null) return Class.forName("io.github.rosemoe.sora.lang.styling.color.ResolvableColor")
+                .getMethod("resolve",schemeType).invoke(color,scheme) as Int
+        }
+        val style=spanType.getMethod("getStyle").invoke(span) as Long
+        val id=((if(background) style shr 19 else style) and 0x7ffff).toInt()
+        return schemeType.getMethod("getColor",Int::class.javaPrimitiveType).invoke(scheme,id) as Int
+    }
+    private fun decorateCurrent():EditorAnalysis {
+        val frame=port.snapshot()!!;val analysis=EditorAnalyzer().analyze(frame)
+        assertTrue(port.applyDecorations(analysis));return analysis
+    }
+    @Test fun mixedBracketsAndLexicalRolesAreDrawnInTheMainEditor() {
+        val code="def calc(value):\n    obj.field = value + LIMIT\n    return ([{value: 1}])"
+        loadText(code);editor.setSelection(code.lastIndexOf('(')+1)
+        waitForTextMate();val analysis=decorateCurrent()
+        for(token in analysis.extraTokens) {
+            val expected=EditorPalette.color(token.kind,true) ?: continue
+            assertEquals("${token.kind} at ${token.start}",expected,colorAt(token.start))
+        }
+        val pair=analysis.brackets!!
+        assertEquals(0xFF3A3D41.toInt(),colorAt(pair.first,true));assertEquals(0xFF3A3D41.toInt(),colorAt(pair.second,true))
+        assertNotEquals(colorAt(code.lastIndexOf('(')),colorAt(code.lastIndexOf('[')))
+        assertEquals(code,editor.text.toString());captureEditor("phone-dark")
+    }
+    @Test fun decorationsKeepSelectionDirtyStateRevisionAndActualUndoHistory() {
+        loadText("item = (1)");editor.setSelection(4)
+        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("s",1)
+        val source=port.snapshot()!!;val revision=field<Long>("editRevision");val dirty=field<Boolean>("dirty")
+        decorateCurrent();decorateCurrent()
+        assertEquals(source,port.snapshot());assertEquals(revision,field<Long>("editRevision"));assertEquals(dirty,field<Boolean>("dirty"))
+        assertTrue(editor.history(false));assertEquals("item = (1)",editor.text.toString())
+    }
+    @Test fun obsoleteDecorationsCannotSurviveTypingTabSwitchOrComposition() {
+        loadText("old = ([1])");editor.setSelection(0);val old=decorateCurrent()
+        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("#",1)
+        assertFalse(port.applyDecorations(old))
+        switch("main.cpp");assertFalse(port.applyDecorations(old))
+        loadText("value = 1");editor.setSelection(0);val next=EditorAnalyzer().analyze(port.snapshot()!!)
+        val connection=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo());connection.setComposingText("中",1)
+        val before=editor.text.toString();assertFalse(port.applyDecorations(next));assertEquals(before,editor.text.toString())
+        connection.finishComposingText()
+    }
+    @Test fun invalidOverlayIsRejectedBeforeChangingDiagnosticsOrBuffer() {
+        loadText("value = 1");val frame=port.snapshot()!!
+        val issue=InlineIssue(0,5,"known issue","test")
+        assertTrue(port.applyDecorations(EditorAnalysis(frame,emptyList(),null,syntax=SyntaxReport(listOf(issue)))))
+        assertFalse(port.applyDecorations(EditorAnalysis(frame,emptyList(),null,
+            extraTokens=listOf(EditorFeatures.Token(-1,3,"variable")))))
+        assertEquals(listOf(issue),port.report.issues);assertEquals("value = 1",editor.text.toString())
+    }
+    @Test fun oversizedHighlightFallbackClearsRolesButKeepsStatusAndAllowsEditing() {
+        loadText("x".repeat(45001));editor.setSelection(45001)
+        val result=decorateCurrent();assertEquals(HighlightFallback.TEXT_LIMIT,result.fallback)
+        assertTrue(port.report.status.contains("4.5"));assertEquals(45001,editor.length())
+        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("y",1)
+        assertEquals(45002,editor.length())
+    }
+
+    private fun captureEditor(name:String) {
+        val cwd=java.io.File(checkNotNull(System.getProperty("user.dir")));val root=if(cwd.name=="app") cwd.parentFile else cwd
+        val folder=java.io.File(root,"verification/main-app-editor-feedback-2026-10-22/previews");folder.mkdirs()
+        val bitmap=android.graphics.Bitmap.createBitmap(editor.width,editor.height,android.graphics.Bitmap.Config.ARGB_8888)
+        editor.draw(android.graphics.Canvas(bitmap))
+        java.io.File(folder,"$name.png").outputStream().use{assertTrue(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
+        bitmap.recycle()
+    }
+    private fun waitForTextMate() {
+        repeat(200) {
+            Shadows.shadowOf(Looper.getMainLooper()).idle()
+            val styles=editor.inputView().javaClass.getMethod("getStyles").invoke(editor.inputView())
+            if(editor.syntaxState().contains("TextMate") && styles!=null) return
+            Thread.sleep(5)
+        }
+        fail("Actual TextMate analysis did not become ready: ${editor.syntaxState()}")
+    }
+    @Test fun textMateReanalysisAndStyleRefreshKeepTheLexicalLayer() {
+        val code="def calc(value):\n    return ([value]) # comment"
+        loadText(code);editor.setSelection(0);waitForTextMate()
+        val keyword=colorAt(0);val comment=colorAt(code.indexOf('#'))
+        decorateCurrent()
+        assertEquals(keyword,colorAt(0));assertEquals(comment,colorAt(code.indexOf('#')))
+        val view=editor.inputView();val styles=view.javaClass.getMethod("getStyles").invoke(view)
+        Class.forName("io.github.rosemoe.sora.widget.CodeEditor").getMethod("setStyles",Class.forName("io.github.rosemoe.sora.lang.styling.Styles")).invoke(view,styles)
+        assertEquals(EditorPalette.color("parameter",true),colorAt(code.indexOf("value")))
+        editor.setSelection(editor.length());editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("\nnext = 2",1)
+        decorateCurrent()
+        assertEquals(EditorPalette.color("variable",true),colorAt(editor.text.toString().indexOf("next")))
+    }
+    @Test @Config(qualifiers="w1000dp-h800dp") fun syntaxThemeAndFontApplyKeepTheSameTabletBufferAndTerminal() {
+        loadText("value = ([1])");editor.setSelection(0);decorateCurrent()
+        val before=port.snapshot()!!;val registry=field<com.codepocket.ide.terminal.shell.ShellSessionRegistry>("terminalRegistry")
+        val sessions=registry.catalog.entries().map{it.id};val panel=field<Boolean>("panelVisible")
+        val old=field<AppSettings>("settings");val next=old.copy(syntax=SyntaxTheme.LIGHT,fontSize=18,wordWrap=true)
+        var applied=false
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"applySettings",ClassParameter.from(AppSettings::class.java,next),
+            ClassParameter.from(kotlin.jvm.functions.Function1::class.java,{ value:Boolean -> applied=value }))
+        assertTrue(applied);layout();awaitEditor();val frame=port.snapshot()!!;assertFalse(frame.dark)
+        assertTrue(port.applyDecorations(EditorAnalyzer().analyze(frame)))
+        assertEquals(EditorPalette.color("variable",false),colorAt(0));assertEquals(EditorPalette.color("bracket0",false),colorAt(8))
+        assertEquals(before.buffer,frame.buffer);assertEquals(sessions,registry.catalog.entries().map{it.id})
+        assertEquals(panel,field<Boolean>("panelVisible"));assertSame(editor,field<WorkbenchEditor>("editor"))
+        captureEditor("tablet-light-syntax")
+    }
+    @Test fun nativeOversizedPasteDoesNotOverwriteTheFileOrClaimAnUnwrittenRecoveryDraft() {
+        loadText("print('safe')");key(KeyEvent.KEYCODE_S,KeyEvent.META_CTRL_ON);settleIo()
+        val disk=workspace.resolve("main.py").readText();editor.setSelection(editor.length())
+        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("x".repeat(200001),1)
+        assertTrue(editor.length()>Workspace.MAX_CHARS)
+        key(KeyEvent.KEYCODE_S,KeyEvent.META_CTRL_ON);settleIo()
+        assertEquals(disk,workspace.resolve("main.py").readText());assertTrue(field("dirty"))
+        val message=field<android.widget.TextView>("status").text.toString()
+        assertTrue(message,message.contains("本次恢复草稿未写入"));assertTrue(message,message.contains("20万"))
+        switch("main.cpp");assertEquals("main.py",field<String>("activePath"))
+        val dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+        assertNotNull(dialog)
+        val detail=dialog.findViewById<android.widget.TextView>(android.R.id.message).text.toString()
+        assertTrue(detail,detail.contains("20万"));assertTrue(detail,detail.contains("已阻止切换"))
+        dialog.dismiss();editor.requestFocus()
+        assertTrue(editor.history(false));assertEquals(disk,editor.text.toString())
+    }
+
 }

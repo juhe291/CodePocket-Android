@@ -1,14 +1,17 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-22接续状态：I1已将Sora接入主App正常工作台入口。** 使用原项目、文件树、标签、保存/草稿、设置和真实运行入口；只交付一个主APK。editor-lab冻结为内部回归工具，核心适配源码和语法/许可资源已抽到主程序依赖的editor-sora库。
+**2026-10-22接续状态：I2首批已接回主Sora中的括号分层色、词法角色色和匹配括号强调，并修正保存失败的草稿提示。** 原工作台、文件树、多标签、保存保护和单一真实终端继续使用。
 
-- [本批主程序集成Debug APK](dist/CodePocket-main-sora-integration-2026-10-21-debug.apk)（约25.11MiB，原包名/原签名，arm64-v8a）。
-- [本批修改、真实测试与未完成项](docs/MAIN_APP_SORA_INTEGRATION_2026-10-22.md)。主App548通过/1既有跳过；共享适配133通过；Lint0错误，Debug构建及实际APK/Python/签名检查通过。
-- [后续实施计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：接下来执行I2功能贯通和I3 UI/动画核对，再完成I4。当前括号分层/词法角色色、精确光标动画及完整主入口验收仍未完成，不能将本集成Debug当作全部迁移验收完成。
+- [本批主程序Debug APK](dist/CodePocket-main-editor-feedback-2026-10-22-debug.apk)（约25.37MiB，原包名/原签名，arm64-v8a）。
+- [修改、真实验证与未完成项](docs/MAIN_APP_EDITOR_FEEDBACK_2026-10-22.md)：主App556通过/1既有跳过，共享适配139通过；Lint0错误，Debug构建及实际APK/Python/签名检查通过。
+- [实际代码区渲染检查](docs/main-editor-feedback-preview/README.md) · [主程序集成计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)。当前角色色属于词法提示，深度语义、完整操作链、精确光标动画和最终整合验收仍未完成。
 
-实机输入法、实体键鼠、卓易通和帧率验收继续后置；P2/P3保留。以下日期段落是历史记录，其中“默认原生编辑器”“下一批”等描述仅适用于当时版本。
+普通输入/粘贴尚可超过20万字符，超限内容不能保存或写入恢复草稿，需缩减或复制。实机输入法、实体键鼠、卓易通和帧率验收继续后置；P2/P3保留。下方日期段落为历史事实。
 
 ## 历史实施与构建记录
+
+**2026-10-22归档：I1已将Sora接入主App正常入口。** [I1报告](docs/MAIN_APP_SORA_INTEGRATION_2026-10-22.md)记录主App548通过/1既有跳过、共享133通过与构建结果；是接入基线，不等于I2–I4全部完成。editor-lab冻结为内部工具，核心适配代码/许可资源由生产editor-sora库共享。
+
 
 **2026-10-21：Sora实验接通真实内部项目与SAF文件会话。** 临时草稿页“项目 / SAF”进入文件实验，可切文件、保存/Ctrl+S、恢复草稿并保留选区/视口；提供方失败、冲突或读取期间继续输入会阻止错误切换。原保存实现七份源码逐字节共享，默认IDE仍用原生编辑器，真实PTY/Python/Wandbox保持。
 
