@@ -52,6 +52,7 @@ class TerminalWorkbenchViewTest {
         field("mainToolbar",MainToolbar(activity,palette,{},{},{},{},{}));field("status",TextView(activity))
     }
     @After fun release() {
+        ReflectionHelpers.getField<com.codepocket.editorlab.WorkbenchEditor?>(activity,"editor")?.close()
         ReflectionHelpers.getField<ShellTerminalPane?>(activity,"shellPane")?.dispose()
         ShellSessionRegistry.finishAll()
         ReflectionHelpers.setStaticField(RunSession::class.java,"result",savedResult)
@@ -118,8 +119,8 @@ class TerminalWorkbenchViewTest {
         assertEquals(View.VISIBLE,ReflectionHelpers.getField<EditText>(activity,"input").visibility)
     }
 
-    private fun makeFocusHierarchy():CodeEditor {
-        val editor=CodeEditor(activity)
+    private fun makeFocusHierarchy():com.codepocket.editorlab.WorkbenchEditor {
+        val editor=com.codepocket.editorlab.WorkbenchEditor(activity)
         region.isFocusableInTouchMode=true
         val root=LinearLayout(activity).apply {orientation=LinearLayout.VERTICAL;addView(editor);addView(region)}
         activity.setContentView(root)

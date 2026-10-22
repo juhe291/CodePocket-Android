@@ -48,7 +48,7 @@ final class SoraBuffer implements AutoCloseable {
         Result failure = sourceFailure(source, composing, matchSelection);
         if (failure != null) return failure;
         Result result = TextEdits.check(content, content.getCursor().getLeft(), content.getCursor().getRight(),
-            start, end, text, selectionStart, selectionEnd, ScratchEdits.MAX_CHARS);
+            start, end, text, selectionStart, selectionEnd, 200_000);
         if (result == Result.APPLIED) {
             content.beginBatchEdit();
             try { content.replace(start, end, text); } finally { content.endBatchEdit(); }

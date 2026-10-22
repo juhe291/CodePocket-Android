@@ -1,6 +1,8 @@
 package com.codepocket.editorlab;
 
 import android.content.Context;
+import android.graphics.Rect;
+import java.util.function.Supplier;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
@@ -14,6 +16,14 @@ final class SoraInputEditor extends CodeEditor {
     Runnable navigationInput, assistanceRefresh;
     Predicate<KeyEvent> assistanceKeys;
     SoraInputEditor(Context context) { super(context); }
+    private boolean suppressFocus;
+    <T> T withoutFocusRequests(Supplier<T> action) {
+        boolean previous = suppressFocus; suppressFocus = true;
+        try { return action.get(); } finally { suppressFocus = previous; }
+    }
+    @Override public boolean requestFocus(int direction, Rect previous) {
+        return !suppressFocus && super.requestFocus(direction, previous);
+    }
     private void input() { if (navigationInput != null) navigationInput.run(); }
     @Override public boolean dispatchTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();

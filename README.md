@@ -1,8 +1,14 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-21后续计划调整：优先整合进同一个CodePocket，交付一个主APK。** 直接将已验证的Sora、辅助与存储适配接入现有主工作台，贯通文件/多标签、设置/搜索/诊断及真实运行，再完成UI/动画收尾和主程序回归。editor-lab保留为内部测试工具；后续不继续扩展独立实验功能页或作为第二个产品交付。
+**2026-10-22接续状态：I1已将Sora接入主App正常工作台入口。** 使用原项目、文件树、标签、保存/草稿、设置和真实运行入口；只交付一个主APK。editor-lab冻结为内部回归工具，核心适配源码和语法/许可资源已抽到主程序依赖的editor-sora库。
 
-[完整后续计划与验收条件](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)。原P2/P3及全部既有需求保留，功能收尾后统一实机。本次只改计划，没有新功能或新APK；当前主包仍为原生编辑器基线。以下日期条目及实验包保留为历史实现/验证资料，不能视为主程序集成完成。
+- [本批主程序集成Debug APK](dist/CodePocket-main-sora-integration-2026-10-21-debug.apk)（约25.11MiB，原包名/原签名，arm64-v8a）。
+- [本批修改、真实测试与未完成项](docs/MAIN_APP_SORA_INTEGRATION_2026-10-22.md)。主App548通过/1既有跳过；共享适配133通过；Lint0错误，Debug构建及实际APK/Python/签名检查通过。
+- [后续实施计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：接下来执行I2功能贯通和I3 UI/动画核对，再完成I4。当前括号分层/词法角色色、精确光标动画及完整主入口验收仍未完成，不能将本集成Debug当作全部迁移验收完成。
+
+实机输入法、实体键鼠、卓易通和帧率验收继续后置；P2/P3保留。以下日期段落是历史记录，其中“默认原生编辑器”“下一批”等描述仅适用于当时版本。
+
+## 历史实施与构建记录
 
 **2026-10-21：Sora实验接通真实内部项目与SAF文件会话。** 临时草稿页“项目 / SAF”进入文件实验，可切文件、保存/Ctrl+S、恢复草稿并保留选区/视口；提供方失败、冲突或读取期间继续输入会阻止错误切换。原保存实现七份源码逐字节共享，默认IDE仍用原生编辑器，真实PTY/Python/Wandbox保持。
 
@@ -189,7 +195,8 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 | workspace-core（本地Android库） | 原有Workspace/SAF/会话/草稿存储，七份源码原样共享；两个App私有目录仍独立 |
 | editor-surface（本地Java库） | View/文本无关的光标锚点、屏幕可用区域与弹窗放置规则，原生/Sora共用 |
 | editor-assist（本地Kotlin/JVM库） | 原有词法、高亮、片段/字段、内置参数及TextChange；无Android/保存/运行依赖，两编辑器共用 |
-| editor-lab（显式启用） | 独立Sora/原生比较、共享辅助与定位、内部项目/SAF文件实验；不接运行器，未替换主IDE |
+| editor-sora（主程序Java Android库） | Sora真实控件/事务/导航/离线TextMate与许可资源；公开API隔离Kotlin版本，主工作台使用 |
+| editor-lab（显式启用） | 内部Sora/原生和文件/SAF回归工具，复用生产适配库；不作为第二个产品交付 |
 | ui/MainToolbar / IdeCommandMenu / IdeCommands / WorkspaceLayoutPolicy | 实测宽度的单排主栏、原生命令入口与焦点/状态策略 |
 | ui/EditorToolbar / InteractionState | 上下文编辑入口、返回/状态/只清显示规则 |
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |

@@ -1,4 +1,4 @@
-CodePocket Editor Lab (experimental, separate application)
+CodePocket - production Sora editor adapter (shared with the optional internal harness)
 
 Sora Editor 0.23.7 - https://github.com/Rosemoe/sora-editor/tree/0.23.7
 Copyright (C) 2020-2024 Rosemoe
@@ -8,14 +8,16 @@ Exact sources: https://repo.maven.apache.org/maven2/io/github/rosemoe/editor/0.2
 The historical experiment bundle contains the original core prototype only; later adapter and TextMate sources are in the current repository/cache, not that old ZIP.
 AndroidX annotation 1.9.1 / collection 1.5.0: Apache License 2.0.
 Kotlin stdlib 2.1.21: Apache License 2.0; JetBrains annotations 13.0: Apache License 2.0.
-Embedded dependency license resources are retained. This experiment does not decide CodePocket's own license.
-
-临时草稿不读写 CodePocket 的项目、SAF、运行器或设置。切换组件只传递文本与归一化选区，组件间撤销历史不迁移；旋转保留文本，进程结束后草稿清空。
-“项目 / SAF”打开独立文件实验：内部示例位于本实验应用私有目录，系统选择器授权后可读写所选真实目录。它复用原IDE的Workspace/SAF/草稿保护；退出检查保存，旋转与磁盘草稿恢复，和临时草稿的行为分别标明。实验应用不直接访问主IDE的私有项目，不连接运行器。
-当前Sora实验已接编辑事务、光标定位、TextMate C++/Python语法、共享词法候选/片段/内置参数参考，以及独立项目/SAF文件会话；默认IDE仍用原生编辑器，尚未接完整生产EditorPort、语义补全或运行后端。触屏/键鼠/IME/卓易通/FPS 仍待统一设备验收。
+Embedded dependency license resources are retained. These third-party notices do not determine the license of CodePocket itself.
 
 
-TextMate syntax experiment (not semantic completion):
+The main com.codepocket.ide app uses the existing workbench, private project directory, SAF permissions,
+file/session/draft controllers, shared code assistance, and real Python/Wandbox/PTY execution.
+The editor adapter is a Java Android library (:editor-sora), not another application.
+Adapter sources are in editor-sora/src/main/java; the historical com.codepocket.editorlab package
+is retained to share the identical adapter implementation with existing regression tests.
+
+Offline TextMate syntax (not semantic completion):
 io.github.rosemoe:language-textmate:0.23.7, used unmodified, LGPL-2.1-or-later.
 Exact source artifact: https://repo.maven.apache.org/maven2/io/github/rosemoe/language-textmate/0.23.7/language-textmate-0.23.7-sources.jar
 Included TM4E code: Copyright Angelo Zerr and contributors; Eclipse Public License 2.0, with original vscode-textmate MIT portions.
@@ -28,6 +30,8 @@ desugar_jdk_libs 2.1.5: GPL-2.0 with Classpath Exception (OpenJDK subset); offic
 Full additional license texts and their download provenance are in textmate/licenses/. They can be read with the syntax-license button.
 Both CodePocket TextMate color themes are local project assets, not copied VS Code themes.
 
-语法加载/正则预热在后台执行；失败或正文超4.5万字符时明确显示纯文本。只切换语法不替换草稿，语言选择旋转保留，历史不跨组件迁移。
-暂未打包C++内嵌SQL/GLSL/汇编/正则等全部外部语法；引擎会警告并跳过部分嵌入规则，不代表完整C++语义或所有语法均覆盖。
-本地Debug实验，未正式发布；完整对应源码、所有上游通知与可重链接交付仍须最终核验。
+语法加载与正则预热在后台执行；失败或正文超4.5万字符时降级纯文本。只切换语法不替换正文。
+未打包C++内嵌SQL/GLSL/汇编/正则等全部外部语法；引擎可能跳过部分嵌入规则。
+主程序已有词法候选、代码片段和内置参数参考；这不代表clangd/Jedi/LSP语义补全已实现。
+本地Debug验证；设备输入法、键鼠、卓易通和帧率验收仍待进行。
+完整对应适配源码随本仓库提供；上游精确源码地址及原许可证保留在以上通知中。

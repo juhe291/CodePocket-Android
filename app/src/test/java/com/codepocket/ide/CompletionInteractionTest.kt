@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
 class CompletionInteractionTest {
     private lateinit var controller: ActivityController<MainActivity>
     private lateinit var main: MainActivity
-    private lateinit var editor: CodeEditor
+    private lateinit var editor: com.codepocket.editorlab.WorkbenchEditor
     @Before fun openPythonEditor() {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("activeFile","main.py")
@@ -44,15 +44,24 @@ class CompletionInteractionTest {
         controller.windowFocusChanged(true)
         editor=ReflectionHelpers.getField(main,"editor")
         layout(main.resources.displayMetrics.widthPixels,main.resources.displayMetrics.heightPixels)
-        assertTrue(editor.requestFocus())
+        assertTrue(editor.requestFocus());awaitEditor()
     }
+    private fun awaitEditor() {
+        repeat(100) {
+            org.robolectric.Shadows.shadowOf(Looper.getMainLooper()).idle()
+            if (editor.isLayoutReady) return
+            Thread.sleep(5)
+        }
+        fail("Real Sora layout did not complete")
+    }
+    private fun loadText(text:String) { editor.setText(text);awaitEditor() }
     private fun layout(width:Int,height:Int) {
         val root=main.findViewById<View>(android.R.id.content)
         root.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(height,View.MeasureSpec.EXACTLY))
         root.layout(0,0,width,height)
         root.viewTreeObserver.dispatchOnGlobalLayout()
     }
-    private fun typePrefix() { editor.setText("pri");editor.setSelection(3);settle() }
+    private fun typePrefix() { loadText("pri");editor.setSelection(3);settle() }
     private fun settle() {
         shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(150))
         ReflectionHelpers.getField<ExecutorService>(main,"completionExecutor").submit{}.get(10,TimeUnit.SECONDS)
@@ -63,7 +72,7 @@ class CompletionInteractionTest {
         val batch=ReflectionHelpers.getField<CompletionBatch?>(main,"completionBatch")
         val anchor=port?.anchor()
         val request=ReflectionHelpers.callInstanceMethod<CompletionRequest>(main,"completionRequest")
-        return "suggested=${LexicalCompletion.complete(request)?.items?.size} task=${ReflectionHelpers.getField<java.util.concurrent.Future<*>?>(main,"completionTask")?.isDone} suppressed=${ReflectionHelpers.getField<CompletionRequest?>(main,"completionSuppressed")} anchorRect=${anchor?.visible?.let {"${it.left},${it.top},${it.right},${it.bottom}"}} caret=${anchor?.top}/${anchor?.bottom} windowFocus=${main.hasWindowFocus()} focus=${editor.hasFocus()} shown=${editor.isShown} size=${editor.width}x${editor.height} selection=${editor.selectionStart}/${editor.selectionEnd} composing=${BaseInputConnection.getComposingSpanStart(editor.text)} active=${ReflectionHelpers.getField<String>(main,"activePath")} loaded=${ReflectionHelpers.getField<String?>(main,"loadedPath")} anchor=${port?.anchor()} batch=$batch status=${ReflectionHelpers.getField<android.widget.TextView>(main,"status").text}"
+        return "suggested=${LexicalCompletion.complete(request)?.items?.size} task=${ReflectionHelpers.getField<java.util.concurrent.Future<*>?>(main,"completionTask")?.isDone} suppressed=${ReflectionHelpers.getField<CompletionRequest?>(main,"completionSuppressed")} anchorRect=${anchor?.visible?.let {"${it.left},${it.top},${it.right},${it.bottom}"}} caret=${anchor?.top}/${anchor?.bottom} windowFocus=${main.hasWindowFocus()} focus=${editor.hasFocus()} shown=${editor.isShown} size=${editor.width}x${editor.height} selection=${editor.selectionStart}/${editor.selectionEnd} composing=${editor.isComposing} active=${ReflectionHelpers.getField<String>(main,"activePath")} loaded=${ReflectionHelpers.getField<String?>(main,"loadedPath")} anchor=${port?.anchor()} batch=$batch status=${ReflectionHelpers.getField<android.widget.TextView>(main,"status").text}"
     }
     private fun visible():Boolean = ReflectionHelpers.getField<CompletionPopup?>(main,"completionPopup")?.isShowing==true
     @After fun close() {
@@ -109,27 +118,27 @@ class CompletionInteractionTest {
         method.isAccessible=true;method.invoke(main,"main.cpp",null)
         WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS);shadowOf(Looper.getMainLooper()).idle()
         editor=ReflectionHelpers.getField(main,"editor");editor.requestFocus()
-        editor.setText("ret");editor.setSelection(3);settle();assertTrue(diagnostics(),visible())
+        loadText("ret");editor.setSelection(3);settle();assertTrue(diagnostics(),visible())
         main.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_TAB))
         main.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_TAB))
         assertEquals("return",editor.text.toString())
     }
     @Test fun toolbarTabDoesNotModifyChineseComposition() {
-        editor.setText("")
+        loadText("")
         val connection=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
         connection.setComposingText("拼",1);settle();assertFalse(visible())
         ReflectionHelpers.callInstanceMethod<Unit>(main,"tab")
-        assertEquals("拼",editor.text.toString());assertTrue(BaseInputConnection.getComposingSpanStart(editor.text)>=0)
+        assertEquals("拼",editor.text.toString());assertTrue(editor.isComposing)
     }
     @Test fun unfinishedCompositionDoesNotRewriteOrOfferAStaleCandidate() {
-        editor.setText("")
+        loadText("")
         val info=android.view.inputmethod.EditorInfo()
         val connection=editor.onCreateInputConnection(info)
         connection.setComposingText("pri",1);settle()
         assertFalse(visible());assertEquals("pri",editor.text.toString())
         connection.finishComposingText();settle()
         assertTrue("Committed composition must resume completion: ${diagnostics()}",visible())
-        assertEquals(-1,BaseInputConnection.getComposingSpanStart(editor.text))
+        assertFalse(editor.isComposing)
     }
     private fun popup() = ReflectionHelpers.getField<CompletionPopup>(main,"completionPopup")
     private fun key(code:Int,meta:Int=0,repeat:Int=0) {
@@ -138,7 +147,7 @@ class CompletionInteractionTest {
         main.dispatchKeyEvent(KeyEvent(time,time,KeyEvent.ACTION_UP,code,0,0,7,0,0,android.view.InputDevice.SOURCE_KEYBOARD))
     }
     private fun multiplePythonCandidates() {
-        editor.setText("p");editor.setSelection(1);settle();assertTrue(diagnostics(),visible())
+        loadText("p");editor.setSelection(1);settle();assertTrue(diagnostics(),visible())
         assertEquals(listOf("pass","print"),ReflectionHelpers.getField<CompletionBatch>(main,"completionBatch").items.take(2).map{it.label})
     }
     @Test fun automaticCandidatesAcceptPhysicalArrowsAndTabWithoutMovingCaret() {
@@ -156,7 +165,7 @@ class CompletionInteractionTest {
         key(KeyEvent.KEYCODE_TAB);assertEquals("print",editor.text.toString())
     }
     @Test fun holdingArrowClampsAtListEdgesAndEscReturnsToCodeNavigation() {
-        editor.setText("p\nxyz");editor.setSelection(1);settle();assertTrue(visible())
+        loadText("p\nxyz");editor.setSelection(1);settle();assertTrue(visible())
         val size=ReflectionHelpers.getField<CompletionBatch>(main,"completionBatch").items.size
         repeat(20){key(KeyEvent.KEYCODE_DPAD_DOWN,repeat=it)}
         assertTrue(visible());assertEquals(size-1,popup().selectedIndex);assertEquals(1,editor.selectionStart)
@@ -181,11 +190,11 @@ class CompletionInteractionTest {
         key(KeyEvent.KEYCODE_DPAD_DOWN);assertTrue(visible());assertEquals(1,popup().selectedIndex)
         key(KeyEvent.KEYCODE_ESCAPE)
         ReflectionHelpers.setField(main,"settings",AppSettings(autoSave=false,animations=false,completionArrows=CompletionArrows.OFF))
-        editor.setText("p\nxyz");editor.setSelection(1);settle();assertTrue(visible())
+        loadText("p\nxyz");editor.setSelection(1);settle();assertTrue(visible())
         key(KeyEvent.KEYCODE_DPAD_DOWN);assertTrue(editor.selectionStart>1)
     }
     @Test fun ctrlEqualsAndMinusResizeOnlyCodeAndRememberTheSetting() {
-        editor.setText("abc\ndef");editor.setSelection(1,3)
+        loadText("abc\ndef");editor.setSelection(1,3)
         val original=ReflectionHelpers.getField<AppSettings>(main,"settings")
         val port=ReflectionHelpers.getField<com.codepocket.ide.editor.DocumentEditorPort>(main,"editorPort")
         val snapshot=port.snapshot()!!.buffer
@@ -194,7 +203,7 @@ class CompletionInteractionTest {
         val panel=ReflectionHelpers.getField<PanelState>(main,"panelState")
         key(KeyEvent.KEYCODE_EQUALS,KeyEvent.META_CTRL_ON)
         assertEquals(original.fontSize+1,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
-        assertEquals(snapshot,port.snapshot()!!.buffer);assertSame(editor,ReflectionHelpers.getField<CodeEditor>(main,"editor"))
+        assertEquals(snapshot,port.snapshot()!!.buffer);assertSame(editor,ReflectionHelpers.getField<com.codepocket.editorlab.WorkbenchEditor>(main,"editor"))
         assertEquals(panel,ReflectionHelpers.getField<PanelState>(main,"panelState"))
         assertEquals(sessions,registry.catalog.entries().map{it.id to it.value.runtime})
         val saved=AppSettings.fromJson(main.getSharedPreferences("codepocket_v2",0).getString("settings",null))
@@ -217,7 +226,7 @@ class CompletionInteractionTest {
         assertEquals(10,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
     }
     @Test fun fontZoomDoesNotDestroyTheNativeUndoHistory() {
-        editor.setText("abc");editor.setSelection(3)
+        loadText("abc");editor.setSelection(3)
         editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("d",1)
         assertEquals("abcd",editor.text.toString())
         key(KeyEvent.KEYCODE_PLUS,KeyEvent.META_CTRL_ON)
@@ -225,12 +234,13 @@ class CompletionInteractionTest {
     }
     @Test fun fontZoomWaitsForCompositionAndIgnoresNonEditorFocus() {
         val original=ReflectionHelpers.getField<AppSettings>(main,"settings")
+        awaitEditor()
         val connection=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
         connection.setComposingText("拼",1)
-        val composing=editor.text.toString();val start=BaseInputConnection.getComposingSpanStart(editor.text)
+        val composing=editor.text.toString();val start=editor.isComposing
         key(KeyEvent.KEYCODE_PLUS,KeyEvent.META_CTRL_ON)
         assertEquals(original.fontSize,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
-        assertEquals(composing,editor.text.toString());assertEquals(start,BaseInputConnection.getComposingSpanStart(editor.text))
+        assertEquals(composing,editor.text.toString());assertEquals(start,editor.isComposing)
         connection.finishComposingText()
         val input=ReflectionHelpers.getField<android.widget.EditText>(main,"input")
         input.visibility=View.VISIBLE;input.requestFocus()
@@ -243,7 +253,7 @@ class CompletionInteractionTest {
         method.isAccessible=true;method.invoke(main,"main.cpp",null)
         WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS);shadowOf(Looper.getMainLooper()).idle()
         editor=ReflectionHelpers.getField(main,"editor");editor.requestFocus()
-        editor.setText("pri");editor.setSelection(3);settle();assertTrue(diagnostics(),visible())
+        loadText("pri");editor.setSelection(3);settle();assertTrue(diagnostics(),visible())
         assertEquals(listOf("printf","private"),ReflectionHelpers.getField<CompletionBatch>(main,"completionBatch").items.take(2).map{it.label})
         key(KeyEvent.KEYCODE_DPAD_DOWN);assertTrue(visible());assertEquals(1,popup().selectedIndex)
         key(KeyEvent.KEYCODE_TAB);assertEquals("private",editor.text.toString())
@@ -274,7 +284,7 @@ class CompletionInteractionTest {
         dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();shadowOf(Looper.getMainLooper()).idle()
     }
     @Test fun phoneHiddenMenuZoomsCodeAndPreservesNativeHistoryAndSelection() {
-        editor.setText("abc");editor.setSelection(3)
+        loadText("abc");editor.setSelection(3)
         editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("d",1)
         val original=ReflectionHelpers.getField<AppSettings>(main,"settings")
         val port=ReflectionHelpers.getField<com.codepocket.ide.editor.DocumentEditorPort>(main,"editorPort")
@@ -285,7 +295,7 @@ class CompletionInteractionTest {
         assertFalse(viewTree(main.findViewById(android.R.id.content)).any{it.contentDescription?.toString()?.startsWith("代码字号")==true})
         touchZoom("放大代码")
         assertEquals(original.fontSize+1,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
-        assertEquals(source,port.snapshot()!!.buffer);assertSame(editor,ReflectionHelpers.getField<CodeEditor>(main,"editor"))
+        assertEquals(source,port.snapshot()!!.buffer);assertSame(editor,ReflectionHelpers.getField<com.codepocket.editorlab.WorkbenchEditor>(main,"editor"))
         assertEquals(sessions,registry.catalog.entries().map{it.id to it.value.runtime})
         val saved=AppSettings.fromJson(main.getSharedPreferences("codepocket_v2",0).getString("settings",null))
         assertEquals(original.fontSize+1,saved.fontSize)

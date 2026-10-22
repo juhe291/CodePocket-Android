@@ -15,7 +15,7 @@ import com.codepocket.ide.editor.InlineIssue
 import com.codepocket.ide.ui.*
 
 /** Read-only error hover. Never grabs the editor focus/IME or changes its buffer. */
-class DiagnosticPopup(private val activity: Activity, private val editor: CodeEditor, private val surface: EditorSurface) {
+class DiagnosticPopup(private val activity: Activity, private val editor: android.view.View, private val surface: EditorSurface) {
     private var popup: PopupWindow? = null
     val isShowing get() = popup?.isShowing == true
     fun dismiss() { popup?.dismiss(); popup = null }

@@ -1,8 +1,10 @@
 # CodePocket Editor Lab
 
-> 2026-10-21计划调整：本模块冻结为内部回归工具，源码/旧测试/旧APK保留；不再扩展独立功能页或交付为第二个产品。后续直接将已验证实现接入主程序，按[主程序集成计划](../docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)执行。下文描述当前实验基线，当前仍未完成主程序集成；本次仅更新计划。
+> 2026-10-22状态：本模块冻结为内部回归工具。主App现已通过editor-sora库接入Sora，见[本批报告](../docs/MAIN_APP_SORA_INTEGRATION_2026-10-22.md)。不再扩展独立功能页或交付为第二个产品；I2/I3仍按主程序集成计划继续。
 
-独立安装的 Sora 适配实验，applicationId 为 `com.codepocket.ide.editorlab`。默认 CodePocket 继续使用原生编辑器；本实验不连接 Python、Wandbox 或 PTY，不是主 IDE 的替代安装包。
+独立内部测试applicationId为 `com.codepocket.ide.editorlab`。Sora核心7份Java源码与20份语法/主题/许可资源已移到 `editor-sora/src/main/`，主程序与本工具测试相同适配实现；历史包名保留以共享同包内部测试，不代表主App依赖实验application。
+
+下文描述保留的内部测试入口；它不连接Python、Wandbox或PTY，也不替代主IDE。主程序正常入口与一个主APK是后续功能交付路径。
 
 ## 当前两个入口
 

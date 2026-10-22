@@ -39,7 +39,8 @@ import com.codepocket.ide.animation.LayoutMotion
 import com.codepocket.ide.animation.SurfaceMotion
 import com.codepocket.ide.animation.DialogMotion
 import com.codepocket.ide.editor.EditorAnalysisController
-import com.codepocket.ide.editor.NativeEditorPort
+import com.codepocket.ide.editor.SoraEditorPort
+import com.codepocket.editorlab.WorkbenchEditor
 import com.codepocket.ide.editor.DocumentEditorPort
 import com.codepocket.ide.editor.EditorDocumentRequest
 import com.codepocket.ide.editor.EditorDocumentTransitions
@@ -141,7 +142,7 @@ class MainActivity : Activity() {
     private val autosave = Runnable { if (dirty && settings.autoSave) saveActive() }
     private val refreshEditor = Runnable {
         if (::editor.isInitialized) {
-            if (BaseInputConnection.getComposingSpanStart(editor.text) >= 0) { hideCompletion(); return@Runnable }
+            if (editor.isComposing) { hideCompletion(); return@Runnable }
             editorAnalysis?.request()
             updateTabStops()
             updateSuggestions()
@@ -174,7 +175,7 @@ class MainActivity : Activity() {
     private fun prefKey(name: String) = "$name:${workspace.identity}"
 
     private lateinit var root: LinearLayout
-    private lateinit var editor: CodeEditor
+    private lateinit var editor: WorkbenchEditor
     private lateinit var input: EditText
     private lateinit var numbers: TextView
     private lateinit var status: TextView
@@ -372,6 +373,7 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        if (::editor.isInitialized) editor.resume()
         motionForeground = true
         shellPane?.hostActive(true)
         refreshMotionPolicy()
@@ -381,6 +383,7 @@ class MainActivity : Activity() {
     override fun onPause() {
         super.onPause()
         motionForeground = false
+        if (::editor.isInitialized) editor.pause()
         shellPane?.hostActive(false)
         refreshMotionPolicy()
         if (::panelResize.isInitialized) panelResize.cancelGesture()
@@ -647,7 +650,7 @@ class MainActivity : Activity() {
         val language = if (activePath.endsWith(".py", true)) "Python" else "C++"
         val (line, column) = InteractionState.caret(editor.text.toString(), editor.selectionStart)
         val state = InteractionState.status(running, workspaceBusy, saving, dirty, status.text.toString())
-        val report = editor.diagnosticReport
+        val report = (editorPort as? SoraEditorPort)?.report ?: com.codepocket.ide.editor.SyntaxReport()
         val detailedState = when {
             report.issues.isNotEmpty() -> "$state · ${report.issues.size} 处问题，点击红线查看"
             report.status.isNotEmpty() -> "$state · ${report.status}"
@@ -666,14 +669,14 @@ class MainActivity : Activity() {
     }
 
     private fun commandContext(): CommandContext {
-        val focused = when {
-            ::input.isInitialized && input.hasFocus() -> input
-            ::editor.isInitialized && editor.hasFocus() -> editor
-            else -> null
+        val composing = when {
+            ::input.isInitialized && input.hasFocus() -> BaseInputConnection.getComposingSpanStart(input.text) >= 0
+            ::editor.isInitialized && editor.hasFocus() -> editor.isComposing
+            else -> false
         }
         return CommandContext(workspaceBusy, ::editor.isInitialized && loadedPath == activePath,
             ::editor.isInitialized && editor.hasFocus(), ::input.isInitialized && input.hasFocus(),
-            focused != null && BaseInputConnection.getComposingSpanStart(focused.text) >= 0, running, saving)
+            composing, running, saving)
     }
 
     private fun updateMainToolbarState() {
@@ -984,7 +987,7 @@ class MainActivity : Activity() {
         sessions.file(loadedPath!!).apply {
             stdin = input.text.toString()
             // A GONE editor can have its native scroll clamped during remeasure. Keep its saved viewport.
-            val live = EditorViewState(editor.selectionStart, editor.selectionEnd, editor.scrollX, editor.scrollY,
+            val live = EditorViewState(editor.selectionStart, editor.selectionEnd, editor.contentScrollX, editor.contentScrollY,
                 lastFocus, input.selectionStart, input.selectionEnd)
             view = PanelViewport.capture(view, live, editorRegion.visibility == View.VISIBLE)
         }
@@ -1035,28 +1038,17 @@ class MainActivity : Activity() {
         }
         editorBody.addView(numbers, LinearLayout.LayoutParams(dp(42), -1))
         editorAnalysis?.close(); editorPort?.close()
-        editor = CodeEditor(this).apply {
-            textSize = 13.5f; typeface = Typeface.MONOSPACE; setTextColor(textForeground)
-            setHintTextColor(muted); hint = "在这里输入 C++ 或 Python…"
-            gravity = Gravity.TOP or Gravity.START
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-            isSingleLine = false; setHorizontallyScrolling(true)
-            setLineSpacing(dp(3).toFloat(), 1f)
-            setPadding(dp(6), dp(9), dp(14), dp(9))
-            setBackgroundColor(Color.TRANSPARENT)
-            setSelectAllOnFocus(false)
-            includeFontPadding = false
-            isSaveEnabled = false
-            filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS))
-        }
-        editorPort = NativeEditorPort(editor,
+        editor = WorkbenchEditor(this)
+        editorPort = SoraEditorPort(editor,
             { if (loadedPath != activePath || !::sessions.isInitialized) null
-                else sessions.key(activePath) to editRevision }, ::isCpp, { syntaxDark }, { !workspaceBusy }) {
+                else sessions.key(activePath) to editRevision },
+            { sessions.key(activePath) }, ::isCpp, { syntaxDark }, { !workspaceBusy })
+        editor.setCompositionEnded {
             if (!isDestroyed && !isFinishing && hasWindowFocus()) {
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
             }
         }
-        (editorPort as NativeEditorPort).apply {
+        (editorPort as SoraEditorPort).apply {
             diagnosticsChanged = ::updateStatusBar
             pythonDocument = { activePath.endsWith(".py", true) }
             runtimeDiagnostics = { frame ->
@@ -1076,8 +1068,8 @@ class MainActivity : Activity() {
         suggestionRow = LinearLayout(this).apply { setPadding(dp(5), dp(2), dp(5), dp(2)); setBackgroundColor(surface) }
         suggestScroll.addView(suggestionRow)
         editorRegion.addView(suggestScroll, LinearLayout.LayoutParams(-1, dp(DesignTokens.SNIPPET_HINT)))
-        editor.viewTreeObserver.addOnScrollChangedListener {
-            diagnosticPopup?.dismiss(); numbers.scrollY = editor.scrollY; completionPopup?.let { if (it.isShowing) it.reposition() }
+        editor.setScrolled {
+            diagnosticPopup?.dismiss();  completionPopup?.let { if (it.isShowing) it.reposition() }
             signaturePopup?.let { if (it.isShowing) it.reposition() }
         }
         editor.viewTreeObserver.addOnGlobalLayoutListener {
@@ -1086,41 +1078,27 @@ class MainActivity : Activity() {
             completionPopup?.let { if (it.isShowing) it.reposition() }
             signaturePopup?.let { if (it.isShowing) it.reposition() }
         }
-        editor.addTextChangedListener(object : TextWatcher {
-            private var before = ""
-            private var change: TextChange? = null
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                if (!quietEdit) { before = s.toString(); snippetTextChanging = true }
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, beforeCount: Int, count: Int) {
-                if (!quietEdit) {
-                    if (editor.isHistoryEdit) clearSnippet() else trackSnippetEdit(start, beforeCount, count)
-                    change = EditorActions.typed(before, start, beforeCount, s.toString().substring(start, start + count), isCpp(),
-                        settings.tabWidth, settings.useSpaces, settings.autoIndent, settings.autoPairs, editor.isHistoryEdit)
-                }
-            }
-            override fun afterTextChanged(s: Editable?) {
-                diagnosticPopup?.dismiss()
-                if (quietEdit) return
-                editorAnalysis?.cancel()
-                hideCompletion()
-                val edit = change
-                change = null
-                if (edit != null && s != null && BaseInputConnection.getComposingSpanStart(s) < 0) applyChange(edit, keepSnippet = true)
+        editor.setChanges { start, removed, inserted, history ->
+            diagnosticPopup?.dismiss()
+            if (!quietEdit) {
+                snippetTextChanging = true
+                if (history) clearSnippet() else trackSnippetEdit(start, removed, inserted)
+                editorAnalysis?.cancel(); (editorPort as? SoraEditorPort)?.clearDiagnostics(); hideCompletion()
                 if (!dirty) { dirty = true; updateShellTitle() }; editRevision++
                 snippetSession = snippetSession?.copy(revision = editRevision)
-                snippetTextChanging = false; validSnippet(); updateSnippetHint()
+                snippetTextChanging = false
+                updateSnippetHint()
                 handler.removeCallbacks(checkpointDraft); handler.postDelayed(checkpointDraft, 200)
-                updateNumbers(); updateStatusBar()
+                updateStatusBar()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
                 handler.removeCallbacks(autosave); if (settings.autoSave) handler.postDelayed(autosave, settings.autoSaveDelayMs.toLong())
             }
-        })
-        editor.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
+        }
+        editor.setEditorFocusListener { _, focused ->
             if (focused) { lastFocus = "editor"; updateImeLayout() } else { diagnosticPopup?.dismiss(); hideCompletion() }
         }
-        editor.setOnClickListener {
-            val issue = editor.diagnosticAtCaret()
+        editor.setEditorClickListener {
+            val issue = (editorPort as? SoraEditorPort)?.diagnosticAtCaret()
             if (issue != null) {
                 hideCompletion(true)
                 val popup = diagnosticPopup ?: DiagnosticPopup(this, editor, editorPort!!).also { diagnosticPopup = it }
@@ -1129,12 +1107,12 @@ class MainActivity : Activity() {
         }
         completionHint = label("", 11f, muted)
         suggestionRow.addView(completionHint)
-        editor.onCaretChanged = {
+        editor.setCaretChanged {
             updateStatusBar()
             if (!quietEdit) {
                 diagnosticPopup?.dismiss()
                 editorAnalysis?.cancel()
-                if (!snippetTextChanging) { validSnippet(); updateSnippetHint() }
+                if (!snippetTextChanging) handler.post { if (!quietEdit) { validSnippet(); updateSnippetHint() } }
                 hideCompletion()
                 handler.removeCallbacks(refreshEditor); handler.postDelayed(refreshEditor, 120)
             }
@@ -1750,14 +1728,8 @@ class MainActivity : Activity() {
 
     private fun isCpp() = !activePath.lowercase().endsWith(".py")
     private fun updateNumbers() {
-        if (!::numbers.isInitialized) return
-        if (!settings.lineNumbers) return
-        val value = editor.text.toString()
-        val layout = editor.layout
-        val labels = if (settings.wordWrap && layout != null && layout.text.length == value.length)
-            EditorSearch.gutter(value, (0 until layout.lineCount.coerceAtMost(10000)).map { layout.getLineStart(it) })
-        else (1..(value.count { it == '\n' } + 1).coerceAtMost(10000)).joinToString("\n")
-        if (numbers.text.toString() != labels) numbers.text = labels
+        // Sora renders its own wrapped-line gutter. The old TextView remains hidden for layout compatibility.
+        if (::numbers.isInitialized) numbers.visibility = View.GONE
     }
 
     private fun completionRequest() = CompletionRequest(sessions.key(activePath), editRevision,
@@ -1777,7 +1749,7 @@ class MainActivity : Activity() {
         if (diagnosticPopup?.isShowing == true) { if (!force) return else diagnosticPopup?.dismiss() }
         if (isFinishing || !hasWindowFocus() || workspaceBusy || loadedPath != activePath || !editor.hasFocus() || !editor.isShown ||
             toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
-            BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || editor.selectionStart != editor.selectionEnd ||
+            editor.isComposing || editor.selectionStart != editor.selectionEnd ||
             (!force && (snippetSession != null || !settings.autoCompletion || editor.length() > 45000))) { hideCompletion(); return }
         val request = completionRequest()
         if (force) completionSuppressed = null
@@ -1795,7 +1767,7 @@ class MainActivity : Activity() {
             runOnUiThread {
                 if (isDestroyed || isFinishing || !hasWindowFocus() || generation != completionGeneration || workspaceBusy ||
                     request != completionRequest() || !editor.hasFocus() || !editor.isShown ||
-                    BaseInputConnection.getComposingSpanStart(editor.text) >= 0 ||
+                    editor.isComposing ||
                     toolDialog?.isShowing == true || explorerDialog?.isShowing == true) return@runOnUiThread
                 if (batch == null) {
                     if (force) status.setText(if (LexicalCompletion.memberContext(request))
@@ -1829,7 +1801,7 @@ class MainActivity : Activity() {
         if (!::editor.isInitialized || !::sessions.isInitialized) return
         if (isFinishing || isDestroyed || !hasWindowFocus() || workspaceBusy || loadedPath != activePath ||
             !editor.hasFocus() || !editor.isShown || editor.length() > 45000 ||
-            BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || editor.selectionStart != editor.selectionEnd ||
+            editor.isComposing || editor.selectionStart != editor.selectionEnd ||
             toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
             completionPopup?.isShowing == true || (!force && !settings.signatureHelp)) { hideSignatureHelp(); return }
         val request = completionRequest()
@@ -1843,7 +1815,7 @@ class MainActivity : Activity() {
             runOnUiThread {
                 if (isDestroyed || isFinishing || !hasWindowFocus() || generation != signatureGeneration || workspaceBusy ||
                     request != completionRequest() || !editor.hasFocus() || !editor.isShown ||
-                    BaseInputConnection.getComposingSpanStart(editor.text) >= 0 ||
+                    editor.isComposing ||
                     toolDialog?.isShowing == true || explorerDialog?.isShowing == true || completionPopup?.isShowing == true) return@runOnUiThread
                 if (found == null || !found.matches(completionRequest())) {
                     if (force) status.setText(R.string.signature_empty)
@@ -1873,7 +1845,7 @@ class MainActivity : Activity() {
 
     private fun acceptCompletion(index: Int = completionPopup?.selectedIndex ?: 0): Boolean {
         if (workspaceBusy || !editor.hasFocus() || completionPopup?.isShowing != true ||
-            BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return false
+            editor.isComposing) return false
         val source = completionRequest()
         val insertion = completionBatch?.insertion(source, index, settings, Workspace.MAX_CHARS) ?: run {
             hideCompletion(); return false
@@ -1920,7 +1892,7 @@ class MainActivity : Activity() {
     }
 
     private fun moveSnippet(reverse: Boolean): Boolean {
-        if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0 || !validSnippet()) return false
+        if (workspaceBusy || !editor.hasFocus() || editor.isComposing || !validSnippet()) return false
         val source = editorPort?.snapshot()?.buffer ?: return false
         val navigation = snippetSession!!.move(reverse)
         if (!selectEditor(EditorSelectionRequest(source, navigation.start, navigation.end), keepSnippet = true)) return false
@@ -1941,7 +1913,7 @@ class MainActivity : Activity() {
 
     private fun showSnippetMenu() {
         if (workspaceBusy || !editor.hasFocus() || loadedPath != activePath ||
-            BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+            editor.isComposing) return
         val snapshot = completionRequest()
         val options = mutableListOf<Pair<String, () -> Unit>>()
         if (validSnippet()) {
@@ -1952,7 +1924,7 @@ class MainActivity : Activity() {
         if (CodeSnippets.replacement(snapshot) != null) CodeSnippets.all(isCpp()).forEach { descriptor ->
             options.add("${descriptor.trigger} · ${descriptor.title}" to {
                 if (!workspaceBusy && snapshot == completionRequest() &&
-                    BaseInputConnection.getComposingSpanStart(editor.text) < 0) {
+                    !editor.isComposing) {
                     val expanded = CodeSnippets.expand(descriptor.id, snapshot, settings, Workspace.MAX_CHARS)
                     if (expanded == null) status.setText(R.string.snippet_cannot_insert)
                     else applyCompletionInsertion(CompletionEdit(expanded.change, expanded), snapshot)
@@ -1970,7 +1942,7 @@ class MainActivity : Activity() {
     }
 
     private fun insertText(snippet: String, caretInside: Boolean = false) {
-        if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+        if (workspaceBusy || !editor.hasFocus() || editor.isComposing) return
         val source = editorPort?.snapshot()?.buffer ?: return
         val start = minOf(source.start, source.end)
         val end = maxOf(source.start, source.end)
@@ -1981,7 +1953,7 @@ class MainActivity : Activity() {
 
     /** Shift+Tab removes one indent. Tab indents selection or accepts a suggestion. */
     private fun indent(reverse: Boolean) {
-        if (workspaceBusy || !editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+        if (workspaceBusy || !editor.hasFocus() || editor.isComposing) return
         if (reverse && moveSnippet(true)) return
         val source = editorPort?.snapshot()?.buffer ?: return
         val change = EditorActions.indent(source.text, source.start, source.end, reverse, settings.tabWidth, settings.useSpaces)
@@ -2003,7 +1975,7 @@ class MainActivity : Activity() {
         return result
     }
 
-    /** Used only for explicit edits. Native typing/history have their own TextWatcher revision path. */
+    /** Used only for explicit edits. Sora typing/history have their own ContentChangeEvent revision path. */
     private fun finishEditorChange(result: EditResult, expansion: SnippetExpansion? = null): Boolean {
         if (!result.accepted) {
             status.setText(when (result) {
@@ -2029,7 +2001,7 @@ class MainActivity : Activity() {
     }
 
     private fun tab() {
-        if (!editor.hasFocus() || BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+        if (!editor.hasFocus() || editor.isComposing) return
         if (settings.completionTab && acceptCompletion()) return
         if (moveSnippet(false)) return
         hideCompletion(); indent(false)
@@ -2094,7 +2066,7 @@ class MainActivity : Activity() {
     /** Change only font metrics: retain Editable, undo, document revision, focus and terminal sessions. */
     private fun zoomEditor(delta: Int, requireEditorFocus: Boolean = true) {
         if (workspaceBusy || loadedPath != activePath || (requireEditorFocus && !editor.hasFocus()) ||
-            BaseInputConnection.getComposingSpanStart(editor.text) >= 0) return
+            editor.isComposing) return
         val size = (settings.fontSize + delta).coerceIn(10, 28)
         if (size == settings.fontSize) { status.text = getString(R.string.editor_font_limit, size); return }
         hideCompletion(true)
@@ -2118,7 +2090,8 @@ class MainActivity : Activity() {
         shellPane?.setAppearance(settings.terminalTheme.name, dark)
         shellPane?.setPreferences(settings.terminalFontSize, motionForeground && motionAllowed() && settings.cursorBlink)
         refreshMotionPolicy()
-        numbers.visibility = if (settings.lineNumbers) View.VISIBLE else View.GONE
+        numbers.visibility = View.GONE
+        editor.setLineNumbers(settings.lineNumbers)
         editor.setHorizontallyScrolling(!settings.wordWrap)
         (editor.parent as? View)?.setBackgroundColor(codeBackground)
         editor.setTextColor(codeForeground); numbers.setTextColor(if (syntaxDark) 0xFF9DA3AD.toInt() else 0xFF636A74.toInt())
@@ -2134,11 +2107,8 @@ class MainActivity : Activity() {
     }
 
     private fun updateTabStops() {
-        val value = editor.text
-        value.getSpans(0, value.length, android.text.style.TabStopSpan::class.java).forEach { value.removeSpan(it) }
-        val width = editor.paint.measureText(" ") * settings.tabWidth
-        for (column in 1..64) value.setSpan(android.text.style.TabStopSpan.Standard((column * width).toInt().coerceAtLeast(1)),
-            0, value.length, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+        editor.configureIndent(settings.tabWidth, settings.useSpaces, settings.autoIndent, settings.autoPairs)
+        editor.configureLanguage(isCpp(), activePath.endsWith(".py", true), syntaxDark)
     }
 
     private fun cancelWorkbenchMotion() {
@@ -2334,7 +2304,7 @@ class MainActivity : Activity() {
                 KeyEvent.KEYCODE_ESCAPE -> CompletionKey.ESC
                 else -> CompletionKey.OTHER
             }
-            val composing = BaseInputConnection.getComposingSpanStart(editor.text) >= 0
+            val composing = editor.isComposing
             val action = CompletionKeys.action(key, settings, completionPopup?.isShowing == true, completionExplicit,
                 completionPopup?.explicitSelection == true, composing, editor.selectionStart != editor.selectionEnd,
                 event.isCtrlPressed || event.isAltPressed || event.isShiftPressed || event.isMetaPressed,

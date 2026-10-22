@@ -43,7 +43,7 @@ jobs:
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
 
       - name: Run Kotlin regression tests and Android lint
-        run: bash ./gradlew :terminal-emulator:testDebugUnitTest :app:testDebugUnitTest :app:lintDebug --stacktrace --no-daemon
+        run: bash ./gradlew :terminal-emulator:testDebugUnitTest :app:testDebugUnitTest :app:lintDebug :editor-sora:lintDebug --stacktrace --no-daemon
 
       - name: Verify actual generated Shell startup on the host
         run: python scripts/verify_shell_startup.py --junit app/build/test-results/testDebugUnitTest --shell /bin/sh --output verification/shell-startup-inspection.json
@@ -85,6 +85,7 @@ jobs:
             app/build/reports/tests/
             third-party/termux/terminal-emulator/build/reports/tests/
             app/build/reports/lint-results-debug.*
+            editor-sora/build/reports/lint-results-debug.*
             verification/apk-inspection.json
             verification/snippet-inspection.json
             verification/shell-startup-inspection.json

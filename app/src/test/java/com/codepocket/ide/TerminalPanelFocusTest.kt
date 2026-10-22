@@ -2,7 +2,7 @@ package com.codepocket.ide
 
 import android.widget.EditText
 import android.widget.LinearLayout
-import com.codepocket.ide.editor.NativeEditorPort
+import com.codepocket.ide.editor.SoraEditorPort
 import com.codepocket.ide.editor.EditorViewportSnapshot
 import com.codepocket.ide.terminal.shell.ShellRuntime
 import com.codepocket.ide.terminal.shell.ShellLaunchPlan
@@ -26,8 +26,8 @@ class TerminalPanelFocusTest {
     private lateinit var activity:MainActivity
     private lateinit var runtime:ShellRuntime
     private lateinit var pane:ShellTerminalPane
-    private lateinit var editor:CodeEditor
-    private lateinit var port:NativeEditorPort
+    private lateinit var editor:com.codepocket.editorlab.WorkbenchEditor
+    private lateinit var port:SoraEditorPort
     private lateinit var region:LinearLayout
     private fun field(name:String,value:Any)=ReflectionHelpers.setField(activity,name,value)
     @Before fun prepare() {
@@ -40,8 +40,8 @@ class TerminalPanelFocusTest {
         ReflectionHelpers.setField(runtime,"session",session);ReflectionHelpers.setField(runtime,"plan",plan)
         ReflectionHelpers.setField(runtime,"state",ShellRuntime.State.OPEN)
         pane=ShellTerminalPane(activity,null,12,false,{},runtime)
-        editor=CodeEditor(activity);editor.setText("print('hello')");editor.setSelection(3)
-        port=NativeEditorPort(editor,{"buffer" to 0L},{false},{true},{true},{})
+        editor=com.codepocket.editorlab.WorkbenchEditor(activity);editor.setText("print('hello')");editor.setSelection(3)
+        port=SoraEditorPort(editor,{"buffer" to 0L},{"buffer"},{false},{true},{true})
         val editorRegion=LinearLayout(activity).apply {addView(editor)}
         region=LinearLayout(activity).apply {isFocusableInTouchMode=true;addView(pane)}
         val root=LinearLayout(activity).apply {orientation=LinearLayout.VERTICAL;addView(editorRegion);addView(region)}

@@ -1,6 +1,6 @@
 plugins { id("com.android.application") }
 
-// Java-only compatibility experiment. Never a dependency of :app or part of its APK.
+// Optional internal harness. The production adapter lives in :editor-sora.
 android {
     namespace = "com.codepocket.editorlab"
     compileSdk = 35
@@ -12,7 +12,7 @@ android {
         versionCode = 1
         versionName = "0.1-experiment"
     }
-    sourceSets.getByName("test").resources.srcDir("src/main/assets")
+    sourceSets.getByName("test").resources.srcDir("../editor-sora/src/main/assets")
     testOptions {
         unitTests.isIncludeAndroidResources = true
         unitTests.all {
@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":editor-sora"))
     implementation(project(":workspace-core"))
     implementation(project(":editor-surface"))
     implementation(project(":editor-assist"))

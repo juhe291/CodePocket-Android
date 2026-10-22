@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "CodePocket"
-include(":app", ":workspace-core", ":editor-surface", ":editor-assist", ":terminal-emulator", ":terminal-view")
+include(":editor-sora", ":app", ":workspace-core", ":editor-surface", ":editor-assist", ":terminal-emulator", ":terminal-view")
 project(":terminal-emulator").projectDir = file("third-party/termux/terminal-emulator")
 project(":terminal-view").projectDir = file("third-party/termux/terminal-view")
 

@@ -61,7 +61,7 @@ class StartupNativeGraphicsTest {
             // Exercise onCreate and its actual asynchronous workspace preparation, not a partial fixture.
             WorkspaceIo.executor.submit {}.get(10, TimeUnit.SECONDS)
             shadowOf(Looper.getMainLooper()).idle()
-            val editor: CodeEditor = ReflectionHelpers.getField(main, "editor")
+            val editor: com.codepocket.editorlab.WorkbenchEditor = ReflectionHelpers.getField(main, "editor")
             assertTrue(editor.text.toString().contains("#include"))
             val controls = descendants(main.window.decorView)
             assertTrue(controls.any { it.contentDescription == "打开终端" })

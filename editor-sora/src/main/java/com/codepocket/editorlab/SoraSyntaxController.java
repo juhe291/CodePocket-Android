@@ -15,6 +15,12 @@ final class SoraSyntaxController implements AutoCloseable {
     private SyntaxLanguage requested = SyntaxLanguage.PYTHON, applied;
     private boolean dark = true, appliedDark, closed, paused, broken;
     private Boolean fallbackDark;
+    private int tabWidth = 4;
+    private boolean spaces = true;
+    void indentation(int width, boolean useSpaces) {
+        if (tabWidth == width && spaces == useSpaces) return;
+        tabWidth = width; spaces = useSpaces; applied = null; request();
+    }
     private String state = "语法加载中 · 纯文本";
     private final Runnable update = this::reconcile;
     SoraSyntaxController(CodeEditor editor, Consumer<String> changed) { this.editor = editor; this.changed = changed; }
@@ -47,7 +53,7 @@ final class SoraSyntaxController implements AutoCloseable {
                 else {
                     TextMateLanguage language = TextMateLanguage.create(effective.scope, bundle.grammars, bundle.themes, false);
                     // TextMate identifiers are lexical, not IntelliSense. Existing IDE completion is integrated separately.
-                    language.setAutoCompleteEnabled(false); language.setTabSize(4); language.useTab(false);
+                    language.setAutoCompleteEnabled(false); language.setTabSize(tabWidth); language.useTab(!spaces);
                     if (language.getAnalyzeManager() == null) throw new IllegalStateException("TextMate analyzer unavailable");
                     editor.setEditorLanguage(language);
                 }
