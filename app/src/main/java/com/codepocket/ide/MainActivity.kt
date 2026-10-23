@@ -1444,10 +1444,20 @@ class MainActivity : Activity() {
         }.showAnimated()
     }
 
-    private fun nameDialog(title: String, value: String = "", onConfirm: (String, () -> Unit) -> Unit) {
+    private fun sizeForm(dialog:AlertDialog,maximumDp:Int=560) {
+        val available=if(::root.isInitialized && root.width>0)root.width else resources.displayMetrics.widthPixels
+        dialog.window?.setLayout(minOf((available-dp(32)).coerceAtLeast(dp(48)),dp(maximumDp)),WindowManager.LayoutParams.WRAP_CONTENT)
+    }
+
+    private fun nameDialog(title: String, value: String = "", contextPath:String?=null, onConfirm: (String, () -> Unit) -> Unit) {
         val field = EditText(this).apply { setSingleLine(); setText(value); setSelection(text.length); setPadding(dp(18), dp(12), dp(18), dp(12)) }
-        val dialog = AlertDialog.Builder(this).setTitle(title).setView(field).setNegativeButton("取消", null)
+        val body=WorkbenchForms.body(this)
+        contextPath?.let{body.addView(WorkbenchForms.location(this,"位置",it),LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(16)})}
+        body.addView(WorkbenchForms.caption(this,"名称"));field.hint="输入名称";field.contentDescription="名称"
+        body.addView(field,LinearLayout.LayoutParams(-1,-2))
+        val dialog = AlertDialog.Builder(this).setTitle(title).setView(WorkbenchForms.scroll(this,body)).setNegativeButton("取消", null)
             .setPositiveButton("确定", null).showAnimated()
+        sizeForm(dialog,480)
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             field.error = null
             try { onConfirm(field.text.toString()) { dialog.dismiss() } }
@@ -1459,8 +1469,8 @@ class MainActivity : Activity() {
         if (!allowFileOperation()) return
         val parent = runCatching { workspace.resolve(currentDirectory) }.getOrDefault(workspace.root)
             .let { if (it.isDirectory) it else workspace.root }
-        nameDialog((if (directory) "新建文件夹" else "新建代码文件") + " · " + workspace.path(parent).ifBlank { "项目根目录" },
-            if (directory) "" else "untitled.${if (isCpp()) "cpp" else "py"}") { name, dismiss ->
+        nameDialog(if (directory) "新建文件夹" else "新建代码文件",
+            if (directory) "" else "untitled.${if (isCpp()) "cpp" else "py"}",workspace.path(parent).ifBlank { "项目根目录" }) { name, dismiss ->
             Workspace.validateName(name)
             saveActive {
                 ioAction("正在创建…", { workspace.create(parent, name, directory) }) { item ->
@@ -1475,7 +1485,7 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun askRename(file: File) = nameDialog("重命名", file.name) { newName, dismiss ->
+    private fun askRename(file: File) = nameDialog("重命名", file.name,workspace.path(file)) { newName, dismiss ->
         Workspace.validateName(newName)
         if (!allowFileOperation()) return@nameDialog
         saveActive {
@@ -1491,15 +1501,16 @@ class MainActivity : Activity() {
     private fun askMove(file: File) {
         if (!allowFileOperation()) return
         var destination = workspace.root
-        val content = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(16), dp(8), dp(16), dp(8)) }
-        val origin = label("来源：${workspace.path(file)}", 12f, muted)
+        val content = WorkbenchForms.body(this)
+        val origin = WorkbenchForms.location(this,"来源",workspace.path(file),if(file.isDirectory)IdeIcon.FOLDER else IdeIconDrawable.file(file.name))
         val path = label("", 13f, textForeground, true)
         val directories = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val scroll = ScrollView(this).apply { addView(directories) }
         content.addView(origin); content.addView(path, LinearLayout.LayoutParams(-1, dp(48)))
-        content.addView(scroll, LinearLayout.LayoutParams(-1, dp(240)))
+        content.addView(scroll, LinearLayout.LayoutParams(-1, dp(if(root.height/resources.displayMetrics.density<480)96 else 240)))
         val dialog = AlertDialog.Builder(this).setTitle("移动到文件夹").setView(content)
             .setNegativeButton("取消", null).setPositiveButton("移动到此处", null).showAnimated()
+        sizeForm(dialog)
         fun render() {
             path.text = getString(R.string.move_target_path, workspace.path(destination).ifBlank { "项目根目录" })
             directories.removeAllViews()
@@ -1532,8 +1543,11 @@ class MainActivity : Activity() {
 
     private fun askDelete(file: File) {
         if (!allowFileOperation()) return
-        AlertDialog.Builder(this).setTitle("确认删除？")
-            .setMessage("将永久删除 ${file.name}${if (file.isDirectory) " 及其全部子文件" else ""}。此操作不可撤销。")
+        val body=WorkbenchForms.body(this)
+        body.addView(WorkbenchForms.location(this,"删除项目",workspace.path(file),if(file.isDirectory)IdeIcon.FOLDER else IdeIconDrawable.file(file.name)))
+        body.addView(label("将永久删除${if(file.isDirectory)"此目录及其全部子文件" else "此文件"}，此操作不可撤销。",12f,palette.error).apply{tag=SurfaceTextTone.DANGER;setPadding(0,dp(16),0,dp(8))})
+        val dialog=AlertDialog.Builder(this).setTitle("确认删除？")
+            .setView(WorkbenchForms.scroll(this,body))
             .setNegativeButton("取消", null).setPositiveButton("删除") { _, _ ->
                 saveActive {
                     val path = workspace.path(file)
@@ -1553,6 +1567,7 @@ class MainActivity : Activity() {
                     }
                 }
             }.showAnimated()
+        sizeForm(dialog,480)
     }
 
     private fun ensureFallback(): String {
@@ -2239,17 +2254,20 @@ class MainActivity : Activity() {
         if (workspaceBusy || loadedPath != activePath) return
         projectSearch?.cancel(); toolDialog?.dismiss(); hideCompletion(true); clearSnippet()
         val targetWorkspace = workspace
-        val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(12), dp(8), dp(12), dp(8)) }
+        val layout = WorkbenchForms.body(this)
         val query = EditText(this).apply {
-            setSingleLine(); hint = "项目文字搜索（含当前未保存缓冲区）"
+            setSingleLine(); hint = "在项目中查找";contentDescription="项目查找文本"
             filters = arrayOf(InputFilter.LengthFilter(256))
         }
         val case = android.widget.CheckBox(this).apply { text = "区分大小写" }
-        val message = TextView(this).apply { setTextColor(muted); text = getString(R.string.project_search_notice) }
-        val list = android.widget.ListView(this)
+        val message = TextView(this).apply { textSize=12f;setTextColor(muted);tag=SurfaceTextTone.MUTED;setPadding(0,dp(8),0,dp(8));visibility=View.GONE }
+        val list = android.widget.ListView(this).apply{visibility=View.GONE}
         val search = android.widget.Button(this).apply { text = "搜索" }
-        layout.addView(query); layout.addView(case); layout.addView(search); layout.addView(message)
-        layout.addView(list, LinearLayout.LayoutParams(-1, dp(240)))
+        val searchRow=LinearLayout(this).apply{gravity=Gravity.CENTER_VERTICAL}
+        searchRow.addView(query,LinearLayout.LayoutParams(0,dp(48),1f));searchRow.addView(search,LinearLayout.LayoutParams(-2,dp(48)).apply{marginStart=dp(8)})
+        layout.addView(searchRow);layout.addView(case);layout.addView(message)
+        list.divider=android.graphics.drawable.ColorDrawable(palette.border);list.dividerHeight=dp(1)
+        layout.addView(list,LinearLayout.LayoutParams(-1,dp(if(root.height/resources.displayMetrics.density<480)96 else 240)))
         val dialog = AlertDialog.Builder(this).setTitle("项目搜索").setView(layout).setNegativeButton("关闭", null).create()
         var request = 0L
         var dialogSearch: ProjectSearch? = null
@@ -2262,15 +2280,20 @@ class MainActivity : Activity() {
             val generation = ++request
             val caseSensitive = case.isChecked
             val buffers = mapOf(activePath to editor.text.toString())
-            hits = emptyList(); list.adapter = null; message.text = "正在搜索，可修改条件后重新搜索或关闭取消…"
+            hits = emptyList(); list.adapter = null;list.visibility=View.VISIBLE;message.visibility=View.VISIBLE;message.text = "正在搜索…"
             WorkspaceIo.executor.execute {
                 val response = runCatching { engine.search(needle, caseSensitive, 200, buffers) }
                 runOnUiThread {
                     if (isDestroyed || !dialog.isShowing || toolDialog !== dialog || workspace !== targetWorkspace || generation != request) return@runOnUiThread
                     response.onSuccess { found ->
                         hits = found
-                        list.adapter = android.widget.ArrayAdapter(this, android.R.layout.simple_list_item_1,
-                            found.map { "${it.path}:${it.lineNumber}\n${it.lineContent.take(160)}" })
+                        list.adapter = object:android.widget.ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+                            found.map { "${it.path}:${it.lineNumber}\n${it.lineContent.take(160)}" }) {
+                            override fun getView(position:Int,convertView:View?,parent:ViewGroup):View {
+                                val hit=found[position]
+                                return WorkbenchForms.searchResult(this@MainActivity,hit.path,hit.lineNumber,hit.lineContent)
+                            }
+                        }
                         message.text = if (engine.wasCancelled) getString(R.string.project_search_cancelled)
                             else getString(R.string.project_search_summary, found.size, engine.skippedFiles,
                                 if (engine.limited) getString(R.string.project_search_limited) else "")
@@ -2297,7 +2320,7 @@ class MainActivity : Activity() {
             if (projectSearch === dialogSearch) projectSearch = null
             if (toolDialog === dialog) toolDialog = null
         }
-        toolDialog = dialog; DialogMotion.show(dialog, motionAllowed())
+        toolDialog = dialog; DialogMotion.show(dialog, motionAllowed());sizeForm(dialog,760)
     }
 
     @Deprecated("Native back handling retained for API 24; predictive-back UI still needs device verification")
@@ -2353,7 +2376,7 @@ class MainActivity : Activity() {
             else if (!selectEditor(EditorSelectionRequest(source, offset))) field.error = getString(R.string.editor_navigation_stale)
             else { dialog.dismiss(); editor.requestFocus() }
         } }
-        toolDialog?.dismiss(); toolDialog = dialog; DialogMotion.show(dialog, motionAllowed())
+        toolDialog?.dismiss(); toolDialog = dialog; DialogMotion.show(dialog, motionAllowed());sizeForm(dialog,760)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

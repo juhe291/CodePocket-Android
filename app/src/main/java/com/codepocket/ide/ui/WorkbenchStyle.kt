@@ -45,7 +45,7 @@ object WorkbenchStyle {
             is Button->{view.setTextColor(p.accentText);view.isAllCaps=false;view.minHeight=dp(48);view.textSize=14f;view.background=IdeControls.feedback(view.context,p)}
             is Switch->{view.setTextColor(p.foreground);view.thumbTintList=ColorStateList.valueOf(p.accentText);view.minHeight=dp(48)}
             is CheckBox->{view.setTextColor(p.foreground);view.buttonTintList=ColorStateList.valueOf(p.accentText);view.minHeight=dp(48)}
-            is TextView->{view.setTextColor(p.foreground);view.setLineSpacing(dp(2).toFloat(),1f);if(view.textSize/view.resources.displayMetrics.scaledDensity>20f)view.textSize=18f}
+            is TextView->{view.setTextColor(when(view.tag){SurfaceTextTone.MUTED->p.muted;SurfaceTextTone.DANGER->p.error;else->p.foreground});view.setLineSpacing(dp(2).toFloat(),1f);if(view.textSize/view.resources.displayMetrics.scaledDensity>20f)view.textSize=18f}
         }
         if(view is ViewGroup)for(i in 0 until view.childCount)content(view.getChildAt(i),p)
     }
