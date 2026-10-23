@@ -787,8 +787,8 @@ class MainActivity : Activity() {
             IdeCommand.HIDE_KEYBOARD -> hideKeyboard()
             IdeCommand.THEME -> toggleTheme()
             IdeCommand.SETTINGS -> showSettings()
-            IdeCommand.SHORTCUTS -> alert(getString(R.string.shortcuts_help))
-            IdeCommand.HELP -> alert(getString(R.string.shell_help))
+            IdeCommand.SHORTCUTS -> showReadOnlyDetails("快捷键说明",getString(R.string.shortcuts_help))
+            IdeCommand.HELP -> showReadOnlyDetails("使用说明",getString(R.string.shell_help))
         }
     }
 
@@ -2153,10 +2153,16 @@ class MainActivity : Activity() {
     private fun showCodeFontSize() {
         hideCompletion(true)
         val controls = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(16), dp(8), dp(16), dp(8)) }
-        val value = label(getString(R.string.editor_font_value, settings.fontSize), 18f, textForeground).apply { gravity = Gravity.CENTER }
+        val value = label(getString(R.string.editor_font_value, settings.fontSize), 22f, textForeground).apply { gravity = Gravity.CENTER }
         val minus = IdeControls.key(this, palette, "A−", getString(R.string.editor_font_smaller)) {}
         val plus = IdeControls.key(this, palette, "A+", getString(R.string.editor_font_larger)) {}
+        val preview=TextView(this).apply{
+            text="Aa 0123 你好";typeface=Typeface.MONOSPACE;gravity=Gravity.CENTER
+            setPadding(dp(16),dp(18),dp(16),dp(18));setBackgroundColor(editorBackground)
+            contentDescription="代码字号预览"
+        }
         fun refresh() {
+            preview.textSize=settings.fontSize.toFloat()
             value.text = getString(R.string.editor_font_value, settings.fontSize)
             minus.isEnabled = settings.fontSize > 10; plus.isEnabled = settings.fontSize < 28
             listOf(minus, plus).forEach { it.alpha = if (it.isEnabled) 1f else .4f }
@@ -2167,9 +2173,12 @@ class MainActivity : Activity() {
         controls.addView(value, LinearLayout.LayoutParams(0, dp(48), 1f))
         controls.addView(plus, LinearLayout.LayoutParams(dp(56), dp(48)))
         toolDialog?.dismiss()
-        toolDialog = AlertDialog.Builder(this).setTitle(R.string.editor_font_title).setMessage(R.string.editor_font_touch_help)
-            .setView(controls).setPositiveButton("完成", null).showAnimated()
-        refresh()
+        val body=WorkbenchForms.body(this)
+        body.addView(preview,LinearLayout.LayoutParams(-1,-2));body.addView(controls)
+        body.addView(WorkbenchForms.caption(this,getString(R.string.editor_font_touch_help)))
+        toolDialog = AlertDialog.Builder(this).setTitle(R.string.editor_font_title)
+            .setView(WorkbenchForms.scroll(this,body)).setPositiveButton("完成", null).showAnimated()
+        sizeForm(toolDialog!!,400);refresh()
     }
 
     /** Change only font metrics: retain Editable, undo, document revision, focus and terminal sessions. */
@@ -2532,7 +2541,7 @@ class MainActivity : Activity() {
             saved + originals
         }) { entries ->
             if (entries.isEmpty()) { alert("没有恢复草稿"); return@ioAction }
-            AlertDialog.Builder(this).setTitle("导出恢复草稿")
+            val picker=AlertDialog.Builder(this).setCustomTitle(WorkbenchForms.header(this,"导出恢复草稿","${entries.size} 个草稿 · 选择后导出",IdeIcon.EXPORT))
                 .setItems(entries.mapIndexed { index, draft -> "${index + 1}. ${draft.path}" }.toTypedArray()) { _, which ->
                     val draft = entries[which]
                     exportContent = draft.text; exportPath = draft.path
@@ -2543,6 +2552,7 @@ class MainActivity : Activity() {
                         }, 202)
                     }
                 }.showAnimated()
+            sizeForm(picker)
         }
     }
 
@@ -2551,7 +2561,7 @@ class MainActivity : Activity() {
         val recent = runCatching { JSONArray(prefs.getString("recentTrees", "[]")) }.getOrDefault(JSONArray())
         val names = mutableListOf("选择手机目录…", "内部项目（卸载会清除）", "重新载入当前目录")
         for (i in 0 until recent.length()) names.add("最近：" + recent.getJSONObject(i).optString("name"))
-        AlertDialog.Builder(this).setTitle(workspace.title).setItems(names.toTypedArray()) { _, which ->
+        val picker=AlertDialog.Builder(this).setCustomTitle(WorkbenchForms.header(this,"工作区",workspace.title,IdeIcon.FOLDER_OPEN)).setItems(names.toTypedArray()) { _, which ->
                 when (which) {
                     0 -> AlertDialog.Builder(this).setTitle("选择真实项目目录")
                         .setMessage("编辑器保存会写回所选目录；权限只限该目录。外部文件卸载后仍由提供方保留。Python 使用私有运行镜像，运行代码产生的文件不会自动同步回外部目录。")
@@ -2561,6 +2571,7 @@ class MainActivity : Activity() {
                     else -> requestWorkspace(recent.getJSONObject(which - 3).getString("uri"))
                 }
         }.showAnimated()
+        sizeForm(picker)
     }
 
     private fun requestWorkspace(tree: String?) {
@@ -2909,15 +2920,21 @@ class MainActivity : Activity() {
     }
 
     private fun showDiagnosticDetails(issue: com.codepocket.ide.editor.InlineIssue) {
-        val text=TextView(this).apply{
-            this.text=getString(R.string.editor_diagnostic_content,issue.source,issue.message);textSize=13f;setPadding(dp(16),dp(8),dp(16),dp(8));setTextIsSelectable(true)
-        }
-        val content=ScrollView(this).apply{addView(text)}
+        val content=WorkbenchForms.details(this,getString(R.string.editor_diagnostic_content,issue.source,issue.message),true)
         toolDialog?.dismiss()
         toolDialog=AlertDialog.Builder(this).setTitle(R.string.editor_diagnostic_details).setView(content)
             .setNegativeButton(R.string.shell_failure_close,null).setPositiveButton(R.string.editor_copy_diagnostic){_,_->
                 (getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText(issue.source,issue.message))
             }.showAnimated()
+        sizeForm(toolDialog!!,760)
     }
+
+    private fun showReadOnlyDetails(title:String,text:String) {
+        toolDialog?.dismiss()
+        toolDialog=AlertDialog.Builder(this).setTitle(title).setView(WorkbenchForms.details(this,text))
+            .setPositiveButton("关闭",null).showAnimated()
+        sizeForm(toolDialog!!,760)
+    }
+
     private fun alert(message: String) { AlertDialog.Builder(this).setMessage(message).setPositiveButton("确定", null).showAnimated() }
 }

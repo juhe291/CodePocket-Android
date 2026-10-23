@@ -23,8 +23,9 @@ object WorkbenchStyle {
             setPadding(dp(12),dp(4),dp(12),dp(4));background=IdeControls.feedback(context,p)
             isEnabled=enabled;alpha=if(enabled)1f else .4f;isSelected=checked
             if(checked)background=android.graphics.drawable.RippleDrawable(ColorStateList.valueOf((p.foreground and 0xffffff) or 0x20000000),shape(context,p.selection),null)
-            val tint=if(destructive)p.error else p.muted
-            addView(ImageView(context).apply {setImageDrawable(IdeIconDrawable(context,if(checked)IdeIcon.CHECK else IdeIconDrawable.forTitle(title),tint,dp(20)));importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO},LinearLayout.LayoutParams(dp(20),dp(20)))
+            val glyph=if(checked)IdeIcon.CHECK else IdeIconDrawable.forTitle(title)
+            val tint=if(destructive)p.error else if(glyph in setOf(IdeIcon.CPP,IdeIcon.PYTHON,IdeIcon.HEADER))IdeIconDrawable.color(glyph,p) else p.muted
+            addView(ImageView(context).apply {setImageDrawable(IdeIconDrawable(context,glyph,tint,dp(20)));importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO},LinearLayout.LayoutParams(dp(20),dp(20)))
             addView(TextView(context).apply {text=title.substringBefore("  ");textSize=13f;setTextColor(if(destructive)p.error else p.foreground);setPadding(dp(12),0,dp(8),0);maxLines=3},LinearLayout.LayoutParams(0,-2,1f))
             if(title.contains("  "))addView(TextView(context).apply {text=title.substringAfter("  ");textSize=11f;setTextColor(p.muted);typeface=Typeface.MONOSPACE},LinearLayout.LayoutParams(-2,-2))
             contentDescription=title+(if(checked)"，已选择" else "")

@@ -95,6 +95,10 @@ class IdeIconDrawable(context: Context, private val icon: IdeIcon, color: Int, p
             }
         }
         fun forTitle(title:String):IdeIcon=when {
+            title.startsWith("最近：")->IdeIcon.FOLDER_OPEN
+            title.endsWith(".py",true)->IdeIcon.PYTHON
+            title.endsWith(".cpp",true)->IdeIcon.CPP
+            title.endsWith(".h",true)||title.endsWith(".hpp",true)->IdeIcon.HEADER
             title.startsWith("代码字号")->IdeIcon.CASE
             title.contains("删除")||title.contains("结束")->IdeIcon.DELETE
             title.contains("新建文件夹")->IdeIcon.ADD_FOLDER

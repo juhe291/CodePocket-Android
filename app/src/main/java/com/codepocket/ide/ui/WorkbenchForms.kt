@@ -36,6 +36,26 @@ object WorkbenchForms {
         }
     }
     fun scroll(context:Context,body:View)=ScrollView(context).apply{isFillViewport=false;addView(body)}
+    fun header(context:Context,title:String,subtitle:String,icon:IdeIcon):View {
+        val p=DesignTokens.forContext(context);val dp={v:Int->IdeControls.dp(context,v)}
+        return body(context).apply{
+            setPadding(dp(20),dp(18),dp(20),dp(8))
+            addView(TextView(context).apply{
+                text=title;textSize=16f;setTypeface(null,Typeface.BOLD);setTextColor(p.foreground)
+                setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(context,icon,p.muted,dp(20)),null,null,null)
+                compoundDrawablePadding=dp(10);setPadding(0,0,0,dp(10))
+            })
+            addView(caption(context,subtitle).apply{maxLines=3;ellipsize=android.text.TextUtils.TruncateAt.MIDDLE;contentDescription=subtitle})
+        }
+    }
+    fun details(context:Context,text:String,monospace:Boolean=false):ScrollView {
+        val p=DesignTokens.forContext(context)
+        return scroll(context,TextView(context).apply{
+            this.text=text;textSize=13f;setTextColor(p.foreground);setTextIsSelectable(true)
+            if(monospace)typeface=Typeface.MONOSPACE
+            setPadding(IdeControls.dp(context,20),IdeControls.dp(context,10),IdeControls.dp(context,20),IdeControls.dp(context,16))
+        })
+    }
     fun searchResult(context:Context,path:String,line:Int,code:String):View {
         val p=DesignTokens.forContext(context);val dp={v:Int->IdeControls.dp(context,v)}
         return LinearLayout(context).apply{

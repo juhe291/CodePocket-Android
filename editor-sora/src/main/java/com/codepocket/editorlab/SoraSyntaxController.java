@@ -40,7 +40,7 @@ final class SoraSyntaxController implements AutoCloseable {
         SyntaxLanguage effective = requested.effective(editor.getText().length());
         if (bundle == null) {
             if (fallbackDark == null || fallbackDark != dark) {
-                editor.setColorScheme(chrome(dark ? new SchemeVS2019() : new SchemeGitHub())); fallbackDark = dark;
+                attach(dark ? new SchemeVS2019() : new SchemeGitHub()); fallbackDark = dark;
             }
             return;
         }
@@ -60,15 +60,20 @@ final class SoraSyntaxController implements AutoCloseable {
                 }
             }
             TextMateColorScheme scheme = new TextMateColorScheme(bundle.themes, model);
-            scheme.setTheme(model); editor.setColorScheme(chrome(scheme));
+            scheme.setTheme(model); attach(scheme);
             applied = effective; appliedDark = dark;
             describe(effective);
         } catch (Exception | LinkageError error) {
             android.util.Log.e("CodePocketEditorLab", "TextMate attachment failed", error);
             editor.setEditorLanguage(null); applied = SyntaxLanguage.PLAIN; broken = true;
-            editor.setColorScheme(chrome(dark ? new SchemeVS2019() : new SchemeGitHub()));
+            attach(dark ? new SchemeVS2019() : new SchemeGitHub());
             state = "语法适配失败 · 纯文本"; changed.accept(state);
         }
+    }
+    private void attach(EditorColorScheme scheme) {
+        editor.setColorScheme(scheme);
+        // Attachment can initialize/reset base colors. Apply workbench overrides afterwards.
+        chrome(scheme);
     }
     /** Keep fallback/loaded/failed grammar chrome stable; VS2019's stock teal gutter is too strong here. */
     private EditorColorScheme chrome(EditorColorScheme scheme) {
@@ -81,6 +86,19 @@ final class SoraSyntaxController implements AutoCloseable {
         scheme.setColor(EditorColorScheme.BLOCK_LINE, dark ? 0xff3a414c : 0xffd6dce5);
         scheme.setColor(EditorColorScheme.BLOCK_LINE_CURRENT, dark ? 0xff6b778a : 0xff8190a4);
         scheme.setColor(EditorColorScheme.SELECTION_HANDLE, dark ? 0xffaecdff : 0xff005fb8);
+        // Stock GitHub fallback uses saturated green/magenta. Keep loading/failure states
+        // legible in the same restrained palette. TextMate dynamic token colors remain authoritative.
+        if (!dark) {
+            scheme.setColor(EditorColorScheme.TEXT_NORMAL, 0xff263445);
+            scheme.setColor(EditorColorScheme.KEYWORD, 0xff7e4e94);
+            scheme.setColor(EditorColorScheme.OPERATOR, 0xff536277);
+            scheme.setColor(EditorColorScheme.LITERAL, 0xff8e4630);
+            scheme.setColor(EditorColorScheme.COMMENT, 0xff617667);
+            scheme.setColor(EditorColorScheme.FUNCTION_NAME, 0xff795e26);
+            scheme.setColor(EditorColorScheme.IDENTIFIER_NAME, 0xff263445);
+            scheme.setColor(EditorColorScheme.IDENTIFIER_VAR, 0xff315f79);
+            scheme.setColor(EditorColorScheme.ANNOTATION, 0xff7e4e94);
+        }
         return scheme;
     }
     private void describe(SyntaxLanguage effective) {
