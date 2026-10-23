@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class SoraWorkbenchIntegrationTest {
+    @get:Rule val testName=org.junit.rules.TestName()
     private lateinit var controller: ActivityController<MainActivity>
     private lateinit var main: MainActivity
     private lateinit var editor: WorkbenchEditor
@@ -30,7 +31,7 @@ class SoraWorkbenchIntegrationTest {
     private fun <T> field(name:String):T = ReflectionHelpers.getField(main,name)
     @Before fun launch() {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
-            .putString("activeFile","main.py").putString("settings",AppSettings(autoSave=false,animations=false).toJson()).commit()
+            .putString("activeFile","main.py").putString("settings",AppSettings(theme=if(testName.methodName.contains("Light"))UiTheme.LIGHT else UiTheme.DARK,autoSave=false,animations=false).toJson()).commit()
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get()
         settleIo(); controller.windowFocusChanged(true);editor=field("editor");layout();editor.requestFocus();awaitEditor()
     }
@@ -222,6 +223,59 @@ class SoraWorkbenchIntegrationTest {
         editor.draw(android.graphics.Canvas(bitmap))
         java.io.File(folder,"$name.png").outputStream().use{assertTrue(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
         bitmap.recycle()
+    }
+    private fun assertThemeTokens(code:String,words:List<String>,expected:List<Int>) {
+        waitForTextMate()
+        var actual=words.map{colorAt(code.indexOf(it))}
+        repeat(200){
+            if(actual==expected){assertEquals(code,editor.text.toString());return}
+            Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(16));Thread.sleep(5)
+            actual=words.map{colorAt(code.indexOf(it))}
+        }
+        assertEquals("Current Sora tokens: "+words.zip(actual.map{Integer.toHexString(it)}),expected,actual)
+    }
+    private fun captureTheme(name:String) {
+        val cwd=java.io.File(checkNotNull(System.getProperty("user.dir")));val root=if(cwd.name=="app")cwd.parentFile else cwd
+        val folder=java.io.File(root,"verification/workbench-token-theme-2026-10-24/previews").apply{mkdirs()}
+        val view=main.findViewById<View>(android.R.id.content)
+        val bitmap=android.graphics.Bitmap.createBitmap(view.width,view.height,android.graphics.Bitmap.Config.ARGB_8888)
+        view.draw(android.graphics.Canvas(bitmap))
+        java.io.File(folder,"$name.png").outputStream().use{assertTrue(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))};bitmap.recycle()
+    }
+    @Test fun phoneLightPythonTokensUseRestrainedLoadedTheme() {
+        val code="def greet():\n    return 'hello' + str(42) # note"
+        loadText(code)
+        assertThemeTokens(code,listOf("return","hello","42","note"),listOf(0xff7e4e94.toInt(),0xff8e4630.toInt(),0xff4f6f47.toInt(),0xff617667.toInt()))
+        captureTheme("phone-light-python")
+    }
+    @Test fun phoneDarkPythonTokensKeepTheExistingLoadedTheme() {
+        val code="def greet():\n    return 'hello' + str(42) # note"
+        loadText(code)
+        assertThemeTokens(code,listOf("return","hello","42","note"),listOf(0xffc586c0.toInt(),0xffce9178.toInt(),0xffb5cea8.toInt(),0xff6a9955.toInt()))
+        captureTheme("phone-dark-python")
+    }
+    @Test @Config(qualifiers="w1280dp-h800dp") fun tabletLightCppTokensUseRestrainedLoadedTheme() {
+        switch("main.cpp")
+        val code="#include <string>\nint main() { auto s = \"hello\"; return 42; } // note"
+        loadText(code)
+        assertThemeTokens(code,listOf("return","int","hello","42","note"),listOf(0xff7e4e94.toInt(),0xff286b7d.toInt(),0xff8e4630.toInt(),0xff4f6f47.toInt(),0xff617667.toInt()))
+        captureTheme("tablet-light-cpp")
+    }
+    @Test fun syntaxThemeRoundTripKeepsBufferUndoAndSelection() {
+        val code="def greet():\n    return 'hello' + str(42) # note"
+        loadText(code.dropLast(1));editor.setSelection(editor.length())
+        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText(code.takeLast(1),1)
+        editor.setSelection(3)
+        val content=editor.text;val revision=field<Long>("editRevision")
+        val before=field<AppSettings>("settings")
+        for(light in listOf(true,false)){
+            ReflectionHelpers.setField(main,"settings",before.copy(syntax=if(light)SyntaxTheme.LIGHT else SyntaxTheme.DARK))
+            ReflectionHelpers.callInstanceMethod<Unit>(main,"updateTabStops")
+            val expected=if(light)listOf(0xff7e4e94.toInt(),0xff8e4630.toInt()) else listOf(0xffc586c0.toInt(),0xffce9178.toInt())
+            assertThemeTokens(code,listOf("return","hello"),expected)
+            assertSame(content,editor.text);assertEquals(3,editor.selectionStart);assertEquals(revision,field<Long>("editRevision"))
+        }
+        assertTrue(editor.history(false));assertEquals(code.dropLast(1),editor.text.toString())
     }
     private fun waitForTextMate() {
         repeat(200) {

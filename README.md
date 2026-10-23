@@ -4,10 +4,10 @@
 
 **2026-10-24：UI视觉优先，正在统一主工作台和二级窗口。** 细分隔线、图标标题、柔和文件类型色和独立路径/正文区域增加层次；移除顶部重复项目搜索，保留侧栏项目搜索和编辑区当前文件查找；未实现功能暂缓，原需求保留。
 
-- [最新主APK](dist/CodePocket-search-entry-2026-10-24-debug.apk)（25.28MiB，原签名、arm64-v8a）。
-- [本批精简与验证](docs/UI_SEARCH_ENTRY_POLISH_2026-10-24.md)、[原生预览](docs/search-entry-preview/README.md)：主App672通过/2已登记失败/1旧跳过；Lint0错误，Debug打包及签名/对齐/Python/主机回归通过。未宣称全量绿色或实机通过。
+- [最新主APK](dist/CodePocket-light-theme-2026-10-24-debug.apk)（25.28MiB，原签名、arm64-v8a）。
+- [本批配色与验证](docs/UI_TOKEN_THEME_2026-10-24.md)、[原生预览](docs/token-theme-preview/README.md)：主App676通过/2已登记失败/1旧跳过；Lint0错误，Debug打包及签名/对齐/Python/主机回归通过。未宣称全量绿色或实机通过。
 - [可点击样稿与四种窗口](docs/ui-preview/README.md)已同步工作台骨架，232场景+13项浏览器交互检查通过；全部内容明确为设计示例。
-- 完整改版进行中；部分TextMate动态令牌配色与诊断浮层失败已登记。设备验收继续后置，下面为历史记录。
+- 完整改版进行中；浅色语法配色已收敛并核对真实令牌；诊断浮层失败、启动瞬间与设备验收仍跟踪。设备验收继续后置，下面为历史记录。
 
 ## 历史主机整合验收
 

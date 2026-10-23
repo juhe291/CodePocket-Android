@@ -14,13 +14,13 @@ object EditorPalette {
         "parameter" -> if (dark) 0xFFD0BEA0.toInt() else 0xFF775B2E.toInt()
         "property" -> if (dark) 0xFFBAADD0.toInt() else 0xFF75518F.toInt()
         "constant" -> if (dark) 0xFFB4C7A0.toInt() else 0xFF4F6F32.toInt()
-        "keyword" -> if (dark) 0xFF569CD6.toInt() else 0xFF0000FF.toInt()
-        "type" -> if (dark) 0xFF4EC9B0.toInt() else 0xFF267F99.toInt()
+        "keyword" -> if (dark) 0xFF569CD6.toInt() else 0xFF7E4E94.toInt()
+        "type" -> if (dark) 0xFF4EC9B0.toInt() else 0xFF286B7D.toInt()
         "function" -> if (dark) 0xFFDCDCAA.toInt() else 0xFF795E26.toInt()
-        "string" -> if (dark) 0xFFCE9178.toInt() else 0xFFA31515.toInt()
-        "number" -> if (dark) 0xFFB5CEA8.toInt() else 0xFF098658.toInt()
-        "comment" -> if (dark) 0xFF6A9955.toInt() else 0xFF008000.toInt()
-        "preprocessor" -> if (dark) 0xFFC586C0.toInt() else 0xFFAF00DB.toInt()
+        "string" -> if (dark) 0xFFCE9178.toInt() else 0xFF8E4630.toInt()
+        "number" -> if (dark) 0xFFB5CEA8.toInt() else 0xFF4F6F47.toInt()
+        "comment" -> if (dark) 0xFF6A9955.toInt() else 0xFF617667.toInt()
+        "preprocessor" -> if (dark) 0xFFC586C0.toInt() else 0xFF7E4E94.toInt()
         else -> null
         }
     }

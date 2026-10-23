@@ -1,0 +1,57 @@
+[
+  {
+    "scopes": [
+      "keyword",
+      "storage"
+    ],
+    "color": "#7E4E94",
+    "contrast_on_white": 6.168
+  },
+  {
+    "scopes": [
+      "storage.type",
+      "entity.name.type",
+      "support.type",
+      "support.class"
+    ],
+    "color": "#286B7D",
+    "contrast_on_white": 6.018
+  },
+  {
+    "scopes": [
+      "entity.name.function",
+      "support.function"
+    ],
+    "color": "#795E26",
+    "contrast_on_white": 6.101
+  },
+  {
+    "scopes": [
+      "string"
+    ],
+    "color": "#8E4630",
+    "contrast_on_white": 6.843
+  },
+  {
+    "scopes": [
+      "constant.numeric",
+      "constant.language"
+    ],
+    "color": "#4F6F47",
+    "contrast_on_white": 5.68
+  },
+  {
+    "scopes": [
+      "comment"
+    ],
+    "color": "#617667",
+    "contrast_on_white": 4.889
+  },
+  {
+    "scopes": [
+      "variable"
+    ],
+    "color": "#315F79",
+    "contrast_on_white": 6.9
+  }
+]
