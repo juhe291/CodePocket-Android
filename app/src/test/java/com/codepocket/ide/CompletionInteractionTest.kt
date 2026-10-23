@@ -65,6 +65,7 @@ class CompletionInteractionTest {
     private fun settle() {
         shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(150))
         ReflectionHelpers.getField<ExecutorService>(main,"completionExecutor").submit{}.get(10,TimeUnit.SECONDS)
+        ReflectionHelpers.getField<ExecutorService>(main,"signatureExecutor").submit{}.get(10,TimeUnit.SECONDS)
         shadowOf(Looper.getMainLooper()).idle()
     }
     private fun diagnostics():String {
@@ -329,6 +330,130 @@ class CompletionInteractionTest {
             assertEquals(original.fontSize+1,ReflectionHelpers.getField<AppSettings>(main,"settings").fontSize)
             assertEquals(inputText,input.text.toString());assertEquals(start,BaseInputConnection.getComposingSpanStart(input.text))
         }finally{menu.dismiss();connection.finishComposingText()}
+    }
+
+    // Drive the real widget's public layout-busy state; providers and popup geometry stay real.
+    private fun busyLayout(value:Boolean) {
+        ReflectionHelpers.callInstanceMethod<Unit>(editor.inputView(),"setLayoutBusy",
+            ReflectionHelpers.ClassParameter.from(Boolean::class.javaPrimitiveType,value))
+        assertEquals(!value,editor.isLayoutReady)
+    }
+    private fun manualAssistanceOnly(text:String) {
+        val settings=ReflectionHelpers.getField<AppSettings>(main,"settings")
+        ReflectionHelpers.setField(main,"settings",settings.copy(autoCompletion=false,signatureHelp=false))
+        loadText(text);editor.setSelection(text.length);settle()
+        assertFalse(visible())
+    }
+    private fun signatureVisible() = ReflectionHelpers.getField<SignaturePopup?>(main,"signaturePopup")?.isShowing==true
+    @Test fun explicitCompletionWaitsForLayoutWhenAutomaticCompletionIsOff() {
+        manualAssistanceOnly("pri");busyLayout(true)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle()
+        assertFalse(visible());assertEquals("pri",editor.text.toString())
+        busyLayout(false);settle()
+        assertTrue("Ctrl+Space must survive layout without another keystroke: ${diagnostics()}",visible())
+        key(KeyEvent.KEYCODE_TAB);assertEquals("print",editor.text.toString())
+    }
+    @Test fun explicitSignatureWaitsForLayoutWhenAutomaticHelpIsOff() {
+        manualAssistanceOnly("range(1, ");busyLayout(true)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON);settle()
+        assertFalse(signatureVisible())
+        busyLayout(false);settle()
+        assertTrue("Ctrl+Shift+Space must retain its reference request across layout: ${diagnostics()}",signatureVisible())
+        assertEquals("range(1, ",editor.text.toString());assertTrue(editor.hasFocus())
+    }
+
+    @Test fun automaticCompletionAndSignatureResumeAfterLayout() {
+        loadText("pri");editor.setSelection(3);busyLayout(true);settle();assertFalse(visible())
+        busyLayout(false);settle();assertTrue(diagnostics(),visible())
+        loadText("range(1, ");editor.setSelection(editor.length());busyLayout(true);settle()
+        assertFalse(signatureVisible());busyLayout(false);settle()
+        assertTrue("Automatic parameter help must not be lost behind the completion readiness check",signatureVisible())
+    }
+    @Test fun layoutStartingAfterCandidateCalculationAlsoKeepsTheExplicitRequest() {
+        manualAssistanceOnly("pri")
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON)
+        ReflectionHelpers.getField<ExecutorService>(main,"completionExecutor").submit{}.get(10,TimeUnit.SECONDS)
+        // The real provider has finished, but its main-thread callback has not run yet.
+        busyLayout(true);settle();assertFalse(visible())
+        busyLayout(false);settle();assertTrue(diagnostics(),visible())
+    }
+    @Test fun layoutStartingAfterSignatureCalculationAlsoKeepsTheExplicitRequest() {
+        manualAssistanceOnly("range(1, ")
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON)
+        ReflectionHelpers.getField<ExecutorService>(main,"signatureExecutor").submit{}.get(10,TimeUnit.SECONDS)
+        busyLayout(true);settle();assertFalse(signatureVisible())
+        busyLayout(false);settle();assertTrue(diagnostics(),signatureVisible())
+    }
+    @Test fun escapeCancelsTheWaitingRequestWithoutEditingOrReopening() {
+        manualAssistanceOnly("pri");busyLayout(true)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle()
+        key(KeyEvent.KEYCODE_ESCAPE);busyLayout(false);settle()
+        assertFalse(visible());assertFalse(signatureVisible());assertEquals("pri",editor.text.toString())
+        assertNull(ReflectionHelpers.getField<Runnable?>(main,"assistLayoutTask"))
+    }
+    @Test fun waitingRequestCannotStealInputFocusOrReopenAfterWindowFocusLoss() {
+        val method=main.javaClass.declaredMethods.single{it.name=="switchFile"}
+        method.isAccessible=true;method.invoke(main,"main.cpp",null)
+        WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS);shadowOf(Looper.getMainLooper()).idle()
+        editor=ReflectionHelpers.getField(main,"editor");editor.requestFocus();awaitEditor()
+        ReflectionHelpers.setField(main,"presetInputExpanded",true)
+        ReflectionHelpers.setField(main,"panelVisible",true)
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"applyPanelLayout")
+        layout(main.resources.displayMetrics.widthPixels,main.resources.displayMetrics.heightPixels)
+        manualAssistanceOnly("pri");busyLayout(true)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle()
+        val input=ReflectionHelpers.getField<android.widget.EditText>(main,"input")
+        input.visibility=View.VISIBLE;input.setText("terminal input");assertTrue(input.requestFocus())
+        busyLayout(false);settle();assertFalse(visible());assertTrue(input.hasFocus());assertEquals("terminal input",input.text.toString())
+        editor.requestFocus();busyLayout(true);key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle()
+        controller.windowFocusChanged(false);busyLayout(false);settle();assertFalse(visible())
+        controller.windowFocusChanged(true);settle();assertFalse(visible())
+    }
+    @Test fun replacingTheBufferOrChangingSelectionInvalidatesTheWaitingRequest() {
+        manualAssistanceOnly("pri");busyLayout(true);key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle()
+        loadText("xyz");editor.setSelection(3);settle();assertFalse(visible());assertEquals("xyz",editor.text.toString())
+        manualAssistanceOnly("pri");busyLayout(true);key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle()
+        editor.setSelection(0,2);busyLayout(false);settle()
+        assertFalse(visible());assertEquals(0,editor.selectionStart);assertEquals(2,editor.selectionEnd)
+    }
+    @Test fun automaticRefreshCannotReplaceTheWaitingExplicitModeAndLatestShortcutWins() {
+        manualAssistanceOnly("range(1, pri");busyLayout(true)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON)
+        ReflectionHelpers.getField<Runnable>(main,"refreshEditor").run();settle()
+        busyLayout(false);settle();assertTrue(diagnostics(),signatureVisible());assertFalse(visible())
+        busyLayout(true);key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle();busyLayout(false);settle()
+        assertTrue(diagnostics(),visible());assertFalse(signatureVisible())
+        key(KeyEvent.KEYCODE_TAB);assertEquals("range(1, print",editor.text.toString())
+    }
+    @Test fun permanentlyBusyLayoutHasABoundedWaitAndCanBeRequestedAgain() {
+        manualAssistanceOnly("pri");busyLayout(true)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON)
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(2100))
+        assertNull(ReflectionHelpers.getField<Runnable?>(main,"assistLayoutTask"));assertFalse(visible())
+        assertEquals(main.getString(R.string.assist_layout_pending),ReflectionHelpers.getField<android.widget.TextView>(main,"status").text.toString())
+        busyLayout(false);settle();assertFalse(visible())
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle();assertTrue(diagnostics(),visible())
+    }
+    @Test @Config(qualifiers="w1000dp-h800dp") fun tabletRealWordwrapReflowRetainsPhysicalCompletionAndSnippetFields() {
+        manualAssistanceOnly("fo")
+        editor.setHorizontallyScrolling(false)
+        // setText creates an actual asynchronous WordwrapLayout; do not await its main-thread publish.
+        editor.setText("fo");editor.setSelection(2)
+        assertFalse("The fixture must enter real Sora asynchronous layout",editor.isLayoutReady)
+        key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON)
+        awaitEditor();settle();assertTrue(diagnostics(),visible())
+        val batch=ReflectionHelpers.getField<CompletionBatch>(main,"completionBatch")
+        val snippet=batch.items.indexOfFirst{it.snippetId!=null}
+        assertTrue("Real shared snippet must be offered",snippet>=0)
+        repeat(snippet){key(KeyEvent.KEYCODE_DPAD_DOWN)};key(KeyEvent.KEYCODE_TAB)
+        assertTrue(editor.text.toString().contains("for item in"))
+        awaitEditor()
+        val input=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
+        assertTrue(input.commitText("索引",1));key(KeyEvent.KEYCODE_TAB)
+        assertEquals("range(10)",editor.text.subSequence(editor.selectionStart,editor.selectionEnd).toString())
+        assertTrue(editor.hasFocus())
     }
 
 }

@@ -96,6 +96,7 @@ class MainActivity : Activity() {
     private var completionSuppressed: CompletionRequest? = null
     private var completionExplicit = false
     private var completionGeneration = 0L
+    private var assistLayoutTask: Runnable? = null
     private val completionExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
     private var completionTask: java.util.concurrent.Future<*>? = null
     private val completionConsumedKeys = mutableSetOf<Int>()
@@ -1740,6 +1741,48 @@ class MainActivity : Activity() {
     private fun completionRequest() = CompletionRequest(sessions.key(activePath), editRevision,
         editor.text.toString(), editor.selectionStart, editor.selectionEnd, isCpp())
 
+    private fun cancelAssistLayout() {
+        assistLayoutTask?.let { handler.removeCallbacks(it) }
+        assistLayoutTask = null
+    }
+
+    /** Small, bounded readiness checks; do not copy/parse text or request editor/IME focus here. */
+    private fun waitForAssistLayout(signature: Boolean, explicit: Boolean): Boolean {
+        if (editor.isLayoutReady) return false
+        hideCompletion()
+        val owner = editor
+        val port = editorPort ?: return true
+        val source = port.navigationSnapshot() ?: return true
+        val deadline = android.os.SystemClock.uptimeMillis() + 2000
+        val task = object : Runnable {
+            override fun run() {
+                if (assistLayoutTask !== this) return
+                if (isDestroyed || isFinishing || !hasWindowFocus() || workspaceBusy ||
+                    editor !== owner || editorPort !== port || loadedPath != activePath ||
+                    !owner.hasFocus() || !owner.isShown || !owner.isEnabled || owner.isComposing ||
+                    toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
+                    !source.matches(port.navigationSnapshot(), false)) {
+                    cancelAssistLayout(); return
+                }
+                if (owner.isLayoutReady) {
+                    assistLayoutTask = null
+                    if (signature) updateSignatureHelp(explicit) else {
+                        updateSuggestions(explicit)
+                        if (!explicit) updateSignatureHelp()
+                    }
+                } else if (android.os.SystemClock.uptimeMillis() < deadline) {
+                    handler.postDelayed(this, 32)
+                } else {
+                    assistLayoutTask = null
+                    if (explicit) status.setText(R.string.assist_layout_pending)
+                }
+            }
+        }
+        assistLayoutTask = task
+        handler.postDelayed(task, 32)
+        return true
+    }
+
     private fun hideCompletion(suppress: Boolean = false) {
         if (suppress) diagnosticPopup?.dismiss()
         hideSignatureHelp(suppress)
@@ -1750,12 +1793,14 @@ class MainActivity : Activity() {
     }
 
     private fun updateSuggestions(force: Boolean = false) {
+        if (!force && assistLayoutTask != null) return
         if (!::editor.isInitialized || !::sessions.isInitialized) return
         if (diagnosticPopup?.isShowing == true) { if (!force) return else diagnosticPopup?.dismiss() }
         if (isFinishing || !hasWindowFocus() || workspaceBusy || loadedPath != activePath || !editor.hasFocus() || !editor.isShown ||
             toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
             editor.isComposing || editor.selectionStart != editor.selectionEnd ||
             (!force && (snippetSession != null || !settings.autoCompletion || editor.length() > 45000))) { hideCompletion(); return }
+        if (waitForAssistLayout(signature = false, explicit = force)) return
         val request = completionRequest()
         if (force) completionSuppressed = null
         if (!force && completionSuppressed == request) return
@@ -1774,6 +1819,7 @@ class MainActivity : Activity() {
                     request != completionRequest() || !editor.hasFocus() || !editor.isShown ||
                     editor.isComposing ||
                     toolDialog?.isShowing == true || explorerDialog?.isShowing == true) return@runOnUiThread
+                if (waitForAssistLayout(signature = false, explicit = force)) return@runOnUiThread
                 if (batch == null) {
                     if (force) status.setText(if (LexicalCompletion.memberContext(request))
                         R.string.completion_members_pending else R.string.completion_empty)
@@ -1796,12 +1842,14 @@ class MainActivity : Activity() {
     }
 
     private fun hideSignatureHelp(suppress: Boolean = false) {
+        cancelAssistLayout()
         if (suppress && ::sessions.isInitialized && ::editor.isInitialized) signatureSuppressed = completionRequest()
         signatureGeneration++; signatureTask?.cancel(true); signatureTask = null
         signaturePopup?.dismiss(animated = suppress && motionEnabled())
     }
 
     private fun updateSignatureHelp(force: Boolean = false) {
+        if (!force && assistLayoutTask != null) return
         if (diagnosticPopup?.isShowing == true) { if (!force) return else diagnosticPopup?.dismiss() }
         if (!::editor.isInitialized || !::sessions.isInitialized) return
         if (isFinishing || isDestroyed || !hasWindowFocus() || workspaceBusy || loadedPath != activePath ||
@@ -1809,6 +1857,7 @@ class MainActivity : Activity() {
             editor.isComposing || editor.selectionStart != editor.selectionEnd ||
             toolDialog?.isShowing == true || explorerDialog?.isShowing == true ||
             completionPopup?.isShowing == true || (!force && !settings.signatureHelp)) { hideSignatureHelp(); return }
+        if (waitForAssistLayout(signature = true, explicit = force)) return
         val request = completionRequest()
         if (force) signatureSuppressed = null
         if (!force && signatureSuppressed == request) return
@@ -1822,6 +1871,7 @@ class MainActivity : Activity() {
                     request != completionRequest() || !editor.hasFocus() || !editor.isShown ||
                     editor.isComposing ||
                     toolDialog?.isShowing == true || explorerDialog?.isShowing == true || completionPopup?.isShowing == true) return@runOnUiThread
+                if (waitForAssistLayout(signature = true, explicit = force)) return@runOnUiThread
                 if (found == null || !found.matches(completionRequest())) {
                     if (force) status.setText(R.string.signature_empty)
                     return@runOnUiThread
@@ -2310,6 +2360,11 @@ class MainActivity : Activity() {
                 else -> CompletionKey.OTHER
             }
             val composing = editor.isComposing
+            if (assistLayoutTask != null && key == CompletionKey.ESC && !composing &&
+                !event.isCtrlPressed && !event.isAltPressed && !event.isShiftPressed && !event.isMetaPressed &&
+                event.flags and KeyEvent.FLAG_SOFT_KEYBOARD == 0) {
+                hideCompletion(true); completionConsumedKeys.add(event.keyCode); return true
+            }
             val action = CompletionKeys.action(key, settings, completionPopup?.isShowing == true, completionExplicit,
                 completionPopup?.explicitSelection == true, composing, editor.selectionStart != editor.selectionEnd,
                 event.isCtrlPressed || event.isAltPressed || event.isShiftPressed || event.isMetaPressed,

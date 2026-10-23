@@ -76,4 +76,5 @@
     <string name="editor_font_smaller">缩小代码</string>
     <string name="editor_font_larger">放大代码</string>
     <string name="editor_input_limit">输入超过20万字符上限，本次输入未写入；请缩减内容后重试。</string>
+    <string name="assist_layout_pending">编辑区仍在排版，请稍后重试代码辅助。</string>
 </resources>
