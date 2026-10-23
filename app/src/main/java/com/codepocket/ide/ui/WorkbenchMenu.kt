@@ -15,7 +15,7 @@ class WorkbenchMenu(context:Context,private val anchor:View,private val animate:
     override fun show(){
         dismiss()
         val p=DesignTokens.forContext(anchor.context);val dp={v:Int->IdeControls.dp(anchor.context,v)}
-        val rows=LinearLayout(anchor.context).apply {orientation=LinearLayout.VERTICAL;setPadding(dp(4),dp(4),dp(4),dp(4))}
+        val rows=LinearLayout(anchor.context).apply {orientation=LinearLayout.VERTICAL;setPadding(dp(4),dp(6),dp(4),dp(6))}
         var previousDanger:Boolean?=null
         var previousGroup:Int?=null
         for(i in 0 until menu.size()){
@@ -39,10 +39,10 @@ class WorkbenchMenu(context:Context,private val anchor:View,private val animate:
                 if(event.keyCode==android.view.KeyEvent.KEYCODE_ESCAPE){if(event.action==android.view.KeyEvent.ACTION_UP)this@WorkbenchMenu.dismiss();return true}
                 return super.dispatchKeyEvent(event)
             }
-        }.apply {isFillViewport=false;isFocusableInTouchMode=true;addView(rows);background=WorkbenchStyle.shape(context,p.overlay,p.border,8)}
+        }.apply {isFillViewport=false;isFocusableInTouchMode=true;addView(rows);background=WorkbenchStyle.shape(context,p.overlay,p.border,6)}
         rows.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED))
         val height=minOf(rows.measuredHeight,(availableHeight*.75f).toInt().coerceAtLeast(dp(48)))
-        val popup=PopupWindow(scroll,width,height,true).apply {setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));isOutsideTouchable=true;elevation=dp(8).toFloat();inputMethodMode=PopupWindow.INPUT_METHOD_NOT_NEEDED}
+        val popup=PopupWindow(scroll,width,height,true).apply {setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));isOutsideTouchable=true;elevation=dp(4).toFloat();inputMethodMode=PopupWindow.INPUT_METHOD_NOT_NEEDED}
         window=popup;popup.setOnDismissListener{Animations.cancelTree(scroll);if(window===popup)window=null}
         popup.showAsDropDown(anchor,0,dp(4),Gravity.END)
         scroll.requestFocus()

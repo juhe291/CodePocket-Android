@@ -25,7 +25,7 @@ object WorkbenchStyle {
             if(checked)background=android.graphics.drawable.RippleDrawable(ColorStateList.valueOf((p.foreground and 0xffffff) or 0x20000000),shape(context,p.selection),null)
             val tint=if(destructive)p.error else p.muted
             addView(ImageView(context).apply {setImageDrawable(IdeIconDrawable(context,if(checked)IdeIcon.CHECK else IdeIconDrawable.forTitle(title),tint,dp(20)));importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO},LinearLayout.LayoutParams(dp(20),dp(20)))
-            addView(TextView(context).apply {text=title.substringBefore("  ");textSize=14f;setTextColor(if(destructive)p.error else p.foreground);setPadding(dp(12),0,dp(8),0);maxLines=3},LinearLayout.LayoutParams(0,-2,1f))
+            addView(TextView(context).apply {text=title.substringBefore("  ");textSize=13f;setTextColor(if(destructive)p.error else p.foreground);setPadding(dp(12),0,dp(8),0);maxLines=3},LinearLayout.LayoutParams(0,-2,1f))
             if(title.contains("  "))addView(TextView(context).apply {text=title.substringAfter("  ");textSize=11f;setTextColor(p.muted);typeface=Typeface.MONOSPACE},LinearLayout.LayoutParams(-2,-2))
             contentDescription=title+(if(checked)"，已选择" else "")
         }
@@ -51,7 +51,7 @@ object WorkbenchStyle {
     }
     fun dialog(dialog:AlertDialog){
         val context=dialog.context;val p=DesignTokens.forContext(context)
-        dialog.window?.setBackgroundDrawable(shape(context,p.overlay,p.border,12))
+        dialog.window?.setBackgroundDrawable(shape(context,p.overlay,p.border,6))
         dialog.window?.decorView?.let{content(it,p)}
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.let { button ->
             if(button.text.toString() in listOf("删除","结束","覆盖","放弃修改"))button.setTextColor(p.error)

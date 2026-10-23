@@ -17,6 +17,8 @@ import org.json.JSONObject
 
 /** Full-window settings center. Drafts never write preferences before a successful Apply. */
 object SettingsDialog {
+    private val categoryIcons=listOf(IdeIcon.PALETTE,IdeIcon.CODE,IdeIcon.INPUT,IdeIcon.SAVE,IdeIcon.TERMINAL,IdeIcon.MOVE,IdeIcon.HELP)
+    private val categoryHelp=listOf("界面主题与配色","字体、缩进与输入","候选列表与按键行为","自动保存与文件保护","终端配色与运行布局","过渡效果与代码光标","快捷键、使用说明与开源许可")
     private val categories=listOf("外观","编辑器","补全与快捷键","文件与保存","终端与运行","动画","帮助与许可")
     data class Draft(val original:AppSettings,var value:AppSettings=original,var category:Int=-1,var query:String="",var scroll:Int=0) {
         fun checkpoint()=JSONObject().put("original",original.toJson()).put("draft",value.toJson()).put("category",category).put("query",query).put("scroll",scroll).toString()
@@ -67,14 +69,16 @@ object SettingsDialog {
         val header=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL}
         val back=IdeControls.icon(activity,p,IdeIcon.BACK,"返回设置分类"){}
         header.addView(back,LinearLayout.LayoutParams(dp(48),dp(48)))
-        header.addView(TextView(activity).apply{text="设置";textSize=20f;setTextColor(p.foreground);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(0,dp(48),1f))
+        header.addView(TextView(activity).apply{text="设置";textSize=18f;setTextColor(p.foreground);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(0,dp(48),1f))
+        header.addView(ImageView(activity).apply{setImageDrawable(IdeIconDrawable(activity,IdeIcon.SETTINGS,p.muted,dp(20)))},LinearLayout.LayoutParams(dp(32),dp(20)))
         root.addView(header)
+        root.addView(View(activity).apply{setBackgroundColor(p.border)},LinearLayout.LayoutParams(-1,dp(1)).apply{bottomMargin=dp(12)})
         val search=EditText(activity).apply{hint="搜索设置";setSingleLine();setText(draft.query);textSize=14f;setPadding(dp(12),0,dp(12),0);contentDescription="搜索设置"}
-        root.addView(search,LinearLayout.LayoutParams(-1,dp(48)))
+        root.addView(search,LinearLayout.LayoutParams(-1,dp(48)).apply{bottomMargin=dp(12)})
         val body=LinearLayout(activity).apply{orientation=LinearLayout.HORIZONTAL}
-        val nav=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL}
-        val scroller=ScrollView(activity).apply{isFillViewport=true}
-        val details=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(8),dp(12),dp(8),dp(16))}
+        val nav=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;setPadding(0,dp(8),dp(12),0)}
+        val scroller=ScrollView(activity).apply{isFillViewport=true;setBackgroundColor(p.editor)}
+        val details=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(20),dp(16),dp(20),dp(24))}
         val navScroller=ScrollView(activity).apply{addView(nav)}
         scroller.addView(details);body.addView(navScroller,LinearLayout.LayoutParams(dp(220),-1));body.addView(scroller,LinearLayout.LayoutParams(0,-1,1f))
         root.addView(body,LinearLayout.LayoutParams(-1,0,1f))
@@ -98,14 +102,31 @@ object SettingsDialog {
             details.addView(TextView(activity).apply{text=title;textSize=18f;setTextColor(p.foreground);setTypeface(null,Typeface.BOLD);setPadding(0,dp(8),0,dp(12))})
             if(help.isNotBlank())details.addView(TextView(activity).apply{text=help;textSize=12f;setTextColor(p.muted);setPadding(0,0,0,dp(12))})
         }
-        fun categoryRow(index:Int):View=WorkbenchStyle.menuRow(activity,categories[index],checked=index==draft.category).apply {
-            setOnClickListener{if(!busy){draft.scroll=0;draft.category=index;search.setText("");draft.query="";render()}}
+        fun categoryRow(index:Int):View {
+            val selected=index==draft.category
+            val row=LinearLayout(activity).apply{
+                orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;minimumHeight=dp(68)
+                setPadding(dp(12),dp(10),dp(12),dp(10));isFocusable=true;isClickable=true
+                background=if(selected)WorkbenchStyle.shape(activity,p.selection,radius=4) else IdeControls.feedback(activity,p)
+                contentDescription=categories[index]+if(selected)"，已选择" else ""
+            }
+            row.addView(ImageView(activity).apply{
+                setImageDrawable(IdeIconDrawable(activity,categoryIcons[index],if(selected)p.accentText else p.muted,dp(20)))
+                importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            },LinearLayout.LayoutParams(dp(24),dp(24)))
+            val words=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(12),0,dp(8),0)}
+            words.addView(TextView(activity).apply{text=categories[index];textSize=13f;setTextColor(p.foreground)})
+            words.addView(TextView(activity).apply{text=categoryHelp[index];textSize=11f;setTextColor(p.muted);setPadding(0,dp(3),0,0)})
+            row.addView(words,LinearLayout.LayoutParams(0,-2,1f))
+            row.addView(ImageView(activity).apply{setImageDrawable(IdeIconDrawable(activity,IdeIcon.CHEVRON_RIGHT,p.muted,dp(14)))},LinearLayout.LayoutParams(dp(16),dp(16)))
+            row.setOnClickListener{if(!busy){draft.scroll=0;draft.category=index;search.setText("");draft.query="";render()}}
+            return row
         }
         fun row(spec:Spec){
-            val item=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL;minimumHeight=dp(72);setPadding(dp(8),dp(8),dp(8),dp(8));background=IdeControls.feedback(activity,p)}
+            val item=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL;minimumHeight=dp(72);setPadding(0,dp(14),0,dp(14));background=IdeControls.feedback(activity,p)}
             val words=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL}
-            words.addView(TextView(activity).apply{text=spec.title;textSize=14f;setTextColor(p.foreground)})
-            words.addView(TextView(activity).apply{text=spec.help;textSize=12f;setTextColor(p.muted);setPadding(0,dp(4),0,0)})
+            words.addView(TextView(activity).apply{text=spec.title;textSize=14f;setTextColor(p.foreground);setTypeface(null,Typeface.BOLD)})
+            words.addView(TextView(activity).apply{text=spec.help;textSize=12f;setTextColor(p.muted);setPadding(0,dp(6),dp(12),0)})
             item.addView(words,LinearLayout.LayoutParams(0,-2,1f))
             if(spec.bool!=null){
                 val toggle=Switch(activity).apply{isChecked=spec.bool.invoke(draft.value);contentDescription=spec.title;minimumWidth=dp(48);minHeight=dp(48)}
@@ -113,7 +134,7 @@ object SettingsDialog {
                 item.addView(toggle,LinearLayout.LayoutParams(dp(56),dp(48)));item.setOnClickListener{if(!busy)toggle.isChecked=!toggle.isChecked}
             } else {
                 val value=spec.options[spec.selected!!.invoke(draft.value).coerceIn(0,spec.options.lastIndex)]
-                words.addView(TextView(activity).apply{text=value;textSize=12f;setTextColor(p.accentText);setPadding(0,dp(6),0,0)})
+                words.addView(TextView(activity).apply{text=value;textSize=12f;setTextColor(p.accentText);setPadding(0,dp(8),0,0)})
                 item.addView(ImageView(activity).apply{setImageDrawable(IdeIconDrawable(activity,IdeIcon.CHEVRON_RIGHT,p.muted,dp(16)))},LinearLayout.LayoutParams(dp(24),dp(24)))
                 item.setOnClickListener {
                     if(busy)return@setOnClickListener
@@ -139,21 +160,43 @@ object SettingsDialog {
             val height=if((decor?.height?:0)>0)decor!!.height/activity.resources.displayMetrics.density else activity.resources.configuration.screenHeightDp.toFloat()
             val wide=WorkspaceLayoutPolicy.settingsSplit(width.toInt(),height.toInt())
             lastWide=wide;navScroller.visibility=if(wide)View.VISIBLE else View.GONE;nav.removeAllViews();details.removeAllViews()
-            if(wide)categories.indices.forEach{nav.addView(categoryRow(it))}
+            details.setPadding(dp(if(wide)28 else 16),dp(16),dp(if(wide)28 else 16),dp(24))
             if(wide&&draft.category<0)draft.category=0
+            if(wide)categories.indices.forEach{nav.addView(categoryRow(it))}
             back.visibility=if(!wide&&draft.category>=0&&draft.query.isBlank())View.VISIBLE else View.GONE
             when {
                 draft.query.isNotBlank()->{
-                    heading("搜索结果", "匹配名称、说明和分类")
+                    heading("搜索结果")
                     val matches=all.filter{(it.title+it.help+categories[it.category]).contains(draft.query,true)}
                     if(matches.isEmpty())heading("没有匹配的设置")
                     matches.forEach{spec->details.addView(TextView(activity).apply{text=categories[spec.category];textSize=11f;setTextColor(p.muted);setPadding(dp(8),dp(14),0,0)});row(spec)}
                 }
-                draft.category<0->{heading("偏好设置","按类别调整工作台，点击应用后生效");categories.indices.forEach{details.addView(categoryRow(it))}}
+                draft.category<0->{heading("工作台偏好");categories.indices.forEach{details.addView(categoryRow(it))}}
                 else->{
                     heading(categories[draft.category])
                     all.filter{it.category==draft.category}.forEach(::row)
-                    if(draft.category==0||draft.category==4){
+                    if(draft.category==0){
+                        val samplePalette=DesignTokens.palette(draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20))
+                        val example=LinearLayout(activity).apply{
+                            orientation=LinearLayout.VERTICAL;setPadding(dp(16),dp(12),dp(16),dp(16))
+                            background=WorkbenchStyle.shape(activity,samplePalette.editor,samplePalette.border,4)
+                            contentDescription="主题预览示意，不是编辑文件"
+                        }
+                        example.addView(TextView(activity).apply{
+                            text="main.cpp";textSize=12f;setTextColor(samplePalette.muted)
+                            setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(activity,IdeIcon.CPP,samplePalette.accentText,dp(18)),null,null,null)
+                            compoundDrawablePadding=dp(8);setPadding(0,0,0,dp(12))
+                        })
+                        listOf("#include <iostream>" to samplePalette.muted,
+                            "int main() {" to samplePalette.accentText,
+                            "    std::cout << \"Hello\";" to samplePalette.foreground,
+                            "}" to samplePalette.foreground).forEach{(code,color)->
+                            example.addView(TextView(activity).apply{text=code;textSize=13f;typeface=Typeface.MONOSPACE;setTextColor(color);setPadding(0,dp(2),0,dp(2))})
+                        }
+                        details.addView(example,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(20)})
+                        details.addView(TextView(activity).apply{text="主题预览 · 应用后生效";textSize=11f;setTextColor(p.muted);setPadding(0,dp(8),0,0)})
+                    }
+                    if(draft.category==4){
                         val preview=LinearLayout(activity).apply{setPadding(dp(12),dp(12),dp(12),dp(12));gravity=Gravity.CENTER_VERTICAL}
                         com.codepocket.ide.terminal.shell.TerminalAppearance.palette(draft.value.terminalTheme.name,draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20)).ansi.slice(1..6).forEach{c->preview.addView(View(activity).apply{background=WorkbenchStyle.shape(activity,c,radius=4)},LinearLayout.LayoutParams(dp(24),dp(16)).apply{marginEnd=dp(8)})}
                         details.addView(preview)

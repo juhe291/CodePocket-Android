@@ -28,6 +28,7 @@ class MainToolbar(context: Context, private val palette: IdePalette,
     private val terminal=IdeControls.icon(context,palette,IdeIcon.TERMINAL,"打开终端",onTerminal)
     private val run=IdeControls.icon(context,palette,IdeIcon.RUN,"运行 · F5",onRun)
     val menuAnchor=IdeControls.icon(context,palette,IdeIcon.MORE,"工作台菜单"){}
+    private val borderPaint=android.graphics.Paint().apply{color=palette.border}
     private var running:Boolean?=null
     private var projectTitle="CodePocket"
     init {
@@ -41,7 +42,7 @@ class MainToolbar(context: Context, private val palette: IdePalette,
     }
     override fun onDraw(canvas:android.graphics.Canvas){
         super.onDraw(canvas)
-        canvas.drawRect(0f,height-dp(1).toFloat(),width.toFloat(),height.toFloat(),android.graphics.Paint().apply{color=palette.border})
+        canvas.drawRect(0f,height-dp(1).toFloat(),width.toFloat(),height.toFloat(),borderPaint)
     }
     // Rail owns navigation on every window, no duplicated Explorer button in the title bar.
     fun setSidebarPresent(present:Boolean)=Unit

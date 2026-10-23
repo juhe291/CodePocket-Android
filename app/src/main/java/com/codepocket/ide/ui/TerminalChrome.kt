@@ -15,14 +15,14 @@ import android.widget.TextView
 object TerminalChrome {
     private fun dp(context: Context, value: Int) = IdeControls.dp(context, value)
     private fun shape(context: Context, fill: Int, border: Int) = GradientDrawable().apply {
-        setColor(fill); cornerRadius=dp(context,6).toFloat();setStroke(dp(context,1),border)
+        setColor(fill); cornerRadius=dp(context,4).toFloat();if(border!=0)setStroke(dp(context,1),border)
     }
     private fun buttonBackground(context: Context, palette: IdePalette) = StateListDrawable().apply {
-        addState(intArrayOf(android.R.attr.state_selected),shape(context,palette.selection,palette.accent))
+        addState(intArrayOf(android.R.attr.state_selected),shape(context,palette.selection,0))
         addState(intArrayOf(android.R.attr.state_pressed),shape(context,palette.selection,palette.border))
         addState(intArrayOf(android.R.attr.state_hovered),shape(context,palette.overlay,palette.border))
         addState(intArrayOf(android.R.attr.state_focused),shape(context,palette.selection,palette.accent))
-        addState(intArrayOf(),shape(context,palette.panel,palette.border))
+        addState(intArrayOf(),shape(context,android.graphics.Color.TRANSPARENT,0))
     }.let { InsetDrawable(it,dp(context,3),dp(context,8),dp(context,3),dp(context,8)) }
 
     fun action(context: Context, palette: IdePalette, icon: IdeIcon, description: String, callback: Runnable): ImageButton =
