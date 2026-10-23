@@ -82,12 +82,24 @@ object SettingsDialog {
         root.addView(feedback)
         val dialog=AlertDialog.Builder(activity).setView(root).setNegativeButton("取消",null).setPositiveButton("应用",null).create()
         var busy=false;val all=specs(activity);var render:()->Unit={}
+        // An async Apply owns one submitted draft. Do not accept changes which its callback would discard.
+        fun updateEnabled(view:View=root){
+            view.isEnabled=!busy
+            if(view is ViewGroup)for(i in 0 until view.childCount)updateEnabled(view.getChildAt(i))
+        }
+        fun setBusy(value:Boolean){
+            busy=value;updateEnabled()
+            dialog.setCancelable(!value)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled=!value
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).text=if(value)"正在应用…" else "应用"
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled=!value
+        }
         fun heading(title:String,help:String=""){
             details.addView(TextView(activity).apply{text=title;textSize=18f;setTextColor(p.foreground);setTypeface(null,Typeface.BOLD);setPadding(0,dp(8),0,dp(12))})
             if(help.isNotBlank())details.addView(TextView(activity).apply{text=help;textSize=12f;setTextColor(p.muted);setPadding(0,0,0,dp(12))})
         }
         fun categoryRow(index:Int):View=WorkbenchStyle.menuRow(activity,categories[index],checked=index==draft.category).apply {
-            setOnClickListener{draft.scroll=0;draft.category=index;search.setText("");draft.query="";render()}
+            setOnClickListener{if(!busy){draft.scroll=0;draft.category=index;search.setText("");draft.query="";render()}}
         }
         fun row(spec:Spec){
             val item=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL;minimumHeight=dp(72);setPadding(dp(8),dp(8),dp(8),dp(8));background=IdeControls.feedback(activity,p)}
@@ -97,17 +109,18 @@ object SettingsDialog {
             item.addView(words,LinearLayout.LayoutParams(0,-2,1f))
             if(spec.bool!=null){
                 val toggle=Switch(activity).apply{isChecked=spec.bool.invoke(draft.value);contentDescription=spec.title;minimumWidth=dp(48);minHeight=dp(48)}
-                toggle.setOnCheckedChangeListener{_,value->draft.value=spec.toggle!!.invoke(draft.value,value)}
-                item.addView(toggle,LinearLayout.LayoutParams(dp(56),dp(48)));item.setOnClickListener{toggle.isChecked=!toggle.isChecked}
+                toggle.setOnCheckedChangeListener{_,value->if(!busy)draft.value=spec.toggle!!.invoke(draft.value,value)}
+                item.addView(toggle,LinearLayout.LayoutParams(dp(56),dp(48)));item.setOnClickListener{if(!busy)toggle.isChecked=!toggle.isChecked}
             } else {
                 val value=spec.options[spec.selected!!.invoke(draft.value).coerceIn(0,spec.options.lastIndex)]
                 words.addView(TextView(activity).apply{text=value;textSize=12f;setTextColor(p.accentText);setPadding(0,dp(6),0,0)})
                 item.addView(ImageView(activity).apply{setImageDrawable(IdeIconDrawable(activity,IdeIcon.CHEVRON_RIGHT,p.muted,dp(16)))},LinearLayout.LayoutParams(dp(24),dp(24)))
                 item.setOnClickListener {
+                    if(busy)return@setOnClickListener
                     draft.scroll=scroller.scrollY
                     val picker=AlertDialog.Builder(activity).setTitle(spec.title).setSingleChoiceItems(spec.options.toTypedArray(),spec.selected.invoke(draft.value),null).setNegativeButton("取消",null).create()
                     DialogMotion.show(picker,current.animations)
-                    picker.listView.setOnItemClickListener{_,_,index,_->draft.value=spec.choose!!.invoke(draft.value,index);picker.dismiss();render()}
+                    picker.listView.setOnItemClickListener{_,_,index,_->if(!busy){draft.value=spec.choose!!.invoke(draft.value,index);picker.dismiss();render()}}
                 }
             }
             details.addView(item,LinearLayout.LayoutParams(-1,-2))
@@ -162,15 +175,17 @@ object SettingsDialog {
                 }
             }
             scroller.post{scroller.scrollTo(0,draft.scroll)}
+            updateEnabled() // Window changes may create new controls while Apply is still waiting.
         }
-        back.setOnClickListener{draft.category=-1;draft.scroll=0;render()}
+        back.setOnClickListener{if(!busy){draft.category=-1;draft.scroll=0;render()}}
         search.addTextChangedListener(object:TextWatcher{
             override fun beforeTextChanged(s:CharSequence?,start:Int,count:Int,after:Int){}
-            override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int){draft.query=s.toString();draft.scroll=0;render()}
+            override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int){if(!busy){draft.query=s.toString();draft.scroll=0;render()}}
             override fun afterTextChanged(s:Editable?){}
         })
         dialog.setOnKeyListener{_,key,event->
             if(key==android.view.KeyEvent.KEYCODE_BACK&&event.action==android.view.KeyEvent.ACTION_UP){
+                if(busy)return@setOnKeyListener true
                 if(draft.category>=0&&lastWide==false&&draft.query.isBlank()){draft.category=-1;draft.scroll=0;render()}else discard();true
             }else false
         }
@@ -180,8 +195,8 @@ object SettingsDialog {
         dialog.window?.decorView?.setTag(R.id.settings_checkpoint,{draft.scroll=scroller.scrollY;draft.checkpoint()})
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener{discard()}
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            if(!busy){busy=true;feedback.visibility=View.GONE;dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled=false
-                val finished:(Boolean)->Unit={ok->if(dialog.isShowing){busy=false;dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled=true;if(ok)dialog.dismiss() else {feedback.text="设置尚未应用，请处理保存错误后重试";feedback.visibility=View.VISIBLE}}}
+            if(!busy){setBusy(true);feedback.visibility=View.GONE
+                val finished:(Boolean)->Unit={ok->if(dialog.isShowing){setBusy(false);if(ok)dialog.dismiss() else {feedback.text="设置尚未应用，请处理保存错误后重试";feedback.visibility=View.VISIBLE}}}
                 try{if(apply!=null)apply(draft.value.normalized(),finished) else {save(draft.value.normalized());finished(true)}}catch(e:Exception){finished(false);feedback.text=e.message}
             }
         }
