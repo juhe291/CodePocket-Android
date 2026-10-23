@@ -36,20 +36,20 @@ class TabletAnimationLayoutTest {
         assertFalse(ReflectionHelpers.getField<Boolean>(main,"panelVisible"))
         assertEquals(.52f,ReflectionHelpers.getField<PanelState>(main,"panelState").bottomFraction,0f)
     }
-    @Test fun fixedColumnsBeginAt840dpAndShortTabletWindowsFallBackToDrawer(){
+    @Test fun fixedColumnsUseTallMediumWindowsAndRailAlwaysRemains(){
         for(w in listOf(599,600,650,839,840,1000,1280))for(h in listOf(300,359,360,479,480,800)){
-            val geometry=WorkspaceGeometry(w,h,false);val expected=w>=840&&h>=360
+            val geometry=WorkspaceGeometry(w,h,false);val expected=w>=600&&h>=480
             assertEquals("$w x $h",expected,geometry.showExplorerSidebar)
-            assertEquals(expected,geometry.showActivityBar)
+            assertTrue(geometry.showActivityBar)
             assertEquals(if(expected)ExplorerMode.SIDEBAR else ExplorerMode.OVERLAY,ExplorerLayout.resolve(geometry,260).mode)
         }
     }
     @Test fun densityAndImeResizeDoNotDependOnPortraitOrLandscape(){
         val landscape=WorkspaceGeometry.fromPixels(2560,1600,2f,false)
         val portrait=WorkspaceGeometry.fromPixels(1600,2560,2f,false)
-        assertTrue(landscape.showExplorerSidebar);assertFalse(portrait.showExplorerSidebar)
+        assertTrue(landscape.showExplorerSidebar);assertTrue(portrait.showExplorerSidebar)
         val split=WorkspaceGeometry.fromPixels(1680,720,2f,true)
-        assertTrue(split.showExplorerSidebar)
+        assertFalse(split.showExplorerSidebar)
         assertFalse(WorkspaceGeometry.fromPixels(1680,718,2f,true).showExplorerSidebar)
     }
 }

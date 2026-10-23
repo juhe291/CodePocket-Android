@@ -9,57 +9,60 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 
-/** Width decisions depend on this view's measured budget, never device orientation. */
-@SuppressLint("ViewConstructor") // Programmatic shell: requires live command callbacks, never inflated from XML.
+enum class WorkbenchMenuGroup(val title:String) { FILE("文件"), EDIT("编辑"), VIEW("视图"), RUN("运行"), TERMINAL("终端"), HELP("帮助") }
+
+/** Single-line desktop menus collapse into a structured mobile menu as the measured budget shrinks. */
+@SuppressLint("ViewConstructor")
 class MainToolbar(context: Context, private val palette: IdePalette,
     onExplorer: () -> Unit, onRun: () -> Unit, onMenu: (View) -> Unit,
-    onTitle: () -> Unit, onSearch: () -> Unit, onTerminal: () -> Unit = {}) : LinearLayout(context) {
-    private fun dp(value: Int) = IdeControls.dp(context, value)
-    private val explorer = IdeControls.icon(context, palette, IdeIcon.EXPLORER, "资源管理器 · Ctrl+B", onExplorer)
-    private val titleView = TextView(context).apply {
-        textSize = 14f; setTextColor(palette.foreground); gravity = Gravity.CENTER_VERTICAL
-        setSingleLine(); ellipsize = TextUtils.TruncateAt.END
-        setPadding(dp(4), 0, dp(4), 0); setOnClickListener { onTitle() }
+    onTitle: () -> Unit, onSearch: () -> Unit, onTerminal: () -> Unit = {},
+    onGroup: (View,WorkbenchMenuGroup)->Unit = {_,_->}) : LinearLayout(context) {
+    private fun dp(value:Int)=IdeControls.dp(context,value)
+    private val menus=LinearLayout(context)
+    private val titleView=TextView(context).apply {
+        textSize=12f;setTextColor(palette.muted);gravity=Gravity.CENTER_VERTICAL
+        setSingleLine();ellipsize=TextUtils.TruncateAt.END;setPadding(dp(12),0,dp(8),0)
+        setOnClickListener{onTitle()}
     }
-    private val search = IdeControls.icon(context, palette, IdeIcon.SEARCH, IdeCommand.SEARCH.title, onSearch)
-    private val terminal = IdeControls.icon(context, palette, IdeIcon.TERMINAL, "打开终端", onTerminal)
-    private var sidebar = false
-    fun setSidebarPresent(present: Boolean) { if (sidebar != present) { sidebar = present; requestLayout() } }
-    private val run = IdeControls.icon(context, palette, IdeIcon.RUN, "运行 · F5", onRun)
-    val menuAnchor = IdeControls.icon(context, palette, IdeIcon.MORE, "更多命令") {}
-    private var running: Boolean? = null
+    private val search=IdeControls.icon(context,palette,IdeIcon.SEARCH,IdeCommand.SEARCH.title,onSearch)
+    private val terminal=IdeControls.icon(context,palette,IdeIcon.TERMINAL,"打开终端",onTerminal)
+    private val run=IdeControls.icon(context,palette,IdeIcon.RUN,"运行 · F5",onRun)
+    val menuAnchor=IdeControls.icon(context,palette,IdeIcon.MORE,"工作台菜单"){}
+    private var running:Boolean?=null
+    private var projectTitle="CodePocket"
     init {
-        menuAnchor.setOnClickListener { onMenu(it) }
-        gravity = Gravity.CENTER_VERTICAL; setBackgroundColor(palette.surface)
-        addView(explorer, LayoutParams(dp(48), -1))
-        addView(titleView, LayoutParams(0, -1, 1f))
-        addView(search, LayoutParams(dp(48), -1))
-        addView(terminal, LayoutParams(dp(48), -1))
-        addView(run, LayoutParams(dp(48), -1)); addView(menuAnchor, LayoutParams(dp(48), -1))
+        gravity=Gravity.CENTER_VERTICAL;setBackgroundColor(palette.surface);setWillNotDraw(false)
+        WorkbenchMenuGroup.entries.forEach { group ->
+            menus.addView(IdeControls.key(context,palette,group.title,"${group.title}菜单"){onGroup(menus.findViewWithTag(group),group)}.apply { tag=group;textSize=12f },LayoutParams(dp(56),-1))
+        }
+        menuAnchor.setOnClickListener{onMenu(it)}
+        addView(menus,LayoutParams(-2,-1));addView(titleView,LayoutParams(0,-1,1f))
+        listOf(search,terminal,run,menuAnchor).forEach{addView(it,LayoutParams(dp(48),-1))}
     }
-    fun setTitle(title: String, fullPath: String) {
-        if (titleView.text.toString() != title) titleView.text = title
-        IdeControls.describe(titleView, fullPath)
-        titleView.setOnLongClickListener { android.widget.Toast.makeText(context, fullPath, android.widget.Toast.LENGTH_LONG).show(); true }
+    override fun onDraw(canvas:android.graphics.Canvas){
+        super.onDraw(canvas)
+        canvas.drawRect(0f,height-dp(1).toFloat(),width.toFloat(),height.toFloat(),android.graphics.Paint().apply{color=palette.border})
     }
-    fun setRunState(active: Boolean, enabled: Boolean) {
-        run.isEnabled = enabled; run.alpha = if (enabled) 1f else .4f
-        if (running == active) return
-        running = active
-        run.setImageDrawable(IdeIconDrawable(context, if (active) IdeIcon.STOP else IdeIcon.RUN,
-            if (active) palette.error else palette.success, dp(20)))
-        IdeControls.describe(run, if (active) "停止程序" else "运行 · F5")
+    // Rail owns navigation on every window, no duplicated Explorer button in the title bar.
+    fun setSidebarPresent(present:Boolean)=Unit
+    fun setTitle(title:String,fullPath:String){projectTitle=title;titleView.text=title;IdeControls.describe(titleView,fullPath)}
+    fun setRunState(active:Boolean,enabled:Boolean) {
+        run.isEnabled=enabled;run.alpha=if(enabled)1f else .4f
+        if(running==active)return
+        running=active;run.setImageDrawable(IdeIconDrawable(context,if(active)IdeIcon.STOP else IdeIcon.RUN,if(active)palette.error else palette.success,dp(20)))
+        IdeControls.describe(run,if(active)"停止程序" else "运行 · F5")
     }
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val budget = (MeasureSpec.getSize(widthMeasureSpec) / resources.displayMetrics.density).toInt()
-        val spec = WorkspaceLayoutPolicy.toolbar(budget)
-        explorer.visibility = if (spec.explorer && !sidebar) VISIBLE else GONE
-        search.visibility = if (spec.search) VISIBLE else GONE
-        terminal.visibility = if (spec.terminal) VISIBLE else GONE
-        run.visibility = if (spec.run) VISIBLE else GONE
-        titleView.visibility = if (spec.title) VISIBLE else GONE
-        listOf(explorer, search, terminal, run, menuAnchor).forEach { it.layoutParams.width = dp(spec.control) }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    override fun onMeasure(widthMeasureSpec:Int,heightMeasureSpec:Int) {
+        val budget=(MeasureSpec.getSize(widthMeasureSpec)/resources.displayMetrics.density).toInt()
+        val heading=if(budget<600)"CodePocket" else projectTitle
+        if(titleView.text.toString()!=heading)titleView.text=heading
+        menus.visibility=if(budget>=1000 && resources.configuration.fontScale<=1.3f)VISIBLE else GONE
+        search.visibility=if(budget>=600)VISIBLE else GONE
+        terminal.visibility=if(budget>=144)VISIBLE else GONE
+        run.visibility=if(budget>=96)VISIBLE else GONE
+        titleView.visibility=if(budget>=240)VISIBLE else GONE
+        listOf(search,terminal,run,menuAnchor).forEach{it.layoutParams.width=dp(minOf(48,budget.coerceAtLeast(0)))}
+        super.onMeasure(widthMeasureSpec,heightMeasureSpec)
     }
 }
 

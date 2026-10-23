@@ -1,0 +1,101 @@
+{
+  "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+  "jedi": "0.20.1",
+  "parso": "0.8.7",
+  "cases": [
+    {
+      "case": "typed_list_member",
+      "passed": true,
+      "expected": "append",
+      "names": [
+        "append"
+      ],
+      "elapsed_ms": 1118.78
+    },
+    {
+      "case": "instance_method",
+      "passed": true,
+      "expected": "solve",
+      "names": [
+        "solve"
+      ],
+      "elapsed_ms": 16.8
+    },
+    {
+      "case": "standard_library",
+      "passed": true,
+      "expected": "loads",
+      "names": [
+        "load",
+        "loads"
+      ],
+      "elapsed_ms": 30.0
+    },
+    {
+      "case": "unsaved_text_overrides_disk",
+      "passed": true,
+      "expected": "upper",
+      "names": [
+        "upper"
+      ],
+      "elapsed_ms": 96.23
+    },
+    {
+      "case": "disk_untouched",
+      "passed": true
+    },
+    {
+      "case": "project_module_static_members",
+      "passed": true,
+      "expected": "run",
+      "names": [
+        "run"
+      ],
+      "elapsed_ms": 19.86
+    },
+    {
+      "case": "project_top_level_not_executed",
+      "passed": true
+    },
+    {
+      "case": "unicode_codepoint_column",
+      "passed": true,
+      "expected": "append",
+      "names": [
+        "append"
+      ],
+      "elapsed_ms": 67.14,
+      "jedi_column": 35,
+      "utf16_offset": 36
+    },
+    {
+      "case": "signature_active_parameter",
+      "passed": true,
+      "signatures": [
+        {
+          "name": "combine",
+          "active": 1,
+          "parameters": [
+            "param left: int",
+            "param right: str='x'"
+          ]
+        }
+      ],
+      "elapsed_ms": 4.5
+    }
+  ],
+  "passed": 9,
+  "total": 9,
+  "wheels": {
+    "jedi-0.20.1-py2.py3-none-any.whl": {
+      "bytes": 4885980,
+      "sha256": "0fb16d86c4a4c73c37ba518c77419975e30fcc620658a8d14fbb5720cdd34142"
+    },
+    "parso-0.8.7-py2.py3-none-any.whl": {
+      "bytes": 107025,
+      "sha256": "a8926eb2a1b915486941fdbd31e86a4baf88fe8c210f25f2f35ecec5b574ca1c"
+    }
+  },
+  "android_verified": false,
+  "app_integrated": false
+}

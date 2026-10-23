@@ -59,11 +59,11 @@ object PanelLayoutPolicy {
      * @param preferSide User preference for side docking (default false = bottom priority)
      */
     fun resolve(state: PanelState, visible: Boolean, width: Int, height: Int,
-        ime: Boolean, inputFocused: Boolean, collapseOnIme: Boolean, preferSide: Boolean = false, minimumPanel: Int = 0): PanelLayout {
+        ime: Boolean, inputFocused: Boolean, collapseOnIme: Boolean, preferSide: Boolean = false, minimumPanel: Int = 0, bottomOnly: Boolean = false): PanelLayout {
         // Bottom-first strategy: only dock to side if user explicitly prefers it AND there's room
         // A short wide window has room for side-by-side panes even when a bottom split cannot fit.
         val compactSplit = width >= 600 && height in 160 until (208 + HANDLE + 128) && !state.maximized
-        val dock = if ((preferSide && width >= 840) || compactSplit) PanelDock.SIDE else PanelDock.BOTTOM
+        val dock = if (!bottomOnly && ((preferSide && width >= 840) || compactSplit)) PanelDock.SIDE else PanelDock.BOTTOM
         val available = (if (dock == PanelDock.SIDE) width else height).coerceAtLeast(0)
         fun hidden() = PanelLayout(dock, false, true, 0, available)
         if (width <= 0 || height <= 0 || !visible) return hidden()

@@ -1,5 +1,7 @@
 # CodePocket · Android C++ / Python IDE
 
+> 当前开发优先级：按最新要求先完成工作台 UI 视觉与层级重构；尚未实现的新功能暂缓。见 [本轮记录](docs/UI_WORKBENCH_REDESIGN_2026-10-23.md)。
+
 **2026-10-23：默认单一主APK的主机整合验收通过，继续P2。** 当前主入口使用生产Sora，文件/保存/补全/界面及真实运行入口接在同一工作台。新增运行前保存/继续编辑/冲突/发送确认回归，生产代码未变。
 
 - [集成主APK](dist/CodePocket-main-integrated-2026-10-23-debug.apk)（与上一版surfaces包逐字节相同，无需重复安装）。

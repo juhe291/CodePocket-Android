@@ -13,10 +13,10 @@ object DesignTokens {
     const val ICON = 20
     const val GAP = 4
     const val SNIPPET_HINT = 28
-    fun palette(dark: Boolean) = if (dark) IdePalette(0xFF1E242E.toInt(), 0xFF171D26.toInt(),
-        0xFF1B222C.toInt(), 0xFFD7DFEA.toInt(), 0xFFA5B1C2.toInt(), 0xFF323D4D.toInt(),
+    fun palette(dark: Boolean) = if (dark) IdePalette(0xFF1F2228.toInt(), 0xFF181B20.toInt(),
+        0xFF1B1E24.toInt(), 0xFFD7DFEA.toInt(), 0xFF969EAC.toInt(), 0xFF30353D.toInt(),
         0xFF6189B7.toInt(), 0xFF9ABCE5.toInt(), 0xFFA4C8AC.toInt(), 0xFFE7A09F.toInt())
-    else IdePalette(0xFFFFFFFF.toInt(), 0xFFEEF2F7.toInt(), 0xFFF5F7FA.toInt(),
+    else IdePalette(0xFFFFFFFF.toInt(), 0xFFF1F2F4.toInt(), 0xFFF7F8FA.toInt(),
         0xFF263445.toInt(), 0xFF596A7D.toInt(), 0xFFD8E0EA.toInt(),
         0xFF376797.toInt(), 0xFF315F90.toInt(), 0xFF326B46.toInt(), 0xFFAB3B3B.toInt())
     fun forContext(context: Context): IdePalette {

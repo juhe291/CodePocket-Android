@@ -14,9 +14,9 @@ import com.codepocket.ide.R
 @android.annotation.SuppressLint("ViewConstructor") // Programmatic callbacks; never inflated from XML.
 class TerminalStatusCard(context:Context, retry:Runnable, details:Runnable, about:Runnable):ScrollView(context) {
     private fun dp(n:Int)=IdeControls.dp(context,n)
-    private val body=LinearLayout(context).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(16),dp(16),dp(16),dp(16))}
+    private val body=LinearLayout(context).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(16),dp(12),dp(16),dp(12))}
     private val engine=TextView(context).apply{setText(R.string.shell_status_engine);textSize=11f;setCompoundDrawablePadding(dp(8))}
-    private val title=TextView(context).apply{textSize=17f;setTypeface(null,Typeface.BOLD);setPadding(0,dp(12),0,dp(8));contentDescription=context.getString(R.string.shell_status_heading);accessibilityLiveRegion=View.ACCESSIBILITY_LIVE_REGION_POLITE}
+    private val title=TextView(context).apply{textSize=14f;setTypeface(null,Typeface.BOLD);setPadding(0,dp(12),0,dp(8));contentDescription=context.getString(R.string.shell_status_heading);accessibilityLiveRegion=View.ACCESSIBILITY_LIVE_REGION_POLITE}
     private val description=TextView(context).apply{textSize=13f;setLineSpacing(dp(3).toFloat(),1f)}
     private var failed=false
     private var state:Int?=null
@@ -30,7 +30,7 @@ class TerminalStatusCard(context:Context, retry:Runnable, details:Runnable, abou
         body.addView(actions);addView(body,LayoutParams(-1,-2));setPalette(DesignTokens.forContext(context));bind(false,false)
     }
     fun setPalette(palette:IdePalette) {
-        body.background=GradientDrawable().apply{setColor(palette.panel);cornerRadius=dp(8).toFloat();setStroke(dp(1),palette.border)}
+        body.setBackgroundColor(palette.panel)
         title.setTextColor(palette.foreground);engine.setTextColor(palette.muted);description.setTextColor(palette.muted)
         engine.setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(context,IdeIcon.TERMINAL,palette.muted,dp(16)),null,null,null)
         for(button in listOf(primary,secondary)){button.setTextColor(palette.foreground);button.background=IdeControls.feedback(context,palette)}

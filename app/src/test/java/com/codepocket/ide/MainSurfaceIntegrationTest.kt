@@ -94,9 +94,12 @@ class MainSurfaceIntegrationTest {
         val window=ReflectionHelpers.getField<PopupWindow>(help,"popup");val details=ReflectionHelpers.getField<TextView>(help,"details");if(details.visibility==View.VISIBLE)textFits(details)
         capture("tablet-large-light-completion",window.contentView);main.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_TAB));main.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_TAB));assertEquals("print",editor.text.toString())
     }
-    private fun diagnostic(message:String){text("abc");editor.setSelection(1);val frame=port.snapshot()!!
+    private fun diagnostic(message:String){text("abc");editor.setSelection(1);idle(150)
+        field<android.os.Handler>("handler").removeCallbacks(field<Runnable>("refreshEditor"))
+        field<EditorAnalysisController>("editorAnalysis").cancel()
+        val frame=port.snapshot()!!
         assertTrue(port.applyDecorations(EditorAnalysis(frame,emptyList(),null,syntax=SyntaxReport(listOf(InlineIssue(0,3,message,"诊断布局验收"))))))
-        editor.inputView().performClick();idle(80)
+        assertNotNull("Injected diagnostic must reach actual caret",port.diagnosticAtCaret());editor.inputView().performClick();idle(80)
     }
     @Test @Config(qualifiers="w360dp-h290dp") fun tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing(){
         val message="布局验收消息\n".repeat(30);diagnostic(message);val d=ShadowAlertDialog.getLatestAlertDialog();assertNotNull("No hover room must still offer details",d);assertTrue(d.isShowing)

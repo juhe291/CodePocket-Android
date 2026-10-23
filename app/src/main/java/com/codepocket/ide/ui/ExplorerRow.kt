@@ -73,5 +73,6 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
             canvas.drawLine(x.toFloat(), 0f, x.toFloat(), height.toFloat(), guide)
         }
         super.onDraw(canvas)
+        if(isSelected){guide.color=palette.accent;canvas.drawRect(0f,dp(12).toFloat(),dp(2).toFloat(),height-dp(12).toFloat(),guide);guide.color=palette.border}
     }
 }

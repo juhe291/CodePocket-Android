@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.WindowInsets
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
@@ -125,6 +126,8 @@ class MainActivity : Activity() {
     private var panelState = PanelState()
     private var panelLayout: PanelLayout? = null
     private lateinit var splitHost: LinearLayout
+    private lateinit var topWorkspace: LinearLayout
+    private lateinit var auxiliarySlot: FrameLayout
     private lateinit var panelResize: PanelResizeHandle
     private var activityBar: ActivityBar? = null
     private var explorerResizeHandle: ExplorerResizeHandle? = null
@@ -495,7 +498,7 @@ class MainActivity : Activity() {
 
         mainToolbar = MainToolbar(this, palette,
             { dispatchCommand(IdeCommand.EXPLORER) }, { dispatchCommand(IdeCommand.RUN_STOP) },
-            ::showCommandMenu, { dispatchCommand(IdeCommand.WORKSPACE) }, { dispatchCommand(IdeCommand.SEARCH) }, ::openTerminal)
+            ::showCommandMenu, { dispatchCommand(IdeCommand.WORKSPACE) }, { dispatchCommand(IdeCommand.SEARCH) }, ::openTerminal, ::showWorkbenchMenu)
         root.addView(mainToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         updateShellTitle()
         keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
@@ -524,7 +527,10 @@ class MainActivity : Activity() {
         contentHost = content
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
 
-        // Responsive layout will be determined after measurement
+        activityBar = ActivityBar(this, palette, { dispatchCommand(IdeCommand.SEARCH) }, ::showSettings,
+            { dispatchCommand(IdeCommand.RUN_STOP) }) { dispatchCommand(IdeCommand.EXPLORER) }.also {
+            content.addView(it, LinearLayout.LayoutParams(dp(48), -1))
+        }
         val work = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         content.addView(work, LinearLayout.LayoutParams(0, -1, 1f))
         buildEditor(work)
@@ -540,15 +546,20 @@ class MainActivity : Activity() {
             setBackgroundColor(surface)
             setOnClickListener { showPanelSizeMenu(this) }
         }
-        splitHost.addView(editorRegion, LinearLayout.LayoutParams(-1, 0, 1f))
+        topWorkspace = LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL; layoutDirection=View.LAYOUT_DIRECTION_LTR }
+        topWorkspace.addView(editorRegion, LinearLayout.LayoutParams(0, -1, 1f))
+        // Reserved visual architecture only. Browser/Git/extensions stay deferred; no fake feature surfaces.
+        auxiliarySlot = FrameLayout(this).apply { visibility=View.GONE; tag="auxiliary-slot" }
+        topWorkspace.addView(auxiliarySlot, LinearLayout.LayoutParams(dp(260), -1))
+        splitHost.addView(topWorkspace, LinearLayout.LayoutParams(-1, 0, 1f))
         splitHost.addView(panelResize, LinearLayout.LayoutParams(-1, dp(PanelLayoutPolicy.HANDLE)))
         splitHost.addView(console, LinearLayout.LayoutParams(-1, dp(225)))
         work.addView(splitHost, LinearLayout.LayoutParams(-1, 0, 1f))
 
-        root.addView(keyboardToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
+        work.addView(keyboardToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         statusBarComponent = StatusBar(this, palette)
         statusBarComponent.setText("就绪")
-        root.addView(statusBarComponent, LinearLayout.LayoutParams(-1, -2))
+        work.addView(statusBarComponent, LinearLayout.LayoutParams(-1, -2))
 
         // Keep TextView reference for backward compatibility with existing code
         status = TextView(this).apply {
@@ -596,14 +607,10 @@ class MainActivity : Activity() {
 
     private fun updateExplorerLayout(layout: ExplorerLayout) {
         if (::mainToolbar.isInitialized) mainToolbar.setSidebarPresent(layout.mode == ExplorerMode.SIDEBAR)
+        activityBar?.visibility=View.VISIBLE
         if (layout.mode == ExplorerMode.SIDEBAR) {
-            if (activityBar == null) {
-                activityBar = ActivityBar(this, palette, { dispatchCommand(IdeCommand.SEARCH) }, ::showSettings) { dispatchCommand(IdeCommand.EXPLORER) }.also {
-                    contentHost.addView(it, 0, LinearLayout.LayoutParams(dp(48), -1))
-                }
-            }
             if (explorerPane == null) {
-                explorerPane = makeExplorerPane(true).also { contentHost.addView(it, 1, LinearLayout.LayoutParams(dp(layout.width), -1)) }
+                explorerPane = makeExplorerPane(true).also { topWorkspace.addView(it, 0, LinearLayout.LayoutParams(dp(layout.width), -1)) }
                 explorerResizeHandle = ExplorerResizeHandle(this).also { handle ->
                     handle.setCallbacks(::resizeExplorer, ::finishExplorerResize) {
                         if (::contentHost.isInitialized) Animations.cancelTree(contentHost)
@@ -612,7 +619,7 @@ class MainActivity : Activity() {
                     }
                     handle.setOnClickListener { explorerWidth = 240; finishExplorerResize(); updateExplorerLayout(ExplorerLayout.resolve(currentGeometry!!, explorerWidth)) }
                     handle.setBackgroundColor(surface)
-                    contentHost.addView(handle, 2, LinearLayout.LayoutParams(dp(24), -1))
+                    topWorkspace.addView(handle, 1, LinearLayout.LayoutParams(dp(12), -1))
                 }
             }
             activityBar?.visibility = View.VISIBLE
@@ -627,7 +634,8 @@ class MainActivity : Activity() {
         } else {
             // Keep a single attached instance. GONE is not removal: never lose the reference and create duplicates.
             explorerResizeHandle?.cancelGesture()
-            listOfNotNull(activityBar, explorerPane, explorerResizeHandle).forEach { Animations.cancel(it); it.visibility = View.GONE }
+            listOfNotNull(explorerPane, explorerResizeHandle).forEach { Animations.cancel(it); it.visibility = View.GONE }
+            activityBar?.setExplorerActive(explorerDialog?.isShowing == true)
         }
     }
 
@@ -686,15 +694,37 @@ class MainActivity : Activity() {
 
     private fun updateShellTitle() {
         if (!::mainToolbar.isInitialized) return
-        mainToolbar.setTitle("${if (dirty) "● " else ""}${activePath.substringAfterLast('/')}", "${workspace.title} / $activePath")
+        mainToolbar.setTitle(workspace.title.substringBefore("（").substringBefore(" · "), "${workspace.title} / $activePath")
         pathBreadcrumb?.text = getString(R.string.workbench_breadcrumb, workspace.title.substringBefore(" · ").substringBefore("（"), activePath.replace("/", "  ›  "))
         updateMainToolbarState()
     }
 
     private fun showCommandMenu(anchor: View) {
         commandMenu?.dismiss()
-        val width = (mainToolbar.width / resources.displayMetrics.density).toInt()
-        showContextCommands(anchor, IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(width), panelLayout?.showPanel == true))
+        val popup=DialogMotion.menu(this,anchor,motionAllowed())
+        WorkbenchMenuGroup.entries.forEach { popup.menu.add(0,1000+it.ordinal,0,it.title) }
+        popup.menu.add(1,2000,0,"设置")
+        popup.setOnMenuItemClickListener { item ->
+            anchor.post { if(anchor.isAttachedToWindow) {
+                if(item.itemId==2000)showSettings()
+                else WorkbenchMenuGroup.entries.getOrNull(item.itemId-1000)?.let { showWorkbenchMenu(anchor,it) }
+            } };true
+        }
+        commandMenu=popup;popup.show()
+    }
+
+    private fun showWorkbenchMenu(anchor: View,group:WorkbenchMenuGroup) {
+        val commands=when(group) {
+            WorkbenchMenuGroup.FILE->listOf(IdeCommand.WORKSPACE,IdeCommand.NEW_FILE,IdeCommand.NEW_FOLDER,
+                IdeCommand.SAVE,IdeCommand.IMPORT_COPY,IdeCommand.EXPORT,IdeCommand.RELOAD,IdeCommand.RECOVER)
+            WorkbenchMenuGroup.EDIT->listOf(IdeCommand.UNDO,IdeCommand.REDO,IdeCommand.FIND,IdeCommand.REPLACE,
+                IdeCommand.GOTO_LINE,IdeCommand.FONT_SIZE,IdeCommand.COMPLETE,IdeCommand.SIGNATURE,IdeCommand.SNIPPET)
+            WorkbenchMenuGroup.VIEW->listOf(IdeCommand.EXPLORER,IdeCommand.SEARCH,IdeCommand.PANEL,IdeCommand.THEME,IdeCommand.HIDE_KEYBOARD)
+            WorkbenchMenuGroup.RUN->listOf(IdeCommand.RUN_STOP)
+            WorkbenchMenuGroup.TERMINAL->listOf(IdeCommand.PANEL,IdeCommand.MAXIMIZE_TERMINAL,IdeCommand.CLOSE_TERMINAL,IdeCommand.CLEAR_TERMINAL,IdeCommand.PANEL_SIZE)
+            WorkbenchMenuGroup.HELP->IdeCommands.settingsMenuItems.filter { it!=IdeCommand.THEME }
+        }
+        showContextCommands(anchor,commands)
     }
 
     private fun showContextCommands(anchor: View, commands: List<IdeCommand>) {
@@ -938,7 +968,7 @@ class MainActivity : Activity() {
         shellPane?.setCompact(terminalCompact)
         val terminalMinimum=if(selectedOutput==3) (if(terminalCompact)48 else headerMinimum)+(shellPane?.minimumHeightDp(terminalCompact)?:168) else 0
         val spec = PanelLayoutPolicy.resolve(panelState, panelVisible, width, height,
-            imeVisible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, settings.collapsePanelOnIme, settings.panelPreferSide,terminalMinimum)
+            imeVisible, input.hasFocus() || shellPane?.hasTerminalFocus() == true, settings.collapsePanelOnIme, settings.panelPreferSide,terminalMinimum,bottomOnly=true)
         val previous = panelLayout
         val stamp = if (previous != null && previous.dock != spec.dock) capturePanelViewport() else null
         panelLayout = spec
@@ -950,12 +980,13 @@ class MainActivity : Activity() {
             if (old == null || old.width != width || old.height != height || old.weight != weight)
                 view.layoutParams = LinearLayout.LayoutParams(width, height, weight)
         }
-        params(editorRegion, if (side) 0 else -1, if (side) -1 else 0, 1f)
+        params(topWorkspace, if (side) 0 else -1, if (side) -1 else 0, 1f)
         params(panelResize, if (side) dp(PanelLayoutPolicy.HANDLE) else -1, if (side) -1 else dp(PanelLayoutPolicy.HANDLE))
         val full = spec.showPanel && !spec.showEditor
         params(outputRegion, if (side && !full) dp(spec.extent) else -1, if (!side && !full) dp(spec.extent) else -1)
         outputRegion.visibility = if (spec.showPanel) View.VISIBLE else View.GONE
         if (!spec.showEditor && editor.hasFocus()) outputRegion.requestFocus()
+        topWorkspace.visibility = if (spec.showEditor) View.VISIBLE else View.GONE
         editorRegion.visibility = if (spec.showEditor) View.VISIBLE else View.GONE
         panelResize.visibility = if (spec.resizable) View.VISIBLE else View.GONE
         panelResize.configure(spec.dock, dp(spec.extent), dp(spec.minimum), dp(spec.maximum), dp(spec.available))
@@ -1027,10 +1058,14 @@ class MainActivity : Activity() {
         val tabs = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; setBackgroundColor(surface) }
         tabsRow = EditorTabs(this, palette)
         tabs.addView(tabsRow)
-        editorRegion.addView(tabs, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
-        editorToolbar = EditorToolbar(this, palette, ::dispatchCommand) { showContextCommands(it, IdeCommands.editorMenuItems) }
+        editorToolbar = EditorToolbar(this, palette, ::dispatchCommand) { showContextCommands(it,
+            listOf(IdeCommand.SAVE,IdeCommand.UNDO,IdeCommand.REDO,IdeCommand.FIND)+IdeCommands.editorMenuItems) }
+        val tabHeader=LinearLayout(this).apply { setBackgroundColor(surface) }
+        tabHeader.addView(tabs,LinearLayout.LayoutParams(0,dp(48),1f))
+        tabHeader.addView(editorToolbar,LinearLayout.LayoutParams(-2,dp(48)))
+        editorRegion.addView(tabHeader,LinearLayout.LayoutParams(-1,dp(48)))
         pathBreadcrumb = label("", 11f, muted).apply { setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.MIDDLE; setPadding(dp(14), 0, dp(12), 0); gravity = Gravity.CENTER_VERTICAL }
-        editorRegion.addView(pathBreadcrumb, LinearLayout.LayoutParams(-1, dp(28)))
+        editorRegion.addView(pathBreadcrumb, LinearLayout.LayoutParams(-1, dp(24)))
 
         val editorBody = LinearLayout(this).apply { setBackgroundColor(editorBackground); orientation = LinearLayout.HORIZONTAL }
         numbers = label("1", 13.5f, muted).apply {
@@ -1064,7 +1099,6 @@ class MainActivity : Activity() {
         editorAnalysis = EditorAnalysisController(editorPort!!, { handler.post(it) }, analyze = analyzer::analyze)
         editorBody.addView(editor, LinearLayout.LayoutParams(0, -1, 1f))
         editorRegion.addView(editorBody, LinearLayout.LayoutParams(-1, 0, 1f))
-        editorRegion.addView(editorToolbar, LinearLayout.LayoutParams(-1, dp(48)))
         val suggestScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }
         suggestionScroll = suggestScroll
         suggestionRow = LinearLayout(this).apply { setPadding(dp(5), dp(2), dp(5), dp(2)); setBackgroundColor(surface) }
@@ -1261,9 +1295,6 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams(dp(48), dp(48)))
         if (!sidebar) row.addView(IdeControls.icon(this, palette, IdeIcon.CLOSE, "关闭资源管理器") { explorerDialog?.dismiss() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         panelView.addView(row)
-        panelView.addView(label(if (workspace.external) "已授权目录 · 保存写回原目录" else "应用内项目 · 请导出备份", 11f, muted).apply {
-            setPadding(dp(16), dp(4), dp(12), dp(8))
-        })
         val scroll = ScrollView(this).apply { isFillViewport = true }
         val fileList = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         if (sidebar) sidebarExplorerList = fileList else overlayExplorerList = fileList
@@ -1285,6 +1316,7 @@ class MainActivity : Activity() {
 
     private fun showExplorer() {
         if (workspaceBusy) return
+        if (panelState.maximized && panelVisible) setPanelMaximized(false)
         if (currentGeometry?.showExplorerSidebar == true) {
             explorerVisible = !explorerVisible
             val pane = explorerPane ?: return
@@ -1302,13 +1334,17 @@ class MainActivity : Activity() {
         if (explorerDialog?.isShowing == true) { explorerDialog?.dismiss(); return }
         val content = makeExplorerPane(false)
         explorerDialog = AlertDialog.Builder(this).setView(content).create().also { dialog ->
-                dialog.setOnDismissListener { overlayExplorerList = null; if (explorerDialog === dialog) explorerDialog = null }
+                dialog.setOnDismissListener { overlayExplorerList = null; if (explorerDialog === dialog) explorerDialog = null
+                    activityBar?.setExplorerActive(currentGeometry?.showExplorerSidebar==true && explorerVisible) }
                 DialogMotion.show(dialog, motionAllowed(), drawer = true)
                 val available = root.width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels
-                dialog.window?.setLayout(minOf(dp(360), (available * .9f).toInt()), -1)
+                dialog.window?.setLayout(minOf(dp(360), (available-dp(48)).coerceAtLeast(dp(180))),
+                    topWorkspace.height.takeIf { it>dp(192) } ?: contentHost.height)
+                dialog.window?.attributes=dialog.window?.attributes?.apply { x=dp(48);y=mainToolbar.height }
+                activityBar?.setExplorerActive(true)
                 dialog.window?.setGravity(Gravity.START or Gravity.TOP)
                 dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(surface))
-                dialog.window?.setDimAmount(.35f)
+                dialog.window?.setDimAmount(.12f)
                 dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             }
     }
@@ -1333,7 +1369,7 @@ class MainActivity : Activity() {
         if ("" in expanded) visit(workspace.root, 0)
         val moving = animate && entries.size + 2 <= LayoutMotion.MAX_TREE_ITEMS && motionEnabled()
         LayoutMotion.begin(explorerList, moving)
-        KeyedViews.update(explorerList, listOf("root") + entries.keys + "hint", { key ->
+        KeyedViews.update(explorerList, listOf("root") + entries.keys, { key ->
             when (key) {
                 "root" -> ExplorerRow(this, palette)
                 "hint" -> label("点击文件打开 · 长按或鼠标右键管理", 10f, muted).apply {

@@ -10,7 +10,7 @@ class ResponsiveLayoutTest {
     fun `narrow width shows overlay explorer`() {
         val geometry = WorkspaceGeometry(400, 800, false)
         assertEquals(WidthCategory.NARROW, geometry.widthCategory)
-        assertFalse(geometry.showActivityBar)
+        assertTrue(geometry.showActivityBar)
         assertFalse(geometry.showExplorerSidebar)
 
         val explorerLayout = ExplorerLayout.resolve(geometry, null)
@@ -19,15 +19,15 @@ class ResponsiveLayoutTest {
     }
 
     @Test
-    fun `medium width reserves editor space and uses overlay explorer`() {
+    fun `medium tall window displays primary sidebar`() {
         val geometry = WorkspaceGeometry(650, 500, false)
         assertEquals(WidthCategory.MEDIUM, geometry.widthCategory)
-        // 600-839dp keeps editor space and uses the full-height phone/tablet drawer.
-        assertFalse(geometry.showActivityBar)
-        assertFalse(geometry.showExplorerSidebar)
+        // Current visual brief keeps a primary sidebar in medium windows with sufficient height.
+        assertTrue(geometry.showActivityBar)
+        assertTrue(geometry.showExplorerSidebar)
         val explorerLayout = ExplorerLayout.resolve(geometry, null)
-        assertEquals(ExplorerMode.OVERLAY, explorerLayout.mode)
-        assertFalse(explorerLayout.resizable)
+        assertEquals(ExplorerMode.SIDEBAR, explorerLayout.mode)
+        assertTrue(explorerLayout.resizable)
     }
 
     @Test
@@ -77,7 +77,7 @@ class ResponsiveLayoutTest {
         val geometry2 = WorkspaceGeometry(650, 400, true) // IME reduces height
 
         assertEquals(geometry1.widthCategory, geometry2.widthCategory)
-        assertFalse(geometry1.showExplorerSidebar)
+        assertTrue(geometry1.showExplorerSidebar)
         assertFalse(geometry2.showExplorerSidebar) // Fixed columns start at 840dp
     }
 
@@ -88,7 +88,7 @@ class ResponsiveLayoutTest {
 
         // Medium: drawer; wide windows keep a fixed sidebar.
         assertNull(WorkspaceLayoutPolicy.explorerSidebar(650, 400))
-        assertEquals(240, WorkspaceLayoutPolicy.explorerSidebar(840, 400))
+        assertEquals(240, WorkspaceLayoutPolicy.explorerSidebar(840, 600))
 
         // Wide: sidebar constrained by max fraction
         val width2 = WorkspaceLayoutPolicy.explorerSidebar(1200, 600)

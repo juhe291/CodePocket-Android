@@ -158,7 +158,7 @@ class WorkbenchViewsTest {
         ReflectionHelpers.setField(main,"sidebarExplorerList",list)
         fun render(){ReflectionHelpers.callInstanceMethod<Any?>(main,"renderExplorer",ReflectionHelpers.ClassParameter.from(Boolean::class.javaPrimitiveType!!,false))}
         render();val root=key(list,"root");val active=ReflectionHelpers.getField<String>(main,"activePath")
-        root.performClick();assertEquals(2,list.childCount);assertEquals(active,ReflectionHelpers.getField<String>(main,"activePath"))
+        root.performClick();assertEquals(1,list.childCount);assertEquals(active,ReflectionHelpers.getField<String>(main,"activePath"))
         assertFalse(ReflectionHelpers.getField<MutableSet<String>>(main,"expanded").contains(""))
         root.performClick();assertNotNull(key(list,"entry:src"));assertSame(root,key(list,"root"))
     }

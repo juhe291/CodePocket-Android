@@ -1,0 +1,46 @@
+{
+  "apk": "dist\\CodePocket-workbench-2026-10-24-debug.apk",
+  "bytes": 26502874,
+  "sha256": "9c7ab785ed6317eaf1c7a84950c0d84cb0c48eab71886ffac02db878b2664179",
+  "junit": {
+    "tests": 657,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 1
+  },
+  "failed": [
+    "com.codepocket.ide.MainSurfaceIntegrationTest.tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing",
+    "com.codepocket.ide.MainSurfaceIntegrationTest.diagnosticHoverScrollsCompleteMessageAndCopiesWithoutEditing"
+  ],
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 14
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "DrawAllocation": 1,
+        "SetTextI18n": 10
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "old_apks_preserved": 61,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "assemble": "passed; package executed in final-build, separate assemble-only UP-TO-DATE",
+  "full_regression": "failed; two diagnostic hover UI cases remain",
+  "packaged_python_tests": 39,
+  "device_verified": false,
+  "visual_scope": "Actual Main/Sora host native drawings; viewed phone/tablet dark and tablet light",
+  "complete_ui": false
+}

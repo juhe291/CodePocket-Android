@@ -263,7 +263,12 @@ class CompletionInteractionTest {
     private fun viewTree(view:View):List<View> = listOf(view)+if(view is android.view.ViewGroup)
         (0 until view.childCount).flatMap{viewTree(view.getChildAt(it))} else emptyList()
     private fun openTouchZoomMenu():Pair<android.widget.PopupMenu,android.widget.PopupWindow> {
-        viewTree(main.findViewById(android.R.id.content)).single{it.contentDescription=="编辑操作"}.performClick()
+        viewTree(main.findViewById(android.R.id.content)).single{it.contentDescription=="工作台菜单"}.performClick()
+        shadowOf(Looper.getMainLooper()).idle()
+        val categories=ReflectionHelpers.getField<android.widget.PopupMenu>(main,"commandMenu")
+        val categoryWindow=ReflectionHelpers.getField<android.widget.PopupWindow>(categories,"window")
+        viewTree(categoryWindow.contentView).single{it.contentDescription=="编辑"}.performClick()
+        shadowOf(Looper.getMainLooper()).idle()
         val menu=ReflectionHelpers.getField<android.widget.PopupMenu>(main,"commandMenu")
         return menu to ReflectionHelpers.getField(menu,"window")
     }

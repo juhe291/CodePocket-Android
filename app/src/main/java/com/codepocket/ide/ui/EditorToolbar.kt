@@ -11,9 +11,10 @@ import android.widget.LinearLayout
 class EditorToolbar(context: Context, palette: IdePalette, dispatch: (IdeCommand) -> Unit,
     onMenu: (View) -> Unit) : HorizontalScrollView(context) {
     private val controls = mutableMapOf<IdeCommand, View>()
+    private val buttonRow = LinearLayout(context)
     init {
         isHorizontalScrollBarEnabled = false; setBackgroundColor(palette.surface)
-        val row = LinearLayout(context)
+        val row = buttonRow
         IdeCommands.editorToolbarItems.forEach { command ->
             val icon = when (command) {
                 IdeCommand.SAVE -> IdeIcon.SAVE
@@ -25,10 +26,15 @@ class EditorToolbar(context: Context, palette: IdePalette, dispatch: (IdeCommand
             controls[command] = button
             row.addView(button, LinearLayout.LayoutParams(IdeControls.dp(context, 48), -1))
         }
-        val more = IdeControls.icon(context, palette, IdeIcon.MORE, "编辑操作") {}
-        more.setOnClickListener { onMenu(it) }
-        row.addView(more, LinearLayout.LayoutParams(IdeControls.dp(context, 48), -1))
         addView(row, LayoutParams(-2, -1))
+    }
+    override fun onMeasure(widthMeasureSpec:Int,heightMeasureSpec:Int) {
+        val total=(parent as? View)?.width?.takeIf { it>0 } ?: MeasureSpec.getSize(widthMeasureSpec)
+        val budget=total/resources.displayMetrics.density
+        val shown=if(budget>=650)192 else if(budget>=480)144 else 48
+        controls.forEach { (command,view) -> view.visibility=if(command==IdeCommand.SAVE ||
+            (shown>=144 && command in listOf(IdeCommand.UNDO,IdeCommand.REDO)) || shown>=192)VISIBLE else GONE }
+        super.onMeasure(MeasureSpec.makeMeasureSpec(minOf(IdeControls.dp(context,shown),MeasureSpec.getSize(widthMeasureSpec)),MeasureSpec.EXACTLY),heightMeasureSpec)
     }
     fun setState(state: CommandContext) {
         controls.forEach { (command, view) ->

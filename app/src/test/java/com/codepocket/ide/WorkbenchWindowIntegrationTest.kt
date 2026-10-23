@@ -56,15 +56,15 @@ class WorkbenchWindowIntegrationTest {
             .put("workAreaWidthDp",field<WorkspaceGeometry>("currentGeometry").contentWidth).put("workAreaHeightDp",field<WorkspaceGeometry>("currentGeometry").contentHeight)
             .put("editorWidthPx",editor.width).put("editorHeightPx",editor.height).put("panelVisible",field<Boolean>("panelVisible")).put("panelDock",field<PanelLayout>("panelLayout").dock.name).toString())
         assertEquals(panel,field<Boolean>("panelVisible"));assertEquals(sidebar,field<WorkspaceGeometry>("currentGeometry").showExplorerSidebar)
-        assertEquals(sidebar,field<View?>("activityBar")?.visibility==View.VISIBLE);assertFalse(field<Boolean>("startupPanelPending"))
+        assertTrue(field<View?>("activityBar")?.visibility==View.VISIBLE);assertFalse(field<Boolean>("startupPanelPending"))
         assertTrue(editor.width>0);assertTrue(editor.height>0);if(panel)assertEquals(.35f,field<PanelState>("panelState").bottomFraction,0f)
     }
     @Test @Config(qualifiers="w599dp-h800dp") fun width599LaunchesThePhoneWorkbench(){check(false,false)}
     @Test @Config(qualifiers="w600dp-h480dp") fun net600By480StartsThePanelWithoutFixedColumns(){check(true,false)}
     @Test @Config(qualifiers="w600dp-h479dp") fun height479DoesNotTriggerTabletStartup(){check(false,false)}
-    @Test @Config(qualifiers="w839dp-h800dp") fun width839UsesTheDrawerAndStartupPanel(){check(true,false)}
+    @Test @Config(qualifiers="w839dp-h800dp") fun width839UsesMediumSidebarAndStartupPanel(){check(true,true)}
     @Test @Config(qualifiers="w840dp-h800dp") fun width840UsesFixedColumnsAndStartupPanel(){check(true,true)}
-    @Test @Config(qualifiers="w840dp-h480dp") fun shortWideWindowKeepsUsableEditorAndTerminal(){check(true,true)}
+    @Test @Config(qualifiers="w840dp-h480dp") fun shortWideWindowKeepsUsableEditorAndTerminal(){check(true,false)}
     private fun capture(tag:String,v:View=main.findViewById(android.R.id.content)){
         val b=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);v.draw(Canvas(b));val cwd=File(System.getProperty("user.dir")!!);val repo=if(cwd.name=="app")cwd.parentFile else cwd
         val folder=File(repo,"verification/main-app-window-ui-2026-10-23/previews").apply{mkdirs()};File(folder,"$tag.png").outputStream().use{assertTrue(b.compress(Bitmap.CompressFormat.PNG,100,it))};b.recycle()
