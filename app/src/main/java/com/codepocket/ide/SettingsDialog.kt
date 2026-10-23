@@ -166,14 +166,14 @@ object SettingsDialog {
             back.visibility=if(!wide&&draft.category>=0&&draft.query.isBlank())View.VISIBLE else View.GONE
             when {
                 draft.query.isNotBlank()->{
-                    heading("搜索结果")
+                    details.addView(WorkbenchForms.sectionHeading(activity,"搜索结果","",IdeIcon.SEARCH))
                     val matches=all.filter{(it.title+it.help+categories[it.category]).contains(draft.query,true)}
                     if(matches.isEmpty())heading("没有匹配的设置")
                     matches.forEach{spec->details.addView(TextView(activity).apply{text=categories[spec.category];textSize=11f;setTextColor(p.muted);setPadding(dp(8),dp(14),0,0)});row(spec)}
                 }
-                draft.category<0->{heading("工作台偏好");categories.indices.forEach{details.addView(categoryRow(it))}}
+                draft.category<0->{details.addView(WorkbenchForms.sectionHeading(activity,"工作台偏好","",IdeIcon.SETTINGS));categories.indices.forEach{details.addView(categoryRow(it))}}
                 else->{
-                    heading(categories[draft.category])
+                    details.addView(WorkbenchForms.sectionHeading(activity,categories[draft.category],"",categoryIcons[draft.category]))
                     all.filter{it.category==draft.category}.forEach(::row)
                     if(draft.category==0){
                         val samplePalette=DesignTokens.palette(draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20))

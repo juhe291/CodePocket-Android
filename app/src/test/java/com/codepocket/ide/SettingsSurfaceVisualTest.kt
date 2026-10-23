@@ -35,7 +35,7 @@ class SettingsSurfaceVisualTest {
         idle();val v=dialog.window!!.decorView
         val b=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);v.draw(Canvas(b))
         val cwd=File(System.getProperty("user.dir")!!);val repo=if(cwd.name=="app")cwd.parentFile else cwd
-        val out=File(repo,"verification/workbench-surfaces-2026-10-24/previews").apply{mkdirs()}
+        val out=File(repo,"verification/workbench-heading-polish-2026-10-24/previews").apply{mkdirs()}
         File(out,"$name.png").outputStream().use{assertTrue(b.compress(Bitmap.CompressFormat.PNG,100,it))};b.recycle()
         val button=dialog.getButton(AlertDialog.BUTTON_POSITIVE);assertTrue(button.height>=48)
         val position=IntArray(2);button.getLocationOnScreen(position);val top=IntArray(2);v.getLocationOnScreen(top)

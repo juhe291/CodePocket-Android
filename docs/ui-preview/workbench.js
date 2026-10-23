@@ -58,7 +58,18 @@ function previewFont(delta){previewFontSize=Math.max(10,Math.min(28,previewFontS
 const categoryIcons=['palette','file-code-2','keyboard','save','terminal','move','circle-help'];
 const categoryHints=['主题与配色','字号、缩进与显示','候选行为与按键','自动保存与恢复','终端配色与布局','光标与界面过渡','说明与开源组件'];
 function decorateCategories(){document.querySelectorAll('.settingsnav [data-cat],.settingsdetail [data-cat]').forEach(button=>{if(button.dataset.decorated)return;button.dataset.decorated='true';const i=+button.dataset.cat;button.innerHTML='<span class="categorymark">'+icon(categoryIcons[i])+'</span><span class="categorywords"><strong>'+cats[i]+'</strong>'+(button.closest('.settingsdetail')?'<small>'+categoryHints[i]+'</small>':'')+'</span>';});}
-new MutationObserver(decorateCategories).observe($('#layers'),{childList:true,subtree:true});
+function decorateSectionHeadings(){
+ decorateCategories();
+ document.querySelectorAll('.settingsdetail h3').forEach(heading=>{
+  if(heading.dataset.decorated)return;
+  const title=heading.textContent;const index=cats.indexOf(title);
+  const glyph=index>=0?categoryIcons[index]:['工作台偏好','偏好设置'].includes(title)?'settings-2':title==='搜索结果'?'search':null;
+  if(!glyph)return;
+  heading.dataset.decorated='true';
+  const mark=document.createElement('span');mark.className='sectionmark';mark.setAttribute('aria-hidden','true');mark.innerHTML=icon(glyph);heading.prepend(mark);
+ });
+}
+new MutationObserver(decorateSectionHeadings).observe($('#layers'),{childList:true,subtree:true});
 const endButton=document.createElement('button');endButton.className='icon';endButton.title='关闭当前终端会话';endButton.innerHTML=icon('trash-2');endButton.onclick=()=>scene('结束会话');$('.termhead [title="最大化终端"]').before(endButton);
 const sessionName=$('.termname');sessionName.innerHTML=icon('terminal')+'<span class="session-label">终端 · Shell 1</span>'+icon('chevron-down');
 const collapseButton=$('.termhead [title="收起终端"]');collapseButton.innerHTML=icon('chevron-down');collapseButton.onclick=()=>scene('收起终端');

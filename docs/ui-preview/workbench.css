@@ -20,3 +20,8 @@ body.light .app{--shell:#f1f2f4;--editor:#fff;--panel:#f7f8fa;--line:#d8e0ea}
 .termhead .termname{flex:0 1 auto;overflow:hidden}.session-label{overflow:hidden;text-overflow:ellipsis;min-width:0}.termhead .icon{flex-shrink:0}.compact-top .termhead{position:relative;min-height:96px;align-items:flex-start;padding-top:48px}.compact-top .termhead .termname{flex:1}.compact-top .termhead .termstate{display:flex;align-items:center;position:absolute;left:12px;right:12px;top:0;height:48px;text-align:left;border-bottom:1px solid var(--line)}.compact-top .termhead [title="最大化终端"]{display:none}
 body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:#795e26}body.light .comment{color:#617667}body.light .ln{color:#697587}.phone:not(.compact-top) .top .projectSearch{display:inline-flex}.nested-preview{margin-left:20px}.nested-preview .treeitem{border-left-color:var(--line)!important}
 .type{color:#4ec9b0}body.light .kw{color:#7e4e94}body.light .type{color:#286b7d}
+
+/* A small, quiet icon base and one rule establish the section hierarchy. */
+.settingsdetail h3:has(.sectionmark){display:flex;align-items:center;gap:12px;font-size:16px;min-height:44px;padding-bottom:12px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.sectionmark{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--accent)}
+.sectionmark svg{width:20px;height:20px}

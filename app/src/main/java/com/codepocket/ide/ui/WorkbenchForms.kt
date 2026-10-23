@@ -36,17 +36,35 @@ object WorkbenchForms {
         }
     }
     fun scroll(context:Context,body:View)=ScrollView(context).apply{isFillViewport=false;addView(body)}
-    fun header(context:Context,title:String,subtitle:String,icon:IdeIcon):View {
+    /** Decorative heading only: no extra command, focus target or editable text. */
+    fun sectionHeading(context:Context,title:String,subtitle:String,icon:IdeIcon):View {
         val p=DesignTokens.forContext(context);val dp={v:Int->IdeControls.dp(context,v)}
-        return body(context).apply{
-            setPadding(dp(20),dp(18),dp(20),dp(8))
-            addView(TextView(context).apply{
+        return LinearLayout(context).apply{
+            orientation=LinearLayout.VERTICAL
+            val line=LinearLayout(context).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;minimumHeight=dp(44)}
+            line.addView(ImageView(context).apply{
+                setImageDrawable(IdeIconDrawable(context,icon,p.accentText,dp(20)))
+                setPadding(dp(8),dp(8),dp(8),dp(8))
+                background=WorkbenchStyle.shape(context,p.panel,p.border,6)
+                importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            },LinearLayout.LayoutParams(dp(36),dp(36)))
+            val words=LinearLayout(context).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(12),0,0,0)}
+            words.addView(TextView(context).apply{
                 text=title;textSize=16f;setTypeface(null,Typeface.BOLD);setTextColor(p.foreground)
-                setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(context,icon,p.muted,dp(20)),null,null,null)
-                compoundDrawablePadding=dp(10);setPadding(0,0,0,dp(10))
             })
-            addView(caption(context,subtitle).apply{maxLines=3;ellipsize=android.text.TextUtils.TruncateAt.MIDDLE;contentDescription=subtitle})
+            if(subtitle.isNotBlank())words.addView(caption(context,subtitle).apply{
+                setPadding(0,dp(4),0,0);maxLines=3
+                ellipsize=android.text.TextUtils.TruncateAt.MIDDLE;contentDescription=subtitle
+            })
+            line.addView(words,LinearLayout.LayoutParams(0,-2,1f))
+            addView(line,LinearLayout.LayoutParams(-1,-2))
+            addView(View(context).apply{setBackgroundColor(p.border);importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO},
+                LinearLayout.LayoutParams(-1,dp(1)).apply{topMargin=dp(12);bottomMargin=dp(8)})
         }
+    }
+    fun header(context:Context,title:String,subtitle:String,icon:IdeIcon):View = body(context).apply{
+        setPadding(IdeControls.dp(context,20),IdeControls.dp(context,18),IdeControls.dp(context,20),IdeControls.dp(context,4))
+        addView(sectionHeading(context,title,subtitle,icon))
     }
     fun details(context:Context,text:String,monospace:Boolean=false):ScrollView {
         val p=DesignTokens.forContext(context)
