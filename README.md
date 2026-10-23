@@ -6,6 +6,7 @@
 
 - [最新主APK](dist/CodePocket-audit-2026-10-24-debug.apk)（25.48MiB，原签名、arm64-v8a）。
 - [本批界面清单与验证](docs/UI_AUXILIARY_POLISH_2026-10-24.md)、[原生预览](docs/auxiliary-surfaces-preview/README.md)：主App671通过/2已登记失败/1旧跳过；Lint0错误，Debug打包及签名/对齐/Python/主机回归通过。未宣称全量绿色或实机通过。
+- [可点击样稿与四种窗口](docs/ui-preview/README.md)已同步工作台骨架，232场景+13项浏览器交互检查通过；全部内容明确为设计示例。
 - 完整改版进行中；部分TextMate动态令牌配色与诊断浮层失败已登记。设备验收继续后置，下面为历史记录。
 
 ## 历史主机整合验收
