@@ -1,0 +1,63 @@
+{
+  "baseline": "6309010ba23839dfad42f6b571ea5101e12a07cc",
+  "apk": "dist\\CodePocket-main-integrated-2026-10-23-debug.apk",
+  "sha256": "30395c3a2e7323f1f3fc23309391a9ee5930ca29b62954689763b46fa99e0d30",
+  "bytes": 26429643,
+  "main_tests": {
+    "tests": 649,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "termux_tests": {
+    "tests": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "default_projects": [
+    ":",
+    ":app",
+    ":editor-assist",
+    ":editor-sora",
+    ":editor-surface",
+    ":terminal-emulator",
+    ":terminal-view",
+    ":workspace-core"
+  ],
+  "internal_shared_adapter_tests": {
+    "tests": 159,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "internal_shared_execution": "unchanged shared suite retained; full build task status recorded separately",
+  "lint": {
+    "app": {
+      "errors": 0,
+      "warnings": 10,
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "SetTextI18n": 7
+      }
+    },
+    "editor-sora": {
+      "errors": 0,
+      "warnings": 1,
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "protected_tracked_files": 937,
+  "preserved_old_apks": 60,
+  "unchanged_native_and_python_archives": 28,
+  "preserved_old_top_level_ide_classes": 182,
+  "actual_dex_class_defs": 4285,
+  "shared_assets": 20,
+  "vectors": 46,
+  "vector_paths": 137,
+  "device_execution": false
+}

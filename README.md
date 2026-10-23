@@ -1,5 +1,14 @@
 # CodePocket · Android C++ / Python IDE
 
+**2026-10-23：默认单一主APK的主机整合验收通过，继续P2。** 当前主入口使用生产Sora，文件/保存/补全/界面及真实运行入口接在同一工作台。新增运行前保存/继续编辑/冲突/发送确认回归，生产代码未变。
+
+- [集成主APK](dist/CodePocket-main-integrated-2026-10-23-debug.apk)（与上一版surfaces包逐字节相同，无需重复安装）。
+- [I4真实结果与需求审计](docs/MAIN_APP_FINAL_INTEGRATION_2026-10-23.md)：主648通过/1旧跳过，共享159和Termux146缓存，Lint0错误，默认工程和实际APK核验通过。
+- 下一步P2真实语言服务及原P2/P3；设备验收统一后置，远端Actions未运行，完整项目尚未完成。
+
+## 前批菜单与浮层记录
+
+
 **2026-10-23：主工作台菜单与浮层收尾完成，继续 I4 总验收。** 修复收起空终端误新建、菜单分组/Esc、大字体参数参考、完整诊断与小窗详情、查找替换文件名/排版。保留文件安全、生产Sora和单一真实PTY。
 
 - [最新主APK](dist/CodePocket-main-surfaces-2026-10-23-debug.apk)（25.21MiB，原签名、arm64-v8a）。
