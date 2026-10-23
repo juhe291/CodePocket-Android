@@ -1,12 +1,12 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-23接续状态：主工作台文件/设置链已补验，修复设置异步应用丢失新选择。** 提交期间锁定表单并显示“正在应用…”，失败后恢复编辑并保留草稿；窗口变宽后重建的控件同样受保护。
+**2026-10-23接续状态：主工作台SAF、草稿恢复及运行错误定位新增14项回归通过，接续I3光标动画与手机/平板收尾。** 本批未发现新生产缺陷，既有保存保护保持。
 
-- [本批主程序Debug APK](dist/CodePocket-main-file-settings-2026-10-23-debug.apk)（约25.37MiB，原包名/原签名，arm64-v8a）。
-- [修改、完整测试与边界记录](docs/MAIN_APP_FILE_SETTINGS_2026-10-23.md)：主App591通过/1既有跳过，新增13项主工作台用例；共享139沿用缓存；Lint0错误，Debug构建及实际APK/Python/签名检查通过。
-- [主程序集成计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：继续I2的SAF/草稿/运行定位等剩余链路，再接I3精确光标/UI动画和I4最终主包验收；原P2/P3保留。
+- [本批主APK](dist/CodePocket-main-saf-recovery-2026-10-23-debug.apk)（25.37MiB，原签名，arm64-v8a）：与上批字节一致，已重新核验，无需重复安装。
+- [测试及边界记录](docs/MAIN_APP_SAF_RECOVERY_2026-10-23.md)：主App605通过/1既有跳过，新增14项；共享139沿用缓存；Lint0错误，Debug任务与实际APK/Python/签名检查通过。
+- [主程序集成计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：下一步I3精确光标/UI动画和I4最终主包验收；I2清单继续核对，原P2/P3保留。
 
-此前[补全/参数提示布局等待](docs/MAIN_APP_ASSIST_READINESS_2026-10-23.md)、[输入前20万字符预算与旧连接隔离](docs/MAIN_APP_INPUT_LIMIT_2026-10-22.md)、文件安全和单一真实终端继续保留。当前辅助仍是词法/内置参考；真实设备IME、蓝牙键鼠、卓易通、API24和帧率未实测，统一实机验收后置。下方日期段落为历史事实。
+此前[设置提交保护与文件链](docs/MAIN_APP_FILE_SETTINGS_2026-10-23.md)、[补全布局等待](docs/MAIN_APP_ASSIST_READINESS_2026-10-23.md)、[输入预算与旧连接隔离](docs/MAIN_APP_INPUT_LIMIT_2026-10-22.md)、文件安全和单一真实终端继续保留。当前辅助仍是词法/内置参考；设备IME、蓝牙键鼠、卓易通、API24/FPS未实测，统一后置。下方日期段落为历史事实。
 
 ## 历史实施与构建记录
 
