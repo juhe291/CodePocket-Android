@@ -119,7 +119,9 @@ class TestTerminalPython(unittest.TestCase):
         self.assertEqual(result["error_line"],2);self.assertIn("ValueError: broken",p.text(1));self.assertIn("before",p.text())
     def test_workspace_imports_still_work(self):
         p=self.launch('import pathlib\npathlib.Path("helper.py").write_text("answer=42")\nimport helper\nprint(helper.answer)')
-        self.assertEqual(p.finish()["exit_code"],0);self.assertIn("42",p.text())
+        result=p.finish()
+        self.assertEqual(result["exit_code"],0,{"result":result,"stderr":p.text(1)})
+        self.assertIn("42",p.text())
     def test_kill_while_waiting_then_fresh_run(self):
         p=self.launch('input("blocked> ")');p.wait_text("blocked> ")
         p.process.kill();p.process.wait(timeout=5);self.assertFalse(p.result_path.exists())

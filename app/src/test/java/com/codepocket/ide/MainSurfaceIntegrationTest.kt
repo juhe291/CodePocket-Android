@@ -49,7 +49,7 @@ class MainSurfaceIntegrationTest {
     private fun menuRow(window:PopupWindow,title:String)=views(window.contentView).single{it.contentDescription==title}
     private fun capture(tag:String,v:View){
         val b=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);val canvas=Canvas(b);canvas.drawColor(DesignTokens.forContext(v.context).overlay);v.draw(canvas);val cwd=File(System.getProperty("user.dir")!!);val root=if(cwd.name=="app")cwd.parentFile else cwd
-        val dir=File(root,"verification/main-app-surfaces-2026-10-23/previews").apply{mkdirs()};File(dir,"$tag.png").outputStream().use{assertTrue(b.compress(Bitmap.CompressFormat.PNG,100,it))};b.recycle()
+        val dir=File(root,"verification/workbench-diagnostic-ui-2026-10-24/previews").apply{mkdirs()};File(dir,"$tag.png").outputStream().use{assertTrue(b.compress(Bitmap.CompressFormat.PNG,100,it))};b.recycle()
     }
     @Before fun launch(){
         RuntimeEnvironment.setFontScale(if(name.methodName.contains("Large"))2f else 1f)
@@ -101,16 +101,73 @@ class MainSurfaceIntegrationTest {
         assertTrue(port.applyDecorations(EditorAnalysis(frame,emptyList(),null,syntax=SyntaxReport(listOf(InlineIssue(0,3,message,"诊断布局验收"))))))
         assertNotNull("Injected diagnostic must reach actual caret",port.diagnosticAtCaret());editor.inputView().performClick();idle(80)
     }
-    @Test @Config(qualifiers="w360dp-h290dp") fun tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing(){
+    @Test @Config(qualifiers="w360dp-h220dp") fun tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing(){
         val message="布局验收消息\n".repeat(30);diagnostic(message);val d=ShadowAlertDialog.getLatestAlertDialog();assertNotNull("No hover room must still offer details",d);assertTrue(d.isShowing)
         assertTrue(views(d.window!!.decorView).filterIsInstance<TextView>().any{it.text.contains(message)});assertEquals(1,editor.selectionStart)
-        capture("phone-tiny-large-diagnostic-details",d.window!!.decorView);d.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();idle()
+        capture("phone-tiny-large-diagnostic-details",d.window!!.decorView)
+        val body=views(d.window!!.decorView).filterIsInstance<TextView>().single{it.text.contains(message)}
+        val scroll=body.parent as ScrollView
+        assertTrue("At least one complete error line must fit",scroll.height>=body.lineHeight)
+        val last=body.layout.getLineForOffset(body.text.lastIndexOf("布局验收消息"))
+        scroll.scrollTo(0,body.top+body.compoundPaddingTop+body.layout.getLineTop(last));idle(16)
+        val top=body.top+body.compoundPaddingTop+body.layout.getLineTop(last)-scroll.scrollY
+        val height=body.layout.getLineBottom(last)-body.layout.getLineTop(last)
+        assertTrue("The complete last error line must be reachable by scrolling",scroll.scrollY>0&&top>=0&&top+height<=scroll.height)
+        capture("phone-tiny-large-diagnostic-scrolled",d.window!!.decorView)
+        d.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();idle()
     }
     @Test fun diagnosticHoverScrollsCompleteMessageAndCopiesWithoutEditing(){
         val message="诊断布局验收：这是一段供界面回归的长说明。\n".repeat(25);diagnostic(message);val help=field<DiagnosticPopup>("diagnosticPopup");assertTrue(help.isShowing)
         val window=ReflectionHelpers.getField<PopupWindow>(help,"popup");val body=views(window.contentView).filterIsInstance<TextView>().single{it.text.toString()==message}
-        assertTrue("Full diagnostics should scroll",body.parent is ScrollView);val content=editor.text
+        assertTrue("Full diagnostics should scroll",body.parent is ScrollView);assertTrue((body.parent as ScrollView).canScrollVertically(1));val content=editor.text
         views(window.contentView).single{it.contentDescription=="复制错误信息"}.performClick();assertEquals(message,main.getSystemService(ClipboardManager::class.java).primaryClip!!.getItemAt(0).text.toString());assertSame(content,editor.text);assertTrue(editor.hasFocus())
+    }
+    @Test @Config(qualifiers="w360dp-h290dp") fun compactLargeDiagnosticKeepsHoverWhenSpaceFits(){
+        diagnostic("紧凑窗口诊断显示验收\n".repeat(30))
+        assertTrue("The redesigned 290dp window still has hover room",field<DiagnosticPopup>("diagnosticPopup").isShowing)
+        val window=ReflectionHelpers.getField<PopupWindow>(field<DiagnosticPopup>("diagnosticPopup"),"popup")
+        capture("compact-large-diagnostic-hover",window.contentView)
+    }
+    @Test fun unchangedGlobalLayoutKeepsHoverButCaretChangeDismisses(){
+        diagnostic("固定光标的错误说明")
+        val help=field<DiagnosticPopup>("diagnosticPopup");assertTrue(help.isShowing);val content=editor.text
+        repeat(3){editor.viewTreeObserver.dispatchOnGlobalLayout();idle(16);assertTrue(help.isShowing)}
+        editor.setSelection(2);idle();assertFalse(help.isShowing);assertSame(content,editor.text)
+    }
+    @Test fun fontGeometryChangeDismissesHoverWithoutEditing(){
+        diagnostic("字号变化应取消原位置的诊断浮层")
+        val help=field<DiagnosticPopup>("diagnosticPopup");assertTrue(help.isShowing);val content=editor.text
+        editor.textSize=22f;idle(80);editor.viewTreeObserver.dispatchOnGlobalLayout()
+        assertFalse(help.isShowing);assertSame(content,editor.text)
+    }
+    @Test fun identicalDiagnosticRefreshKeepsHoverButNewMessageCloses(){
+        diagnostic("原错误说明")
+        val help=field<DiagnosticPopup>("diagnosticPopup");val content=editor.text
+        fun apply(message:String):Boolean {
+            val frame=port.snapshot()!!
+            return port.applyDecorations(EditorAnalysis(frame,emptyList(),null,syntax=SyntaxReport(listOf(InlineIssue(0,3,message,"诊断布局验收")))))
+        }
+        assertTrue(apply("原错误说明"));idle(16);assertTrue(help.isShowing)
+        assertTrue(apply("新错误说明"));assertFalse(help.isShowing);assertSame(content,editor.text)
+    }
+    @Test fun clearingDiagnosticsDismissesHoverWithoutEditing(){
+        diagnostic("待清除错误说明")
+        val help=field<DiagnosticPopup>("diagnosticPopup");assertTrue(help.isShowing);val content=editor.text
+        port.clearDiagnostics()
+        assertTrue(port.report.issues.isEmpty());assertFalse(help.isShowing);assertSame(content,editor.text);assertEquals(1,editor.selectionStart)
+    }
+    @Test fun actualBracketDiagnosticOpensReadOnlyHover(){
+        text("print([)");idle(150)
+        val analysis=field<EditorAnalysisController>("editorAnalysis");analysis.request()
+        ReflectionHelpers.getField<ExecutorService>(analysis,"worker").submit{}.get(10,TimeUnit.SECONDS);idle(80)
+        val issue=checkNotNull(port.report.issues.firstOrNull()){ "Existing structural analyzer must report the mismatched bracket" }
+        editor.setSelection(issue.start);editor.inputView().performClick();idle(80)
+        val help=field<DiagnosticPopup>("diagnosticPopup");assertTrue(help.isShowing)
+        val window=ReflectionHelpers.getField<PopupWindow>(help,"popup")
+        assertTrue(views(window.contentView).filterIsInstance<TextView>().any{it.text.toString()==issue.message})
+        assertEquals("print([)",editor.text.toString());assertTrue(editor.hasFocus())
+        capture("phone-actual-structural-diagnostic",window.contentView)
+        capture("phone-actual-structural-code",main.findViewById(android.R.id.content))
     }
     @Test fun newFileValidationRetainsTheInputAndCurrentDocument(){
         val content=editor.text;ReflectionHelpers.callInstanceMethod<Unit>(main,"askCreate",ClassParameter.from(Boolean::class.javaPrimitiveType,false));val d=ShadowAlertDialog.getLatestAlertDialog()

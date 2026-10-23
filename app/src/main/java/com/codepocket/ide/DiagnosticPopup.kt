@@ -20,7 +20,22 @@ import com.codepocket.ide.ui.*
 class DiagnosticPopup(private val activity: Activity, private val editor: android.view.View, private val surface: EditorSurface) {
     private var popup: PopupWindow? = null
     val isShowing get() = popup?.isShowing == true
-    fun dismiss() { popup?.dismiss(); popup = null }
+    private var shownAnchor: EditorSurface.Anchor? = null
+    private var shownIssue: InlineIssue? = null
+    fun dismiss() { popup?.dismiss(); popup = null; shownAnchor = null; shownIssue = null }
+    /** A layout notification alone is not a cursor/viewport change. */
+    fun onLayoutChanged() {
+        if (!isShowing) return
+        val previous = shownAnchor ?: return dismiss()
+        val current = surface.anchor()
+        if (current == null || !previous.matches(current.document, current.revision, current.offset) ||
+            previous.x != current.x || previous.top != current.top || previous.bottom != current.bottom ||
+            previous.visible.left != current.visible.left || previous.visible.top != current.visible.top ||
+            previous.visible.right != current.visible.right || previous.visible.bottom != current.visible.bottom) dismiss()
+    }
+    fun onDiagnosticsChanged(current: InlineIssue?) {
+        if (isShowing && current != shownIssue) dismiss()
+    }
     fun show(issue: InlineIssue): Boolean {
         dismiss()
         val anchor = surface.anchor() ?: return false
@@ -60,7 +75,7 @@ class DiagnosticPopup(private val activity: Activity, private val editor: androi
         return try {
             @Suppress("RtlHardcoded")
             window.showAtLocation(editor, Gravity.TOP or Gravity.LEFT, x, y)
-            popup = window; true
+            popup = window; shownAnchor = anchor; shownIssue = issue; true
         } catch (_: WindowManager.BadTokenException) { window.dismiss(); false }
     }
 }

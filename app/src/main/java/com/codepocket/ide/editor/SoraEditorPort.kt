@@ -32,7 +32,7 @@ class SoraEditorPort(
         if (closed || text.length > Workspace.MAX_CHARS || editor.isComposing) return false
         return editor.replaceDocument(identity(), text).also { if (it) clearDiagnostics() }
     }
-    fun clearDiagnostics() { report = SyntaxReport(); editor.diagnostics(intArrayOf(), intArrayOf()) }
+    fun clearDiagnostics() { report = SyntaxReport(); editor.diagnostics(intArrayOf(), intArrayOf()); diagnosticsChanged?.invoke() }
     fun diagnosticAtCaret(): InlineIssue? = report.issues.firstOrNull { editor.selectionStart in it.start..it.end }
     override fun applyEdit(transaction: EditorTransaction): EditResult {
         val checked = EditorTransactions.check(snapshot(), transaction, Workspace.MAX_CHARS)

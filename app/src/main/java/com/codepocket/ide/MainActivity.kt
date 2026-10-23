@@ -1086,7 +1086,7 @@ class MainActivity : Activity() {
             }
         }
         (editorPort as SoraEditorPort).apply {
-            diagnosticsChanged = ::updateStatusBar
+            diagnosticsChanged = { diagnosticPopup?.onDiagnosticsChanged(diagnosticAtCaret()); updateStatusBar() }
             pythonDocument = { activePath.endsWith(".py", true) }
             runtimeDiagnostics = { frame ->
                 val origin = result
@@ -1109,7 +1109,7 @@ class MainActivity : Activity() {
             signaturePopup?.let { if (it.isShowing) it.reposition() }
         }
         editor.viewTreeObserver.addOnGlobalLayoutListener {
-            diagnosticPopup?.dismiss()
+            diagnosticPopup?.onLayoutChanged()
             if (settings.wordWrap) updateNumbers()
             completionPopup?.let { if (it.isShowing) it.reposition() }
             signaturePopup?.let { if (it.isShowing) it.reposition() }

@@ -1,0 +1,63 @@
+{
+  "apk": "dist\\CodePocket-diagnostic-state-2026-10-24-debug.apk",
+  "bytes": 26508745,
+  "sha256": "b456003d577113e21a8003ceb7cdbc91b9a8b7e7da6e52476bbbb3a829a8e31c",
+  "junit": {
+    "tests": 685,
+    "failures": 0,
+    "skipped": 1,
+    "errors": 0
+  },
+  "failures": [],
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 17
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 1,
+        "SetTextI18n": 13
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "old_apks_preserved": 69,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "assemble": "Debug tests, Lint, packageDebug and assembleDebug succeeded",
+  "signature": "passed",
+  "alignment_16kb": "passed",
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false,
+  "baseline_test_cases_retained": 679,
+  "new_test_cases": 6,
+  "packaged_theme_matches_source": true,
+  "minimum_light_token_contrast": 4.889,
+  "skipped_tests": [
+    "com.codepocket.ide.WorkspaceTest.rejectsLinksDuringRecursiveDeletion"
+  ],
+  "no_new_skips": true,
+  "artifact_initial_test_failures": 1,
+  "artifact_initial_test_errors": 0,
+  "artifact_current_failures": 0,
+  "artifact_current_errors": 0,
+  "workspace_import_independent_runs": 40,
+  "workspace_import_probe_passed": true,
+  "workspace_import_initial_failure_unresolved": true
+}
