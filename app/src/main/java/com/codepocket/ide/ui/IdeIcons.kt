@@ -123,7 +123,7 @@ class IdeIconDrawable(context: Context, private val icon: IdeIcon, color: Int, p
             title.contains("重新")||title.contains("恢复")->IdeIcon.REFRESH
             title.contains("导入")->IdeIcon.IMPORT
             title.contains("导出")->IdeIcon.EXPORT
-            title.contains("终端")||title.contains("Shell")->IdeIcon.TERMINAL
+            title.contains("终端")||title.contains("Shell")||title.contains("会话")->IdeIcon.TERMINAL
             title.endsWith("/")||title.contains("目录")||title.contains("项目")||title.contains("工作区")->IdeIcon.FOLDER_OPEN
             title.contains("运行")||title.contains("启动")->IdeIcon.RUN
             else->IdeIcon.INFO

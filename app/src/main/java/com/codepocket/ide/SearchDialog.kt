@@ -27,8 +27,8 @@ object SearchDialog {
         val palette = DesignTokens.forContext(activity)
         fun dp(v: Int) = IdeControls.dp(activity, v)
         val content = LinearLayout(activity).apply {
-            orientation = LinearLayout.VERTICAL; setPadding(dp(8), dp(4), dp(8), dp(8))
-            background = GradientDrawable().apply { setColor(palette.overlay); cornerRadius = dp(8).toFloat(); setStroke(dp(1), palette.border) }
+            orientation = LinearLayout.VERTICAL; setPadding(dp(12), dp(8), dp(12), dp(12))
+            background = GradientDrawable().apply { setColor(palette.overlay); cornerRadius = dp(6).toFloat(); setStroke(dp(1), palette.border) }
         }
         val initial = snapshot()
         val query = EditText(activity).apply {
@@ -46,13 +46,22 @@ object SearchDialog {
         val header = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
         header.addView(TextView(activity).apply {
             text = activity.getString(R.string.search_current_file, displayName?.substringAfterLast('/') ?: activity.getString(R.string.search_document))
-            textSize = 12f; setTextColor(palette.muted); setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.MIDDLE; setPadding(dp(8), 0, 0, 0)
+            textSize = 11f; setTextColor(palette.muted); setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.MIDDLE; setPadding(dp(8), 0, 0, 0)
         }, LinearLayout.LayoutParams(0, dp(48), 1f))
+        header.getChildAt(0).let { label -> (label as TextView).apply {
+            setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(activity,IdeIconDrawable.file(displayName ?: "main.py"),palette.muted,dp(16)),null,null,null)
+            compoundDrawablePadding=dp(8)
+        } }
         content.addView(header)
         val row = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
         val replaceRow = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL; visibility = if (replace) View.VISIBLE else View.GONE }
         val options = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
-        content.addView(row); content.addView(options); content.addView(feedback,LinearLayout.LayoutParams(-1,-2)); content.addView(replaceRow)
+        content.addView(row)
+        val matchBar=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL}
+        matchBar.addView(options,LinearLayout.LayoutParams(-2,-2))
+        feedback.gravity=Gravity.END or Gravity.CENTER_VERTICAL
+        matchBar.addView(feedback,LinearLayout.LayoutParams(0,-2,1f))
+        content.addView(matchBar,LinearLayout.LayoutParams(-1,-2)); content.addView(replaceRow)
         val dialog = AlertDialog.Builder(activity).setView(content).create()
         fun icon(parent: LinearLayout, glyph: IdeIcon, label: String, action: () -> Unit) =
             IdeControls.icon(activity, palette, glyph, label, action).also { parent.addView(it, LinearLayout.LayoutParams(dp(48), dp(48))) }

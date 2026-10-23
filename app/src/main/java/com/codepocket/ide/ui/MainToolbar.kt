@@ -134,7 +134,7 @@ class PanelToolbar(context: Context, private val palette: IdePalette,
         val budget=(width/resources.displayMetrics.density).toInt()
         val spec=WorkspaceLayoutPolicy.panelToolbar(budget)
         val integrated=navigation!=null
-        clear.visibility=if(if(integrated)budget>=840 else spec.clear)VISIBLE else GONE
+        clear.visibility=if(!integrated && spec.clear)VISIBLE else GONE
         preset.visibility=if(inputAvailable&&if(integrated)budget>=840 else spec.preset)VISIBLE else GONE
         maximize.visibility=if(spec.maximize&&(!integrated||!compact||budget>=400))VISIBLE else GONE
         endSession.visibility=if(compact&&sessionNavigation&&closeSessionAction!=null)VISIBLE else GONE

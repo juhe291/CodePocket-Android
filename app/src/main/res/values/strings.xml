@@ -67,7 +67,7 @@
     <string name="move_target_path">目标：%1$s</string>
     <string name="search_document">当前文档</string>
     <string name="search_current_file">当前文件 · %1$s</string>
-    <string name="search_type_to_find">输入即查找 · Enter 下一个</string>
+    <string name="search_type_to_find">输入以查找</string>
     <string name="search_replace_undo">%1$s · 可撤销</string>
     <string name="editor_font_size">代码字号：%1$d sp</string>
     <string name="editor_font_limit">代码字号已达边界：%1$d sp</string>

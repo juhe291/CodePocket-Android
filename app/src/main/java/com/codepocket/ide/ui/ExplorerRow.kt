@@ -54,7 +54,7 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
         arrow.visibility = if (directory) View.VISIBLE else View.INVISIBLE
         background = if (selected) GradientDrawable().apply { setColor(palette.selection); cornerRadius = dp(3).toFloat() } else null
         IdeControls.describe(this, (if(path.isEmpty())title else path) + if (directory) (if (expanded) "，已展开" else "，已折叠") else "")
-        more.visibility = if (selected || path.isEmpty()) View.VISIBLE else View.GONE
+        more.visibility = if (selected && path.isNotEmpty()) View.VISIBLE else View.GONE
         isSelected = selected; bound = true; invalidate()
     }
 
@@ -63,7 +63,7 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val budget = (width - dp(192)).coerceAtLeast(0)
         val indent = dp(8) + minOf(dp(depth * 12), dp(96), budget)
-        if (paddingLeft != indent) setPadding(indent, dp(6), dp(8), dp(6))
+        if (paddingLeft != indent) setPadding(indent, 0, dp(8), 0)
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 

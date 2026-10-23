@@ -1263,11 +1263,13 @@ class MainActivity : Activity() {
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
         menu.menu.add(0, 100, 0, "定位当前文件")
         menu.menu.add(0, 101, 1, "折叠全部目录")
+        menu.menu.add(1,102,2,IdeCommand.NEW_FOLDER.title).isEnabled=IdeCommands.enabled(IdeCommand.NEW_FOLDER,commandContext())
         IdeCommands.explorerMenuItems.forEachIndexed { index, command -> menu.menu.add(1, index, index + 2, command.title).isEnabled = IdeCommands.enabled(command, commandContext()) }
         menu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 100 -> revealCurrentFileInTree()
                 101 -> { expanded.clear(); renderExplorer(animate = true); persistNavigation() }
+                102 -> dispatchCommand(IdeCommand.NEW_FOLDER)
                 else -> IdeCommands.explorerMenuItems.getOrNull(item.itemId)?.let(::dispatchCommand)
             }; true
         }; menu.show()
@@ -1287,7 +1289,7 @@ class MainActivity : Activity() {
         val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0) }
         row.addView(label("资源管理器", 12f, muted, true).apply { setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.END },
             LinearLayout.LayoutParams(0, dp(48), 1f))
-        IdeCommands.explorerToolbarItems.forEach { command ->
+        IdeCommands.explorerToolbarItems.filter { it==IdeCommand.NEW_FILE }.forEach { command ->
             row.addView(IdeControls.icon(this, palette, if (command == IdeCommand.NEW_FILE) IdeIcon.ADD_FILE else IdeIcon.ADD_FOLDER,
                 command.title) { dispatchCommand(command) }, LinearLayout.LayoutParams(dp(48), dp(48)))
         }
@@ -2790,7 +2792,9 @@ class MainActivity : Activity() {
         menu.show(); return menu
     }
 
-    private fun showTerminalActions(anchor: View) {
+    private fun showTerminalActions(anchor: View) = showTerminalActionGroup(anchor,-1)
+
+    private fun showTerminalActionGroup(anchor:View,section:Int) {
         val entry = terminalRegistry.catalog.selected()
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
         if (entry == null) {
@@ -2800,10 +2804,24 @@ class MainActivity : Activity() {
         }
         val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证", "终端配色",
             ) + if(isCpp())listOf("编辑 C++ 云端预填输入")else emptyList()
-        titles.forEachIndexed { index, title -> menu.menu.add(0, index, index, title) }
-        menu.menu.add(0,20,20,"新建终端")
-        menu.menu.add(0,21,21,"调整面板尺寸")
-        menu.menu.add(0,22,22,"收起运行面板")
+        if(section<0){
+            listOf("终端操作","会话管理","布局与输入","配色与帮助").forEachIndexed { index,title->menu.menu.add(0,100+index,index,title) }
+            menu.setOnMenuItemClickListener { item->
+                if(terminalRegistry.catalog.selected()===entry)showTerminalActionGroup(anchor,item.itemId-100)
+                true
+            }
+            menu.show();return
+        }
+        val ids=when(section){
+            0->listOf(0,1,2,3)
+            1->listOf(20,4,7,5)
+            2->listOf(21,22)+(if(isCpp())listOf(10)else emptyList())
+            else->listOf(9,6,8)
+        }
+        ids.forEachIndexed{order,id->
+            val title=when(id){20->"新建终端";21->"调整面板尺寸";22->"收起运行面板";else->titles[id]}
+            menu.menu.add(0,id,order,title)
+        }
         menu.setOnMenuItemClickListener { item ->
             if (terminalRegistry.catalog.selected() === entry) when (item.itemId) {
                 0 -> shellPane?.showKeyboard()
