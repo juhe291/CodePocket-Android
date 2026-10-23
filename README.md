@@ -1,12 +1,12 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-10-23接续状态：主Sora光标动画已接入，继续I3手机/平板界面核对。** 普通键入/退格约60ms，近距离移动约80ms，停止操作后柔和闪烁；连续输入不排队，组合输入/滚动/重排/失焦直接对齐。系统减少动画、省电及已有独立开关生效；备用与正式主题统一柔和灰蓝。
+**2026-10-23接续状态：修复设置底部留白，完善实际窗口、大字体和终端状态界面。** 原生取消/应用固定贴底、搜索内容正常；二级输入框统一边框与焦点。编辑区增加留白，终端失败提供简洁摘要、重试与完整日志详情，保留同一真实PTY。
 
-- [最新主APK](dist/CodePocket-main-caret-polish-2026-10-23-debug.apk)（25.37MiB，原签名，arm64-v8a）。本批首版motion仅留作中间验证，最终使用polish。
-- [修改、测试及边界记录](docs/MAIN_APP_CARET_MOTION_2026-10-23.md)：主App614通过/1旧跳过，新增9项；共享156/156实际重跑，新增17项；Lint0错误，Debug构建与实际APK/Python/签名核验通过。
-- [主程序集成计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：继续I3窗口边界、大字体/长文件名、二级界面及终端细节，再I4最终主包；I2清单继续核对，原P2/P3保留。
+- [最新主APK](dist/CodePocket-main-window-ui-2026-10-23-debug.apk)（25.20MiB，原签名，arm64-v8a）。
+- [修改、测试与边界](docs/MAIN_APP_WINDOW_UI_2026-10-23.md)：主App632通过/1旧跳过，新增18项；共享159/159实际重跑，新增3项；Lint0错误，Debug构建与实际APK/Python/签名核验通过。
+- [主程序集成计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：继续I3剩余二级菜单和浮层清单/视觉核对，再I4整体验收；原P2/P3保留。
 
-此前[SAF/草稿与运行定位](docs/MAIN_APP_SAF_RECOVERY_2026-10-23.md)、[文件/设置保护](docs/MAIN_APP_FILE_SETTINGS_2026-10-23.md)、[补全布局等待](docs/MAIN_APP_ASSIST_READINESS_2026-10-23.md)和[输入预算/旧连接隔离](docs/MAIN_APP_INPUT_LIMIT_2026-10-22.md)保持；仍使用单一真实终端。当前辅助是词法/内置参考；实机IME、蓝牙键鼠、卓易通、API24和帧率仍统一后置。下方为历史事实。
+此前[主Sora光标动画](docs/MAIN_APP_CARET_MOTION_2026-10-23.md)、[SAF/草稿与运行定位](docs/MAIN_APP_SAF_RECOVERY_2026-10-23.md)、[文件/设置保护](docs/MAIN_APP_FILE_SETTINGS_2026-10-23.md)和输入预算/旧连接隔离保持。代码辅助仍是词法/内置参考。主机API28/34回归与局部目视不代表设备验收；实际IME、蓝牙键鼠、卓易通、API24/FPS继续统一后置。下方为历史事实。
 
 ## 历史实施与构建记录
 

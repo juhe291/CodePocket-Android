@@ -2775,8 +2775,7 @@ class MainActivity : Activity() {
                 3 -> entry.value.runtime.clearScreen()
                 4 -> nameDialog("重命名终端会话", entry.name()) { name, dismiss -> terminalRegistry.catalog.rename(entry.id, name); showOutput(selectedOutput); dismiss() }
                 5 -> closeCurrentShell()
-                6 -> AlertDialog.Builder(this).setTitle("本机终端错误").setMessage(entry.value.runtime.failureDetails())
-                    .setNegativeButton("关闭", null).setPositiveButton("复制") { _, _ -> entry.value.runtime.copyFailureDetails() }.showAnimated()
+                6 -> ShellTerminalPane.showFailureDetails(this, entry.value.runtime, motionAllowed())
                 7 -> shellPane?.ensureSession()
                 8 -> shellPane?.showAbout()
                 9 -> showTerminalPalette(anchor)

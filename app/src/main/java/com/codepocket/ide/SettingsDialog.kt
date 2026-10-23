@@ -191,6 +191,22 @@ object SettingsDialog {
         }
         DialogMotion.show(dialog,current.animations)
         dialog.window?.setLayout(-1,-1)
+        // A full-height Window does not expand AlertDialog's wrap-content parent/custom panels.
+        // Keep native Apply/Cancel buttons, but give our scrollable settings body the remaining height.
+        dialog.findViewById<ViewGroup>(android.R.id.custom)?.let { custom ->
+            custom.layoutParams=custom.layoutParams.apply{height=ViewGroup.LayoutParams.MATCH_PARENT}
+            (custom.parent as? View)?.let { panel ->
+                panel.layoutParams=panel.layoutParams.apply{
+                    if(this is LinearLayout.LayoutParams){height=0;weight=1f}else height=ViewGroup.LayoutParams.MATCH_PARENT
+                }
+                (panel.parent as? View)?.let { parent ->
+                    parent.layoutParams=parent.layoutParams.apply{height=ViewGroup.LayoutParams.MATCH_PARENT}
+                }
+            }
+        }
+        (dialog.getButton(AlertDialog.BUTTON_POSITIVE).parent as? View)?.setBackgroundColor(p.surface)
+        search.setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(activity,IdeIcon.SEARCH,p.muted,dp(16)),null,null,null)
+        search.compoundDrawablePadding=dp(8)
         dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         dialog.window?.decorView?.setTag(R.id.settings_checkpoint,{draft.scroll=scroller.scrollY;draft.checkpoint()})
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener{discard()}

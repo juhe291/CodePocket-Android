@@ -36,7 +36,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private final TextView runCaption;
     private final LinearLayout heading;
     private final FrameLayout viewport;
-    private final TextView placeholder;
+    private final com.codepocket.ide.ui.TerminalStatusCard placeholder;
     private final Button start;
     private TerminalView terminal;
     private final TerminalKeyboard keyboardRequest=new TerminalKeyboard();
@@ -53,7 +53,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         TerminalAppearance.Palette colors=TerminalAppearance.INSTANCE.apply(runtime.session(),name,dark);
         if(changed) {
             appearanceInitialized=true;
-            setBackgroundColor(colors.getBackground());caption.setTextColor(colors.getForeground());placeholder.setTextColor(colors.getForeground());runCaption.setTextColor(DesignTokens.INSTANCE.palette(dark).getMuted());
+            setBackgroundColor(colors.getBackground());caption.setTextColor(colors.getForeground());placeholder.setPalette(DesignTokens.INSTANCE.palette(dark));runCaption.setTextColor(DesignTokens.INSTANCE.palette(dark).getMuted());
             if(terminal!=null)terminal.invalidate();
         }
     }
@@ -110,8 +110,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
             }
         };
         viewport.setPadding(dp(12),dp(8),dp(12),dp(8));
-        placeholder = new TextView(context);
-        placeholder.setTextColor(0xffaab7c9); placeholder.setTextSize(12); placeholder.setPadding(dp(14), dp(8), dp(14), dp(8));
+        placeholder = new com.codepocket.ide.ui.TerminalStatusCard(context, this::ensureSession, this::showFailureDetails, this::showAbout);
         viewport.addView(placeholder, new FrameLayout.LayoutParams(-1, -1));
         addView(viewport, new LayoutParams(-1, 0, 1));
         IdePalette chrome=DesignTokens.INSTANCE.forContext(context);
@@ -211,8 +210,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         if (session == null) {
             if (terminal != null) { terminal.setTerminalCursorBlinkerState(false, false); viewport.removeView(terminal); terminal = null; }
             placeholder.setVisibility(VISIBLE);
-            placeholder.setText(runtime.state() == ShellRuntime.State.FAILED ? "真实 Shell 启动失败：\n" + runtime.error() :
-                runtime.state() == ShellRuntime.State.PREPARING ? "正在准备真实终端…" : "Android Shell · /system/bin/sh\n点击启动后连接真实进程。Python 运行会接入这个终端；C++ 显示真实云端返回结果。");
+            placeholder.bind(runtime.state() == ShellRuntime.State.FAILED, runtime.state() == ShellRuntime.State.PREPARING);
             caption.setText(runtime.state() == ShellRuntime.State.PREPARING ? "正在准备 /system/bin/sh" : "/system/bin/sh · 本地终端");
             start.setEnabled(runtime.state() != ShellRuntime.State.PREPARING); start.setVisibility(VISIBLE); return;
         }
@@ -263,13 +261,24 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
                     .setMessage("将关闭当前终端及其正在运行的程序，编辑器文件保留。")
                     .setNegativeButton("取消", null).setPositiveButton("结束", (d, w) -> runtime.close()).show(); break;
                 case 5: showAbout(); break;
-                case 6: dialogBuilder().setTitle("上次终端错误（本机记录）")
-                    .setMessage(runtime.failureDetails())
-                    .setNegativeButton("关闭", null)
-                    .setPositiveButton("复制", (d, w) -> runtime.copyFailureDetails()).show(); break;
+                case 6: showFailureDetails(); break;
             }
             return true;
         }); menu.show();
+    }
+    public void showFailureDetails() { showFailureDetails(getContext(), runtime, animations); }
+    public static AlertDialog showFailureDetails(Context context, ShellRuntime runtime, boolean animations) {
+        android.widget.ScrollView scroll = new android.widget.ScrollView(context);
+        TextView content = new TextView(context);
+        int inset = Math.round(16 * context.getResources().getDisplayMetrics().density);
+        content.setPadding(inset, inset / 2, inset, inset / 2); content.setTextSize(12); content.setTypeface(Typeface.MONOSPACE);
+        content.setText(runtime.failureDetails()); content.setTextIsSelectable(true);
+        content.setContentDescription(context.getString(com.codepocket.ide.R.string.shell_failure_content));
+        scroll.addView(content, new android.widget.ScrollView.LayoutParams(-1, -2));
+        AlertDialog dialog = new AlertDialog.Builder(context).setTitle(com.codepocket.ide.R.string.shell_failure_title).setView(scroll)
+            .setNegativeButton(com.codepocket.ide.R.string.shell_failure_close, null)
+            .setPositiveButton(com.codepocket.ide.R.string.shell_failure_copy, (d, w) -> runtime.copyFailureDetails()).create();
+        return com.codepocket.ide.animation.DialogMotion.INSTANCE.show(dialog, animations, false);
     }
     public void showAbout() {
         dialogBuilder().setTitle("真实 Android Shell")

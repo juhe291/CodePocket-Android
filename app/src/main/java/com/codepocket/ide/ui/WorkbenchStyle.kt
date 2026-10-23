@@ -33,7 +33,15 @@ object WorkbenchStyle {
     fun content(view:View,p:IdePalette=DesignTokens.forContext(view.context)) {
         val dp={v:Int->IdeControls.dp(view.context,v)}
         when(view){
-            is EditText->{view.setTextColor(p.foreground);view.setHintTextColor(p.muted);view.backgroundTintList=ColorStateList.valueOf(p.accent);view.minHeight=dp(48);view.textSize=14f}
+            is EditText->{
+                view.setTextColor(p.foreground);view.setHintTextColor(p.muted);view.minHeight=dp(48);view.textSize=14f
+                view.backgroundTintList=null
+                view.background=android.graphics.drawable.StateListDrawable().apply{
+                    addState(intArrayOf(android.R.attr.state_focused),shape(view.context,p.editor,p.accent,6))
+                    addState(intArrayOf(),shape(view.context,p.panel,p.border,6))
+                }
+                view.setPadding(dp(12),dp(6),dp(12),dp(6))
+            }
             is Button->{view.setTextColor(p.accentText);view.isAllCaps=false;view.minHeight=dp(48);view.textSize=14f;view.background=IdeControls.feedback(view.context,p)}
             is Switch->{view.setTextColor(p.foreground);view.thumbTintList=ColorStateList.valueOf(p.accentText);view.minHeight=dp(48)}
             is CheckBox->{view.setTextColor(p.foreground);view.buttonTintList=ColorStateList.valueOf(p.accentText);view.minHeight=dp(48)}

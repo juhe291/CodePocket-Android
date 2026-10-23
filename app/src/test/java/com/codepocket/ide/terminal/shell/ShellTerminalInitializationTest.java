@@ -87,8 +87,12 @@ public class ShellTerminalInitializationTest {
         assertTrue(runtime.failureDetails().contains("IllegalStateException: view initialization failed"));
         pane.changed();
         assertNull(ReflectionHelpers.getField(pane, "terminal"));
-        android.widget.TextView placeholder = ReflectionHelpers.getField(pane, "placeholder");
-        assertTrue(placeholder.getText().toString().contains("view initialization failed"));
+        android.view.View placeholder = ReflectionHelpers.getField(pane, "placeholder");
+        assertEquals(android.view.View.VISIBLE, placeholder.getVisibility());
+        android.widget.TextView heading = ReflectionHelpers.getField(placeholder, "title");
+        assertEquals(application.getString(com.codepocket.ide.R.string.shell_status_failed_title), heading.getText().toString());
+        assertFalse(heading.getText().toString().contains("view initialization failed"));
+        assertTrue(runtime.failureDetails().contains("view initialization failed"));
         runtime.detach(observer);
     }
 

@@ -77,4 +77,21 @@
     <string name="editor_font_larger">放大代码</string>
     <string name="editor_input_limit">输入超过20万字符上限，本次输入未写入；请缩减内容后重试。</string>
     <string name="assist_layout_pending">编辑区仍在排版，请稍后重试代码辅助。</string>
+    <string name="shell_status_engine">/system/bin/sh · 本地终端</string>
+    <string name="shell_status_heading">终端状态</string>
+    <string name="shell_status_empty_title">本地终端</string>
+    <string name="shell_status_empty_body">在此执行 Shell 命令。运行 Python 时，输入和输出会接入当前会话。</string>
+    <string name="shell_status_connecting_title">正在连接终端</string>
+    <string name="shell_status_connecting_body">正在准备本地 Shell，连接成功后即可输入命令。</string>
+    <string name="shell_status_failed_title">终端暂时无法启动</string>
+    <string name="shell_status_failed_body">未能连接本地 Shell。编辑器中的代码仍然保留，可重试或查看本机错误详情。</string>
+    <string name="shell_status_start">启动终端</string>
+    <string name="shell_status_retry">重试启动</string>
+    <string name="shell_status_preparing">正在连接…</string>
+    <string name="shell_status_details">错误详情</string>
+    <string name="shell_status_about">终端说明</string>
+    <string name="shell_failure_title">本机终端错误</string>
+    <string name="shell_failure_content">终端错误记录，可选择并复制文字</string>
+    <string name="shell_failure_close">关闭</string>
+    <string name="shell_failure_copy">复制完整记录</string>
 </resources>

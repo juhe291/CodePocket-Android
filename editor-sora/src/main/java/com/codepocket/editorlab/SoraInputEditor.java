@@ -29,6 +29,10 @@ final class SoraInputEditor extends CodeEditor {
     Predicate<KeyEvent> assistanceKeys;
     SoraInputEditor(Context context) { super(context); }
     private SoraCaretMotion caretMotion;
+    @Override public float measureTextRegionOffset() {
+        float offset = super.measureTextRegionOffset();
+        return caretMotion != null && !isLineNumberEnabled() ? Math.max(offset, 12 * getResources().getDisplayMetrics().density) : offset;
+    }
     private boolean transientCaretColor;
     private Integer caretColor;
     void setCaretColor(int color) { caretColor = color; getColorScheme().setColor(EditorColorScheme.SELECTION_INSERT, color); }

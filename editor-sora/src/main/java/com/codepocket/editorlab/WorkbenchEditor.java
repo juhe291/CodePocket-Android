@@ -40,6 +40,10 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
         editor = new SoraInputEditor(context);
         editor.installDecorations();
         editor.installCaretMotion();
+        float density = getResources().getDisplayMetrics().density;
+        editor.setLineNumberMarginLeft(10 * density);
+        editor.setDividerMargin(8 * density, 12 * density);
+        editor.setDividerWidth(density);
         editor.limitInput(200_000, () -> { if (!closed && inputRejected != null) inputRejected.run(); });
         editor.setSaveEnabled(false);
         editor.setTypefaceText(Typeface.MONOSPACE);
