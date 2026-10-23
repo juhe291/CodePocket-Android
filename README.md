@@ -1,5 +1,14 @@
 # CodePocket · Android C++ / Python IDE
 
+**2026-10-23：主工作台菜单与浮层收尾完成，继续 I4 总验收。** 修复收起空终端误新建、菜单分组/Esc、大字体参数参考、完整诊断与小窗详情、查找替换文件名/排版。保留文件安全、生产Sora和单一真实PTY。
+
+- [最新主APK](dist/CodePocket-main-surfaces-2026-10-23-debug.apk)（25.21MiB，原签名、arm64-v8a）。
+- [修复、测试及界面清单](docs/MAIN_APP_SURFACES_2026-10-23.md)：主App643通过/1旧跳过、新11；共享159缓存；Lint0错误，Debug构建及实际APK检查通过。
+- [集成计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：接下来I4总验收，再P2/P3；设备IME/键鼠/卓易通/FPS统一后置。代码辅助仍为词法/内置参考。
+
+## 前批窗口与设置记录
+
+
 **2026-10-23接续状态：修复设置底部留白，完善实际窗口、大字体和终端状态界面。** 原生取消/应用固定贴底、搜索内容正常；二级输入框统一边框与焦点。编辑区增加留白，终端失败提供简洁摘要、重试与完整日志详情，保留同一真实PTY。
 
 - [最新主APK](dist/CodePocket-main-window-ui-2026-10-23-debug.apk)（25.20MiB，原签名，arm64-v8a）。

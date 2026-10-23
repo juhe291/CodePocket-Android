@@ -23,7 +23,7 @@ import java.util.concurrent.Future
 object SearchDialog {
     fun show(activity: Activity, replace: Boolean, snapshot: () -> EditorSnapshot,
         select: (EditorSnapshot, Int, Int) -> Boolean,
-        apply: (EditorSnapshot, TextChange, Boolean) -> Boolean, animations: Boolean = true): AlertDialog {
+        apply: (EditorSnapshot, TextChange, Boolean) -> Boolean, animations: Boolean = true, displayName: String? = null): AlertDialog {
         val palette = DesignTokens.forContext(activity)
         fun dp(v: Int) = IdeControls.dp(activity, v)
         val content = LinearLayout(activity).apply {
@@ -42,17 +42,17 @@ object SearchDialog {
             setTextColor(palette.foreground); setHintTextColor(palette.muted)
             filters = arrayOf(InputFilter.LengthFilter(Workspace.MAX_CHARS))
         }
-        val feedback = TextView(activity).apply { textSize = 12f; setTextColor(palette.muted); gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0); contentDescription = "匹配数量" }
+        val feedback = TextView(activity).apply { textSize = 12f; setTextColor(palette.muted); gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0); contentDescription = "匹配数量"; minHeight=dp(32); maxLines=3; ellipsize=android.text.TextUtils.TruncateAt.END }
         val header = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
         header.addView(TextView(activity).apply {
-            text = activity.getString(R.string.search_current_file, initial.key.substringAfterLast('/').substringAfterLast(':'))
+            text = activity.getString(R.string.search_current_file, displayName?.substringAfterLast('/') ?: activity.getString(R.string.search_document))
             textSize = 12f; setTextColor(palette.muted); setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.MIDDLE; setPadding(dp(8), 0, 0, 0)
         }, LinearLayout.LayoutParams(0, dp(48), 1f))
         content.addView(header)
         val row = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
         val replaceRow = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL; visibility = if (replace) View.VISIBLE else View.GONE }
         val options = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
-        content.addView(row); content.addView(options); content.addView(replaceRow)
+        content.addView(row); content.addView(options); content.addView(feedback,LinearLayout.LayoutParams(-1,-2)); content.addView(replaceRow)
         val dialog = AlertDialog.Builder(activity).setView(content).create()
         fun icon(parent: LinearLayout, glyph: IdeIcon, label: String, action: () -> Unit) =
             IdeControls.icon(activity, palette, glyph, label, action).also { parent.addView(it, LinearLayout.LayoutParams(dp(48), dp(48))) }
@@ -121,7 +121,7 @@ object SearchDialog {
         icon(row, IdeIcon.NEXT, "下一个匹配 · Enter") { operation(0) }
         fun option(label: String, description: String, changed: (Boolean) -> Unit) =
             IdeControls.key(activity, palette, label, description) {}.also { view ->
-                options.addView(view, LinearLayout.LayoutParams(dp(48), dp(48)))
+                options.addView(view, LinearLayout.LayoutParams(-2, dp(48)))
                 view.setOnClickListener {
                     view.isSelected = !view.isSelected
                     view.setTextColor(if (view.isSelected) palette.accentText else palette.foreground)
@@ -131,9 +131,8 @@ object SearchDialog {
             }
         option("Aa", "区分大小写") { matchCase = it }
         option("ab|", "全字匹配") { wholeWord = it }
-        options.addView(feedback, LinearLayout.LayoutParams(0, dp(48), 1f))
-        replaceRow.addView(IdeControls.key(activity, palette, "替换", "替换当前或下一个匹配") { operation(2) }, LinearLayout.LayoutParams(dp(56), dp(48)))
-        replaceRow.addView(IdeControls.key(activity, palette, "全部", "替换全部匹配，可撤销") { operation(3) }, LinearLayout.LayoutParams(dp(56), dp(48)))
+        replaceRow.addView(IdeControls.key(activity, palette, "替换", "替换当前或下一个匹配") { operation(2) }, LinearLayout.LayoutParams(-2, dp(48)))
+        replaceRow.addView(IdeControls.key(activity, palette, "全部", "替换全部匹配，可撤销") { operation(3) }, LinearLayout.LayoutParams(-2, dp(48)))
         val watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

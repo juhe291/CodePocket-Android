@@ -28,17 +28,18 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
     private val title = TextView(activity).apply { textSize = 11f; setTextColor(muted); maxLines = 1 }
     private val signature = TextView(activity).apply {
         textSize = 13f; typeface = Typeface.MONOSPACE; setTextColor(foregroundColor)
-        setPadding(dp(8), 0, dp(8), 0); gravity = Gravity.CENTER_VERTICAL; setSingleLine()
+        setPadding(dp(8), 0, dp(8), 0); gravity = Gravity.CENTER_VERTICAL; minHeight=dp(48); setSingleLine()
     }
-    private val scroll = HorizontalScrollView(activity).apply { isHorizontalScrollBarEnabled = false; addView(signature) }
+    private val scroll = HorizontalScrollView(activity).apply { minimumHeight=dp(48); isHorizontalScrollBarEnabled = false; addView(signature) }
     private val details = TextView(activity).apply {
         textSize = 11f; setTextColor(muted); maxLines = 2; setPadding(dp(8), dp(2), dp(8), 0)
         ellipsize = android.text.TextUtils.TruncateAt.END
     }
     private val disclaimer = TextView(activity).apply {
-        textSize = 10f; setTextColor(muted); setPadding(dp(8), 0, dp(8), 0); maxLines = 1
+        textSize = 10f; setTextColor(muted); setPadding(dp(8), 0, dp(8), 0); minHeight=dp(20); maxLines = 1
         ellipsize = android.text.TextUtils.TruncateAt.END
     }
+    private val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0) }
     private var recentlyClosedDocument: String? = null
     private var recentlyClosedAt = Long.MIN_VALUE
     private var result: SignatureResult? = null
@@ -57,7 +58,6 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
     val isShowing get() = popup.isShowing
 
     init {
-        val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0) }
         heading.addView(title, LinearLayout.LayoutParams(0, dp(48), 1f))
         fun control(icon:com.codepocket.ide.ui.IdeIcon,description:Int,action:()->Unit) {
             heading.addView(com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),icon,activity.getString(description),action),LinearLayout.LayoutParams(dp(48),dp(48)))
@@ -66,9 +66,9 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         control(com.codepocket.ide.ui.IdeIcon.NEXT,R.string.signature_next) { cycle(1) }
         control(com.codepocket.ide.ui.IdeIcon.CLOSE,R.string.signature_close) { close() }
         content.addView(heading)
-        content.addView(scroll, LinearLayout.LayoutParams(-1, dp(44)))
-        content.addView(details, LinearLayout.LayoutParams(-1, 0, 1f))
-        content.addView(disclaimer, LinearLayout.LayoutParams(-1, dp(20)))
+        content.addView(scroll, LinearLayout.LayoutParams(-1, -2))
+        content.addView(details, LinearLayout.LayoutParams(-1, -2))
+        content.addView(disclaimer, LinearLayout.LayoutParams(-1, -2))
     }
 
     fun show(next: SignatureResult, animate: Boolean): Boolean {
@@ -119,9 +119,15 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         val matches = anchor.matches(request.document, request.revision, request.caret)
         if (!matches) { dismiss(false); return false }
         val visible = anchor.visible
-        val placed = CompletionGeometry.place(CompletionBounds(visible.left, visible.top, visible.right, visible.bottom),
-            anchor.x, anchor.top, anchor.bottom, dp(460), dp(156), dp(144), dp(3)) ?: run { dismiss(false); return false }
-        if (placed.width < dp(260)) { dismiss(false); return false }
+        val width=minOf(dp(460),visible.right-visible.left)
+        if(width<dp(260)){dismiss(false);return false}
+        details.visibility=View.VISIBLE
+        fun measure(){content.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED))}
+        measure()
+        val minimum=heading.measuredHeight+scroll.measuredHeight+disclaimer.measuredHeight
+        fun place()=CompletionGeometry.place(CompletionBounds(visible.left,visible.top,visible.right,visible.bottom),anchor.x,anchor.top,anchor.bottom,width,content.measuredHeight,minimum,dp(3))
+        var placed=place()?:run{dismiss(false);return false}
+        if(placed.height<content.measuredHeight){details.visibility=View.GONE;measure();placed=place()?:run{dismiss(false);return false}}
         var px = placed.x; var py = placed.y
         if (Build.VERSION.SDK_INT < 29) {
             val screen = IntArray(2); val local = IntArray(2)

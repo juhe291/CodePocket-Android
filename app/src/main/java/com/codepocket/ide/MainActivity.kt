@@ -1104,7 +1104,8 @@ class MainActivity : Activity() {
             if (issue != null) {
                 hideCompletion(true)
                 val popup = diagnosticPopup ?: DiagnosticPopup(this, editor, editorPort!!).also { diagnosticPopup = it }
-                popup.show(issue)
+                editor.finishMotion()
+                if(!popup.show(issue))showDiagnosticDetails(issue)
             } else { diagnosticPopup?.dismiss(); updateSuggestions(); updateSignatureHelp() }
         }
         completionHint = label("", 11f, muted)
@@ -2295,7 +2296,7 @@ class MainActivity : Activity() {
             val accepted = finishEditorChange(result)
             if (result.changesText) queueDraft()
             accepted
-        }, animations = motionAllowed())
+        }, animations = motionAllowed(), displayName = activePath)
     }
 
     private fun showGoToLine() {
@@ -2757,8 +2758,8 @@ class MainActivity : Activity() {
         val entry = terminalRegistry.catalog.selected()
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
         if (entry == null) {
-            menu.menu.add("新建终端").setOnMenuItemClickListener {newShellSession();true}
-            menu.menu.add("收起运行面板").setOnMenuItemClickListener {togglePanel();true}
+            menu.menu.add(0,1,0,"新建终端").setOnMenuItemClickListener {newShellSession();true}
+            menu.menu.add(0,2,1,"收起运行面板").setOnMenuItemClickListener {togglePanel();true}
             menu.show();return
         }
         val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证", "终端配色",
@@ -2830,5 +2831,16 @@ class MainActivity : Activity() {
         switchFile(relative, jump)
     }
 
+    private fun showDiagnosticDetails(issue: com.codepocket.ide.editor.InlineIssue) {
+        val text=TextView(this).apply{
+            this.text=getString(R.string.editor_diagnostic_content,issue.source,issue.message);textSize=13f;setPadding(dp(16),dp(8),dp(16),dp(8));setTextIsSelectable(true)
+        }
+        val content=ScrollView(this).apply{addView(text)}
+        toolDialog?.dismiss()
+        toolDialog=AlertDialog.Builder(this).setTitle(R.string.editor_diagnostic_details).setView(content)
+            .setNegativeButton(R.string.shell_failure_close,null).setPositiveButton(R.string.editor_copy_diagnostic){_,_->
+                (getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText(issue.source,issue.message))
+            }.showAnimated()
+    }
     private fun alert(message: String) { AlertDialog.Builder(this).setMessage(message).setPositiveButton("确定", null).showAnimated() }
 }

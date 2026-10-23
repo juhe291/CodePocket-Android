@@ -10,6 +10,8 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.ScrollView
+import android.view.View
 import com.codepocket.editor.surface.EditorSurface
 import com.codepocket.ide.editor.InlineIssue
 import com.codepocket.ide.ui.*
@@ -32,12 +34,16 @@ class DiagnosticPopup(private val activity: Activity, private val editor: androi
         }, LinearLayout.LayoutParams(dp(48), dp(48)))
         title.addView(IdeControls.icon(activity, palette, IdeIcon.CLOSE, "关闭错误提示") { dismiss() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         content.addView(title)
-        content.addView(TextView(activity).apply { text = issue.message; textSize = 13f; maxLines = 6; setTextColor(palette.foreground); ellipsize = android.text.TextUtils.TruncateAt.END })
+        val message=TextView(activity).apply {text=issue.message;textSize=13f;setTextColor(palette.foreground)}
+        val scroller=ScrollView(activity).apply {isFocusable=false;addView(message)}
+        content.addView(scroller,LinearLayout.LayoutParams(-1,0,1f))
         val width = minOf(dp(520), anchor.visible.right - anchor.visible.left - dp(8))
         if (width < dp(180)) return false
-        content.measure(android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.EXACTLY), android.view.View.MeasureSpec.makeMeasureSpec(dp(240), android.view.View.MeasureSpec.AT_MOST))
+        message.measure(View.MeasureSpec.makeMeasureSpec((width-content.paddingLeft-content.paddingRight).coerceAtLeast(1),View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED))
+        val minimum=dp(48)+kotlin.math.ceil(message.paint.fontSpacing.toDouble()).toInt()+content.paddingBottom
+        val preferred=dp(48)+minOf(message.measuredHeight,dp(180))+content.paddingBottom
         val placed = CompletionGeometry.place(CompletionBounds(anchor.visible.left, anchor.visible.top, anchor.visible.right, anchor.visible.bottom),
-            anchor.x, anchor.top, anchor.bottom, width, content.measuredHeight, dp(72), dp(4)) ?: return false
+            anchor.x, anchor.top, anchor.bottom, width, preferred, minimum, dp(4)) ?: return false
         val window = PopupWindow(content, placed.width, placed.height, false).apply {
             isOutsideTouchable = false; inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
             softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING

@@ -16,11 +16,13 @@ class WorkbenchMenu(context:Context,private val anchor:View,private val animate:
         dismiss()
         val p=DesignTokens.forContext(anchor.context);val dp={v:Int->IdeControls.dp(anchor.context,v)}
         val rows=LinearLayout(anchor.context).apply {orientation=LinearLayout.VERTICAL;setPadding(dp(4),dp(4),dp(4),dp(4))}
-        var danger=false
+        var previousDanger:Boolean?=null
+        var previousGroup:Int?=null
         for(i in 0 until menu.size()){
             val item=menu.getItem(i);if(!item.isVisible)continue
             val destructive=item.title.toString() in listOf("删除","删除当前文件","结束会话","结束当前 Shell")
-            if(destructive&&!danger){rows.addView(View(anchor.context).apply{setBackgroundColor(p.border)},LinearLayout.LayoutParams(-1,dp(1)));danger=true}
+            if(previousDanger!=null&&(previousDanger!=destructive||previousGroup!=item.groupId))rows.addView(View(anchor.context).apply{setBackgroundColor(p.border)},LinearLayout.LayoutParams(-1,dp(1)))
+            previousDanger=destructive;previousGroup=item.groupId
             rows.addView(WorkbenchStyle.menuRow(anchor.context,item.title.toString(),item.isEnabled,item.isChecked,destructive).apply {
                 isFocusable=item.isEnabled
                 setOnKeyListener{_,key,event->if(key==android.view.KeyEvent.KEYCODE_ESCAPE&&event.action==android.view.KeyEvent.ACTION_UP){dismiss();true}else false}
@@ -32,12 +34,18 @@ class WorkbenchMenu(context:Context,private val anchor:View,private val animate:
         val availableWidth=minOf(anchor.rootView.width.takeIf{it>0}?:display.widthPixels,frame.width().takeIf{it>0}?:display.widthPixels)
         val availableHeight=minOf(anchor.rootView.height.takeIf{it>0}?:display.heightPixels,frame.height().takeIf{it>0}?:display.heightPixels)
         val width=minOf(dp(340),(availableWidth-dp(24)).coerceAtLeast(dp(48)))
-        val scroll=ScrollView(anchor.context).apply {isFillViewport=false;addView(rows);background=WorkbenchStyle.shape(context,p.overlay,p.border,8)}
+        val scroll=object:ScrollView(anchor.context){
+            override fun dispatchKeyEvent(event:android.view.KeyEvent):Boolean {
+                if(event.keyCode==android.view.KeyEvent.KEYCODE_ESCAPE){if(event.action==android.view.KeyEvent.ACTION_UP)this@WorkbenchMenu.dismiss();return true}
+                return super.dispatchKeyEvent(event)
+            }
+        }.apply {isFillViewport=false;isFocusableInTouchMode=true;addView(rows);background=WorkbenchStyle.shape(context,p.overlay,p.border,8)}
         rows.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED))
         val height=minOf(rows.measuredHeight,(availableHeight*.75f).toInt().coerceAtLeast(dp(48)))
         val popup=PopupWindow(scroll,width,height,true).apply {setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));isOutsideTouchable=true;elevation=dp(8).toFloat();inputMethodMode=PopupWindow.INPUT_METHOD_NOT_NEEDED}
         window=popup;popup.setOnDismissListener{Animations.cancelTree(scroll);if(window===popup)window=null}
         popup.showAsDropDown(anchor,0,dp(4),Gravity.END)
+        scroll.requestFocus()
         Animations.fadeIn(scroll,90,enabled=MotionEnvironment.enabled(anchor.context,animate))
     }
     override fun dismiss(){window?.dismiss();window=null;super.dismiss()}
