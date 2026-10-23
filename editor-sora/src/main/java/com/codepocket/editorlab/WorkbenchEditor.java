@@ -39,6 +39,7 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
         setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
         editor = new SoraInputEditor(context);
         editor.installDecorations();
+        editor.installCaretMotion();
         editor.limitInput(200_000, () -> { if (!closed && inputRejected != null) inputRejected.run(); });
         editor.setSaveEnabled(false);
         editor.setTypefaceText(Typeface.MONOSPACE);
@@ -107,10 +108,11 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     public boolean replaceDocument(String document, String text) {
         if (closed || text.length() > 200_000) return false;
         replacing = true;
+        editor.alignCaret();
         try {
             if (!editor.withoutFocusRequests(() -> adapter.replaceDocument(document, text, 0, 0))) return false;
             key = document; previousLength = text.length(); return true;
-        } finally { replacing = false; }
+        } finally { replacing = false; editor.alignCaret(); }
     }
     /** Explicit whole-buffer command for tests/internal tools; normal project loading uses replaceDocument. */
     public void setText(String text) {
@@ -152,12 +154,11 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
         syntax.indentation(width, spaces);
     }
     public void configureMotion(boolean enabled, boolean move, boolean blink, int color) {
-        editor.setCursorAnimationEnabled(enabled && move);
-        editor.setCursorBlinkPeriod(enabled && blink ? 500 : 0);
-        editor.getColorScheme().setColor(io.github.rosemoe.sora.widget.schemes.EditorColorScheme.SELECTION_INSERT, color);
+        editor.configureCaretMotion(enabled, move, blink);
+        editor.setCaretColor(color);
         if (!enabled) finishMotion();
     }
-    public void finishMotion() { editor.getCursorAnimator().cancel(); }
+    public void finishMotion() { editor.alignCaret(); }
     public boolean decorate(String source, int[] starts, int[] ends, int[] colors, int first, int second, int background) {
         return !closed && editor.decorate(source, starts, ends, colors, first, second, background);
     }
@@ -168,8 +169,8 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
                 result.addDiagnostic(new DiagnosticRegion(starts[i], ends[i], DiagnosticRegion.SEVERITY_ERROR));
         editor.setDiagnostics(result);
     }
-    public void pause() { syntax.pause(); cancelNavigation(); finishMotion(); }
-    public void resume() { syntax.resume(); }
+    public void pause() { syntax.pause(); cancelNavigation(); editor.pauseCaret(); }
+    public void resume() { syntax.resume(); editor.resumeCaret(); }
     @Override public void close() {
         if (closed) return;
         closed = true; changes = null; caretChanged = null; scrolled = null; compositionEnded = null; inputRejected = null;

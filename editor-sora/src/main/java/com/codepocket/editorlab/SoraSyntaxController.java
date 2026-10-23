@@ -4,6 +4,7 @@ import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
+import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora.widget.schemes.SchemeVS2019;
 import java.util.function.Consumer;
 
@@ -39,7 +40,7 @@ final class SoraSyntaxController implements AutoCloseable {
         SyntaxLanguage effective = requested.effective(editor.getText().length());
         if (bundle == null) {
             if (fallbackDark == null || fallbackDark != dark) {
-                editor.setColorScheme(dark ? new SchemeVS2019() : new SchemeGitHub()); fallbackDark = dark;
+                editor.setColorScheme(chrome(dark ? new SchemeVS2019() : new SchemeGitHub())); fallbackDark = dark;
             }
             return;
         }
@@ -59,15 +60,28 @@ final class SoraSyntaxController implements AutoCloseable {
                 }
             }
             TextMateColorScheme scheme = new TextMateColorScheme(bundle.themes, model);
-            scheme.setTheme(model); editor.setColorScheme(scheme);
+            scheme.setTheme(model); editor.setColorScheme(chrome(scheme));
             applied = effective; appliedDark = dark;
             describe(effective);
         } catch (Exception | LinkageError error) {
             android.util.Log.e("CodePocketEditorLab", "TextMate attachment failed", error);
             editor.setEditorLanguage(null); applied = SyntaxLanguage.PLAIN; broken = true;
-            editor.setColorScheme(dark ? new SchemeVS2019() : new SchemeGitHub());
+            editor.setColorScheme(chrome(dark ? new SchemeVS2019() : new SchemeGitHub()));
             state = "语法适配失败 · 纯文本"; changed.accept(state);
         }
+    }
+    /** Keep fallback/loaded/failed grammar chrome stable; VS2019's stock teal gutter is too strong here. */
+    private EditorColorScheme chrome(EditorColorScheme scheme) {
+        scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, dark ? 0xff1e1e1e : 0xffffffff);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, dark ? 0xff1e1e1e : 0xffffffff);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER, dark ? 0xff858585 : 0xff707070);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER_CURRENT, dark ? 0xffc5cedb : 0xff334155);
+        scheme.setColor(EditorColorScheme.LINE_DIVIDER, dark ? 0xff303846 : 0xffdbe2eb);
+        scheme.setColor(EditorColorScheme.CURRENT_LINE, dark ? 0xff262626 : 0xfff3f3f3);
+        scheme.setColor(EditorColorScheme.BLOCK_LINE, dark ? 0xff3a414c : 0xffd6dce5);
+        scheme.setColor(EditorColorScheme.BLOCK_LINE_CURRENT, dark ? 0xff6b778a : 0xff8190a4);
+        scheme.setColor(EditorColorScheme.SELECTION_HANDLE, dark ? 0xffaecdff : 0xff005fb8);
+        return scheme;
     }
     private void describe(SyntaxLanguage effective) {
         String next = effective == SyntaxLanguage.PLAIN ? (requested == SyntaxLanguage.PLAIN ? "纯文本" : "超出4.5万字符着色预算 · 纯文本") :

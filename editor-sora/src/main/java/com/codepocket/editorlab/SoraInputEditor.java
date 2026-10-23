@@ -2,6 +2,10 @@ package com.codepocket.editorlab;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.Canvas;
+import io.github.rosemoe.sora.event.SelectionChangeEvent;
+import io.github.rosemoe.sora.event.ScrollEvent;
+import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -24,6 +28,64 @@ final class SoraInputEditor extends CodeEditor {
     Runnable navigationInput, assistanceRefresh;
     Predicate<KeyEvent> assistanceKeys;
     SoraInputEditor(Context context) { super(context); }
+    private SoraCaretMotion caretMotion;
+    private boolean transientCaretColor;
+    private Integer caretColor;
+    void setCaretColor(int color) { caretColor = color; getColorScheme().setColor(EditorColorScheme.SELECTION_INSERT, color); }
+    @Override public void setColorScheme(EditorColorScheme scheme) {
+        super.setColorScheme(scheme);
+        if (caretColor != null) getColorScheme().setColor(EditorColorScheme.SELECTION_INSERT, caretColor);
+    }
+    void installCaretMotion() {
+        // An owned scheme avoids changing any other editor's palette during the scoped caret paint.
+        setColorScheme(new EditorColorScheme());
+        caretMotion = new SoraCaretMotion(this); setCursorAnimator(caretMotion); setCursorBlinkPeriod(0);
+        subscribeEvent(SelectionChangeEvent.class, (event, receipt) -> caretMotion.selectionChanged());
+        subscribeEvent(ScrollEvent.class, (event, receipt) -> {
+            if (event.getStartX() != event.getEndX() || event.getStartY() != event.getEndY()) caretMotion.align();
+        });
+    }
+    void configureCaretMotion(boolean enabled, boolean move, boolean blink) {
+        setCursorAnimationEnabled(enabled && move); caretMotion.configure(enabled, move, blink);
+    }
+    void alignCaret() { if (caretMotion != null) caretMotion.align(); }
+    void pauseCaret() { if (caretMotion != null) caretMotion.pause(); }
+    void resumeCaret() { if (caretMotion != null) caretMotion.resume(); }
+    @Override public void beforeModification(io.github.rosemoe.sora.text.Content content) {
+        if (caretMotion != null) caretMotion.contentChanging();
+        super.beforeModification(content);
+    }
+    @Override public void onColorUpdated(int type) {
+        // Native setColor normally invalidates every cached text RenderNode. The scoped fade must not.
+        if (!transientCaretColor || type != EditorColorScheme.SELECTION_INSERT) super.onColorUpdated(type);
+    }
+    @Override protected void onDraw(Canvas canvas) {
+        float alpha = caretMotion == null ? 1f : caretMotion.frameOpacity();
+        if (alpha >= 1f) { super.onDraw(canvas); return; }
+        EditorColorScheme scheme = getColorScheme(); int original = scheme.getColor(EditorColorScheme.SELECTION_INSERT);
+        transientCaretColor = true;
+        try {
+            scheme.setColor(EditorColorScheme.SELECTION_INSERT, (original & 0x00ffffff) | Math.round((original >>> 24) * alpha) << 24);
+            super.onDraw(canvas);
+        } finally {
+            scheme.setColor(EditorColorScheme.SELECTION_INSERT, original); transientCaretColor = false;
+        }
+    }
+    @Override protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH); if (caretMotion != null) caretMotion.align();
+    }
+    @Override protected void onFocusChanged(boolean focused, int direction, Rect previous) {
+        super.onFocusChanged(focused, direction, previous); if (caretMotion != null) { if (focused) setCursorBlinkPeriod(0); caretMotion.align(); }
+    }
+    @Override public void onWindowFocusChanged(boolean focused) {
+        super.onWindowFocusChanged(focused); if (caretMotion != null) caretMotion.align();
+    }
+    @Override protected void onDetachedFromWindow() {
+        if (caretMotion != null) caretMotion.pause(); super.onDetachedFromWindow();
+    }
+    @Override protected void onAttachedToWindow() {
+        super.onAttachedToWindow(); if (caretMotion != null) caretMotion.resume();
+    }
     private boolean suppressFocus;
     private SoraInputGuard inputGuard;
     void limitInput(int maximum, Runnable rejected) { inputGuard = new SoraInputGuard(this, maximum, rejected); }
@@ -161,6 +223,10 @@ final class SoraInputEditor extends CodeEditor {
                 }
             } else if(action==MotionEvent.ACTION_CANCEL) { mouseStartedInSelection=false;mouseSelectionOwner=null; }
         }
+        if (caretMotion != null) {
+            if (action == MotionEvent.ACTION_MOVE || action == MotionEvent.ACTION_POINTER_DOWN) caretMotion.dragging(true);
+            else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) caretMotion.dragging(false);
+        }
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN || action == MotionEvent.ACTION_MOVE) input();
         return super.dispatchTouchEvent(event);
     }
@@ -178,7 +244,7 @@ final class SoraInputEditor extends CodeEditor {
         if (assistanceKeys != null && assistanceKeys.test(event)) return true;
         return super.dispatchKeyEvent(event);
     }
-    @Override public void release() { if(inputGuard!=null) inputGuard.close();super.release(); }
+    @Override public void release() { if(caretMotion!=null) caretMotion.close();if(inputGuard!=null) inputGuard.close();super.release(); }
     @Override public InputConnection onCreateInputConnection(EditorInfo info) {
         InputConnection connection = super.onCreateInputConnection(info);
         if (connection == null) return null;
