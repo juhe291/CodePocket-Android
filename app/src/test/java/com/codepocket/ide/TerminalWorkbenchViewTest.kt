@@ -49,7 +49,7 @@ class TerminalWorkbenchViewTest {
         field("consoleResultScroll",scroll);field("consoleText",text)
         field("input",EditText(activity));field("panelInputHeading",LinearLayout(activity))
         field("panelToolbar",PanelToolbar(activity,palette,{},{},{},{},{}))
-        field("mainToolbar",MainToolbar(activity,palette,{},{},{},{},{}));field("status",TextView(activity))
+        field("mainToolbar",MainToolbar(activity,palette,{},{},{}));field("status",TextView(activity))
     }
     @After fun release() {
         ReflectionHelpers.getField<com.codepocket.editorlab.WorkbenchEditor?>(activity,"editor")?.close()

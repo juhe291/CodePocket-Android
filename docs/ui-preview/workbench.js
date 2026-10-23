@@ -71,3 +71,4 @@ const includeRow=previewExplorer.querySelector('.treeitem');const headerRow=[...
 const includeChildren=document.createElement('div');includeChildren.className='nested-preview hidden';includeRow.after(includeChildren);includeChildren.append(headerRow);includeRow.setAttribute('aria-expanded','false');
 function includeVisual(open){includeRow.innerHTML='<span>'+icon(open?'chevron-down':'chevron-right')+'</span><span class="folder">'+icon(open?'folder-open':'folder')+'</span><span class="treename">include</span>';includeRow.setAttribute('aria-expanded',String(open));includeChildren.classList.toggle('hidden',!open);}
 includeRow.onclick=()=>includeVisual(includeRow.getAttribute('aria-expanded')!=='true');includeVisual(false);
+document.querySelector(".top .projectSearch")?.remove();

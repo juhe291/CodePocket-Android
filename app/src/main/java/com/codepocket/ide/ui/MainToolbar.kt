@@ -14,8 +14,8 @@ enum class WorkbenchMenuGroup(val title:String) { FILE("文件"), EDIT("编辑")
 /** Single-line desktop menus collapse into a structured mobile menu as the measured budget shrinks. */
 @SuppressLint("ViewConstructor")
 class MainToolbar(context: Context, private val palette: IdePalette,
-    onExplorer: () -> Unit, onRun: () -> Unit, onMenu: (View) -> Unit,
-    onTitle: () -> Unit, onSearch: () -> Unit, onTerminal: () -> Unit = {},
+    onRun: () -> Unit, onMenu: (View) -> Unit,
+    onTitle: () -> Unit, onTerminal: () -> Unit = {},
     onGroup: (View,WorkbenchMenuGroup)->Unit = {_,_->}) : LinearLayout(context) {
     private fun dp(value:Int)=IdeControls.dp(context,value)
     private val menus=LinearLayout(context)
@@ -24,7 +24,6 @@ class MainToolbar(context: Context, private val palette: IdePalette,
         setSingleLine();ellipsize=TextUtils.TruncateAt.END;setPadding(dp(12),0,dp(8),0)
         setOnClickListener{onTitle()}
     }
-    private val search=IdeControls.icon(context,palette,IdeIcon.SEARCH,IdeCommand.SEARCH.title,onSearch)
     private val terminal=IdeControls.icon(context,palette,IdeIcon.TERMINAL,"打开终端",onTerminal)
     private val run=IdeControls.icon(context,palette,IdeIcon.RUN,"运行 · F5",onRun)
     val menuAnchor=IdeControls.icon(context,palette,IdeIcon.MORE,"工作台菜单"){}
@@ -38,7 +37,7 @@ class MainToolbar(context: Context, private val palette: IdePalette,
         }
         menuAnchor.setOnClickListener{onMenu(it)}
         addView(menus,LayoutParams(-2,-1));addView(titleView,LayoutParams(0,-1,1f))
-        listOf(search,terminal,run,menuAnchor).forEach{addView(it,LayoutParams(dp(48),-1))}
+        listOf(terminal,run,menuAnchor).forEach{addView(it,LayoutParams(dp(48),-1))}
     }
     override fun onDraw(canvas:android.graphics.Canvas){
         super.onDraw(canvas)
@@ -58,11 +57,10 @@ class MainToolbar(context: Context, private val palette: IdePalette,
         val heading=if(budget<600)"CodePocket" else projectTitle
         if(titleView.text.toString()!=heading)titleView.text=heading
         menus.visibility=if(budget>=1000 && resources.configuration.fontScale<=1.3f)VISIBLE else GONE
-        search.visibility=if(budget>=600)VISIBLE else GONE
         terminal.visibility=if(budget>=144)VISIBLE else GONE
         run.visibility=if(budget>=96)VISIBLE else GONE
         titleView.visibility=if(budget>=240)VISIBLE else GONE
-        listOf(search,terminal,run,menuAnchor).forEach{it.layoutParams.width=dp(minOf(48,budget.coerceAtLeast(0)))}
+        listOf(terminal,run,menuAnchor).forEach{it.layoutParams.width=dp(minOf(48,budget.coerceAtLeast(0)))}
         super.onMeasure(widthMeasureSpec,heightMeasureSpec)
     }
 }

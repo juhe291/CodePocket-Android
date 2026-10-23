@@ -497,8 +497,8 @@ class MainActivity : Activity() {
         setContentView(root)
 
         mainToolbar = MainToolbar(this, palette,
-            { dispatchCommand(IdeCommand.EXPLORER) }, { dispatchCommand(IdeCommand.RUN_STOP) },
-            ::showCommandMenu, { dispatchCommand(IdeCommand.WORKSPACE) }, { dispatchCommand(IdeCommand.SEARCH) }, ::openTerminal, ::showWorkbenchMenu)
+            { dispatchCommand(IdeCommand.RUN_STOP) },
+            ::showCommandMenu, { dispatchCommand(IdeCommand.WORKSPACE) }, ::openTerminal, ::showWorkbenchMenu)
         root.addView(mainToolbar, LinearLayout.LayoutParams(-1, dp(DesignTokens.TOUCH)))
         updateShellTitle()
         keyboardToolbar = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; visibility = View.GONE }

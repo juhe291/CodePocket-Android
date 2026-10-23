@@ -74,7 +74,7 @@ class AuxiliarySurfaceIntegrationTest {
         layout();Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100));val v=target?:main.findViewById<View>(android.R.id.content)
         val b=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);v.draw(Canvas(b))
         val cwd=File(System.getProperty("user.dir")!!);val repo=if(cwd.name=="app")cwd.parentFile else cwd
-        val folder=File(repo,"verification/workbench-audit-2026-10-24/previews").apply{mkdirs()}
+        val folder=File(repo,"verification/workbench-search-entry-2026-10-24/previews").apply{mkdirs()}
         File(folder,"$tag.png").outputStream().use{assertTrue(b.compress(Bitmap.CompressFormat.PNG,100,it))};b.recycle()
     }
     @Test @Config(qualifiers="w840dp-h411dp") fun phoneLandscapeLightWorkbench(){
@@ -92,6 +92,23 @@ class AuxiliarySurfaceIntegrationTest {
         assertHierarchy(false);capture("phone-large-workbench")
     }
     private fun latest()=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+    @Test @Config(qualifiers="w1280dp-h800dp") fun tabletSearchRoutesRemainDistinctWithNoRepeatedTopEntry(){
+        val content=editor.text
+        val top=views(field<View>("mainToolbar"))
+        assertFalse(top.any{it.contentDescription?.toString()?.contains("项目搜索")==true})
+        assertEquals(3,top.filterIsInstance<android.widget.ImageView>().size)
+        views(field<View>("activityBar")).single{it.contentDescription=="项目搜索"}.performClick();drain()
+        val project=field<android.app.AlertDialog>("toolDialog")
+        assertTrue(views(project.window!!.decorView).filterIsInstance<android.widget.TextView>().any{it.text.toString()=="项目搜索"})
+        assertEquals(1,views(project.window!!.decorView).filterIsInstance<android.widget.EditText>().size)
+        capture("tablet-project-search-from-rail",project.window!!.decorView);project.dismiss();idle();editor.requestFocus()
+        views(field<View>("editorToolbar")).single{it.contentDescription==IdeCommand.FIND.title}.performClick();idle()
+        val current=field<android.app.AlertDialog>("toolDialog")
+        assertTrue(views(current.window!!.decorView).any{it.contentDescription=="查找文本"})
+        assertTrue(views(current.window!!.decorView).filterIsInstance<android.widget.TextView>().any{it.text.toString()==main.getString(R.string.search_current_file,"main.cpp")})
+        assertSame(content,editor.text);capture("tablet-current-file-search-from-editor",current.window!!.decorView)
+        current.dismiss()
+    }
     @Test @Config(qualifiers="w1280dp-h800dp") fun tabletLightWorkspaceKeepsRealChoicesAndPermissionCancel(){
         val content=editor.text;invoke("workspaceMenu");val picker=latest()
         assertTrue(views(picker.window!!.decorView).filterIsInstance<android.widget.TextView>().any{it.text.toString()=="工作区"})

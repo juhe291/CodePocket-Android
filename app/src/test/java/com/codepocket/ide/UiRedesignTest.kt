@@ -23,11 +23,12 @@ class UiRedesignTest {
     private fun toggle(d:AlertDialog,title:String)=views(d.window!!.decorView).filterIsInstance<Switch>().first{it.contentDescription==title}
     @Test fun terminalToolbarEntryRemainsAvailableWithoutCreatingSessionOrRequestingIme(){
         val a=activity();var opened=0
-        val toolbar=MainToolbar(a,DesignTokens.palette(true),{},{},{},{},{},{opened++})
+        val toolbar=MainToolbar(a,DesignTokens.palette(true),{},{},{},{opened++})
         toolbar.measure(View.MeasureSpec.makeMeasureSpec(320,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(48,View.MeasureSpec.EXACTLY))
         toolbar.layout(0,0,320,48)
         val button=views(toolbar).first{it.contentDescription=="打开终端"}
         assertEquals(View.VISIBLE,button.visibility);assertEquals(48,button.measuredWidth)
+        assertFalse(views(toolbar).any{it.contentDescription?.toString()?.contains("项目搜索")==true})
         button.performClick();button.performClick();assertEquals(2,opened)
     }
     @Test fun collapsedRootAndSelectedRootRoundTripWithoutForcedExpansion(){
