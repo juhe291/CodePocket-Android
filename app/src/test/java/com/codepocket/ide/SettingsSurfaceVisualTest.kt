@@ -35,7 +35,7 @@ class SettingsSurfaceVisualTest {
         idle();val v=dialog.window!!.decorView
         val b=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);v.draw(Canvas(b))
         val cwd=File(System.getProperty("user.dir")!!);val repo=if(cwd.name=="app")cwd.parentFile else cwd
-        val out=File(repo,"verification/workbench-heading-polish-2026-10-24/previews").apply{mkdirs()}
+        val out=File(repo,"verification/workbench-settings-consistency-2026-10-24/previews").apply{mkdirs()}
         File(out,"$name.png").outputStream().use{assertTrue(b.compress(Bitmap.CompressFormat.PNG,100,it))};b.recycle()
         val button=dialog.getButton(AlertDialog.BUTTON_POSITIVE);assertTrue(button.height>=48)
         val position=IntArray(2);button.getLocationOnScreen(position);val top=IntArray(2);v.getLocationOnScreen(top)
@@ -54,6 +54,24 @@ class SettingsSurfaceVisualTest {
         show(light=true);assertTrue(tree(dialog.window!!.decorView).any{it.contentDescription=="外观，已选择"});screenshot("tablet-light-settings")
         tree(dialog.window!!.decorView).single{it.contentDescription=="终端与运行"}.performClick();idle()
         screenshot("tablet-light-terminal-settings")
+    }
+    @Test @Config(qualifiers="w320dp-h800dp") fun narrowLargeRunDetailsWrapAndRemainReachable(){
+        show(scale=1.7f)
+        tree(dialog.window!!.decorView).single{it.contentDescription=="终端与运行"}.performClick();idle()
+        val disclosure=tree(dialog.window!!.decorView).filterIsInstance<TextView>().single{it.text.toString()==activity.getString(R.string.settings_cpp_mode_help)}
+        assertTrue(disclosure.text.contains("代码和输入会发送至第三方 Wandbox"))
+        val textLayout=disclosure.layout;assertNotNull(textLayout);assertTrue(textLayout.lineCount>1)
+        for(line in 0 until textLayout.lineCount){
+            assertEquals(0,textLayout.getEllipsisCount(line))
+            assertTrue(textLayout.getLineWidth(line)<=disclosure.width-disclosure.compoundPaddingLeft-disclosure.compoundPaddingRight+1)
+        }
+        assertTrue(textLayout.height<=disclosure.height-disclosure.compoundPaddingTop-disclosure.compoundPaddingBottom)
+        val scroller=generateSequence(disclosure.parent){it.parent}.filterIsInstance<ScrollView>().first()
+        // fullScroll animates by default; use the immediate native scroll for deterministic host geometry.
+        scroller.isSmoothScrollingEnabled=false;scroller.fullScroll(View.FOCUS_DOWN);idle()
+        screenshot("phone-large-terminal-settings")
+        val visible=android.graphics.Rect();assertTrue("disclosure visible after scroll=${scroller.scrollY}, viewport=${scroller.height}, content=${scroller.getChildAt(0).height}",disclosure.getGlobalVisibleRect(visible))
+        assertEquals(disclosure.height,visible.height())
     }
     @Test @Config(qualifiers="w411dp-h891dp") fun phoneLargeSearchKeepsEveryControlReadable(){
         show(scale=1.7f)

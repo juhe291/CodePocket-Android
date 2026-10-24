@@ -148,6 +148,22 @@ class MainFileSettingsIntegrationTest {
         assertEquals(source,port.snapshot());assertEquals(panel,field<PanelState>("panelState"));assertEquals(live,registry.catalog.entries().map{it.id to it.value.runtime})
         assertTrue(editor.history(false));assertEquals("x",editor.text.toString())
     }
+    @Test fun legacySidePreferenceSurvivesUnrelatedSettingsWithoutOfferingInactiveSwitch(){
+        val prefs=main.getSharedPreferences("codepocket_v2",0)
+        val legacy=org.json.JSONObject(field<AppSettings>("settings").toJson()).put("version",8).put("panelPreferSide",true)
+        prefs.edit().putString("settings",legacy.toString()).commit()
+        controller.recreate();main=controller.get();drain();layout();ready()
+        val original=field<AppSettings>("settings");assertTrue(original.panelPreferSide)
+        val content=editor.text;val source=port.snapshot();val d=settings()
+        search(d,"分屏")
+        assertFalse(views(d.window!!.decorView).any{it.contentDescription=="优先左右分屏"})
+        assertTrue(views(d.window!!.decorView).filterIsInstance<TextView>().any{it.text.toString()=="没有匹配的设置"})
+        search(d,"行号");setting(d,"显示行号").isChecked=!original.lineNumbers
+        d.getButton(AlertDialog.BUTTON_POSITIVE).performClick();drain();ready()
+        assertFalse(d.isShowing);assertEquals(original.copy(lineNumbers=!original.lineNumbers),field<AppSettings>("settings"))
+        assertTrue(org.json.JSONObject(prefs.getString("settings",null)!!).getBoolean("panelPreferSide"))
+        assertSame(content,editor.text);assertEquals(source,port.snapshot());assertEquals(PanelDock.BOTTOM,field<PanelLayout>("panelLayout").dock)
+    }
     @Test fun rotatingMainActivityRetainsUnappliedSettingsSearchAndDraft(){
         val original=field<AppSettings>("settings");val d=settings();search(d,"行号");setting(d,"显示行号").isChecked=!original.lineNumbers
         controller.recreate();main=controller.get();drain();layout();ready()

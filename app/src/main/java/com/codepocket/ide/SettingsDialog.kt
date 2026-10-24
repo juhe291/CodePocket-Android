@@ -18,7 +18,7 @@ import org.json.JSONObject
 /** Full-window settings center. Drafts never write preferences before a successful Apply. */
 object SettingsDialog {
     private val categoryIcons=listOf(IdeIcon.PALETTE,IdeIcon.CODE,IdeIcon.INPUT,IdeIcon.SAVE,IdeIcon.TERMINAL,IdeIcon.MOVE,IdeIcon.HELP)
-    private val categoryHelp=listOf("界面主题与配色","字体、缩进与输入","候选列表与按键行为","自动保存与文件保护","终端配色与运行布局","过渡效果与代码光标","快捷键、使用说明与开源许可")
+    private val categoryHelp=listOf("界面主题与配色","字体、缩进与输入","候选列表与按键行为","自动保存与文件保护","终端显示与代码运行","过渡效果与代码光标","快捷键、使用说明与开源许可")
     private val categories=listOf("外观","编辑器","补全与快捷键","文件与保存","终端与运行","动画","帮助与许可")
     data class Draft(val original:AppSettings,var value:AppSettings=original,var category:Int=-1,var query:String="",var scroll:Int=0) {
         fun checkpoint()=JSONObject().put("original",original.toJson()).put("draft",value.toJson()).put("category",category).put("query",query).put("scroll",scroll).toString()
@@ -55,7 +55,7 @@ object SettingsDialog {
         choice(4,"终端字号","真实终端与运行结果共用字号偏好",(10..24).map{"$it sp"},{it.terminalFontSize-10},{s,i->s.copy(terminalFontSize=i+10)})
         choice(4,"终端配色","切换配色保留正在运行的会话",listOf("跟随界面","CodePocket Dark","Nord","Dracula","Light"),{it.terminalTheme.ordinal},{s,i->s.copy(terminalTheme=TerminalTheme.values()[i])})
         toggle(4,"输入代码时临时收起终端","仅在键盘实际占用底部空间时生效",{it.collapsePanelOnIme},{s,v->s.copy(collapsePanelOnIme=v)})
-        toggle(4,"优先左右分屏","空间允许时使用左右布局；临时约束不覆盖偏好",{it.panelPreferSide},{s,v->s.copy(panelPreferSide=v)})
+        // Retain the serialized legacy preference; this bottom-only workbench exposes no side-dock switch.
         toggle(5,"动画总开关","遵从系统减少动画与省电策略",{it.animations},{s,v->s.copy(animations=v)})
         toggle(5,"平滑移动代码光标","键入约60ms，短距离导航约80ms；实际输入位置即时更新",{it.cursorMovement},{s,v->s.copy(cursorMovement=v)})
         toggle(5,"柔和闪烁代码光标","输入时清晰显示，停顿后柔和闪烁；关闭后常亮",{it.cursorBlink},{s,v->s.copy(cursorBlink=v)})
@@ -101,6 +101,17 @@ object SettingsDialog {
         fun heading(title:String,help:String=""){
             details.addView(TextView(activity).apply{text=title;textSize=18f;setTextColor(p.foreground);setTypeface(null,Typeface.BOLD);setPadding(0,dp(8),0,dp(12))})
             if(help.isNotBlank())details.addView(TextView(activity).apply{text=help;textSize=12f;setTextColor(p.muted);setPadding(0,0,0,dp(12))})
+        }
+        fun engineInfo(icon:IdeIcon,title:Int,body:Int){
+            val entry=LinearLayout(activity).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.TOP;setPadding(0,dp(12),0,dp(12))}
+            entry.addView(ImageView(activity).apply{
+                setImageDrawable(IdeIconDrawable(activity,icon,IdeIconDrawable.color(icon,p),dp(20)))
+                importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            },LinearLayout.LayoutParams(dp(24),dp(24)))
+            val words=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(12),0,0,0)}
+            words.addView(TextView(activity).apply{setText(title);textSize=13f;setTextColor(p.foreground);setTypeface(null,Typeface.BOLD)})
+            words.addView(TextView(activity).apply{setText(body);textSize=12f;setTextColor(p.muted);setLineSpacing(dp(2).toFloat(),1f);setPadding(0,dp(5),0,0)})
+            entry.addView(words,LinearLayout.LayoutParams(0,-2,1f));details.addView(entry,LinearLayout.LayoutParams(-1,-2))
         }
         fun categoryRow(index:Int):View {
             val selected=index==draft.category
@@ -204,7 +215,11 @@ object SettingsDialog {
                     }
                     if(draft.category==3)heading("文件安全",activity.getString(R.string.settings_save_help))
                     if(draft.category==2)heading("补全按键说明",activity.getString(R.string.completion_key_help))
-                    if(draft.category==4)heading("运行方式","Python 在当前真实终端中本地交互运行。C++ 使用 Wandbox 云端预填输入，完成后返回结果；源码会发送至第三方。")
+                    if(draft.category==4){
+                        heading(activity.getString(R.string.settings_run_modes))
+                        engineInfo(IdeIcon.PYTHON,R.string.settings_python_mode,R.string.settings_python_mode_help)
+                        engineInfo(IdeIcon.CPP,R.string.settings_cpp_mode,R.string.settings_cpp_mode_help)
+                    }
                     if(draft.category==6){
                         heading("CodePocket","原生 Android C++ / Python 学习工作台")
                         listOf("快捷键说明" to activity.getString(R.string.shortcuts_help),"运行与权限说明" to activity.getString(R.string.python_terminal_help),

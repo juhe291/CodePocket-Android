@@ -42,3 +42,5 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 @container (max-width:319px){.terminal-dock .dock-label{display:none}.terminal-dock .dock-keyboard,.terminal-dock .dock-controls{width:48px;gap:0}}
 
 .terminal-dock .dock-controls.selected{background:var(--selected)}
+
+.run-modes-preview{margin-top:20px}.run-modes-preview h4{font-size:16px;margin:0 0 8px}.engine-mode{display:flex;align-items:flex-start;gap:12px;padding:12px 0;font-size:13px}.engine-mode p{font-size:12px;line-height:1.6;color:var(--muted);margin:5px 0 0}.engine-mode .filemark{margin-top:2px;flex-shrink:0}

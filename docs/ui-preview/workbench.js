@@ -63,7 +63,7 @@ scene=function(name){
 let previewFontSize=14;
 function previewFont(delta){previewFontSize=Math.max(10,Math.min(28,previewFontSize+delta));$('.font-preview').style.fontSize=previewFontSize+'px';$('#previewFontValue').textContent=previewFontSize+' sp';}
 const categoryIcons=['palette','file-code-2','keyboard','save','terminal','move','circle-help'];
-const categoryHints=['主题与配色','字号、缩进与显示','候选行为与按键','自动保存与恢复','终端配色与布局','光标与界面过渡','说明与开源组件'];
+const categoryHints=['主题与配色','字号、缩进与显示','候选行为与按键','自动保存与恢复','终端显示与运行','光标与界面过渡','说明与开源组件'];
 function decorateCategories(){document.querySelectorAll('.settingsnav [data-cat],.settingsdetail [data-cat]').forEach(button=>{if(button.dataset.decorated)return;button.dataset.decorated='true';const i=+button.dataset.cat;button.innerHTML='<span class="categorymark">'+icon(categoryIcons[i])+'</span><span class="categorywords"><strong>'+cats[i]+'</strong>'+(button.closest('.settingsdetail')?'<small>'+categoryHints[i]+'</small>':'')+'</span>';});}
 function decorateSectionHeadings(){
  decorateCategories();
@@ -116,3 +116,12 @@ previewTerminal.append(previewControlKeys);
 const previewControlToggle=previewTerminalDock.querySelector('.dock-controls');
 function previewControlsSelection(){const expanded=!previewControlKeys.classList.contains('hidden');previewControlToggle.classList.toggle('selected',expanded);previewControlToggle.setAttribute('aria-expanded',String(expanded));}
 new MutationObserver(previewControlsSelection).observe(previewControlKeys,{attributes:true,attributeFilter:['class']});previewControlsSelection();
+
+function decorateRunModePreview(){
+ const detail=document.querySelector('.settingsdetail');
+ if(!detail||detail.querySelector('h3')?.textContent.trim()!=='终端与运行'||detail.querySelector('.run-modes-preview'))return;
+ const section=document.createElement('section');section.className='run-modes-preview';
+ section.innerHTML='<h4>运行方式</h4><div class="engine-mode"><span class="filemark py" aria-hidden="true">Py</span><div><strong>Python · 本地</strong><p>在当前终端中交互输入</p></div></div><div class="engine-mode"><span class="filemark" aria-hidden="true">C++</span><div><strong>C++17 · 云端</strong><p>预填输入，完成后返回结果。<br>代码和输入会发送至第三方 Wandbox。</p></div></div>';
+ detail.append(section);
+}
+new MutationObserver(decorateRunModePreview).observe($('#layers'),{childList:true,subtree:true});
