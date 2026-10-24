@@ -30,6 +30,7 @@ const originalScene=scene;
 scene=function(name){
  closeLayers();
  switch(name){
+ case '打开工作区':case '工作区载入失败':return previewWorkspaceState(name==='工作区载入失败');
  case '主菜单':return menu(menuGroups.map(g=>[g[0],g[1],g[2]]));
  case '文件操作':return menu([['新建文件','新建文件','file-plus-2',false,'Ctrl+N'],['打开 / 切换工作区','切换项目','folder-open',false,'Ctrl+O'],['保存','工作台','save',false,'Ctrl+S'],'-',['导出副本','恢复草稿','download'],['恢复草稿','恢复草稿','refresh-cw']]);
  case '视图菜单':return menu([['打开终端','打开终端','terminal'],['资源管理器','切换文件树','files',false,'Ctrl+B'],['代码字号','代码字号','case-sensitive'],['切换深浅主题','切换主题','palette'],['设置','设置','settings-2']]);
@@ -73,7 +74,7 @@ new MutationObserver(decorateSectionHeadings).observe($('#layers'),{childList:tr
 const endButton=document.createElement('button');endButton.className='icon';endButton.title='关闭当前终端会话';endButton.innerHTML=icon('trash-2');endButton.onclick=()=>scene('结束会话');$('.termhead [title="最大化终端"]').before(endButton);
 const sessionName=$('.termname');sessionName.innerHTML=icon('terminal')+'<span class="session-label">终端 · Shell 1</span>'+icon('chevron-down');
 const collapseButton=$('.termhead [title="收起终端"]');collapseButton.innerHTML=icon('chevron-down');collapseButton.onclick=()=>scene('收起终端');
-const options=$('#scene');['文件操作','视图菜单','运行菜单','帮助菜单','代码字号'].forEach(n=>options.add(new Option(n,n)));
+const options=$('#scene');['文件操作','视图菜单','运行菜单','帮助菜单','代码字号','打开工作区','工作区载入失败'].forEach(n=>options.add(new Option(n,n)));
 previewLayout(true);
 const themePreviewToggle=$('#theme').onclick;
 $('#theme').onclick=()=>{themePreviewToggle();saved.theme=document.body.classList.contains('light')?'浅色':'深色';};
@@ -83,3 +84,10 @@ const includeChildren=document.createElement('div');includeChildren.className='n
 function includeVisual(open){includeRow.innerHTML='<span>'+icon(open?'chevron-down':'chevron-right')+'</span><span class="folder">'+icon(open?'folder-open':'folder')+'</span><span class="treename">include</span>';includeRow.setAttribute('aria-expanded',String(open));includeChildren.classList.toggle('hidden',!open);}
 includeRow.onclick=()=>includeVisual(includeRow.getAttribute('aria-expanded')!=='true');includeVisual(false);
 document.querySelector(".top .projectSearch")?.remove();
+
+// Existing startup states, explicitly shown as a design example rather than running code.
+function previewWorkspaceState(failed){
+ const symbol=failed?'info':'file-code-2';
+ $('#layers').innerHTML='<section class="workspace-state'+(failed?' failed':'')+'"><header class="startup-brand">CodePocket</header><div class="startup-body"><span class="state-symbol" aria-hidden="true">'+icon(symbol)+'</span><h2>'+(failed?'工作区暂时无法打开':'正在打开工作区…')+'</h2>'+(failed?'<p>载入失败不会删除原文件或恢复草稿</p>':'')+'</div></section>';
+ if(failed)$('#layers').insertAdjacentHTML('beforeend','<section class="modal"><div class="modalheader"><h2>工作区载入失败</h2></div><div class="modalbody"><p>设计示例：目录授权暂时不可用。请选择原目录重新授权。</p></div><div class="actions"><button onclick="scene(&quot;工作台&quot;)">内部项目</button><button onclick="scene(&quot;切换项目&quot;)">选择目录</button></div></section>');
+}

@@ -1,0 +1,21 @@
+  public boolean isEditable();
+    Code:
+       0: aload_0
+       1: getfield      #1891               // Field editable:Z
+       4: ifeq          25
+       7: aload_0
+       8: getfield      #1876               // Field layoutBusy:Z
+      11: ifne          25
+      14: aload_0
+      15: invokevirtual #1717               // Method isFormatting:()Z
+      18: ifne          25
+      21: iconst_1
+      22: goto          26
+      25: iconst_0
+      26: ireturn
+
+  public boolean getEditable();
+    Code:
+       0: aload_0
+       1: getfield      #1891               // Field editable:Z
+       4: ireturn

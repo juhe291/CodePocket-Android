@@ -25,3 +25,9 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 .settingsdetail h3:has(.sectionmark){display:flex;align-items:center;gap:12px;font-size:16px;min-height:44px;padding-bottom:12px;margin-bottom:8px;border-bottom:1px solid var(--line)}
 .sectionmark{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--accent)}
 .sectionmark svg{width:20px;height:20px}
+
+.workspace-state{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;background:var(--shell);color:var(--text)}
+.startup-brand{display:flex;align-items:center;height:49px;flex-shrink:0;padding:0 16px;border-bottom:1px solid var(--line);font-size:13px}
+.startup-body{display:flex;flex:1;min-height:0;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow:auto}
+.state-symbol{width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--accent)}
+.workspace-state.failed .state-symbol{color:var(--red)}.state-symbol svg{width:24px;height:24px}.startup-body h2{font-size:16px;margin:20px 0 0}.startup-body p{font-size:12px;color:var(--muted);margin:8px 0 0}

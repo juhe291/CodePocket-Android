@@ -226,7 +226,8 @@ class MainActivity : Activity() {
         selectedOutput = savedInstanceState?.getInt("outputChannel", 3)?.coerceIn(0, 3) ?: 3
         drafts = DraftStore(File(filesDir, "drafts")) { a, b -> android.system.Os.rename(a.path, b.path) }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-        setContentView(TextView(this).apply { text = "正在载入 CodePocket…"; setPadding(24, 36, 24, 24) })
+        applySystemBarPalette()
+        setContentView(WorkspacePlaceholder.create(this, palette))
         startWorkspace(prefs.getString("selectedTree", null), savedInstanceState)
     }
 
@@ -310,7 +311,7 @@ class MainActivity : Activity() {
                     themeSnapshot?.release(); themeSnapshot = null
                     documentTransitions.cancel(); preservePendingDocumentEdits()
                     if (!::root.isInitialized) {
-                        setContentView(TextView(this).apply { text = "工作区载入失败，请重新授权或打开内部项目。" })
+                        setContentView(WorkspacePlaceholder.create(this, palette, unavailable = true))
                     }
                     AlertDialog.Builder(this).setTitle("工作区载入失败")
                         .setMessage("${error.message}\n恢复草稿仍保留在应用内。请选择原目录重新授权。")
@@ -477,6 +478,15 @@ class MainActivity : Activity() {
     }
     private fun space(w: Int = 5) = View(this).apply { layoutParams = LinearLayout.LayoutParams(dp(w), 1) }
 
+    private fun applySystemBarPalette() {
+        window.statusBarColor = surface
+        window.navigationBarColor = panel
+        val lightNavigationBar = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
+        @Suppress("DEPRECATION")
+        window.decorView.systemUiVisibility = if (dark) 0 else View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or lightNavigationBar
+    }
+
     private fun createUi() {
         commandMenu?.dismiss(); commandMenu = null
         diagnosticPopup?.dismiss(); diagnosticPopup = null
@@ -487,12 +497,7 @@ class MainActivity : Activity() {
         activityBar = null; explorerPane = null; explorerResizeHandle = null
         sidebarExplorerList = null; overlayExplorerList = null; currentGeometry = null
         panelDragViewport = null; panelLayout = null
-        window.statusBarColor = surface
-        window.navigationBarColor = panel
-        val lightNavigationBar = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
-        @Suppress("DEPRECATION")
-        window.decorView.systemUiVisibility = if (dark) 0 else View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or lightNavigationBar
+        applySystemBarPalette()
         root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(editorBackground) }
         setContentView(root)
 

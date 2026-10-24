@@ -1,12 +1,12 @@
 # CodePocket 可点击工作台设计预览
 
-打开 [index.html](index.html)，可选择手机竖屏/横屏、平板竖屏/横屏和深浅主题。29种界面场景覆盖工作台、菜单、表单、设置、补全及终端状态。使用本地CSS/JS/SVG资源，可以离线查看。
+打开 [index.html](index.html)，可选择手机竖屏/横屏、平板竖屏/横屏和深浅主题。31种界面场景覆盖工作台、菜单、表单、设置、补全及终端状态。使用本地CSS/JS/SVG资源，可以离线查看。
 
-**所有文件和输出均为设计示例，不执行代码，不是APK或Android设备截图。** 原生App继续使用真实Python/Wandbox/单一PTY；实际诊断交互见[诊断原生预览](../diagnostic-ui-preview/README.md)与[标题原生预览](../heading-polish-preview/README.md)，代码配色见[原生配色预览](../token-theme-preview/README.md)与[窗口预览](../search-entry-preview/README.md)和[最新APK](../../dist/CodePocket-heading-polish-2026-10-24-debug.apk)。
+**所有文件和输出均为设计示例，不执行代码，不是APK或Android设备截图。** 原生App继续使用真实Python/Wandbox/单一PTY；实际诊断交互见[诊断原生预览](../diagnostic-ui-preview/README.md)与[标题原生预览](../heading-polish-preview/README.md)与[载入原生预览](../startup-ui-preview/README.md)，代码配色见[原生配色预览](../token-theme-preview/README.md)与[窗口预览](../search-entry-preview/README.md)和[最新APK](../../dist/CodePocket-startup-ui-2026-10-24-debug.apk)。
 
 2026-10-24在原样稿基础上同步全高Activity Bar、上方文件树/编辑器、横跨工作区的底部终端和中性状态栏；移除顶部重复项目搜索与编辑区重复更多、合并文件夹操作。增加目录示例层级、设置分类图标及标题底座、细分隔线、简洁路径区与柔和选中短线；不引入荧光/光晕/夸张渐变。未实现功能仍暂缓，样稿不作为功能交付。
 
-本轮Playwright真实浏览器：29场景×4窗口×2主题=232次场景/横向边界检查，加13项交互与20项实际配色检查全部通过，未发现页面脚本错误。另核对360px宽度、减少动画、目录折叠、设置取消/应用及终端入口。检查的是浏览器样稿，不代表AndroidIME/键鼠/卓易通/FPS通过。
+本轮Playwright真实浏览器：29场景×4窗口×2主题=248次场景/横向边界检查，加15项交互与20项实际配色检查全部通过，未发现页面脚本错误。新增载入/失败状态及示例恢复导航；另核对360px宽度、减少动画、目录折叠、设置取消/应用及终端入口。检查的是浏览器样稿，不代表AndroidIME/键鼠/卓易通/FPS通过。
 
 | 窗口 | 深色工作台 | 浅色工作台 | 深色设置 | 浅色设置 |
 | --- | --- | --- | --- | --- |

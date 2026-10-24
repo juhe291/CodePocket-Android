@@ -2,17 +2,19 @@
     <style name="Theme.CodePocket" parent="android:style/Theme.Material.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:statusBarColor">#0D1321</item>
-        <item name="android:navigationBarColor">#0D1321</item>
+        <item name="android:windowBackground">#181B20</item>
+        <item name="android:statusBarColor">#181B20</item>
+        <item name="android:navigationBarColor">#1B1E24</item>
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:colorAccent">#81ADFF</item>
+        <item name="android:colorAccent">#9ABCE5</item>
     </style>
     <style name="Theme.CodePocket.Light" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">#F3F3F3</item>
-        <item name="android:navigationBarColor">#F8F8F8</item>
+        <item name="android:windowBackground">#F1F2F4</item>
+        <item name="android:statusBarColor">#F1F2F4</item>
+        <item name="android:navigationBarColor">#F7F8FA</item>
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:colorAccent">#0067B8</item>
+        <item name="android:colorAccent">#315F90</item>
     </style>
 </resources>

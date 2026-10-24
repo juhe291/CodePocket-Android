@@ -98,4 +98,8 @@
     <string name="editor_diagnostic_details">诊断详情</string>
     <string name="editor_diagnostic_content">%1$s\n\n%2$s</string>
     <string name="editor_copy_diagnostic">复制错误信息</string>
+    <string name="workspace_brand">CodePocket</string>
+    <string name="workspace_loading">正在打开工作区…</string>
+    <string name="workspace_unavailable">工作区暂时无法打开</string>
+    <string name="workspace_recovery_preserved">载入失败不会删除原文件或恢复草稿</string>
 </resources>

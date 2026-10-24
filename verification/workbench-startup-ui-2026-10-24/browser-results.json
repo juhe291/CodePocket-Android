@@ -1,0 +1,11 @@
+{
+  "cases": 248,
+  "checks": 15,
+  "paletteChecks": 20,
+  "scenes": 31,
+  "devices": 4,
+  "themes": 2,
+  "errors": [],
+  "failures": [],
+  "androidDeviceVerified": false
+}
