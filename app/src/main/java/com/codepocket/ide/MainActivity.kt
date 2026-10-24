@@ -1645,7 +1645,10 @@ class MainActivity : Activity() {
     private fun switchFile(relative: String, after: (() -> Unit)? = null): Boolean {
         if (workspaceBusy) return false
         revealEditor()
-        if (relative == activePath && loadedPath == activePath) { after?.invoke(); return true }
+        if (relative == activePath && loadedPath == activePath) {
+            (tabsRow as? EditorTabs)?.revealSelection()
+            after?.invoke(); return true
+        }
         saveActive {
             val transition = beginDocumentTransition() ?: return@saveActive
             captureSession(); persistSessions()

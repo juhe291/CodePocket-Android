@@ -46,3 +46,7 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 .run-modes-preview{margin-top:20px}.run-modes-preview h4{font-size:16px;margin:0 0 8px}.engine-mode{display:flex;align-items:flex-start;gap:12px;padding:12px 0;font-size:13px}.engine-mode p{font-size:12px;line-height:1.6;color:var(--muted);margin:5px 0 0}.engine-mode .filemark{margin-top:2px;flex-shrink:0}
 
 .tab-dirty-indicator{width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:var(--text);visibility:hidden}.tab.dirty .tab-dirty-indicator{visibility:visible}
+
+.tab .tab-filename{display:block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tabs{scroll-behavior:auto}
+
+.tabs .tab{max-width:100%;min-width:0;flex-shrink:0;box-sizing:border-box}.tab>.filemark,.tab>[data-preview-close]{flex-shrink:0}

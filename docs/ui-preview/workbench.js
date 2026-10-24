@@ -147,3 +147,20 @@ scene=function(name){
  const result=sceneBeforeMarkers(name);decoratePreviewTabMarkers();previewTabState();return result;
 };
 decoratePreviewTabMarkers();previewTabState();$('#scene').add(new Option('未保存标签','未保存标签'));
+
+// Navigation in the design sample reveals the selected tab without requesting keyboard focus.
+const selectFileBeforeReveal=selectFile;
+selectFile=function(name){
+ selectFileBeforeReveal(name);
+ const selected=document.querySelector('.tabs .tab.active');
+ if(!selected)return;
+ if(!selected.querySelector('.filemark')){
+  const extension=name.split('.').pop().toLowerCase();const kind=extension==='py'?'py':['h','hpp'].includes(extension)?'h':'';
+  const label=extension==='py'?'Py':['h','hpp'].includes(extension)?'H':extension==='cpp'?'C++':'·';
+  selected.innerHTML='<span class="filemark '+kind+'">'+label+'</span><span class="tab-filename">'+esc(name)+'</span><span data-preview-close aria-hidden="true">'+icon('x')+'</span>';
+  decoratePreviewTabMarkers();
+ }
+ selected.title=name;
+ const viewport=document.querySelector('.tabs');
+ selected.scrollIntoView({block:'nearest',inline:selected.offsetWidth>viewport.clientWidth?'end':'nearest',behavior:'auto'});
+};

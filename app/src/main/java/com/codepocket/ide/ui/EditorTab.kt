@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.text.TextUtils
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -29,10 +30,11 @@ class EditorTab(context: Context, private val palette: IdePalette, val path: Str
         isFocusable = true; setOnClickListener { open() }; setOnLongClickListener { describe(); true }
         IdeControls.describe(this, path)
     }
+    private val closeButton = IdeControls.icon(context, palette, IdeIcon.CLOSE, "关闭 $path", close)
     init {
         gravity = Gravity.CENTER_VERTICAL; setWillNotDraw(false)
         addView(name, LayoutParams(LayoutParams.WRAP_CONTENT, dp(DesignTokens.TOUCH)))
-        addView(IdeControls.icon(context, palette, IdeIcon.CLOSE, "关闭 $path", close),
+        addView(closeButton,
             LayoutParams(dp(DesignTokens.TOUCH), dp(DesignTokens.TOUCH)))
     }
     fun bind(active: Boolean, dirty: Boolean) {
@@ -43,6 +45,16 @@ class EditorTab(context: Context, private val palette: IdePalette, val path: Str
         if (name.contentDescription?.toString() != description) IdeControls.describe(name, description)
         name.setTextColor(if (active) palette.foreground else palette.muted)
         setBackgroundColor(if (active) palette.editor else palette.surface); invalidate()
+    }
+    internal fun constrainToViewport(availableWidth: Int) {
+        if (availableWidth <= 0) return
+        val limit = minOf(dp(240), (availableWidth - dp(DesignTokens.TOUCH)).coerceAtLeast(dp(56)))
+        if (name.maxWidth != limit) name.maxWidth = limit
+    }
+    internal fun revealBounds(out: Rect, availableWidth: Int) {
+        // On a very narrow window keep the existing close target reachable, including RTL layouts.
+        if (width > availableWidth) out.set(closeButton.left, closeButton.top, closeButton.right, closeButton.bottom)
+        else out.set(0, 0, width, height)
     }
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)

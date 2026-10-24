@@ -1,0 +1,10 @@
+{
+  "junit": {
+    "tests": 704,
+    "failures": 0,
+    "skipped": 1,
+    "errors": 0
+  },
+  "apk_sha256": "b7d22871d4dce526cadd338364a1d813fd5794e0a0e22c413393f9192a27caf6",
+  "reason_for_further_change": "All first full checks passed, but visual review showed the file type icon cut off on an oversized tab. Cap each tab to its viewport and strengthen full-tab visibility assertions."
+}
