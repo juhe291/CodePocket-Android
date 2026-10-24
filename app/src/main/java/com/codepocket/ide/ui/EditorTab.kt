@@ -17,10 +17,13 @@ class EditorTab(context: Context, private val palette: IdePalette, val path: Str
     private fun dp(value: Int) = IdeControls.dp(context, value)
     private val pen = Paint().apply { color = palette.accent }
     private var activeTab = false
+    private var modified = false
+    private val dirtyPen = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = palette.foreground }
     private val name = TextView(context).apply {
         textSize = 12f; gravity = Gravity.CENTER_VERTICAL; includeFontPadding = false
         maxWidth = dp(240); setSingleLine(); ellipsize = TextUtils.TruncateAt.END
-        setPadding(dp(10), 0, dp(6), 0); compoundDrawablePadding = dp(6)
+        // Fixed marker space prevents the title and neighbouring close targets from shifting.
+        setPadding(dp(10), 0, dp(18), 0); compoundDrawablePadding = dp(6)
         setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(context, IdeIconDrawable.file(path), IdeIconDrawable.color(IdeIconDrawable.file(path), palette), dp(20)), null, null, null)
         background = IdeControls.feedback(context, palette)
         isFocusable = true; setOnClickListener { open() }; setOnLongClickListener { describe(); true }
@@ -33,11 +36,17 @@ class EditorTab(context: Context, private val palette: IdePalette, val path: Str
             LayoutParams(dp(DesignTokens.TOUCH), dp(DesignTokens.TOUCH)))
     }
     fun bind(active: Boolean, dirty: Boolean) {
-        activeTab = active; name.isSelected = active
-        val title = "${if (dirty) "● " else ""}${path.substringAfterLast('/')}"
+        activeTab = active; modified = dirty; name.isSelected = active
+        val title = path.substringAfterLast('/')
         if (name.text.toString() != title) name.text = title
+        val description = if (dirty) "$path · 未保存" else path
+        if (name.contentDescription?.toString() != description) IdeControls.describe(name, description)
         name.setTextColor(if (active) palette.foreground else palette.muted)
         setBackgroundColor(if (active) palette.editor else palette.surface); invalidate()
+    }
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        if (modified) canvas.drawCircle(name.right - dp(9).toFloat(), height / 2f, dp(3).toFloat(), dirtyPen)
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)

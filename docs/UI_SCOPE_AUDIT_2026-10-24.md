@@ -2,7 +2,7 @@
 
 范围按用户最新指令确定：UI视觉优先，允许适度装饰；保留已有项目和真实运行；未实现功能先不接入，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
 
-本批最终验证及APK见[设置一致性记录](UI_SETTINGS_CONSISTENCY_2026-10-24.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
+本批最终验证及APK见[标签展示记录](UI_TAB_STABILITY_2026-10-24.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
 
 | 范围 | 当前源码与实际入口 | 证据及边界 |
 | --- | --- | --- |
@@ -15,7 +15,7 @@
 | 文件树 | ExplorerRow/ExplorerUiState；根与子目录切换、末级目录折叠、工作区展开/滚动、树选中与编辑文件分离 | UiRedesignTest、WorkbenchWindowIntegrationTest、MainFileSettingsIntegrationTest；收起不关闭文档 |
 | 文件表单/选择器 | WorkbenchForms与原新建/重命名/移动/删除；路径区、错误保留、删除确认、实际事务仍受旧校验 | FormSurfaceIntegrationTest、MainFileSettingsIntegrationTest；本批无快捷键行保持原层级，实际移动回归保留 |
 | 保存与恢复 | EditorSessions、DraftStore、SAF原链路；冲突/失败保留缓冲与草稿 | MainFileSettingsIntegrationTest、MainSafRecoveryIntegrationTest、WorkspaceStartupIntegrationTest；Windows符号链接用例仍有1旧跳过 |
-| 标签与编辑操作 | 类型图标、未保存标记、单独关闭；保存/撤销/重做/当前文件查找按空间显示 | WorkbenchViewsTest、SoraWorkbenchIntegrationTest；切文件保持选择/缓冲及相应撤销保护 |
+| 标签与编辑操作 | 类型图标、固定占位未保存圆点、单独关闭；首次Sora键入刷新标记，编辑工具按空间显示 | WorkbenchViewsTest、EditorTabStabilityIntegrationTest、SoraWorkbenchIntegrationTest；真实输入/缩进/保存后坐标及缓冲身份保持，主机标签区域仅6×6px圆点变化 |
 | 分类设置 | 七类、搜索、宽窗口分栏、草稿取消/应用、失败保留与旋转恢复 | SettingsSurfaceVisualTest、MainFileSettingsIntegrationTest；已隐藏bottomOnly工作台中的无效分屏开关；旧panelPreferSide JSON偏好保留，实际Main/Sora往返回归及窄屏大字体说明可达性通过 |
 | 菜单层级 | 主分类与命令图标按稳定身份指定；撤销、查找定位、字号、辅助功能按组分隔；快捷键窄屏/大字体换到名称下方 | MainSurfaceIntegrationTest实际弹窗、改名后图标/禁用/派发身份、大字体实际跳转；旧列表型选择器保留兼容标题图标映射 |
 | 查找/替换与定位 | SearchDialog及原literal替换；跳转行、项目搜索的现有输入/结果/过时来源保护 | MainSurfaceIntegrationTest、SoraWorkbenchIntegrationTest、EditorSearch相关回归；没有改为新的搜索引擎 |
@@ -33,6 +33,7 @@
 
 ## 登记与验收边界
 
+- 多标签超出可视范围后的当前标签自动定位仍需专项核对；本批只验证未保存切换和既有关闭，不据此声称所有多标签滚动行为已覆盖。
 - 旧“优先左右分屏”展示不一致已处理：隐藏无效入口，保留旧JSON字段/布局能力；新增实际设置应用保留回归。左右停靠功能仍未开放，没有删除偏好或改变当前底部结构。
 - 先前一次实际APK helper导入用例返回1，原断言未记录底层异常；完整重测与独立40次未复现，原因仍未确认。见workbench-diagnostic-ui-2026-10-24/import-recheck-summary.json。本批不把它标为已解决。
 - 实机输入法/组合输入、蓝牙键鼠、Android系统第一帧、卓易通、API24、帧率/高刷新率和Wandbox远端仍未验收，按用户约定后置。

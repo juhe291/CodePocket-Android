@@ -125,3 +125,25 @@ function decorateRunModePreview(){
  detail.append(section);
 }
 new MutationObserver(decorateRunModePreview).observe($('#layers'),{childList:true,subtree:true});
+
+// Visual example only: dirty markers occupy the same space in clean/modified tabs.
+function decoratePreviewTabMarkers(){
+ document.querySelectorAll('.tabs .tab').forEach(tab=>{
+  if(tab.querySelector('.tab-dirty-indicator'))return;
+  const marker=document.createElement('span');marker.className='tab-dirty-indicator';marker.setAttribute('aria-hidden','true');
+  const close=tab.lastElementChild;
+  if(close&&(close.matches('svg')||close.dataset.icon==='x'))tab.insertBefore(marker,close);else tab.append(marker);
+ });
+}
+function previewTabState(){const active=document.querySelector('.tabs .tab.active');document.querySelector('.status .state').textContent=active?.classList.contains('dirty')?'未保存':'已保存';}
+const selectFileBeforeMarkers=selectFile;
+selectFile=function(name){selectFileBeforeMarkers(name);decoratePreviewTabMarkers();previewTabState();};
+const sceneBeforeMarkers=scene;
+scene=function(name){
+ document.querySelectorAll('.tabs .tab').forEach(tab=>tab.classList.remove('dirty'));
+ if(name==='未保存标签'){
+  sceneBeforeMarkers('工作台');decoratePreviewTabMarkers();document.querySelector('.tabs .tab.active')?.classList.add('dirty');previewTabState();return;
+ }
+ const result=sceneBeforeMarkers(name);decoratePreviewTabMarkers();previewTabState();return result;
+};
+decoratePreviewTabMarkers();previewTabState();$('#scene').add(new Option('未保存标签','未保存标签'));

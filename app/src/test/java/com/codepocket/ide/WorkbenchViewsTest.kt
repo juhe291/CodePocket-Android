@@ -92,7 +92,7 @@ class WorkbenchViewsTest {
         tab.bind(true,true);rows.addView(tab)
         val name=tab.getChildAt(0) as TextView
         name.performClick();tab.getChildAt(1).performClick()
-        assertEquals(1,opened);assertEquals(1,closed);assertEquals("● long-file.py",name.text.toString());assertEquals(1,name.maxLines)
+        assertEquals(1,opened);assertEquals(1,closed);assertEquals("long-file.py",name.text.toString());assertEquals("src/long-file.py · 未保存",name.contentDescription.toString());assertEquals(1,name.maxLines)
     }
     private fun mainFixture(): Pair<MainActivity,Workspace> {
         val main=Robolectric.buildActivity(MainActivity::class.java).get();main.setTheme(R.style.Theme_CodePocket)
@@ -113,7 +113,7 @@ class WorkbenchViewsTest {
         name.isFocusableInTouchMode=true;name.requestFocus()
         ReflectionHelpers.setField(main,"dirty",true)
         ReflectionHelpers.callInstanceMethod<Any?>(main,"refreshTabs")
-        assertSame(first,tabs.getChildAt(0));assertTrue(name.hasFocus());assertEquals("● main.cpp",name.text.toString())
+        assertSame(first,tabs.getChildAt(0));assertTrue(name.hasFocus());assertEquals("main.cpp",name.text.toString());assertEquals("main.cpp · 未保存",name.contentDescription.toString())
         ReflectionHelpers.setField(main,"activePath","main.py")
         ReflectionHelpers.callInstanceMethod<Any?>(main,"refreshTabs")
         assertSame(first,tabs.getChildAt(0));assertTrue(name.hasFocus());assertEquals("main.cpp",name.text.toString())

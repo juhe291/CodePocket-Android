@@ -1137,7 +1137,7 @@ class MainActivity : Activity() {
                 snippetTextChanging = true
                 if (history) clearSnippet() else trackSnippetEdit(start, removed, inserted)
                 editorAnalysis?.cancel(); (editorPort as? SoraEditorPort)?.clearDiagnostics(); hideCompletion()
-                if (!dirty) { dirty = true; updateShellTitle() }; editRevision++
+                if (!dirty) { dirty = true; refreshTabs() }; editRevision++
                 snippetSession = snippetSession?.copy(revision = editRevision)
                 snippetTextChanging = false
                 updateSnippetHint()
