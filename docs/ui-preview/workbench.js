@@ -97,3 +97,22 @@ function previewWorkspaceState(failed){
  $('#layers').innerHTML='<section class="workspace-state'+(failed?' failed':'')+'"><header class="startup-brand">CodePocket</header><div class="startup-body"><span class="state-symbol" aria-hidden="true">'+icon(symbol)+'</span><h2>'+(failed?'工作区暂时无法打开':'正在打开工作区…')+'</h2>'+(failed?'<p>载入失败不会删除原文件或恢复草稿</p>':'')+'</div></section>';
  if(failed)$('#layers').insertAdjacentHTML('beforeend','<section class="modal"><div class="modalheader"><h2>工作区载入失败</h2></div><div class="modalbody"><p>设计示例：目录授权暂时不可用。请选择原目录重新授权。</p></div><div class="actions"><button onclick="scene(&quot;工作台&quot;)">内部项目</button><button onclick="scene(&quot;切换项目&quot;)">选择目录</button></div></section>');
 }
+
+const previewTerminalDock=document.querySelector('.termkeys:not(#controlkeys)');
+previewTerminalDock.classList.add('terminal-dock');
+previewTerminalDock.innerHTML='<button class="dock-keyboard" title="显示终端虚拟键盘" onclick="scene(&quot;显示键盘&quot;)">'+icon('keyboard')+'<span class="dock-label">键盘</span></button><button class="dock-controls" title="展开或收起终端控制键" onclick="scene(&quot;控制键&quot;)">'+icon('brackets')+'<span class="dock-label">控制键</span></button><span class="dock-spacer"></span><button class="icon" title="复制终端示例记录" onclick="previewCopyTranscript()">'+icon('copy')+'</button><button class="icon" title="滚动到终端底部" onclick="previewTerminalBottom()">'+icon('chevron-down')+'</button>';
+function previewTerminalBottom(){const output=document.querySelector('.termcontent');output.scrollTop=output.scrollHeight;}
+async function previewCopyTranscript(){
+ try{await navigator.clipboard.writeText(document.querySelector('.termcontent').innerText);modal('已复制设计示例记录','<p>复制的是本页示例文字，不是App终端或程序输出。</p>','关闭');}
+ catch(error){modal('示例复制不可用','<p>浏览器未允许写入剪贴板，可直接选择示例文字。</p>','关闭');}
+}
+
+const previewControlKeys=document.createElement('div');previewControlKeys.id='controlkeys';previewControlKeys.className='termkeys hidden';
+['Ctrl+C','Ctrl+D','Tab','Esc','↑','↓','←','→'].forEach(title=>{
+ const key=document.createElement('button');key.textContent=title;key.title=title+' · 设计示例';
+ key.onclick=()=>document.querySelector('.inputline')?.focus();previewControlKeys.append(key);
+});
+previewTerminal.append(previewControlKeys);
+const previewControlToggle=previewTerminalDock.querySelector('.dock-controls');
+function previewControlsSelection(){const expanded=!previewControlKeys.classList.contains('hidden');previewControlToggle.classList.toggle('selected',expanded);previewControlToggle.setAttribute('aria-expanded',String(expanded));}
+new MutationObserver(previewControlsSelection).observe(previewControlKeys,{attributes:true,attributeFilter:['class']});previewControlsSelection();

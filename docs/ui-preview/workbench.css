@@ -35,3 +35,10 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 .popup{container-type:inline-size}.popup .menurow{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:12px;padding:6px 12px;min-height:48px}
 .popup .menurow .label,.popup .menurow small{min-width:0;overflow-wrap:anywhere}
 @container (max-width:299px){.popup .menurow{grid-template-columns:20px minmax(0,1fr);row-gap:3px}.popup .menurow small{grid-column:2}}
+
+.terminal{container-type:inline-size}.terminal-dock{display:flex;align-items:center;flex-shrink:0;overflow-x:auto;padding:0 5px;box-sizing:border-box;min-height:48px}
+.terminal-dock button{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:0 0 auto;min-width:48px;min-height:48px;padding:0 10px;white-space:nowrap}
+.terminal-dock button svg{width:17px;height:17px;color:var(--muted)}.terminal-dock .dock-keyboard{width:92px}.terminal-dock .dock-controls{width:100px}.dock-spacer{flex:1;min-width:0}
+@container (max-width:319px){.terminal-dock .dock-label{display:none}.terminal-dock .dock-keyboard,.terminal-dock .dock-controls{width:48px;gap:0}}
+
+.terminal-dock .dock-controls.selected{background:var(--selected)}

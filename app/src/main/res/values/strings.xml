@@ -102,4 +102,10 @@
     <string name="workspace_loading">正在打开工作区…</string>
     <string name="workspace_unavailable">工作区暂时无法打开</string>
     <string name="workspace_recovery_preserved">载入失败不会删除原文件或恢复草稿</string>
+    <string name="terminal_dock_keyboard">键盘</string>
+    <string name="terminal_dock_controls">控制键</string>
+    <string name="terminal_dock_keyboard_description">显示终端虚拟键盘</string>
+    <string name="terminal_dock_controls_description">展开或收起终端控制键</string>
+    <string name="terminal_dock_copy_description">复制终端记录</string>
+    <string name="terminal_dock_bottom_description">滚动到终端底部</string>
 </resources>

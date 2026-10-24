@@ -2,7 +2,7 @@
 
 范围按用户最新指令确定：UI视觉优先，允许适度装饰；保留已有项目和真实运行；未实现功能先不接入，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
 
-本批最终验证及APK见[命令菜单记录](UI_COMMAND_MENUS_2026-10-24.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
+本批最终验证及APK见[终端工具区记录](UI_TERMINAL_DOCK_2026-10-24.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
 
 | 范围 | 当前源码与实际入口 | 证据及边界 |
 | --- | --- | --- |
@@ -23,7 +23,7 @@
 | 补全/片段/参数 | 基础词法候选、内置片段和参数参考；Tab/方向键/Esc、组合输入/异步布局与旧结果保护 | CompletionInteractionTest、MainSurfaceIntegrationTest；Jedi/clangd深语义未接入，代码折叠等额外能力不作为本轮新交付 |
 | 错误反馈 | 基础结构诊断与运行定位映射、红线、点击只读浮层；变化时关闭旧诊断 | MainSurfaceIntegrationTest、SoraWorkbenchIntegrationTest；不是完整LSP/所有实时编译错误检查 |
 | 真实终端与运行 | 单一真实PTY及其会话管理；Python本地桥、C++既有Wandbox完成后返回/预填stdin；第三方提示保持 | 当前运行模块/原生库逐字节保留，Python源码/APK字节码及主机Shell/片段实际检查；本轮不能证明Android Chaquopy/mksh或Wandbox远端执行已实机通过 |
-| 面板操作与配色 | 现有拖高/最大化/恢复/收起、会话关闭、键盘/控制键、复制/清空；TerminalAppearance五种配色与成熟ANSI解析 | TerminalWorkbenchViewTest、ShellUiTest、ShellTerminalTouchTest等主机回归；配色不重建进程，实际触屏/键鼠交互后置 |
+| 面板操作与配色 | 现有拖高/最大化/恢复/收起、会话关闭、键盘/控制键、复制/清空；TerminalAppearance五种配色与成熟ANSI解析 | TerminalWorkbenchViewTest、ShellUiTest、ShellTerminalTouchTest及TerminalDockIntegrationTest；四动作窄屏/大字体图标化、极窄滚动保持48dp；主机模型保持不代表设备进程存活验收，实际触屏/键鼠交互后置 |
 | 动画/光标 | 原可取消动画、MotionEnvironment、SoraCaretMotion；菜单/侧栏/面板/标签、60/80ms视觉光标、独立闪烁开关 | FullWorkbenchMotionTest、MainCaretMotionIntegrationTest等主机回归；60FPS/高刷没有设备测量结论 |
 | 载入与失败状态 | WorkspacePlaceholder、主题窗口背景/系统栏、原IO和恢复按钮处理器 | WorkspaceStartupIntegrationTest实际IO阻塞/释放、失败前落盘草稿及恢复；系统冷启动真正第一帧仍未验证 |
 | 帮助/许可/详情 | WorkbenchForms只读滚动正文、原说明/许可证/诊断完整复制 | AuxiliarySurfaceIntegrationTest；系统文本选择菜单/SAF选择器/输入法继续由Android负责 |

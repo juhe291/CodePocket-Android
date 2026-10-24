@@ -1,0 +1,18 @@
+{
+  "cases": 248,
+  "checks": 21,
+  "paletteChecks": 20,
+  "scenes": 31,
+  "devices": 4,
+  "themes": 2,
+  "errors": [
+    "Cannot read properties of null (reading 'classList')",
+    "Cannot read properties of null (reading 'classList')"
+  ],
+  "failures": [
+    {
+      "behavior": "terminal control row opens"
+    }
+  ],
+  "androidDeviceVerified": false
+}

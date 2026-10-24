@@ -42,6 +42,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     private final TerminalKeyboard keyboardRequest=new TerminalKeyboard();
     private boolean compact;
     private boolean controlsExpanded;
+    private com.codepocket.ide.ui.TerminalControlsDock controlsDock;
     private Runnable chromeChanged=()->{};
     public void setOnChromeChanged(Runnable callback) { chromeChanged=callback; }
     private String colorTheme="FOLLOW_UI";
@@ -127,24 +128,15 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
         controlsExpanded=context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).getBoolean("terminalControlsExpanded",false);
         keyboard.setVisibility(controlsExpanded?VISIBLE:GONE);
         LinearLayout footer=new LinearLayout(context);footer.setOrientation(VERTICAL);footer.setBackgroundColor(chrome.getPanel());
-        LinearLayout dock=new LinearLayout(context);dock.setGravity(Gravity.CENTER_VERTICAL);dock.setPadding(dp(5),0,dp(5),0);
-        TextView imeButton=TerminalChrome.INSTANCE.key(context,chrome,"键盘","显示终端虚拟键盘",this::showKeyboard);
-        imeButton.setCompoundDrawablesWithIntrinsicBounds(new com.codepocket.ide.ui.IdeIconDrawable(context,IdeIcon.INPUT,chrome.getMuted(),dp(17)),null,null,null);
-        imeButton.setCompoundDrawablePadding(dp(6));imeButton.setTypeface(null);
-        dock.addView(imeButton,new LayoutParams(dp(92),dp(48)));
-        TextView toggle=TerminalChrome.INSTANCE.key(context,chrome,"控制键","展开或收起终端控制键",()->{
+        controlsDock=new com.codepocket.ide.ui.TerminalControlsDock(context,chrome,this::showKeyboard,()->{
             controlsExpanded=!controlsExpanded;keyboard.setVisibility(controlsExpanded?VISIBLE:GONE);
             context.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE).edit().putBoolean("terminalControlsExpanded",controlsExpanded).apply();
-            for(int i=0;i<dock.getChildCount();i++)if(android.text.TextUtils.equals("展开或收起终端控制键",dock.getChildAt(i).getContentDescription()))dock.getChildAt(i).setSelected(controlsExpanded);
-            chromeChanged.run();requestLayout();
-        });
-        toggle.setSelected(controlsExpanded);toggle.setTypeface(null);dock.addView(toggle,new LayoutParams(dp(80),dp(48)));
-        dock.addView(new android.view.View(context),new LayoutParams(0,1,1));
-        dock.addView(TerminalChrome.INSTANCE.action(context,chrome,IdeIcon.COPY,"复制终端记录",runtime::copyTranscript),new LayoutParams(dp(48),dp(48)));
-        dock.addView(TerminalChrome.INSTANCE.action(context,chrome,IdeIcon.DOWN,"滚动到终端底部",()->{
+            controlsDock.setControlsExpanded(controlsExpanded);chromeChanged.run();requestLayout();
+        },runtime::copyTranscript,()->{
             if(terminal!=null){terminal.stopTextSelectionMode();terminal.setTopRow(0);terminal.invalidate();}
-        }),new LayoutParams(dp(48),dp(48)));
-        footer.addView(dock,new LayoutParams(-1,dp(48)));footer.addView(keyboard,new LayoutParams(-1,dp(48)));
+        });
+        controlsDock.setControlsExpanded(controlsExpanded);
+        footer.addView(controlsDock,new LayoutParams(-1,dp(48)));footer.addView(keyboard,new LayoutParams(-1,dp(48)));
         addView(footer,new LayoutParams(-1,-2));
         changed();
     }
