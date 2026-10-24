@@ -1,0 +1,53 @@
+{
+  "apk": "dist\\CodePocket-command-ui-2026-10-24-debug.apk",
+  "bytes": 26671767,
+  "sha256": "af69918df7ebc135d056d84a34b7f21b668793308f90eacd5cb98a277ffec307",
+  "junit": {
+    "tests": 690,
+    "failures": 0,
+    "skipped": 1,
+    "errors": 0
+  },
+  "failures": [],
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 20
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "DrawAllocation": 4,
+        "UnusedResources": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "old_apks_preserved": 72,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "assemble": "Debug tests, Lint, packageDebug and assembleDebug succeeded",
+  "signature": "passed",
+  "alignment_16kb": "passed",
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false,
+  "baseline_test_cases_retained": 688,
+  "new_test_cases": 2,
+  "packaged_theme_matches_source": true,
+  "minimum_light_token_contrast": 4.889
+}

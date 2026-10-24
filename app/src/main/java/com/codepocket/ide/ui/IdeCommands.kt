@@ -15,7 +15,7 @@ enum class IdeCommand(val title: String, val editorOnly: Boolean = false) {
     MAXIMIZE_TERMINAL("最大化 / 还原面板"), CLOSE_TERMINAL("收起运行面板"),
     PRESET_INPUT("编辑预设输入"), CLEAR_INPUT("清空当前文件预设输入"), HIDE_KEYBOARD("收起虚拟键盘"),
     THEME("切换深浅主题"), SETTINGS("设置"), SHORTCUTS("快捷键说明"), HELP("使用说明"),
-    FONT_SIZE("代码字号  A±")
+    FONT_SIZE("代码字号  Ctrl++ / Ctrl+-")
 }
 data class CommandContext(val busy: Boolean, val loaded: Boolean, val editorFocused: Boolean,
     val inputFocused: Boolean, val composing: Boolean, val running: Boolean, val saving: Boolean)

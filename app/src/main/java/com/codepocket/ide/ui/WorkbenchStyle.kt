@@ -16,18 +16,44 @@ object WorkbenchStyle {
         setColor(color);cornerRadius=IdeControls.dp(context,radius).toFloat()
         if(border!=0)setStroke(IdeControls.dp(context,1),border)
     }
-    fun menuRow(context:Context,title:String,enabled:Boolean=true,checked:Boolean=false,destructive:Boolean=false):LinearLayout {
+    fun menuRow(context:Context,title:String,enabled:Boolean=true,checked:Boolean=false,destructive:Boolean=false,
+        iconDrawable:android.graphics.drawable.Drawable?=null):LinearLayout {
         val p=DesignTokens.forContext(context);val dp={v:Int->IdeControls.dp(context,v)}
-        return LinearLayout(context).apply {
+        val name=TextView(context).apply {
+            text=title.substringBefore("  ");textSize=13f;setTextColor(if(destructive)p.error else p.foreground);maxLines=3
+        }
+        val shortcut=if(title.contains("  "))TextView(context).apply {
+            text=title.substringAfter("  ");textSize=11f;setTextColor(p.muted);tag=SurfaceTextTone.MUTED;typeface=Typeface.MONOSPACE
+        }else null
+        val words=LinearLayout(context).apply {gravity=Gravity.CENTER_VERTICAL;setPadding(dp(12),0,0,0)}
+        val nameParams=LinearLayout.LayoutParams(0,-2,1f)
+        val shortcutParams=LinearLayout.LayoutParams(-2,-2)
+        if(shortcut!=null){words.addView(name,nameParams);words.addView(shortcut,shortcutParams)}
+        else name.setPadding(dp(12),0,dp(8),0)
+        return object:LinearLayout(context){
+            private var stacked:Boolean?=null
+            override fun onMeasure(widthMeasureSpec:Int,heightMeasureSpec:Int){
+                val stack=resources.configuration.fontScale>1.3f || MeasureSpec.getSize(widthMeasureSpec)/resources.displayMetrics.density<300
+                if(shortcut!=null&&stacked!=stack){
+                    stacked=stack;words.orientation=if(stack)VERTICAL else HORIZONTAL
+                    nameParams.width=if(stack)-1 else 0;nameParams.weight=if(stack)0f else 1f;name.layoutParams=nameParams
+                    name.setPadding(0,0,if(stack)0 else dp(8),0)
+                    shortcutParams.width=if(stack)-1 else -2;shortcut.layoutParams=shortcutParams;shortcut.setPadding(0,if(stack)dp(3)else 0,0,0)
+                }
+                super.onMeasure(widthMeasureSpec,heightMeasureSpec)
+            }
+        }.apply {
             orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;minimumHeight=dp(48)
-            setPadding(dp(12),dp(4),dp(12),dp(4));background=IdeControls.feedback(context,p)
+            setPadding(dp(12),dp(6),dp(12),dp(6));background=IdeControls.feedback(context,p)
             isEnabled=enabled;alpha=if(enabled)1f else .4f;isSelected=checked
             if(checked)background=android.graphics.drawable.RippleDrawable(ColorStateList.valueOf((p.foreground and 0xffffff) or 0x20000000),shape(context,p.selection),null)
             val glyph=if(checked)IdeIcon.CHECK else IdeIconDrawable.forTitle(title)
             val tint=if(destructive)p.error else if(glyph in setOf(IdeIcon.CPP,IdeIcon.PYTHON,IdeIcon.HEADER))IdeIconDrawable.color(glyph,p) else p.muted
-            addView(ImageView(context).apply {setImageDrawable(IdeIconDrawable(context,glyph,tint,dp(20)));importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO},LinearLayout.LayoutParams(dp(20),dp(20)))
-            addView(TextView(context).apply {text=title.substringBefore("  ");textSize=13f;setTextColor(if(destructive)p.error else p.foreground);setPadding(dp(12),0,dp(8),0);maxLines=3},LinearLayout.LayoutParams(0,-2,1f))
-            if(title.contains("  "))addView(TextView(context).apply {text=title.substringAfter("  ");textSize=11f;setTextColor(p.muted);typeface=Typeface.MONOSPACE},LinearLayout.LayoutParams(-2,-2))
+            addView(ImageView(context).apply {
+                setImageDrawable(if(!checked&&iconDrawable!=null)iconDrawable else IdeIconDrawable(context,glyph,tint,dp(20)))
+                importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            },LinearLayout.LayoutParams(dp(20),dp(20)))
+            addView(if(shortcut==null)name else words,LinearLayout.LayoutParams(0,-2,1f))
             contentDescription=title+(if(checked)"，已选择" else "")
         }
     }

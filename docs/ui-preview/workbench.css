@@ -31,3 +31,7 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 .startup-body{display:flex;flex:1;min-height:0;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow:auto}
 .state-symbol{width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--accent)}
 .workspace-state.failed .state-symbol{color:var(--red)}.state-symbol svg{width:24px;height:24px}.startup-body h2{font-size:16px;margin:20px 0 0}.startup-body p{font-size:12px;color:var(--muted);margin:8px 0 0}
+
+.popup{container-type:inline-size}.popup .menurow{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:12px;padding:6px 12px;min-height:48px}
+.popup .menurow .label,.popup .menurow small{min-width:0;overflow-wrap:anywhere}
+@container (max-width:299px){.popup .menurow{grid-template-columns:20px minmax(0,1fr);row-gap:3px}.popup .menurow small{grid-column:2}}

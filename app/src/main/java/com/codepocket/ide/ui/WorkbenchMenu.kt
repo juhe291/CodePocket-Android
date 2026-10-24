@@ -12,6 +12,9 @@ import com.codepocket.ide.animation.MotionEnvironment
 /** Native menu identity/callbacks, with a shared touch-sized presentation. Keeps platform menu identities and keyboard navigation. */
 class WorkbenchMenu(context:Context,private val anchor:View,private val animate:Boolean):PopupMenu(context,anchor){
     private var window:PopupWindow?=null
+    private data class Appearance(val icon:IdeIcon,val destructive:Boolean)
+    private val appearances=mutableMapOf<Int,Appearance>()
+    fun setItemAppearance(itemId:Int,icon:IdeIcon,destructive:Boolean=false){appearances[itemId]=Appearance(icon,destructive)}
     override fun show(){
         dismiss()
         val p=DesignTokens.forContext(anchor.context);val dp={v:Int->IdeControls.dp(anchor.context,v)}
@@ -20,10 +23,11 @@ class WorkbenchMenu(context:Context,private val anchor:View,private val animate:
         var previousGroup:Int?=null
         for(i in 0 until menu.size()){
             val item=menu.getItem(i);if(!item.isVisible)continue
-            val destructive=item.title.toString() in listOf("删除","删除当前文件","结束会话","结束当前 Shell")
+            val appearance=appearances[item.itemId]
+            val destructive=appearance?.destructive ?: (item.title.toString() in listOf("删除","删除当前文件","结束会话","结束当前 Shell"))
             if(previousDanger!=null&&(previousDanger!=destructive||previousGroup!=item.groupId))rows.addView(View(anchor.context).apply{setBackgroundColor(p.border)},LinearLayout.LayoutParams(-1,dp(1)))
             previousDanger=destructive;previousGroup=item.groupId
-            rows.addView(WorkbenchStyle.menuRow(anchor.context,item.title.toString(),item.isEnabled,item.isChecked,destructive).apply {
+            rows.addView(WorkbenchStyle.menuRow(anchor.context,item.title.toString(),item.isEnabled,item.isChecked,destructive,appearance?.let{IdeIconDrawable(anchor.context,it.icon,if(it.destructive)p.error else p.muted,dp(20))}).apply {
                 isFocusable=item.isEnabled
                 setOnKeyListener{_,key,event->if(key==android.view.KeyEvent.KEYCODE_ESCAPE&&event.action==android.view.KeyEvent.ACTION_UP){dismiss();true}else false}
                 setOnClickListener{if(item.isEnabled){dismiss();menu.performIdentifierAction(item.itemId,0)}}

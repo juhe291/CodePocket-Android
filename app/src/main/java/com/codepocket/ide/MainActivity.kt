@@ -707,8 +707,20 @@ class MainActivity : Activity() {
     private fun showCommandMenu(anchor: View) {
         commandMenu?.dismiss()
         val popup=DialogMotion.menu(this,anchor,motionAllowed())
-        WorkbenchMenuGroup.entries.forEach { popup.menu.add(0,1000+it.ordinal,0,it.title) }
+        WorkbenchMenuGroup.entries.forEach { group ->
+            val icon=when(group){
+                WorkbenchMenuGroup.FILE->IdeIcon.EXPLORER
+                WorkbenchMenuGroup.EDIT->IdeIcon.RENAME
+                WorkbenchMenuGroup.VIEW->IdeIcon.MAXIMIZE
+                WorkbenchMenuGroup.RUN->IdeIcon.RUN
+                WorkbenchMenuGroup.TERMINAL->IdeIcon.TERMINAL
+                WorkbenchMenuGroup.HELP->IdeIcon.HELP
+            }
+            popup.menu.add(0,1000+group.ordinal,0,group.title)
+            (popup as? WorkbenchMenu)?.setItemAppearance(1000+group.ordinal,icon)
+        }
         popup.menu.add(1,2000,0,"设置")
+        (popup as? WorkbenchMenu)?.setItemAppearance(2000,IdeIcon.SETTINGS)
         popup.setOnMenuItemClickListener { item ->
             anchor.post { if(anchor.isAttachedToWindow) {
                 if(item.itemId==2000)showSettings()

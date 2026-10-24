@@ -49,7 +49,7 @@ class MainSurfaceIntegrationTest {
     private fun menuRow(window:PopupWindow,title:String)=views(window.contentView).single{it.contentDescription==title}
     private fun capture(tag:String,v:View){
         val b=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);val canvas=Canvas(b);canvas.drawColor(DesignTokens.forContext(v.context).overlay);v.draw(canvas);val cwd=File(System.getProperty("user.dir")!!);val root=if(cwd.name=="app")cwd.parentFile else cwd
-        val dir=File(root,"verification/workbench-diagnostic-ui-2026-10-24/previews").apply{mkdirs()};File(dir,"$tag.png").outputStream().use{assertTrue(b.compress(Bitmap.CompressFormat.PNG,100,it))};b.recycle()
+        val dir=File(root,"verification/workbench-command-ui-2026-10-24/previews").apply{mkdirs()};File(dir,"$tag.png").outputStream().use{assertTrue(b.compress(Bitmap.CompressFormat.PNG,100,it))};b.recycle()
     }
     @Before fun launch(){
         RuntimeEnvironment.setFontScale(if(name.methodName.contains("Large"))2f else 1f)
@@ -81,6 +81,45 @@ class MainSurfaceIntegrationTest {
         val menu=WorkbenchMenu(main,anchor(),false);menu.menu.add(0,1,0,"不可用").isEnabled=false;menu.menu.add(0,2,1,"可用");var calls=0
         menu.setOnMenuItemClickListener{calls++;true};val content=editor.text;menu.show();val window=popup();val disabled=menuRow(window,"不可用");assertFalse(disabled.isFocusable);disabled.performClick();assertEquals(0,calls)
         val active=menuRow(window,"可用");active.requestFocus();window.contentView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ESCAPE));window.contentView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_ESCAPE));assertFalse(window.isShowing);assertSame(content,editor.text)
+    }
+    @Test fun localizedCommandTitlesKeepStopAndNavigationIconsAndDangerState(){
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"showCommandMenu",ClassParameter.from(View::class.java,anchor()))
+        idle(80);capture("phone-main-categories",popup().contentView);popup().dismiss()
+        val context=CommandContext(false,true,true,false,false,true,false)
+        var selected:IdeCommand?=null
+        val menu=IdeCommandMenu.show(anchor(),context,listOf(IdeCommand.RUN_STOP,IdeCommand.GOTO_LINE,IdeCommand.DELETE),{selected=it},false)
+        menu.menu.findItem(IdeCommand.RUN_STOP.ordinal+1).title="Interrupt execution"
+        menu.menu.findItem(IdeCommand.GOTO_LINE.ordinal+1).title="Navigate to source"
+        menu.menu.findItem(IdeCommand.DELETE.ordinal+1).title="Remove source"
+        menu.show();idle(80);val window=popup()
+        fun glyph(title:String)=ReflectionHelpers.getField<IdeIcon>(views(menuRow(window,title)).filterIsInstance<ImageView>().single().drawable,"icon")
+        assertEquals(IdeIcon.STOP,glyph("Interrupt execution"));assertEquals(IdeIcon.LOCATE,glyph("Navigate to source"))
+        assertEquals(IdeIcon.DELETE,glyph("Remove source"))
+        val removed=menuRow(window,"Remove source");assertFalse(removed.isEnabled);assertFalse(removed.isFocusable)
+        assertEquals(DesignTokens.forContext(main).error,views(removed).filterIsInstance<TextView>().single().currentTextColor)
+        capture("phone-command-identities",window.contentView)
+        val content=editor.text;menuRow(window,"Navigate to source").performClick();idle()
+        assertEquals(IdeCommand.GOTO_LINE,selected);assertSame(content,editor.text)
+    }
+    @Test @Config(qualifiers="w280dp-h900dp") fun LargeNarrowEditMenuKeepsFullShortcutsAndRealNavigation(){
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"showWorkbenchMenu",ClassParameter.from(View::class.java,anchor()),ClassParameter.from(WorkbenchMenuGroup::class.java,WorkbenchMenuGroup.EDIT))
+        idle(100);val window=popup();val scroll=window.contentView as ScrollView
+        for(label in views(window.contentView).filterIsInstance<TextView>()){
+            textFits(label)
+            val layout=label.layout!!;val last=minOf(layout.lineCount,label.maxLines)-1
+            assertEquals("Menu text must remain complete: ${label.text}",label.text.length,layout.getLineEnd(last))
+        }
+        val redo=menuRow(window,IdeCommand.REDO.title)
+        val shortcut=views(redo).filterIsInstance<TextView>().single{it.text.toString()=="Ctrl+Y / Ctrl+Shift+Z"}
+        val title=views(redo).filterIsInstance<TextView>().single{it.text.toString()=="重做"}
+        val a=IntArray(2);val b=IntArray(2);shortcut.getLocationOnScreen(a);title.getLocationOnScreen(b)
+        assertTrue("Shortcut must not squeeze the title",a[1]>=b[1]+title.height)
+        capture("phone-large-narrow-edit-menu",window.contentView)
+        val target=menuRow(window,IdeCommand.GOTO_LINE.title);scroll.scrollTo(0,target.top)
+        val content=editor.text;target.performClick();idle()
+        val dialog=ShadowAlertDialog.getLatestAlertDialog();assertTrue(dialog.isShowing)
+        assertTrue(views(dialog.window!!.decorView).filterIsInstance<TextView>().any{it.text.toString()=="跳转行"})
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();idle();assertSame(content,editor.text)
     }
     @Test @Config(qualifiers="w411dp-h1000dp") fun LargeSignatureKeepsReadableNoticeReferenceAndControls(){
         text("print(");assistance("updateSignatureHelp","signatureExecutor");val hint=field<SignaturePopup>("signaturePopup");assertTrue(hint.isShowing)

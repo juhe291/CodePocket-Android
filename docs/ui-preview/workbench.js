@@ -32,6 +32,12 @@ scene=function(name){
  switch(name){
  case '打开工作区':case '工作区载入失败':return previewWorkspaceState(name==='工作区载入失败');
  case '主菜单':return menu(menuGroups.map(g=>[g[0],g[1],g[2]]));
+ case '编辑菜单':return menu([['撤销','工作台','undo-2',false,'Ctrl+Z'],['重做','工作台','redo-2',false,'Ctrl+Y / Ctrl+Shift+Z'],'-',
+ ['当前文件查找','查找与替换','search',false,'Ctrl+F'],['替换','查找与替换','refresh-cw',false,'Ctrl+H'],['跳转行','跳转行','crosshair',false,'Ctrl+G'],'-',
+ ['代码字号','代码字号','case-sensitive',false,'Ctrl++ / Ctrl+-'],'-',
+ ['基础词法补全','补全候选','file-code-2',false,'Ctrl+Space'],['内置参数参考','函数参数提示','brackets',false,'Ctrl+Shift+Space'],['内置代码片段','内置代码片段','file-code-2']]);
+ case '跳转行':return modal(name,'<label>行号</label><input aria-label="行号" type="number" min="1" value="1">','跳转');
+ case '内置代码片段':return menu([['Python for 循环','补全候选','file-code-2'],['C++ for 循环','补全候选','file-code-2']]);
  case '文件操作':return menu([['新建文件','新建文件','file-plus-2',false,'Ctrl+N'],['打开 / 切换工作区','切换项目','folder-open',false,'Ctrl+O'],['保存','工作台','save',false,'Ctrl+S'],'-',['导出副本','恢复草稿','download'],['恢复草稿','恢复草稿','refresh-cw']]);
  case '视图菜单':return menu([['打开终端','打开终端','terminal'],['资源管理器','切换文件树','files',false,'Ctrl+B'],['代码字号','代码字号','case-sensitive'],['切换深浅主题','切换主题','palette'],['设置','设置','settings-2']]);
  case '运行菜单':return menu([['运行预览','运行状态','play',false,'F5'],['问题详情','问题详情','info']]);
