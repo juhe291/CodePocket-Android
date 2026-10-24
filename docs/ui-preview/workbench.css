@@ -50,3 +50,6 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 .tab .tab-filename{display:block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tabs{scroll-behavior:auto}
 
 .tabs .tab{max-width:100%;min-width:0;flex-shrink:0;box-sizing:border-box}.tab>.filemark,.tab>[data-preview-close]{flex-shrink:0}
+
+.crumb{height:auto;min-height:24px;line-height:1.5;padding-top:3px;padding-bottom:3px;box-sizing:border-box}.crumb #pathfile{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status{height:auto;min-height:28px;line-height:1.4;padding-top:4px;padding-bottom:4px;box-sizing:border-box;flex-shrink:0}.status .state.failure{color:var(--red);font-weight:500}

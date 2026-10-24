@@ -700,7 +700,12 @@ class MainActivity : Activity() {
     private fun updateShellTitle() {
         if (!::mainToolbar.isInitialized) return
         mainToolbar.setTitle(workspace.title.substringBefore("（").substringBefore(" · "), "${workspace.title} / $activePath")
-        pathBreadcrumb?.text = getString(R.string.workbench_breadcrumb, workspace.title.substringBefore(" · ").substringBefore("（"), activePath.replace("/", "  ›  "))
+        pathBreadcrumb?.let { breadcrumb ->
+            val display = getString(R.string.workbench_breadcrumb, workspace.title.substringBefore(" · ").substringBefore("（"), activePath.replace("/", "  ›  "))
+            if (breadcrumb.text.toString() != display) breadcrumb.text = display
+            val fullPath = "${workspace.title}\n$activePath"
+            if (breadcrumb.contentDescription?.toString() != fullPath) IdeControls.describe(breadcrumb, fullPath)
+        }
         updateMainToolbarState()
     }
 
@@ -1081,8 +1086,11 @@ class MainActivity : Activity() {
         tabHeader.addView(tabs,LinearLayout.LayoutParams(0,dp(48),1f))
         tabHeader.addView(editorToolbar,LinearLayout.LayoutParams(-2,dp(48)))
         editorRegion.addView(tabHeader,LinearLayout.LayoutParams(-1,dp(48)))
-        pathBreadcrumb = label("", 11f, muted).apply { setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.MIDDLE; setPadding(dp(14), 0, dp(12), 0); gravity = Gravity.CENTER_VERTICAL }
-        editorRegion.addView(pathBreadcrumb, LinearLayout.LayoutParams(-1, dp(24)))
+        pathBreadcrumb = label("", 11f, muted).apply {
+            setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.MIDDLE
+            setPadding(dp(14), dp(3), dp(12), dp(3)); minimumHeight = dp(24); gravity = Gravity.CENTER_VERTICAL
+        }
+        editorRegion.addView(pathBreadcrumb, LinearLayout.LayoutParams(-1, -2))
 
         val editorBody = LinearLayout(this).apply { setBackgroundColor(editorBackground); orientation = LinearLayout.HORIZONTAL }
         numbers = label("1", 13.5f, muted).apply {

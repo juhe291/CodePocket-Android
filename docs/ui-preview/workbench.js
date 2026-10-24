@@ -132,7 +132,7 @@ function decoratePreviewTabMarkers(){
   if(tab.querySelector('.tab-dirty-indicator'))return;
   const marker=document.createElement('span');marker.className='tab-dirty-indicator';marker.setAttribute('aria-hidden','true');
   const close=tab.lastElementChild;
-  if(close&&(close.matches('svg')||close.dataset.icon==='x'))tab.insertBefore(marker,close);else tab.append(marker);
+  if(close&&(close.matches('svg')||close.dataset.icon==='x'||close.hasAttribute('data-preview-close')))tab.insertBefore(marker,close);else tab.append(marker);
  });
 }
 function previewTabState(){const active=document.querySelector('.tabs .tab.active');document.querySelector('.status .state').textContent=active?.classList.contains('dirty')?'未保存':'已保存';}
@@ -161,6 +161,34 @@ selectFile=function(name){
   decoratePreviewTabMarkers();
  }
  selected.title=name;
- const viewport=document.querySelector('.tabs');
- selected.scrollIntoView({block:'nearest',inline:selected.offsetWidth>viewport.clientWidth?'end':'nearest',behavior:'auto'});
+ revealPreviewTabSelection();
 };
+
+// Save-failure presentation is a labelled design example, never an execution result.
+const previewStateBeforeFailure=previewTabState;
+previewTabState=function(){previewStateBeforeFailure();const state=document.querySelector('.status .state');state.classList.remove('failure');state.removeAttribute('title');};
+const sceneBeforeFailure=scene;
+scene=function(name){
+ const failure=name==='保存失败状态';const result=sceneBeforeFailure(failure?'未保存标签':name);
+ const state=document.querySelector('.status .state');state.classList.toggle('failure',failure);
+ if(failure){state.textContent='保存失败';state.title='未保存 · 保存失败：设计示例，当前编辑仍保留；这不是实际文件操作结果。';}
+ return result;
+};
+const selectFileBeforePathHelp=selectFile;
+selectFile=function(name){selectFileBeforePathHelp(name);document.querySelector('.crumb').title='Algorithms / '+name;};
+document.querySelector('.crumb').title='Algorithms / '+document.querySelector('.tabs .tab.active').dataset.file;
+$('#scene').add(new Option('保存失败状态','保存失败状态'));
+
+function revealPreviewTabSelection(){
+ const viewport=document.querySelector('.tabs'),selected=viewport.querySelector('.tab.active');
+ if(!selected)return;
+ const tab=selected.getBoundingClientRect(),box=viewport.getBoundingClientRect();
+ const left=box.left+viewport.clientLeft,right=left+viewport.clientWidth;
+ const delta=tab.width>viewport.clientWidth?tab.right-right:tab.left<left?tab.left-left:tab.right>right?tab.right-right:0;
+ if(delta)viewport.scrollTo({left:viewport.scrollLeft+delta,behavior:'auto'});
+}
+let previewTabViewportWidth=document.querySelector('.tabs').clientWidth;
+new ResizeObserver(entries=>{
+ const width=entries[0].target.clientWidth;
+ if(width!==previewTabViewportWidth){previewTabViewportWidth=width;revealPreviewTabSelection();}
+}).observe(document.querySelector('.tabs'));

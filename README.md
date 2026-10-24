@@ -1,12 +1,12 @@
 # CodePocket · Android C++ / Python IDE
 
-> 当前开发优先级：按最新要求先完成工作台 UI 视觉与层级重构；尚未实现的新功能暂缓。见 [工作台记录](docs/UI_WORKBENCH_REDESIGN_2026-10-23.md) 与 [设置/控件记录](docs/UI_SURFACES_POLISH_2026-10-24.md) 与 [导航记录](docs/UI_NAVIGATION_POLISH_2026-10-24.md) 与 [表单记录](docs/UI_FORMS_POLISH_2026-10-24.md) 与 [二级窗口记录](docs/UI_AUXILIARY_POLISH_2026-10-24.md) 与 [诊断交互记录](docs/UI_DIAGNOSTIC_LAYOUT_2026-10-24.md) 与 [标题装饰记录](docs/UI_HEADING_POLISH_2026-10-24.md) 与 [载入状态记录](docs/UI_STARTUP_STATES_2026-10-24.md) 与 [菜单记录](docs/UI_COMMAND_MENUS_2026-10-24.md) 与 [终端工具区记录](docs/UI_TERMINAL_DOCK_2026-10-24.md) 与 [设置一致性记录](docs/UI_SETTINGS_CONSISTENCY_2026-10-24.md) 与 [标签稳定性记录](docs/UI_TAB_STABILITY_2026-10-24.md) 与 [标签导航最新记录](docs/UI_TAB_NAVIGATION_2026-10-24.md)。
+> 当前开发优先级：按最新要求先完成工作台 UI 视觉与层级重构；尚未实现的新功能暂缓。见 [工作台记录](docs/UI_WORKBENCH_REDESIGN_2026-10-23.md) 与 [设置/控件记录](docs/UI_SURFACES_POLISH_2026-10-24.md) 与 [导航记录](docs/UI_NAVIGATION_POLISH_2026-10-24.md) 与 [表单记录](docs/UI_FORMS_POLISH_2026-10-24.md) 与 [二级窗口记录](docs/UI_AUXILIARY_POLISH_2026-10-24.md) 与 [诊断交互记录](docs/UI_DIAGNOSTIC_LAYOUT_2026-10-24.md) 与 [标题装饰记录](docs/UI_HEADING_POLISH_2026-10-24.md) 与 [载入状态记录](docs/UI_STARTUP_STATES_2026-10-24.md) 与 [菜单记录](docs/UI_COMMAND_MENUS_2026-10-24.md) 与 [终端工具区记录](docs/UI_TERMINAL_DOCK_2026-10-24.md) 与 [设置一致性记录](docs/UI_SETTINGS_CONSISTENCY_2026-10-24.md) 与 [标签稳定性记录](docs/UI_TAB_STABILITY_2026-10-24.md) 与 [标签导航记录](docs/UI_TAB_NAVIGATION_2026-10-24.md) 与 [路径/状态最新记录](docs/UI_PATH_STATUS_2026-10-24.md)。
 
 **2026-10-24：UI视觉优先，正在统一主工作台和二级窗口。** 细分隔线、柔和图标底座、标题与路径分层、文件类型色增加层次；移除顶部重复项目搜索，保留侧栏项目搜索和编辑区当前文件查找；未实现功能暂缓，原需求保留。
 
-- [最新主APK](dist/CodePocket-tab-navigation-2026-10-24-debug.apk)（25.44MiB，原签名、arm64-v8a）。
-- [本批多标签导航验证](docs/UI_TAB_NAVIGATION_2026-10-24.md)、[原生预览](docs/tab-navigation-preview/README.md)、[完整UI范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)：主App703通过/0失败/1旧跳过，Lint0错误，Debug构建及签名/对齐/Python/主机复核通过；不代表远端CI或实机通过。
-- [可点击样稿与四种窗口](docs/ui-preview/README.md)已同步工作台骨架，256场景+31项浏览器交互检查通过；全部内容明确为设计示例。
+- [最新主APK](dist/CodePocket-path-status-2026-10-24-debug.apk)（25.44MiB，原签名、arm64-v8a）。
+- [本批路径与保存状态验证](docs/UI_PATH_STATUS_2026-10-24.md)、[原生预览](docs/path-status-preview/README.md)、[完整UI范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)：主App708通过/0失败/1旧跳过，Lint0错误，Debug构建及签名/对齐/Python/主机复核通过；不代表远端CI或实机通过。
+- [可点击样稿与四种窗口](docs/ui-preview/README.md)已同步工作台骨架，264场景+38项浏览器交互检查通过；全部内容明确为设计示例。
 - 完整改版进行中；浅色语法配色已收敛并核对真实令牌；诊断浮层的原两项失败已处理；APK主机导入用例曾失败1次但重测未复现，另记跟踪，启动瞬间与设备验收仍后置。下方为历史记录。
 
 ## 历史主机整合验收
