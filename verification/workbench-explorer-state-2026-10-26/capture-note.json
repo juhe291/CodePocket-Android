@@ -1,0 +1,6 @@
+{
+  "observation": "Native component previews initially had transparent inherited backgrounds, displaying as black when viewed alone.",
+  "correction": "Read the first actual ancestor ColorDrawable, assert it exists, and draw that color before the live ScrollView; do not reflect a computed property or edit old image bytes.",
+  "verification": "Repeat full main-app tests/Lint/assemble after the capture fixture correction; preserve first full log/JUnit, original previews and actual APK digest.",
+  "intermediate_failure": "The first capture correction reflected a Kotlin computed surface property as a field, causing NoSuchFieldException in the three new tests; production UI was unchanged."
+}

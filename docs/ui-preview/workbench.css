@@ -56,3 +56,8 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 
 /* Passive context yields to code in short measured windows. */
 .app.compact-captions{min-height:0}.compact-captions .crumb,.compact-captions .status{display:none}
+
+/* A fixed, passive marker slot keeps tree names and menu targets stable. */
+.tree-dirty-indicator{width:16px;flex:0 0 16px;height:6px;position:relative}
+.tree-dirty-indicator::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--text);left:5px;top:0;visibility:hidden}
+.treeitem.dirty .tree-dirty-indicator::after{visibility:visible}

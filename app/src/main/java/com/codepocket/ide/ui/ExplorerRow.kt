@@ -32,6 +32,10 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
     fun setMenuAction(action: () -> Unit) { more.setOnClickListener { action() } }
     private var depth = 0
     private var bound = false
+    private var directoryRow = false
+    private var modifiedFlag = false
+    private var baseDescription = ""
+    private val markerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = palette.foreground }
 
     init {
         orientation = HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
@@ -42,8 +46,11 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
         addView(more, LayoutParams(dp(48), dp(48)))
     }
 
-    fun bind(path: String, level: Int, directory: Boolean, expanded: Boolean, selected: Boolean, animate: Boolean, displayName: String? = null) {
+    fun bind(path: String, level: Int, directory: Boolean, expanded: Boolean, selected: Boolean, animate: Boolean, displayName: String? = null, modified: Boolean = false) {
         depth = level.coerceIn(0, 20)
+        directoryRow = directory
+        val markerSpace = if (directory) 0 else dp(16)
+        if (name.paddingRight != markerSpace) name.setPadding(0, 0, markerSpace, 0)
         val title = displayName ?: path.substringAfterLast('/')
         if (name.text.toString() != title) name.text = title
         name.setTextColor(if (selected) palette.accentText else palette.foreground)
@@ -53,9 +60,25 @@ class ExplorerRow(context: Context, private val palette: IdePalette) : LinearLay
         Animations.rotate(arrow, if (expanded && directory) 90f else 0f, animate && bound && directory)
         arrow.visibility = if (directory) View.VISIBLE else View.INVISIBLE
         background = if (selected) GradientDrawable().apply { setColor(palette.selection); cornerRadius = dp(3).toFloat() } else null
-        IdeControls.describe(this, (if(path.isEmpty())title else path) + if (directory) (if (expanded) "，已展开" else "，已折叠") else "")
+        baseDescription = (if(path.isEmpty())title else path) + if (directory) (if (expanded) "，已展开" else "，已折叠") else ""
+        setModified(modified)
         more.visibility = if (selected && path.isNotEmpty()) View.VISIBLE else View.GONE
         isSelected = selected; bound = true; invalidate()
+    }
+
+    /** Presentation only: no tree rebuild, file access, focus change, or layout request while typing. */
+    fun setModified(value: Boolean) {
+        val next = value && !directoryRow
+        val changed = next != modifiedFlag
+        modifiedFlag = next
+        val description = baseDescription + if (next) " · 未保存" else ""
+        if (contentDescription?.toString() != description) IdeControls.describe(this, description)
+        if (changed) invalidate()
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        if (modifiedFlag) canvas.drawCircle(name.right - dp(8).toFloat(), height / 2f, dp(3).toFloat(), markerPaint)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

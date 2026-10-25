@@ -1,13 +1,13 @@
 # CodePocket · Android C++ / Python IDE
 
-> 当前优先级：UI视觉与工作台层次。允许适度装饰，尚未实现的新功能暂缓；原有保存、编辑和真实运行保留。见[本轮记录](docs/UI_COMPACT_CAPTIONS_2026-10-26.md)与[完整范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。
+> 当前优先级：UI视觉与工作台层次。允许适度装饰，尚未实现的新功能暂缓；原有保存、编辑和真实运行保留。见[本轮记录](docs/UI_EXPLORER_STATE_2026-10-26.md)与[完整范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。
 
-**2026-10-26：保留柔和图标底座、标题/路径分层和中性底栏；短窗口给代码腾出空间。** 净高度低于360dp隐藏路径栏，恢复后显示；浮动键盘不直接触发隐藏。手机和平板、大字体分别有主机证据。
+**2026-10-26：文件树与标签同步显示未保存状态。** 小圆点固定占位，成功保存后清除，失败时保留；根目录折叠和抽屉重开保留当前文件状态。既有柔和图标/标题层次、中性底栏和短窗口布局保持。
 
-- [最新Debug APK](dist/CodePocket-compact-captions-2026-10-26-debug.apk)（25.44MiB，原签名、arm64-v8a）。
-- [真实结果与待办](docs/UI_COMPACT_CAPTIONS_2026-10-26.md) · [原生布局对照](docs/compact-captions-preview/README.md)：主App 713通过/0失败/1旧跳过，Lint0错误，实际Debug打包及APK检查通过。
-- [可点击样稿](docs/ui-preview/README.md)：34场景、272次场景检查、43项交互和20项配色检查通过；均为明确标注的设计示例。
-- 平板高度过渡的主机焦点问题已登记后续处理；实际IME/键鼠/卓易通/FPS及远端CI仍后置。既有UI批次见[接续记录](docs/RESUME.md)，本轮不代表整个项目或实机验收完成。
+- [最新Debug APK](dist/CodePocket-explorer-state-2026-10-26-debug.apk)（25.44MiB，原签名、arm64-v8a）。
+- [真实结果与限制](docs/UI_EXPLORER_STATE_2026-10-26.md) · [原生预览](docs/explorer-state-preview/README.md)：主App 716通过/0失败/1旧跳过，Lint0错误，实际Debug打包及APK检查通过。
+- [可点击样稿](docs/ui-preview/README.md)：34场景、272次场景检查、48项交互和20项配色检查通过；均为设计示例。
+- 被动缩窗焦点、旧状态关键词等问题仍登记；实机IME/键鼠/卓易通/FPS与远端CI后置。历史批次见[接续记录](docs/RESUME.md)，本轮不等于整个项目完成。
 
 ## 历史主机整合验收
 

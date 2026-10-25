@@ -2,7 +2,7 @@
 
 范围按用户最新指令确定：UI视觉优先，允许适度装饰；保留已有项目和真实运行；未实现功能先不接入，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
 
-本批最终验证及APK见[短窗口路径记录](UI_COMPACT_CAPTIONS_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
+本批最终验证及APK见[文件树状态记录](UI_EXPLORER_STATE_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
 
 | 范围 | 当前源码与实际入口 | 证据及边界 |
 | --- | --- | --- |
@@ -12,7 +12,7 @@
 | 入口精简 | 顶部终端/运行/单一全局更多；项目搜索在导航、当前文件查找在编辑区；编辑区无重复更多 | AuxiliarySurfaceIntegrationTest；面板局部更多管理终端，不是第二个全局菜单 |
 | 视觉体系与图标 | DesignTokens、IdeControls、IdeIcons；本地Lucide及许可证；灰蓝层次、柔和文件类型色、中性底栏 | 原生及浏览器预览分别标识；没有发光/荧光/夸张渐变。并非全部界面逐张人眼验收 |
 | 触控与文本 | 常用动作48dp组件，长文件名省略但保留完整路径说明，大字体行增长与菜单滚动 | WorkbenchViewsTest、WorkbenchWindowIntegrationTest、MainSurfaceIntegrationTest的实际抽样；不能据此声称所有系统控件都已测量 |
-| 文件树 | ExplorerRow/ExplorerUiState；根与子目录切换、末级目录折叠、工作区展开/滚动、树选中与编辑文件分离 | UiRedesignTest、WorkbenchWindowIntegrationTest、MainFileSettingsIntegrationTest；收起不关闭文档 |
+| 文件树 | ExplorerRow/ExplorerUiState；根与子目录切换、末级目录折叠、工作区展开/滚动、树选中与编辑文件分离；当前未保存缓冲的固定圆点/完整说明 | UiRedesignTest、WorkbenchWindowIntegrationTest、MainFileSettingsIntegrationTest、ExplorerModifiedStateIntegrationTest；收起不关闭文档，真实输入/保存/冲突重试同步状态，保留行/滚动/48dp菜单；不扫描非当前恢复草稿 |
 | 文件表单/选择器 | WorkbenchForms与原新建/重命名/移动/删除；路径区、错误保留、删除确认、实际事务仍受旧校验 | FormSurfaceIntegrationTest、MainFileSettingsIntegrationTest；本批无快捷键行保持原层级，实际移动回归保留 |
 | 保存与恢复 | EditorSessions、DraftStore、SAF原链路；冲突/失败保留缓冲与草稿 | MainFileSettingsIntegrationTest、MainSafRecoveryIntegrationTest、WorkspaceStartupIntegrationTest；Windows符号链接用例仍有1旧跳过 |
 | 标签与编辑操作 | 类型图标、固定占位未保存圆点、单独关闭；首次Sora键入刷新标记，编辑工具按空间显示 | WorkbenchViewsTest、EditorTabStabilityIntegrationTest、EditorTabNavigationIntegrationTest、SoraWorkbenchIntegrationTest；输入/保存保持坐标和手动滚动，明确导航/缩窗后当前项可见；长标签保留类型图标及关闭目标 |
@@ -34,8 +34,8 @@
 
 ## 登记与验收边界
 
-- 多标签基本定位已补充5项实际Main/Sora证据：明确导航/关闭当前项/区域变窄后定位，输入和保存保持手动滚动；窄屏长标签完整显示图标、截断名称及关闭按钮。本批路径/状态栏增加5项实际Main/Sora证据；短窗口/IME路径占位已补充4项Main/Sora主机证据及359/360边界，不据此声称全部输入环境已验收。平板高度过渡后编辑器焦点丢失的主机观察已另记，设备及旧版情况未确定；220dp有空间诊断/200dp无空间详情分别回归。
-- 原InteractionState次级说明仍按文案关键词判断，特殊文件名可能命中；本批可见摘要保护旧成功不覆盖新未保存，结构化状态留后续评估。
+- 多标签基本定位已补充5项实际Main/Sora证据：明确导航/关闭当前项/区域变窄后定位，输入和保存保持手动滚动；窄屏长标签完整显示图标、截断名称及关闭按钮。路径/状态栏已有5项实际Main/Sora证据；短窗口/IME路径占位已补充4项Main/Sora主机证据及359/360边界，不据此声称全部输入环境已验收。平板高度过渡后编辑器焦点丢失的主机观察已另记，设备及旧版情况未确定；220dp有空间诊断/200dp无空间详情分别回归。
+- 原InteractionState次级说明仍按文案关键词判断，特殊文件名可能命中；可见摘要已保护旧成功不覆盖新未保存，结构化状态留后续评估。
 - 旧“优先左右分屏”展示不一致已处理：隐藏无效入口，保留旧JSON字段/布局能力；新增实际设置应用保留回归。左右停靠功能仍未开放，没有删除偏好或改变当前底部结构。
 - 先前一次实际APK helper导入用例返回1，原断言未记录底层异常；完整重测与独立40次未复现，原因仍未确认。见workbench-diagnostic-ui-2026-10-24/import-recheck-summary.json。本批不把它标为已解决。
 - 实机输入法/组合输入、蓝牙键鼠、Android系统第一帧、卓易通、API24、帧率/高刷新率和Wandbox远端仍未验收，按用户约定后置。

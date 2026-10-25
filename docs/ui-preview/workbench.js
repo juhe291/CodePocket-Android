@@ -138,7 +138,7 @@ function decoratePreviewTabMarkers(){
   if(close&&(close.matches('svg')||close.dataset.icon==='x'||close.hasAttribute('data-preview-close')))tab.insertBefore(marker,close);else tab.append(marker);
  });
 }
-function previewTabState(){const active=document.querySelector('.tabs .tab.active');document.querySelector('.status .state').textContent=active?.classList.contains('dirty')?'未保存':'已保存';}
+function previewTabState(){const active=document.querySelector('.tabs .tab.active');document.querySelector('.status .state').textContent=active?.classList.contains('dirty')?'未保存':'已保存';decoratePreviewTreeState();}
 const selectFileBeforeMarkers=selectFile;
 selectFile=function(name){selectFileBeforeMarkers(name);decoratePreviewTabMarkers();previewTabState();};
 const sceneBeforeMarkers=scene;
@@ -203,3 +203,22 @@ $('#scene').onchange=event=>{
  if(event.target.value!=='紧凑编辑区'){previewHeightOverride=null;previewLayout(false);}
  sceneSelectionBeforeCompact(event);
 };
+
+// Reflect the labelled dirty-document example without adding a second tree action.
+function decoratePreviewTreeState(){
+ const current=document.querySelector('.tabs .tab.active');
+ const dirtyFile=current?.classList.contains('dirty')?current.dataset.file:null;
+ document.querySelectorAll('.treeitem').forEach(row=>{
+  const title=row.querySelector('.treename');
+  if(!title||!row.querySelector('.filemark'))return;
+  const path=title.textContent;row.dataset.previewFile=path;
+  if(!row.querySelector('.tree-dirty-indicator')){
+   const marker=document.createElement('span');marker.className='tree-dirty-indicator';marker.setAttribute('aria-hidden','true');
+   title.after(marker);
+  }
+  const modified=path===dirtyFile;row.classList.toggle('dirty',modified);
+  row.title='Algorithms / '+path+(modified?' · 未保存':'');
+  row.setAttribute('aria-label',row.title);
+ });
+}
+decoratePreviewTreeState();

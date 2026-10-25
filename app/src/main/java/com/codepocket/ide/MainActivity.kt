@@ -1430,7 +1430,7 @@ class MainActivity : Activity() {
             }
             val entry = entries[key] ?: return@update
             (view as ExplorerRow).bind(entry.path, entry.depth + 1, entry.folder, entry.open,
-                entry.path == (explorerSelection ?: activePath), moving)
+                entry.path == (explorerSelection ?: activePath), moving, modified = entry.path == activePath && dirty)
             view.setMenuAction { fileMenu(entry.file) }
             view.setOnClickListener {
                 if (workspaceBusy) return@setOnClickListener
@@ -1710,9 +1710,19 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun refreshExplorerModifiedState() {
+        val modifiedKey = if (dirty) "entry:$activePath" else null
+        listOfNotNull(sidebarExplorerList, overlayExplorerList).forEach { rows ->
+            for (index in 0 until rows.childCount) (rows.getChildAt(index) as? ExplorerRow)?.let { row ->
+                row.setModified(modifiedKey != null && row.getTag(R.id.workbench_key) == modifiedKey)
+            }
+        }
+    }
+
     private fun refreshTabs() {
         if (!::tabsRow.isInitialized) return
         updateShellTitle()
+        refreshExplorerModifiedState()
         opened.toList().forEach { if (!workspace.resolve(it).isFile) opened.remove(it) }
         val existing = tabsRow.childCount > 0
         KeyedViews.update(tabsRow, opened.toList(), { path ->

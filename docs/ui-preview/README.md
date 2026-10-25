@@ -2,11 +2,11 @@
 
 打开 [index.html](index.html)，可选择手机竖屏/横屏、平板竖屏/横屏和深浅主题。34种界面场景覆盖工作台、菜单、表单、设置、补全及终端状态。使用本地CSS/JS/SVG资源，可以离线查看。
 
-**所有文件和输出均为设计示例，不执行代码，不是APK或Android设备截图。** 原生App继续使用真实Python/Wandbox/单一PTY；实际诊断交互见[诊断原生预览](../diagnostic-ui-preview/README.md)与[标题原生预览](../heading-polish-preview/README.md)与[载入原生预览](../startup-ui-preview/README.md)与[命令原生预览](../command-ui-preview/README.md)与[终端工具区预览](../terminal-dock-preview/README.md)与[设置原生预览](../settings-consistency-preview/README.md)与[标签状态原生预览](../tab-stability-preview/README.md)与[导航原生预览](../tab-navigation-preview/README.md)与[最新路径/底栏原生预览](../path-status-preview/README.md)，代码配色见[原生配色预览](../token-theme-preview/README.md)与[窗口预览](../search-entry-preview/README.md)和[最新APK](../../dist/CodePocket-compact-captions-2026-10-26-debug.apk)。
+**所有文件和输出均为设计示例，不执行代码，不是APK或Android设备截图。** 原生App继续使用真实Python/Wandbox/单一PTY；实际诊断交互见[诊断原生预览](../diagnostic-ui-preview/README.md)与[标题原生预览](../heading-polish-preview/README.md)与[载入原生预览](../startup-ui-preview/README.md)与[命令原生预览](../command-ui-preview/README.md)与[终端工具区预览](../terminal-dock-preview/README.md)与[设置原生预览](../settings-consistency-preview/README.md)与[标签状态原生预览](../tab-stability-preview/README.md)与[导航原生预览](../tab-navigation-preview/README.md)与[最新路径/底栏原生预览](../path-status-preview/README.md)，代码配色见[原生配色预览](../token-theme-preview/README.md)与[窗口预览](../search-entry-preview/README.md)和[最新APK](../../dist/CodePocket-explorer-state-2026-10-26-debug.apk)。
 
 2026-10-24在原样稿基础上同步全高Activity Bar、上方文件树/编辑器、横跨工作区的底部终端和中性状态栏；移除顶部重复项目搜索与编辑区重复更多、合并文件夹操作。增加目录示例层级、设置分类图标及标题底座、细分隔线、简洁路径区与柔和选中短线；不引入荧光/光晕/夸张渐变。未实现功能仍暂缓，样稿不作为功能交付。
 
-本轮Playwright真实浏览器：34场景×4窗口×2主题=272次场景/横向边界检查，加43项交互与20项实际配色检查全部通过，未发现页面脚本错误。新增载入/失败状态及示例恢复导航，编辑菜单九项命令分组及320px快捷键排版及终端四入口/控制键展开收起检查；另核对360px宽度、减少动画、目录折叠、设置取消/应用及终端入口。检查的是浏览器样稿，不代表AndroidIME/键鼠/卓易通/FPS通过。
+本轮Playwright真实浏览器：34场景×4窗口×2主题=272次场景/横向边界检查，加48项交互与20项实际配色检查全部通过，未发现页面脚本错误。新增载入/失败状态及示例恢复导航，编辑菜单九项命令分组及320px快捷键排版及终端四入口/控制键展开收起检查；另核对360px宽度、减少动画、目录折叠、设置取消/应用及终端入口。检查的是浏览器样稿，不代表AndroidIME/键鼠/卓易通/FPS通过。
 
 | 窗口 | 深色工作台 | 浅色工作台 | 深色设置 | 浅色设置 |
 | --- | --- | --- | --- | --- |
@@ -26,3 +26,5 @@
 前版96次浏览器检查及旧截图保留为历史，不用它们替代本轮结果。Lucide0.468.0固定资源与许可证保持，见[third-party/lucide](../../third-party/lucide/UPSTREAM.json)。
 
 2026-10-26新增“紧凑编辑区”：按实际样稿高度隐藏路径/底栏，示例窗口240px；打开嵌套命令保持高度，切回常规场景恢复路径而不更换代码元素。[平板深色](workbench-screenshots/tablet-dark-compact.png) · [手机浅色](workbench-screenshots/phone-light-compact.png)。不模拟真实键盘，也不表示Android输入法验收通过。[原生测量与待办](../UI_COMPACT_CAPTIONS_2026-10-26.md)。
+
+2026-10-26同步文件树“未保存”圆点与完整说明：沿用既有未保存标签/保存失败场景，位置固定，失败保留，清除时名称和菜单不移动。[平板深色示例](workbench-screenshots/tablet-dark-dirty-tabs.png) · [原生证据与限制](../UI_EXPLORER_STATE_2026-10-26.md)。
