@@ -1,0 +1,14 @@
+{
+  "initial_stage": "compileDebugUnitTestKotlin",
+  "initial_failure": "AccessDeniedException while creating Kotlin compiler alive file under the Windows user Temp directory; tests had not run.",
+  "resolution": "Phase-local TEMP/TMP and java.io.tmpdir; Kotlin in-process compilation; test-only init script sets project-owned user.home/temp and offline SDK directory linked to existing cached jars. No ACL/global environment or production Gradle edits.",
+  "additional_failures": [
+    "Kotlin daemon client file under user Local/kotlin denied; fallback compilation mangled Chinese paths",
+    "Robolectric user-home download-lock denied before loading the Android SDK"
+  ],
+  "fixture_corrections": [
+    "Constrain the window rather than only its child before host traversals",
+    "Use an explicit API34 ViewRoot Insets shadow consistently across host traversals; not a real IME",
+    "Use Android-compatible integer JSON overload and explicitly collapse the existing panel for the 359/360 editing boundary test"
+  ]
+}

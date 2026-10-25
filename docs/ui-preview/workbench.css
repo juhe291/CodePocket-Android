@@ -53,3 +53,6 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 
 .crumb{height:auto;min-height:24px;line-height:1.5;padding-top:3px;padding-bottom:3px;box-sizing:border-box}.crumb #pathfile{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .status{height:auto;min-height:28px;line-height:1.4;padding-top:4px;padding-bottom:4px;box-sizing:border-box;flex-shrink:0}.status .state.failure{color:var(--red);font-weight:500}
+
+/* Passive context yields to code in short measured windows. */
+.app.compact-captions{min-height:0}.compact-captions .crumb,.compact-captions .status{display:none}

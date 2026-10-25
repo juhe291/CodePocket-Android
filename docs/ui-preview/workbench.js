@@ -16,9 +16,11 @@ const menuGroups=[['文件','文件操作','files'],['编辑','编辑菜单','pe
 desktopMenu.innerHTML=menuGroups.map(g=>`<button onclick="scene('${g[1]}')">${g[0]}</button>`).join('');$('.top').prepend(desktopMenu);
 const previewSizes={tablet:[1280,800,'平板横屏'],tabletPortrait:[800,1200,'平板竖屏'],phoneLandscape:[840,411,'手机横屏'],phone:[411,891,'手机竖屏']};
 $('#device').innerHTML=Object.entries(previewSizes).map(([k,v])=>`<option value="${k}">${v[2]} · ${v[0]} × ${v[1]}</option>`).join('');
+let previewHeightOverride=null;
 function previewLayout(reset=false){
- const size=previewSizes[$('#device').value];previewApp.style.width=size[0]+'px';previewApp.style.height=size[1]+'px';
- const width=previewApp.clientWidth,height=previewApp.clientHeight;const drawer=width<600||height<480;
+ if(reset)previewHeightOverride=null;
+ const size=previewSizes[$('#device').value];previewApp.style.width=size[0]+'px';previewApp.style.height=(previewHeightOverride??size[1])+'px';
+ const width=previewApp.clientWidth,height=previewApp.clientHeight;previewApp.classList.toggle('compact-captions',height<360);const drawer=width<600||height<480;
  isPhone=width<840||height<480;previewApp.classList.toggle('phone',drawer);previewApp.classList.toggle('drawer-mode',drawer);previewApp.classList.toggle('stacked-settings',isPhone);previewApp.classList.toggle('desktop',width>=1000);previewApp.classList.toggle('compact-top',width<600);
  $('.top .title').textContent=width<600?'CodePocket':'Algorithms';
  if(reset){closeLayers();previewExplorer.classList.remove('hidden');previewApp.classList.remove('termmax');previewTerminal.classList.toggle('hidden',drawer);previewTerminal.classList.toggle('open',!drawer);}
@@ -30,6 +32,7 @@ const originalScene=scene;
 scene=function(name){
  closeLayers();
  switch(name){
+ case '紧凑编辑区':previewHeightOverride=240;previewLayout(false);previewApp.classList.remove('termmax');previewTerminal.classList.add('hidden');return;
  case '打开工作区':case '工作区载入失败':return previewWorkspaceState(name==='工作区载入失败');
  case '主菜单':return menu(menuGroups.map(g=>[g[0],g[1],g[2]]));
  case '编辑菜单':return menu([['撤销','工作台','undo-2',false,'Ctrl+Z'],['重做','工作台','redo-2',false,'Ctrl+Y / Ctrl+Shift+Z'],'-',
@@ -192,3 +195,11 @@ new ResizeObserver(entries=>{
  const width=entries[0].target.clientWidth;
  if(width!==previewTabViewportWidth){previewTabViewportWidth=width;revealPreviewTabSelection();}
 }).observe(document.querySelector('.tabs'));
+
+// Measured short-window example only; does not simulate an Android keyboard.
+$('#scene').add(new Option('紧凑编辑区','紧凑编辑区'));
+const sceneSelectionBeforeCompact=$('#scene').onchange;
+$('#scene').onchange=event=>{
+ if(event.target.value!=='紧凑编辑区'){previewHeightOverride=null;previewLayout(false);}
+ sceneSelectionBeforeCompact(event);
+};

@@ -140,7 +140,7 @@ class MainSurfaceIntegrationTest {
         assertTrue(port.applyDecorations(EditorAnalysis(frame,emptyList(),null,syntax=SyntaxReport(listOf(InlineIssue(0,3,message,"诊断布局验收"))))))
         assertNotNull("Injected diagnostic must reach actual caret",port.diagnosticAtCaret());editor.inputView().performClick();idle(80)
     }
-    @Test @Config(qualifiers="w360dp-h220dp") fun tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing(){
+    @Test @Config(qualifiers="w360dp-h200dp") fun tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing(){
         val message="布局验收消息\n".repeat(30);diagnostic(message);val d=ShadowAlertDialog.getLatestAlertDialog();assertNotNull("No hover room must still offer details",d);assertTrue(d.isShowing)
         assertTrue(views(d.window!!.decorView).filterIsInstance<TextView>().any{it.text.contains(message)});assertEquals(1,editor.selectionStart)
         capture("phone-tiny-large-diagnostic-details",d.window!!.decorView)
@@ -154,6 +154,13 @@ class MainSurfaceIntegrationTest {
         assertTrue("The complete last error line must be reachable by scrolling",scroll.scrollY>0&&top>=0&&top+height<=scroll.height)
         capture("phone-tiny-large-diagnostic-scrolled",d.window!!.decorView)
         d.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();idle()
+    }
+    @Test @Config(qualifiers="w360dp-h220dp") fun compactLargeDiagnosticUsesReclaimedPathSpace(){
+        diagnostic("紧凑窗口路径留白验收\n".repeat(30))
+        assertEquals(View.GONE,field<TextView>("pathBreadcrumb").visibility)
+        assertTrue("Reclaimed path space now fits a real diagnostic hover at 220dp",field<DiagnosticPopup>("diagnosticPopup").isShowing)
+        val window=ReflectionHelpers.getField<PopupWindow>(field<DiagnosticPopup>("diagnosticPopup"),"popup")
+        capture("compact-220-large-diagnostic-hover",window.contentView)
     }
     @Test fun diagnosticHoverScrollsCompleteMessageAndCopiesWithoutEditing(){
         val message="诊断布局验收：这是一段供界面回归的长说明。\n".repeat(25);diagnostic(message);val help=field<DiagnosticPopup>("diagnosticPopup");assertTrue(help.isShowing)

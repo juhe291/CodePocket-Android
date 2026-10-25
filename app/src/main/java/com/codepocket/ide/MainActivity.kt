@@ -833,6 +833,8 @@ class MainActivity : Activity() {
         suggestionScroll.visibility = if (WorkspaceLayoutPolicy.showSnippet(snippetSession != null, visible, height)) View.VISIBLE else View.GONE
         keyboardToolbar.visibility = if (visible && editor.hasFocus() && settings.symbolBar) View.VISIBLE else View.GONE
         statusBarComponent.visibility = if (layout.showDetails) View.VISIBLE else View.GONE
+        // Passive path context yields space to code in short windows, regardless of orientation or floating IME.
+        pathBreadcrumb?.visibility = if (height >= 360) View.VISIBLE else View.GONE
         editorToolbar.visibility = View.VISIBLE
         applyPanelLayout()
         if (changed && visible && editor.hasFocus()) editorPort?.revealCaret()
