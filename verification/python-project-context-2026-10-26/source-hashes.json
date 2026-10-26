@@ -1,0 +1,19 @@
+{
+  "app/src/main/java/com/codepocket/ide/MainActivity.kt": "d1339bd46ea1bdeb22a3ecdfd110c796a7501e191ee0b7a319ea13e0ed1c7785",
+  "app/src/main/java/com/codepocket/ide/PythonAnalysisService.kt": "acef9965f2fdea3a7d4abe690141ef4c7a5f37186b537c4201a76562c85a2339",
+  "app/src/main/java/com/codepocket/ide/AnalysisDiskCache.kt": "718a7a9010905b1173a9c0684f7e90f53116c1081a0bd266f23fe2fad2cb8e3c",
+  "app/src/main/java/com/codepocket/ide/ProjectReadExecutor.kt": "7353ecd1664165a935bbfd2d8fcb3fa1b4f2d75cd1499172c87b31bde7875f37",
+  "app/src/main/java/com/codepocket/ide/PythonProjectContext.kt": "b776f3def56108e9435d295a8bc7d44410f4244a1c5ef1db75f808a54501f0a3",
+  "app/src/main/res/values/strings.xml": "905b663a0d59c305df0424d551325cbb0e138e2f776da9933e00313a6fb2431d",
+  "app/src/test/java/com/codepocket/ide/PythonSemanticIntegrationTest.kt": "d5856d9c68a7759c61be854426cbb10bf32a149ead56a27eb8d36e2c9a855192",
+  "app/src/test/java/com/codepocket/ide/PythonProjectContextTest.kt": "177ea0e938f5a53468720248aadce231ceadf368cb79c4e348bc544e58eb9f49",
+  "app/src/test/java/com/codepocket/ide/ProjectReadExecutorTest.kt": "907ad2e511501fe5ede10ba162d09234406dfae480232c6c27c690b2fcb1487f",
+  "app/src/test/java/com/codepocket/ide/AnalysisDiskCacheTest.kt": "2884ca6d12705048289dc79c9e95234767334c306c1304dc6368897dc41e8d8a",
+  "workspace-core/src/main/java/com/codepocket/ide/Workspace.kt": "94a0137817258e670e49180e374358a2853fed0b18b0514196f67694fd15f5d6",
+  "workspace-core/src/main/java/com/codepocket/ide/DocumentTree.kt": "0a8075ae109f8de3958637f58cc4dfc277ad5201ba76e4bcd3bec95d72971222",
+  "workspace-core/src/main/java/com/codepocket/ide/EditorSessions.kt": "ee438afa9557c4c24c5850b6225e7e35f051c4c05e08430ece92836ec43a3213",
+  "workspace-core/src/main/java/com/codepocket/ide/DraftStore.kt": "cb3f2b2ddf4583e10ac060093256647af9118d392a9a1674d3cc737f9c2900df",
+  "workspace-core/src/main/java/com/codepocket/ide/PythonSources.kt": "af4c283afe65d2eb50747a40e2abb56e2f82f08f75910a411a8fea3d5bc6d73e",
+  "tests/test_semantics.py": "1c9461ac4b6a4186958a0c331dabcb3ab854ee264f602ce8666739dc4243837e",
+  "scripts/generate_project_semantic_fixtures.py": "1643d30c0efa4fd8251ba9e87a1dc69f9e2199186f47807df4cac9ed34d2bccf"
+}

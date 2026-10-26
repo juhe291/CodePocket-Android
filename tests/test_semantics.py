@@ -121,6 +121,32 @@ class SemanticsTests(unittest.TestCase):
             prefix=code[result.get("start",len(code)):]
             self.assertNotIn(prefix,self.labels(result))
 
+    def test_transitive_project_snapshot_and_signature_use_all_unsaved_modules(self):
+        # These are analysis-only files, materialized from two unsaved editor drafts.
+        (self.root / "model.py").write_text("payload='😀中文'\ndef combine(left: int, right: str): pass\n", encoding="utf-8")
+        (self.root / "api.py").write_text("from model import payload, combine\n", encoding="utf-8")
+        names = self.labels(self.query("from api import payload\npayload.up"))
+        self.assertIn("upper", names)
+        self.assertNotIn("bit_count", names)
+        signature = self.query("from api import combine\ncombine(1,", "signature")["signatures"][0]
+        self.assertEqual(["left: int", "right: str"], signature["parameters"])
+        self.assertEqual(1, signature["active"])
+
+    def test_snapshot_package_relative_imports_and_type_stub(self):
+        package = self.root / "pkg"; package.mkdir()
+        (package / "__init__.py").write_text("from .model import payload\n", encoding="utf-8")
+        (package / "model.pyi").write_text("payload: str\n", encoding="utf-8")
+        self.assertIn("upper", self.labels(self.query("from pkg import payload\npayload.up")))
+        self.assertIn("upper", self.labels(self.query("from .model import payload\npayload.up", path="pkg/main.py")))
+
+    def test_removed_or_renamed_module_does_not_survive_the_next_snapshot(self):
+        module = self.root / "model.py"
+        module.write_text("payload='text'\n", encoding="utf-8")
+        self.assertIn("upper", self.labels(self.query("from model import payload\npayload.up")))
+        module.rename(self.root / "renamed.py")
+        self.assertNotIn("upper", self.labels(self.query("from model import payload\npayload.up")))
+        self.assertIn("upper", self.labels(self.query("from renamed import payload\npayload.up")))
+
 
 if __name__ == "__main__":
     unittest.main()

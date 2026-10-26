@@ -1,4 +1,5 @@
 <resources>
+    <string name="semantic_document_limit">当前文件超过语义分析限制，保留基础补全</string>
     <string name="completion_semantic">Python 语义 · %1$s</string>
     <string name="completion_semantic_file">%1$s · 当前文件/标准库</string>
     <string name="semantic_loading">正在分析 Python，暂用基础词法补全</string>

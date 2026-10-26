@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.ShellUiTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-26T13:29:04" hostname="JUHE" time="0.007">
+  <properties/>
+  <testcase name="normalPhoneHasTouchSizedExplorerRunMenuAndElasticSingleLineTitleBudget" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <testcase name="busyWorkspaceBlocksCommandsButCannotBlockStoppingARun" classname="com.codepocket.ide.ShellUiTest" time="0.001"/>
+  <testcase name="compositionBlocksEditingCommandsAndNativeHistory" classname="com.codepocket.ide.ShellUiTest" time="0.001"/>
+  <testcase name="activeStdinGetsCompactInputWithoutConsumingHeaderAndOutputTwice" classname="com.codepocket.ide.ShellUiTest" time="0.001"/>
+  <testcase name="shellTextColorsMeetNormalTextContrastInBothThemes" classname="com.codepocket.ide.ShellUiTest" time="0.002"/>
+  <testcase name="presetIsCollapsedByDefaultAndEditorFocusDoesNotReopenIt" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <testcase name="panelToolbarNeverOverflowsAndKeepsHiddenActionsInItsMenu" classname="com.codepocket.ide.ShellUiTest" time="0.001"/>
+  <testcase name="everyNarrowToolbarHasAReachableMenuWithinBudget" classname="com.codepocket.ide.ShellUiTest" time="0.001"/>
+  <testcase name="resizeDegradesControlsToMenuWithoutDependingOnOrientationOrFontWidth" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <testcase name="editorOnlyCommandsCannotStealStdinFocusOrModifySource" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <testcase name="unloadedBufferCannotRunExportOrMutateFiles" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <testcase name="snippetHintOccupiesSpaceOnlyForAnActiveSessionWithRoom" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <testcase name="savingOrRunningKeepsDestructiveWorkspaceSwitchesOutOfMenu" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <testcase name="allLegacyActionsAndNewCommandsHaveRealTouchSurfaces" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <testcase name="savedStdinFocusRevealsItsInputOnlyWhenPanelIsOpen" classname="com.codepocket.ide.ShellUiTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

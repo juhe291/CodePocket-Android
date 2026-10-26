@@ -46,7 +46,9 @@ class PythonAnalysisService:Service() {
             val result=try{
                 if(!Python.isStarted())Python.start(AndroidPlatform(applicationContext))
                 val cache=File(cacheDir,"python-semantics").apply{mkdirs()}
-                Python.getInstance().getModule("semantics").callAttr("analyze",request.payload,cache.path).toString()
+                AnalysisDiskCache.trim(cache)
+                try { Python.getInstance().getModule("semantics").callAttr("analyze",request.payload,cache.path).toString() }
+                finally { AnalysisDiskCache.trim(cache) }
             }catch(_:Exception){failure("backend")}
             catch(_:LinkageError){failure("backend")}
             handler.post{

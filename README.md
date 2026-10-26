@@ -1,5 +1,16 @@
 # CodePocket · Android C++ / Python IDE
 
+> 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心能力，零碎UI润色暂停。P2-B项目上下文已完成代码/主机/APK验证；下一步C++语义，设备运行验收仍后置。整个计划尚未完成。
+
+**2026-10-26：Python跨文件未保存上下文与SAF新鲜快照。**
+
+- [最新Debug APK](dist/CodePocket-python-project-context-2026-10-26-debug.apk)（31.23MiB，原签名，arm64-v8a）。
+- [结果与限制](docs/P2_PYTHON_PROJECT_CONTEXT_2026-10-26.md) · [3张原生图](docs/python-project-context-preview/README.md)：主793通过/1旧跳过，定向132通过，Lint0错误；Python源码66、实际APK语义22与运行专项通过。
+- 多个有效恢复草稿、传递导入/真实参数及SAF当前模块参与补全；原文件/镜像/保存基线不被分析改写，变化的上下文拒绝旧结果；缓存和读取有界。
+- Android分析服务/JNI实际运行、设备资源/IME/键鼠/API24/卓易通及远端CI未验收；[交接](docs/RESUME.md)。原保存、Sora、真实运行和PTY保留。
+
+## 历史：P2-A首批接入
+
 > 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心能力，零碎UI润色暂停。Python真实补全首批已完成代码/主机/APK验证；设备运行验收仍后置，下一批补多文件未保存上下文与SAF快照。以下历史记录保留当时含义，当前事实以本批报告和RESUME为准。
 
 **2026-10-26：Python真实补全与参数接入。** Python真实成员/标准库/已保存内部模块补全与函数参数接入同一主App；当前未保存正文参与，来源明确，失败保留词法/内置参考。

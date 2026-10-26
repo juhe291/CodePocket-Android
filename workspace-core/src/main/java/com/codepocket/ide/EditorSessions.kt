@@ -38,6 +38,8 @@ class EditorSessions(val workspaceId: String, json: String = "[]") {
         return files.getOrPut(path) { FileSession(UUID.randomUUID().toString(), path) }
     }
     fun key(path: String) = workspaceId + ":" + file(path).id
+    /** Copy on the UI thread; analysis workers must never traverse mutable sessions. */
+    fun analysisKeys(): Map<String, String> = files.values.associate { it.path to "$workspaceId:${it.id}" }
     fun rebase(old: String, new: String) {
         val moving = files.keys.filter { it == old || it.startsWith("$old/") }
         require(moving.map { new + it.removePrefix(old) }.none { it in files && it !in moving }) { "目标会话已存在" }

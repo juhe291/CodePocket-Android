@@ -101,6 +101,7 @@ class MainActivity : Activity() {
     private val completionExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
     private var completionTask: java.util.concurrent.Future<*>? = null
     private var semanticClient: PythonSemanticClient? = null
+    private val semanticContext by lazy { PythonProjectContext(File(cacheDir, "python-project-context")) }
     private val semanticExecutor = java.util.concurrent.ThreadPoolExecutor(1,1,0,java.util.concurrent.TimeUnit.MILLISECONDS,
         java.util.concurrent.LinkedBlockingQueue<Runnable>(2),java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy())
     private var semanticCompletionTask: java.util.concurrent.Future<*>? = null
@@ -1941,7 +1942,7 @@ class MainActivity : Activity() {
         val request = completionRequest()
         if (force) completionSuppressed = null
         if (!force && completionSuppressed == request) return
-        if (completionBatch?.request == request && completionPopup?.isShowing == true) {
+        if (!force && completionBatch?.request == request && completionPopup?.isShowing == true) {
             if (force) completionExplicit = true
             completionPopup?.reposition(); return
         }
@@ -1959,10 +1960,11 @@ class MainActivity : Activity() {
                 if(!semantic && !request.cpp && request.code.length<=45000 &&
                     (force || request.code.getOrNull(request.caret-1)?.let{it=='.' || it=='_' || it.isLetterOrDigit()}==true)){
                     val client=semanticClient?:PythonSemanticClient(this).also{semanticClient=it}
-                    val location=SemanticLocation(workspace.root.path,activePath.replace(java.io.File.separatorChar,'/'),!workspace.external)
+                    val targetWorkspace=workspace;val keys=sessions.analysisKeys();val path=activePath
                     semanticExecutor.purge()
                     semanticCompletionTask=semanticExecutor.submit{
-                        val analysis=client.analyze(request,location,"complete")
+                        if(!force)Thread.sleep(120) // Coalesce typing before any project/provider IO.
+                        val analysis=analyzePythonProject(client,request,targetWorkspace,keys,path,"complete")
                         if(!Thread.currentThread().isInterrupted && !isDestroyed){
                             if(analysis.available){
                                 val snippets=batch?.items?.filter{it.snippetId!=null}.orEmpty()
@@ -1978,7 +1980,7 @@ class MainActivity : Activity() {
                 if (batch == null) {
                     if(semantic){completionBatch=null;completionPopup?.dismiss(false)}
                     if (force) status.setText(if(semantic)if(available)R.string.semantic_empty else R.string.semantic_unavailable
-                        else if(!request.cpp)R.string.semantic_loading else if(LexicalCompletion.memberContext(request))
+                        else if(!request.cpp)if(request.code.length>45000)R.string.semantic_document_limit else R.string.semantic_loading else if(LexicalCompletion.memberContext(request))
                             R.string.completion_members_pending else R.string.completion_empty)
                     return@runOnUiThread
                 }
@@ -2036,10 +2038,11 @@ class MainActivity : Activity() {
                 if(semantic && signaturePopup?.isShowing==true && signaturePopup?.userInteracted==true)return@runOnUiThread
                 if(!semantic && !request.cpp && request.code.take(request.caret).contains('(')){
                     val client=semanticClient?:PythonSemanticClient(this).also{semanticClient=it}
-                    val location=SemanticLocation(workspace.root.path,activePath.replace(java.io.File.separatorChar,'/'),!workspace.external)
+                    val targetWorkspace=workspace;val keys=sessions.analysisKeys();val path=activePath
                     semanticExecutor.purge()
                     semanticSignatureTask=semanticExecutor.submit{
-                        val analysis=client.analyze(request,location,"signature")
+                        if(!force)Thread.sleep(120)
+                        val analysis=analyzePythonProject(client,request,targetWorkspace,keys,path,"signature")
                         if(analysis.available && !Thread.currentThread().isInterrupted && !isDestroyed)publish(analysis.signature,true)
                     }
                 }
@@ -2059,6 +2062,15 @@ class MainActivity : Activity() {
             if(!Thread.currentThread().isInterrupted && !isDestroyed)publish(found)
         }
     }
+
+    /** All provider, draft and cache IO stays on the semantic worker, never the editor thread. */
+    private fun analyzePythonProject(client: PythonSemanticClient, request: CompletionRequest, target: Workspace,
+        keys: Map<String, String>, path: String, mode: String): SemanticAnalysis = try {
+        val snapshot = ProjectReadExecutor.shared.read { semanticContext.capture(target, drafts, keys, path, request.code) }
+        val analysis = client.analyze(request, snapshot.location, mode)
+        if (analysis.available && !ProjectReadExecutor.shared.read { snapshot.isCurrent() }) SemanticAnalysis(false, error = "project_changed") else analysis
+    } catch (e: InterruptedException) { throw e }
+    catch (_: Exception) { SemanticAnalysis(false, error = "project_unavailable") }
 
     private fun requestSignatureHelp() {
         if (workspaceBusy || !editor.hasFocus()) return

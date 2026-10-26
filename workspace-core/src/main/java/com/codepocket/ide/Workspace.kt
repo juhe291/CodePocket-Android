@@ -13,6 +13,8 @@ class Workspace private constructor(directory: File, seedSamples: Boolean, priva
     var title: String = "内部项目（卸载会清除，请导出备份）"
         private set
     val external get() = documents != null
+    /** Fresh, read-only analysis input. Never updates the editor mirror or saved-base hashes. */
+    fun pythonSources(): Map<String, String> = documents?.pythonSources() ?: PythonSources.local(root)
     fun preparePythonRun(): File {
         val tree = documents ?: return root
         val destination = File(root.parentFile, "run-" + java.util.UUID.randomUUID())

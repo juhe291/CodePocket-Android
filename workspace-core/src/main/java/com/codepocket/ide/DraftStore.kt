@@ -33,6 +33,13 @@ class DraftStore(private val directory: File, private val replace: (File, File) 
     @Synchronized fun removeIfMatches(key: String, text: String) {
         if (read(key)?.text == text) require(location(key).delete()) { "文件已保存，但无法清理恢复草稿" }
     }
+    /** One consistent set, excluding backup/export entries and drafts from other projects. */
+    @Synchronized fun analysisTexts(keys: Map<String, String>): Map<String, String> = buildMap {
+        keys.forEach { (path, key) -> read(key)?.let { draft ->
+            require(draft.path == path) { "恢复草稿路径与会话不符" }
+            put(path, draft.text)
+        } }
+    }
     @Synchronized fun list(prefix: String): List<Draft> = directory.listFiles()?.filter { it.extension == "json" }
         ?.sortedByDescending { it.lastModified() }?.mapNotNull { file ->
             runCatching {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainFileSettingsIntegrationTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-26T15:52:59" hostname="JUHE" time="3.384">
+  <properties/>
+  <testcase name="deletingAnotherFilePreservesActiveContentSelectionAndHistory" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.267"/>
+  <testcase name="legacySidePreferenceSurvivesUnrelatedSettingsWithoutOfferingInactiveSwitch" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.368"/>
+  <testcase name="renameCollisionKeepsDialogContentsAndCanBeRetried" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.203"/>
+  <testcase name="actualMovePickerMovesOpenDirectoryAndKeepsItsBuffer" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.211"/>
+  <testcase name="dirtyActiveRenameKeepsStableIdentitySelectionUndoAndContinuedSaving" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.225"/>
+  <testcase name="deletingTheLastFileCreatesARealFallbackAndInvalidatesTheOldConnection" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.184"/>
+  <testcase name="failedThemeSaveReenablesTheFormAndKeepsItsUnappliedDraft" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.19"/>
+  <testcase name="rotatingMainActivityRetainsUnappliedSettingsSearchAndDraft" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.295"/>
+  <testcase name="actualSettingsApplyKeepsTabletBufferHistoryAndTerminalSession" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.23"/>
+  <testcase name="externalSaveConflictPreventsRenameAndPreservesRecoverableCode" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.154"/>
+  <testcase name="renamedDirectoryRebasesAllTabsInputsSelectionAndExplorerState" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.382"/>
+  <testcase name="settingsFormCannotChangeTheSubmittedDraftDuringActualAsyncSave" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.298"/>
+  <testcase name="cancellingSettingsDiscardsOnlySettingsAndRetainsDirtyEditorAndPanel" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.196"/>
+  <testcase name="deleteCancelNeverSavesOrChangesTheDirtyBuffer" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.18"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

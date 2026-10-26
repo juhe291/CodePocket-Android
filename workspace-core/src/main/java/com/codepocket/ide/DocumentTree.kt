@@ -26,6 +26,8 @@ class DocumentTree(private val gateway: DocumentGateway, private val recovery: F
         private set
     fun node(path: String): DocumentNode = nodes[path] ?: error("外部文件不存在，请重新载入工作区")
     fun pathId(path: String) = node(path).id
+    /** Enumerate the live provider, including additions/removals since the editor mirror was made. */
+    fun pythonSources(): Map<String, String> = PythonSources.provider(gateway)
     fun copyForRun(destination: File) {
         require(destination.mkdirs()) { "无法创建独立运行快照" }
         var total = 0
