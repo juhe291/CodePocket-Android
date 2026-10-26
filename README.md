@@ -1,13 +1,13 @@
 # CodePocket · Android C++ / Python IDE
 
-> 当前优先级：UI视觉与工作台层次。允许适度装饰，尚未实现的新功能暂缓；保留原有保存、编辑和真实运行。见[本批记录](docs/UI_PICKERS_BATCH_2026-10-26.md)与[完整范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。按[批次节奏](docs/DEVELOPMENT_BATCH_POLICY.md)积累相关修改再统一构建。
+> 当前优先级：UI视觉与工作台层次。允许适度装饰，尚未实现的新功能暂缓；保留原有保存、编辑和真实运行。见[本批记录](docs/UI_ASSIST_BATCH_2026-10-26.md)与[完整范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。按[批次节奏](docs/DEVELOPMENT_BATCH_POLICY.md)积累相关修改再统一构建。
 
-**2026-10-26：一批整理工作区、恢复草稿和移动窗口。** 名称/说明分层，明确当前存储和同名草稿所在目录；长目标路径、大字体、空目录与取消操作使用一致布局。原权限、导出快照和真实文件事务保持。
+**2026-10-26：一批整理补全、内置参数参考和代码片段。** 候选名称/类型/说明分层，参数参考精简无效按钮并修复长形式横向定位，片段触发词与说明分开；保留原输入、光标和事务保护。
 
-- [最新Debug APK](dist/CodePocket-pickers-batch-2026-10-26-debug.apk)（25.44MiB，原签名、arm64-v8a）。
-- [实际结果与限制](docs/UI_PICKERS_BATCH_2026-10-26.md) · [原生预览](docs/pickers-batch-preview/README.md)：主App732通过/0失败/1旧跳过，Lint0错误，Debug实际打包及APK检查通过。
-- [可点击样稿](docs/ui-preview/README.md)：40场景、320次场景检查、72项交互和20项配色检查通过，均为设计示例。
-- 前批焦点、关键词状态等问题继续登记；实机IME/键鼠/卓易通/FPS及远端CI后置。历史见[接续记录](docs/RESUME.md)，不声明整个项目完成。
+- [最新Debug APK](dist/CodePocket-assist-batch-2026-10-26-debug.apk)（25.44MiB，原签名、arm64-v8a）。
+- [实际结果与限制](docs/UI_ASSIST_BATCH_2026-10-26.md) · [原生预览](docs/assist-batch-preview/README.md)：主App738通过/0失败/1旧跳过，Lint0错误，新增1条设计器构造提示已登记；Debug实际打包和APK检查通过。
+- [可点击样稿](docs/ui-preview/README.md)：44场景、352次场景检查、81项交互和20项配色检查通过，均为设计示例。
+- 补全仍为基础词法/内置参考；前批焦点、关键词状态等问题继续登记，实机IME/键鼠/卓易通/FPS及远端CI后置。历史见[接续记录](docs/RESUME.md)，不声明整个项目完成。
 
 ## 历史主机整合验收
 

@@ -2101,14 +2101,14 @@ class MainActivity : Activity() {
         if (workspaceBusy || !editor.hasFocus() || loadedPath != activePath ||
             editor.isComposing) return
         val snapshot = completionRequest()
-        val options = mutableListOf<Pair<String, () -> Unit>>()
+        val options = mutableListOf<Pair<WorkbenchChoice, () -> Unit>>()
         if (validSnippet()) {
-            options.add(getString(R.string.snippet_previous) to { moveSnippet(true); Unit })
-            options.add(getString(R.string.snippet_next) to { moveSnippet(false); Unit })
-            options.add(getString(R.string.snippet_finish) to { clearSnippet() })
+            options.add(WorkbenchChoice("previous",getString(R.string.snippet_previous),"",IdeIcon.BACK) to { moveSnippet(true); Unit })
+            options.add(WorkbenchChoice("next",getString(R.string.snippet_next),"",IdeIcon.NEXT) to { moveSnippet(false); Unit })
+            options.add(WorkbenchChoice("finish",getString(R.string.snippet_finish),"",IdeIcon.CHECK) to { clearSnippet() })
         }
         if (CodeSnippets.replacement(snapshot) != null) CodeSnippets.all(isCpp()).forEach { descriptor ->
-            options.add("${descriptor.trigger} · ${descriptor.title}" to {
+            options.add(WorkbenchChoice(descriptor.id,descriptor.trigger,descriptor.title,IdeIcon.CODE,monospaceTitle=true) to {
                 if (!workspaceBusy && snapshot == completionRequest() &&
                     !editor.isComposing) {
                     val expanded = CodeSnippets.expand(descriptor.id, snapshot, settings, Workspace.MAX_CHARS)
@@ -2121,10 +2121,12 @@ class MainActivity : Activity() {
         if (options.isEmpty()) { status.setText(R.string.snippet_line_help); return }
         toolDialog?.dismiss(); hideCompletion(true)
         toolDialog = AlertDialog.Builder(this).setTitle(R.string.snippet_title)
-            .setItems(options.map { it.first }.toTypedArray()) { dialog, which ->
+            .setCustomTitle(WorkbenchForms.header(this,getString(R.string.snippet_title),if(isCpp())"C++17 · 内置模板" else "Python · 内置模板",IdeIcon.BRACKETS))
+            .setAdapter(WorkbenchChoiceAdapter(this,options.map{it.first})) { dialog, which ->
                 dialog.dismiss()
                 if (snapshot.document == completionRequest().document && snapshot.revision == editRevision) options[which].second()
             }.setNegativeButton(R.string.snippet_cancel, null).showAnimated()
+        toolDialog?.let{sizeForm(it)}
     }
 
     private fun insertText(snippet: String, caretInside: Boolean = false) {

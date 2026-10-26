@@ -25,12 +25,12 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
     private val accent: Int, private val close: () -> Unit) {
     private fun dp(value: Int) = (activity.resources.displayMetrics.density * value + .5f).toInt()
     private val content = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL }
-    private val title = TextView(activity).apply { textSize = 11f; setTextColor(muted); maxLines = 1 }
+    private val title = TextView(activity).apply { textSize = 11f; setTextColor(muted); maxLines = 1;ellipsize=android.text.TextUtils.TruncateAt.MIDDLE }
     private val signature = TextView(activity).apply {
         textSize = 13f; typeface = Typeface.MONOSPACE; setTextColor(foregroundColor)
         setPadding(dp(8), 0, dp(8), 0); gravity = Gravity.CENTER_VERTICAL; minHeight=dp(48); setSingleLine()
     }
-    private val scroll = HorizontalScrollView(activity).apply { minimumHeight=dp(48); isHorizontalScrollBarEnabled = false; addView(signature) }
+    private val scroll = HorizontalScrollView(activity).apply { minimumHeight=dp(48); isHorizontalScrollBarEnabled = true;scrollBarStyle=View.SCROLLBARS_INSIDE_OVERLAY; addView(signature,android.widget.FrameLayout.LayoutParams(-2,-2)) }
     private val details = TextView(activity).apply {
         textSize = 11f; setTextColor(muted); maxLines = 2; setPadding(dp(8), dp(2), dp(8), 0)
         ellipsize = android.text.TextUtils.TruncateAt.END
@@ -39,11 +39,13 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         textSize = 10f; setTextColor(muted); setPadding(dp(8), 0, dp(8), 0); minHeight=dp(20); maxLines = 1
         ellipsize = android.text.TextUtils.TruncateAt.END
     }
-    private val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0) }
+    private val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), 0, 0, 0);setBackgroundColor(com.codepocket.ide.ui.DesignTokens.forContext(activity).panel) }
     private var recentlyClosedDocument: String? = null
     private var recentlyClosedAt = Long.MIN_VALUE
     private var result: SignatureResult? = null
     private var variant = 0
+    private var pendingScroll:Int?=null
+    private val cycleControls=mutableListOf<View>()
     private val popup = PopupWindow(content, 1, 1, false).apply {
         isOutsideTouchable = false; inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
         softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
@@ -52,15 +54,18 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         if (Build.VERSION.SDK_INT >= 29) setIsLaidOutInScreen(true)
         setOnDismissListener {
             recentlyClosedDocument = result?.request?.document; recentlyClosedAt = android.os.SystemClock.uptimeMillis()
-            Animations.cancel(content)
+            pendingScroll=null; Animations.cancel(content)
         }
     }
     val isShowing get() = popup.isShowing
 
     init {
+        signature.addOnLayoutChangeListener { _,_,_,_,_,_,_,_,_ -> scroll.post{scrollToParameter()} }
         heading.addView(title, LinearLayout.LayoutParams(0, dp(48), 1f))
         fun control(icon:com.codepocket.ide.ui.IdeIcon,description:Int,action:()->Unit) {
-            heading.addView(com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),icon,activity.getString(description),action),LinearLayout.LayoutParams(dp(48),dp(48)))
+            val button=com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),icon,activity.getString(description),action)
+            if(description!=R.string.signature_close)cycleControls.add(button)
+            heading.addView(button,LinearLayout.LayoutParams(dp(48),dp(48)))
         }
         control(com.codepocket.ide.ui.IdeIcon.BACK,R.string.signature_previous) { cycle(-1) }
         control(com.codepocket.ide.ui.IdeIcon.NEXT,R.string.signature_next) { cycle(1) }
@@ -94,9 +99,11 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
     private fun render() {
         val match = result ?: return
         val reference = match.reference
+        cycleControls.forEach{it.visibility=if(reference.forms.size>1)View.VISIBLE else View.GONE}
         variant = variant.coerceIn(reference.forms.indices)
         val form = reference.forms[variant]
         title.text = activity.getString(R.string.signature_heading, variant + 1, reference.forms.size)
+        com.codepocket.ide.ui.IdeControls.describe(title,title.text.toString())
         val label = form.label(reference.name)
         val range = form.range(reference.name, match.active(variant))
         signature.text = SpannableString(label).apply {
@@ -109,7 +116,14 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         disclaimer.setText(if (reference.cpp) R.string.signature_cpp_notice else R.string.signature_python_notice)
         signature.contentDescription = activity.getString(R.string.signature_accessibility, label,
             range?.let { label.substring(it.first, it.second) } ?: activity.getString(R.string.signature_unmapped))
-        scroll.post { scroll.scrollTo((signature.paint.measureText(label.take(range?.first ?: 0)).toInt() - dp(30)).coerceAtLeast(0), 0) }
+        pendingScroll=(signature.paint.measureText(label.take(range?.first ?: 0)).toInt()-dp(30)).coerceAtLeast(0)
+        scroll.post{scrollToParameter()}
+    }
+
+    private fun scrollToParameter(){
+        val target=pendingScroll?:return
+        if(!isShowing || activity.isDestroyed || signature.width==0 || scroll.width==0 || signature.isLayoutRequested || scroll.isLayoutRequested)return
+        scroll.scrollTo(target,0);pendingScroll=null
     }
 
     fun reposition(): Boolean {

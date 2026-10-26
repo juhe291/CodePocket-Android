@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainSurfaceIntegrationTest" tests="20" skipped="0" failures="1" errors="0" timestamp="2026-10-26T01:44:06" hostname="JUHE" time="3.745">
+  <properties/>
+  <testcase name="gotoLineKeepsInvalidInputThenMovesToTheActualUtf16Offset" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.234"/>
+  <testcase name="tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.284"/>
+  <testcase name="compactLargeDiagnosticKeepsHoverWhenSpaceFits" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.175"/>
+  <testcase name="LargeSignatureKeepsReadableNoticeReferenceAndControls" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.198">
+    <failure message="java.lang.AssertionError" type="java.lang.AssertionError">java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at com.codepocket.ide.MainSurfaceIntegrationTest.LargeSignatureKeepsReadableNoticeReferenceAndControls(MainSurfaceIntegrationTest.kt:128)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.rules.TestWatcher$1.evaluate(TestWatcher.java:61)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="fontGeometryChangeDismissesHoverWithoutEditing" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.2"/>
+  <testcase name="menuDisabledRowsDoNotDispatchAndEscapeKeepsTheDocument" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.137"/>
+  <testcase name="dangerActionIsSeparatedOnBothSidesAndKeepsStableCommandIdentity" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.132"/>
+  <testcase name="LargeNarrowEditMenuKeepsFullShortcutsAndRealNavigation" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.215"/>
+  <testcase name="projectSearchIncludesUnsavedBufferThroughTheRealWorkspaceWorker" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.265"/>
+  <testcase name="newFileValidationRetainsTheInputAndCurrentDocument" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.171"/>
+  <testcase name="diagnosticHoverScrollsCompleteMessageAndCopiesWithoutEditing" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.169"/>
+  <testcase name="actualBracketDiagnosticOpensReadOnlyHover" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.209"/>
+  <testcase name="compactLargeDiagnosticUsesReclaimedPathSpace" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.16"/>
+  <testcase name="unchangedGlobalLayoutKeepsHoverButCaretChangeDismisses" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.166"/>
+  <testcase name="identicalDiagnosticRefreshKeepsHoverButNewMessageCloses" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.142"/>
+  <testcase name="tabletLargeLightCompletionKeepsDetailsAndKeyboardAcceptance" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.198"/>
+  <testcase name="clearingDiagnosticsDismissesHoverWithoutEditing" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.13"/>
+  <testcase name="phoneLargeReplaceControlsStayReadableAndAllReplacementIsUndoable" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.225"/>
+  <testcase name="localizedCommandTitlesKeepStopAndNavigationIconsAndDangerState" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.189"/>
+  <testcase name="emptyTerminalCloseMenuClosesPanelInsteadOfCreatingAnotherSession" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.143"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

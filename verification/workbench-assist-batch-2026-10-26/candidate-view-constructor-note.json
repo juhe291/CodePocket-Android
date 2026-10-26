@@ -1,0 +1,8 @@
+{
+  "id": "ViewConstructor",
+  "severity": "Warning",
+  "new_count": 1,
+  "xml_references": [],
+  "reason": "The candidate row has palette constructor arguments and is instantiated only from Kotlin; the layout-tool-compatible constructor is absent.",
+  "disposition": "Recorded for later component cleanup per the user UI-first nonblocking-issue preference; Lint remains enabled."
+}

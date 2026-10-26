@@ -12,7 +12,7 @@ import com.codepocket.ide.R
 
 /** Display metadata only. List positions continue to dispatch the caller's original snapshot. */
 data class WorkbenchChoice(val key:String,val title:String,val detail:String,val icon:IdeIcon,
-    val checked:Boolean=false,val startsGroup:Boolean=false,val description:String?=null)
+    val checked:Boolean=false,val startsGroup:Boolean=false,val description:String?=null,val monospaceTitle:Boolean=false)
 
 class WorkbenchChoiceAdapter(private val context:Context,choices:List<WorkbenchChoice>):BaseAdapter(){
     private val choices=choices.toList()
@@ -50,6 +50,7 @@ class WorkbenchChoiceAdapter(private val context:Context,choices:List<WorkbenchC
             addView(line,LayoutParams(-1,-2))
         }
         fun bind(choice:WorkbenchChoice){
+            title.typeface=if(choice.monospaceTitle)android.graphics.Typeface.MONOSPACE else android.graphics.Typeface.DEFAULT
             title.text=choice.title;detail.text=choice.detail;detail.visibility=if(choice.detail.isBlank())GONE else VISIBLE
             glyph.setImageDrawable(IdeIconDrawable(context,choice.icon,IdeIconDrawable.color(choice.icon,p),dp(20)))
             divider.visibility=if(choice.startsGroup)VISIBLE else GONE;check.visibility=if(choice.checked)VISIBLE else INVISIBLE

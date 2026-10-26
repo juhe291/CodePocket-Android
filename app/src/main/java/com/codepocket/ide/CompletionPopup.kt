@@ -3,7 +3,6 @@ package com.codepocket.ide
 import android.app.Activity
 import com.codepocket.ide.animation.Animations
 import com.codepocket.editor.surface.EditorSurface
-import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.Gravity
@@ -23,9 +22,11 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
     private val accent: Int, private val accept: (Int) -> Unit, private val dismissed: () -> Unit) {
     private fun dp(value: Int) = (activity.resources.displayMetrics.density * value + .5f).toInt()
     private val content = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL }
+    private val candidateHeight=com.codepocket.ide.ui.CompletionCandidateRow(activity,foregroundColor,backgroundColor,muted).requiredHeight
     private val details = TextView(activity).apply {
         textSize = 11f; setTextColor(muted); setPadding(dp(8), dp(4), dp(8), dp(4))
         maxLines = 3; ellipsize = android.text.TextUtils.TruncateAt.END
+        setBackgroundColor(com.codepocket.ide.ui.DesignTokens.forContext(activity).panel)
     }
     private var recentlyClosedDocument: String? = null
     private var recentlyClosedAt = Long.MIN_VALUE
@@ -42,19 +43,9 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         override fun getItem(position: Int) = items[position]
         override fun getItemId(position: Int) = position.toLong()
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val row = (convertView as? TextView) ?: TextView(activity).apply {
-                textSize = 13f; typeface = Typeface.MONOSPACE; gravity = Gravity.CENTER_VERTICAL
-                setPadding(dp(8), 0, dp(8), 0); minHeight = dp(48); setSingleLine()
-                ellipsize = android.text.TextUtils.TruncateAt.END
-            }
-            val item = items[position]
-            row.text = activity.getString(R.string.completion_item, "", item.label).trim()
-            val icon = when(item.kind){CompletionKind.SNIPPET->com.codepocket.ide.ui.IdeIcon.BRACKETS;CompletionKind.TYPE->com.codepocket.ide.ui.IdeIcon.HEADER;CompletionKind.IDENTIFIER->com.codepocket.ide.ui.IdeIcon.TEXT;else->com.codepocket.ide.ui.IdeIcon.CODE}
-            row.setCompoundDrawablesWithIntrinsicBounds(com.codepocket.ide.ui.IdeIconDrawable(activity,icon,muted,dp(18)),null,null,null)
-            row.compoundDrawablePadding=dp(8)
-            row.contentDescription = activity.getString(R.string.completion_accessibility, item.label, item.kind.title)
-            row.setTextColor(if (position == selectedIndex) foregroundColor else foregroundColor)
-            row.setBackgroundColor(if (position == selectedIndex) com.codepocket.ide.ui.DesignTokens.forContext(activity).selection else backgroundColor)
+            val row=(convertView as? com.codepocket.ide.ui.CompletionCandidateRow)
+                ?: com.codepocket.ide.ui.CompletionCandidateRow(activity,foregroundColor,backgroundColor,muted)
+            row.bind(items[position],position==selectedIndex)
             return row
         }
     }
@@ -76,11 +67,11 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         }
     }
     val isShowing get() = popup.isShowing
-    private val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
+    private val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL;setBackgroundColor(com.codepocket.ide.ui.DesignTokens.forContext(activity).panel) }
 
     init {
         heading.addView(TextView(activity).apply {
-            setText(R.string.completion_lexical); textSize = 11f; setTextColor(muted); setPadding(dp(8), 0, 0, 0)
+            setText(R.string.completion_lexical);setSingleLine();ellipsize=android.text.TextUtils.TruncateAt.END;contentDescription=activity.getString(R.string.completion_lexical); textSize = 11f; setTextColor(muted); setPadding(dp(8), 0, 0, 0)
         }, LinearLayout.LayoutParams(0, dp(48), 1f))
         heading.addView(com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),com.codepocket.ide.ui.IdeIcon.CLOSE,
             activity.getString(R.string.completion_close)) { dismiss() }, LinearLayout.LayoutParams(dp(48),dp(48)))
@@ -104,7 +95,7 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
     fun move(delta: Int) {
         if (items.isEmpty()) return
         explicitSelection = true; selectedIndex = (selectedIndex + delta).coerceIn(0, items.lastIndex)
-        adapter.notifyDataSetChanged(); list.setSelection(selectedIndex); updateDetails()
+        adapter.notifyDataSetChanged(); list.setSelection(selectedIndex); updateDetails(); reposition()
     }
 
     private fun updateDetails() {
@@ -118,11 +109,14 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         val matches = anchor.matches(document, revision, offset)
         if (!matches) { dismiss(false); return false }
         val visible = anchor.visible
-        val desired = dp(48 + minOf(items.size, 5) * 48 + 60)
+        val width=minOf(dp(380),visible.right-visible.left)
+        details.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED))
+        val descriptionHeight=details.measuredHeight
+        val desired = dp(48)+minOf(items.size,5)*candidateHeight+if(items.size>=2)descriptionHeight else 0
         val placed = CompletionGeometry.place(CompletionBounds(visible.left, visible.top, visible.right, visible.bottom),
-            anchor.x, anchor.top, anchor.bottom, dp(380), desired, dp(48), dp(3)) ?: run { dismiss(false); return false }
-        heading.visibility = if (placed.height >= dp(96)) View.VISIBLE else View.GONE
-        details.visibility = if (placed.height >= dp(48 + 2 * 48 + 60)) View.VISIBLE else View.GONE
+            anchor.x, anchor.top, anchor.bottom, dp(380), desired, candidateHeight, dp(3)) ?: run { dismiss(false); return false }
+        heading.visibility = if (placed.height >= dp(48)+candidateHeight) View.VISIBLE else View.GONE
+        details.visibility = if (items.size>=2 && placed.height >= dp(48)+2*candidateHeight+descriptionHeight) View.VISIBLE else View.GONE
         var popupX = placed.x; var popupY = placed.y
         if (Build.VERSION.SDK_INT < 29) {
             val screen = IntArray(2); val local = IntArray(2)

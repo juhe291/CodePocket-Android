@@ -125,7 +125,9 @@ class MainSurfaceIntegrationTest {
         text("print(");assistance("updateSignatureHelp","signatureExecutor");val hint=field<SignaturePopup>("signaturePopup");assertTrue(hint.isShowing)
         val window=ReflectionHelpers.getField<PopupWindow>(hint,"popup");val notice=ReflectionHelpers.getField<TextView>(hint,"disclaimer");val reference=ReflectionHelpers.getField<HorizontalScrollView>(hint,"scroll")
         textFits(notice);assertTrue("Scrollable signature is a touch target",reference.height>=48)
-        val content=editor.text;views(window.contentView).filter{it.contentDescription in listOf(main.getString(R.string.signature_previous),main.getString(R.string.signature_next),main.getString(R.string.signature_close))}.forEach{assertTrue(it.width>=48);assertTrue(it.height>=48)}
+        val content=editor.text;val controls=views(window.contentView).filter{it.contentDescription in listOf(main.getString(R.string.signature_previous),main.getString(R.string.signature_next),main.getString(R.string.signature_close))}
+        assertEquals(1,controls.count{it.isShown});assertTrue(controls.single{it.isShown}.contentDescription==main.getString(R.string.signature_close))
+        controls.filter{it.isShown}.forEach{assertTrue(it.width>=48);assertTrue(it.height>=48)}
         capture("phone-large-signature",window.contentView);assertTrue(editor.hasFocus());assertSame(content,editor.text)
     }
     @Test @Config(qualifiers="w1000dp-h800dp") fun tabletLargeLightCompletionKeepsDetailsAndKeyboardAcceptance(){

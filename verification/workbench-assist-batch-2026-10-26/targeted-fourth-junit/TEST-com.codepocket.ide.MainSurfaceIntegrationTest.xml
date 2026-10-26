@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainSurfaceIntegrationTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-10-26T01:55:01" hostname="JUHE" time="3.938">
+  <properties/>
+  <testcase name="gotoLineKeepsInvalidInputThenMovesToTheActualUtf16Offset" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.223"/>
+  <testcase name="tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.209"/>
+  <testcase name="compactLargeDiagnosticKeepsHoverWhenSpaceFits" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.217"/>
+  <testcase name="LargeSignatureKeepsReadableNoticeReferenceAndControls" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.179"/>
+  <testcase name="fontGeometryChangeDismissesHoverWithoutEditing" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.163"/>
+  <testcase name="menuDisabledRowsDoNotDispatchAndEscapeKeepsTheDocument" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.132"/>
+  <testcase name="dangerActionIsSeparatedOnBothSidesAndKeepsStableCommandIdentity" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.178"/>
+  <testcase name="LargeNarrowEditMenuKeepsFullShortcutsAndRealNavigation" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.181"/>
+  <testcase name="projectSearchIncludesUnsavedBufferThroughTheRealWorkspaceWorker" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.299"/>
+  <testcase name="newFileValidationRetainsTheInputAndCurrentDocument" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.277"/>
+  <testcase name="diagnosticHoverScrollsCompleteMessageAndCopiesWithoutEditing" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.197"/>
+  <testcase name="actualBracketDiagnosticOpensReadOnlyHover" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.207"/>
+  <testcase name="compactLargeDiagnosticUsesReclaimedPathSpace" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.185"/>
+  <testcase name="unchangedGlobalLayoutKeepsHoverButCaretChangeDismisses" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.185"/>
+  <testcase name="identicalDiagnosticRefreshKeepsHoverButNewMessageCloses" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.15"/>
+  <testcase name="tabletLargeLightCompletionKeepsDetailsAndKeyboardAcceptance" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.179"/>
+  <testcase name="clearingDiagnosticsDismissesHoverWithoutEditing" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.141"/>
+  <testcase name="phoneLargeReplaceControlsStayReadableAndAllReplacementIsUndoable" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.271"/>
+  <testcase name="localizedCommandTitlesKeepStopAndNavigationIconsAndDangerState" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.168"/>
+  <testcase name="emptyTerminalCloseMenuClosesPanelInsteadOfCreatingAnotherSession" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="0.195"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>
