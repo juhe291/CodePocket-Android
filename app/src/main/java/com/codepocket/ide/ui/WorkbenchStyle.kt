@@ -85,6 +85,10 @@ object WorkbenchStyle {
         }
         dialog.listView?.let { list ->
             val original=list.adapter?:return@let
+            if(original is WorkbenchChoiceAdapter){
+                list.divider=null;list.setPadding(0,IdeControls.dp(context,4),0,IdeControls.dp(context,4))
+                return@let
+            }
             val checkedPosition=list.checkedItemPosition
             val values=(0 until original.count).map{original.getItem(it).toString()}
             list.divider=null;list.setPadding(0,IdeControls.dp(context,4),0,IdeControls.dp(context,4))

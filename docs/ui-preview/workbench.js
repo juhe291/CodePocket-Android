@@ -53,6 +53,9 @@ scene=function(name){
  case '文件菜单':return menu([['打开','工作台','file-code-2'],'-',['重命名','重命名','pencil'],['移动到…','移动到文件夹','move'],'-',['删除','确认删除','trash-2',true]]);
  case '终端会话':return menu([['Shell 1 · main.py','工作台','terminal'],['Shell 2 · 空闲','工作台','terminal']]);
  case '项目搜索':case '项目搜索无匹配':return previewProjectSearch(name==='项目搜索无匹配');
+ case '切换项目':case '工作区长名称':return previewWorkspacePicker(name==='工作区长名称');
+ case '恢复草稿':case '恢复草稿长路径':return previewDraftPicker(name==='恢复草稿长路径');
+ case '移动到文件夹':case '移动到深层目录':return previewMovePicker(name==='移动到深层目录'?['include','算法练习_'.repeat(4)]:[]);
  case '折叠全部':if(rootOpen)toggleRoot();return;
  case '终端操作':return menu([['终端操作','终端动作','terminal'],['会话管理','会话动作','files'],['布局与输入','布局与输入','maximize-2'],['配色与帮助','配色与帮助','palette']]);
  case '终端动作':return menu([['新建终端','终端会话','file-plus-2'],['复制记录','工作台','copy'],['粘贴','工作台','clipboard'],['清空显示','工作台','eraser']]);
@@ -265,3 +268,35 @@ function previewProjectSearch(empty){
  form.querySelector('.search-controls button').onclick=()=>scene('项目搜索无匹配');
 }
 $('#scene').add(new Option('项目搜索无匹配','项目搜索无匹配'));
+
+// Storage selectors remain design-only examples; native Android owns all real transactions.
+function previewChoice(key,title,detail,glyph,checked=false,group=false){return '<button class="choice-row '+(group?'choice-group':'')+'" data-choice="'+esc(key)+'" aria-selected="'+checked+'" title="'+esc(title+' · '+detail)+'">'+icon(glyph)+'<span class="choice-words"><strong>'+esc(title)+'</strong><small>'+esc(detail)+'</small></span><span class="choice-check">'+(checked?icon('check'):'')+'</span></button>';}
+function previewPicker(title,scope,rows){
+ modal(title,'<div class="picker-scope">'+icon('folder-open')+'<span>'+esc(scope)+'</span></div><div class="choice-list">'+rows.join('')+'</div>','取消');
+ const form=$('.modal');form.classList.add('storage-picker');const actions=form.querySelector('.actions');actions.firstElementChild.remove();actions.lastElementChild.classList.remove('primary');return form;
+}
+function previewWorkspacePicker(long){
+ const form=previewPicker('工作区','Algorithms',[
+  previewChoice('select','选择手机目录…','通过 Android 系统选择项目文件夹','folder-open'),
+  previewChoice('internal','内部项目','保存在应用内，卸载会清除','folder'),
+  previewChoice('reload','重新载入当前目录','','refresh-cw'),
+  previewChoice('current',long?'算法练习_长目录_'.repeat(4):'Algorithms','最近的系统目录','folder-open',true,true),
+  previewChoice('python','Python课程','最近的系统目录','folder-open')]);
+ form.querySelectorAll('[data-choice]').forEach(row=>row.onclick=()=>{
+  if(row.dataset.choice==='select')modal('系统目录权限说明','<p>保存会写回所选目录，授权只限该目录。外部文件由系统提供方保留。</p><p>设计预览，不会启动系统文件选择器。</p>','知道了');else closeLayers();
+ });
+}
+function previewDraftPicker(long){
+ const paths=long?Array.from({length:10},(_,i)=>'课程目录_'.repeat(3)+'/章节'+i):['chapter1','chapter2'];
+ const form=previewPicker('导出恢复草稿',paths.length+' 个草稿 · 选择后导出',paths.map((path,i)=>previewChoice(String(i),long?'solution.cpp':'solution.py',path,'file-code-2')));
+ form.querySelectorAll('[data-choice]').forEach(row=>row.onclick=()=>modal('导出草稿预览','<p>实际 App 将打开 Android 系统保存界面。此样稿只展示操作层级，草稿与当前编辑内容分别保留。</p>','关闭'));
+}
+function previewMovePicker(parts=[]){
+ modal('移动到文件夹','<div class="location-preview">'+icon('file-code-2')+'<div><small>来源</small>Algorithms / main.py</div></div><p class="move-target">目标：'+esc(parts.length?parts.join('/'):'项目根目录')+'</p><div class="move-directories"></div>','移动到此处');
+ const form=$('.modal');form.classList.add('move-picker');form.querySelector('.modalheader h2').insertAdjacentHTML('afterbegin','<span class="sectionmark">'+icon('move')+'</span>');const list=form.querySelector('.move-directories');
+ if(parts.length){const back=document.createElement('button');back.className='menurow';back.innerHTML=icon('arrow-left')+'<span>返回上一级</span>';back.onclick=()=>previewMovePicker(parts.slice(0,-1));list.append(back);}
+ const folders=parts.length===0?['include','examples']:parts.length===1?['算法练习_'.repeat(4)]:[];
+ for(const name of folders){const row=document.createElement('button');row.className='menurow';row.innerHTML=icon('folder')+'<span>'+esc(name)+'/</span>';row.onclick=()=>previewMovePicker([...parts,name]);list.append(row);}
+ if(!folders.length){const empty=document.createElement('p');empty.className='picker-empty';empty.textContent='此目录没有可选子文件夹';list.append(empty);}
+}
+for(const name of ['工作区长名称','恢复草稿长路径','移动到深层目录'])$('#scene').add(new Option(name,name));

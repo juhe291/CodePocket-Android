@@ -2,7 +2,7 @@
 
 范围按用户最新指令确定：UI视觉优先，允许适度装饰；保留已有项目和真实运行；未实现功能先不接入，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
 
-本批最终验证及APK见[上下文与搜索合并批次](UI_CONTEXT_BATCH_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
+本批最终验证及APK见[选择器合并批次](UI_PICKERS_BATCH_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
 
 | 范围 | 当前源码与实际入口 | 证据及边界 |
 | --- | --- | --- |
@@ -13,7 +13,7 @@
 | 视觉体系与图标 | DesignTokens、IdeControls、IdeIcons；本地Lucide及许可证；灰蓝层次、柔和文件类型色、中性底栏 | 原生及浏览器预览分别标识；没有发光/荧光/夸张渐变。并非全部界面逐张人眼验收 |
 | 触控与文本 | 常用动作48dp组件，长文件名省略但保留完整路径说明，大字体行增长与菜单滚动 | WorkbenchViewsTest、WorkbenchWindowIntegrationTest、MainSurfaceIntegrationTest的实际抽样；不能据此声称所有系统控件都已测量 |
 | 文件树 | ExplorerRow/ExplorerUiState；根与子目录切换、末级目录折叠、工作区展开/滚动、树选中与编辑文件分离；当前未保存缓冲的固定圆点/完整说明 | UiRedesignTest、WorkbenchWindowIntegrationTest、MainFileSettingsIntegrationTest、ExplorerModifiedStateIntegrationTest；收起不关闭文档，真实输入/保存/冲突重试同步状态，保留行/滚动/48dp菜单；不扫描非当前恢复草稿 |
-| 文件表单/选择器 | WorkbenchForms与原新建/重命名/移动/删除；锚点文件菜单含路径标题、身份图标、危险分组与旧行隔离，表单仍保留路径区/错误/确认及旧事务校验 | ContextBatchIntegrationTest、FormSurfaceIntegrationTest、MainFileSettingsIntegrationTest；真实脏文件重命名、目录内新建、删除取消及旧回调隔离，实际移动回归保留 |
+| 文件表单/选择器 | WorkbenchForms与原新建/重命名/移动/删除；锚点文件菜单含路径标题、身份图标、危险分组与旧行隔离，表单仍保留路径区/错误/确认及旧事务校验 | ContextBatchIntegrationTest、FormSurfaceIntegrationTest、MainFileSettingsIntegrationTest；真实脏文件重命名、目录内新建、删除取消及旧回调隔离，WorkspacePickerIntegrationTest另覆盖长目标可增长、空列表自然高度和脏缓冲真实深层移动 |
 | 保存与恢复 | EditorSessions、DraftStore、SAF原链路；冲突/失败保留缓冲与草稿 | MainFileSettingsIntegrationTest、MainSafRecoveryIntegrationTest、WorkspaceStartupIntegrationTest；Windows符号链接用例仍有1旧跳过 |
 | 标签与编辑操作 | 类型图标、固定占位未保存圆点、单独关闭；首次Sora键入刷新标记，编辑工具按空间显示 | WorkbenchViewsTest、EditorTabStabilityIntegrationTest、EditorTabNavigationIntegrationTest、SoraWorkbenchIntegrationTest；输入/保存保持坐标和手动滚动，明确导航/缩窗后当前项可见；长标签保留类型图标及关闭目标 |
 | 分类设置 | 七类、搜索、宽窗口分栏、草稿取消/应用、失败保留与旋转恢复 | SettingsSurfaceVisualTest、MainFileSettingsIntegrationTest；已隐藏bottomOnly工作台中的无效分屏开关；旧panelPreferSide JSON偏好保留，实际Main/Sora往返回归及窄屏大字体说明可达性通过 |
@@ -26,7 +26,7 @@
 | 面板操作与配色 | 现有拖高/最大化/恢复/收起、会话关闭、键盘/控制键、复制/清空；TerminalAppearance五种配色与成熟ANSI解析 | TerminalWorkbenchViewTest、ShellUiTest、ShellTerminalTouchTest及TerminalDockIntegrationTest；四动作窄屏/大字体图标化、极窄滚动保持48dp；主机模型保持不代表设备进程存活验收，实际触屏/键鼠交互后置 |
 | 动画/光标 | 原可取消动画、MotionEnvironment、SoraCaretMotion；菜单/侧栏/面板/标签、60/80ms视觉光标、独立闪烁开关 | FullWorkbenchMotionTest、MainCaretMotionIntegrationTest等主机回归；60FPS/高刷没有设备测量结论 |
 | 载入与失败状态 | WorkspacePlaceholder、主题窗口背景/系统栏、原IO和恢复按钮处理器 | WorkspaceStartupIntegrationTest实际IO阻塞/释放、失败前落盘草稿及恢复；系统冷启动真正第一帧仍未验证 |
-| 帮助/许可/详情 | WorkbenchForms只读滚动正文、原说明/许可证/诊断完整复制 | AuxiliarySurfaceIntegrationTest；系统文本选择菜单/SAF选择器/输入法继续由Android负责 |
+| 帮助/许可/详情 | WorkbenchForms只读滚动正文、原说明/许可证/诊断完整复制 | AuxiliarySurfaceIntegrationTest；工作区/草稿两级行与类型图标、完整路径、当前项/取消另由WorkspacePickerIntegrationTest验证；系统文本选择菜单/SAF选择器/输入法继续由Android负责 |
 | 状态信息 | 中性底栏、优先真实保存失败，窄/大字体优先主状态和行列；完整信息保留说明，宽窗口正常字体增加缩进和编码 | WorkbenchPathStatusIntegrationTest实际外部冲突、草稿/缓冲保持、成功重试及特殊文件名新编辑回归；状态栏点击设置尚未接入，继续暂缓 |
 | 路径栏 | 最小24dp并随文字增高、中间省略、完整原路径说明及提示；相同路径避免重复文本设置 | 前述实际Main/Sora手机/平板2倍字体及正常高度回归；没有新增路径导航菜单；<360dp高隐藏被动路径、恢复后显示，浮动Insets不直接隐藏 |
 | CI与产物 | build-apk.yml保留原Debug构建、校验及上传；当前本地主APK、示例预览与机器结果归档 | 当前未派发远端Actions，不能声称远端CI通过 |

@@ -58,6 +58,14 @@ object WorkbenchForms {
         query.minimumHeight=IdeControls.dp(context,48);button.minimumHeight=IdeControls.dp(context,48)
         addView(query);addView(button)
     }
+    /** Natural height for a few choices; a bounded viewport for longer directory lists. */
+    fun boundedScroll(context:Context,body:View,maximumDp:Int)=object:ScrollView(context){
+        override fun onMeasure(widthMeasureSpec:Int,heightMeasureSpec:Int){
+            val limit=IdeControls.dp(context,maximumDp)
+            val height=if(MeasureSpec.getMode(heightMeasureSpec)==MeasureSpec.UNSPECIFIED)limit else minOf(limit,MeasureSpec.getSize(heightMeasureSpec))
+            super.onMeasure(widthMeasureSpec,MeasureSpec.makeMeasureSpec(height,MeasureSpec.AT_MOST))
+        }
+    }.apply{isFillViewport=false;isNestedScrollingEnabled=true;addView(body)}
     fun scroll(context:Context,body:View)=ScrollView(context).apply{isFillViewport=false;addView(body)}
     /** Decorative heading only: no extra command, focus target or editable text. */
     fun sectionHeading(context:Context,title:String,subtitle:String,icon:IdeIcon):View {

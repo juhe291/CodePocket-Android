@@ -1563,23 +1563,27 @@ class MainActivity : Activity() {
         var destination = workspace.root
         val content = WorkbenchForms.body(this)
         val origin = WorkbenchForms.location(this,"来源",workspace.path(file),if(file.isDirectory)IdeIcon.FOLDER else IdeIconDrawable.file(file.name))
-        val path = label("", 13f, textForeground, true)
+        val path = label("", 13f, textForeground, true).apply{
+            minimumHeight=dp(48);maxLines=4;ellipsize=android.text.TextUtils.TruncateAt.MIDDLE
+            setPadding(0,dp(12),0,dp(12))
+        }
         val directories = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        val scroll = ScrollView(this).apply { addView(directories) }
-        content.addView(origin); content.addView(path, LinearLayout.LayoutParams(-1, dp(48)))
-        content.addView(scroll, LinearLayout.LayoutParams(-1, dp(if(root.height/resources.displayMetrics.density<480)96 else 240)))
-        val dialog = AlertDialog.Builder(this).setTitle("移动到文件夹").setView(content)
+        val scroll = WorkbenchForms.boundedScroll(this,directories,if(root.height/resources.displayMetrics.density<480)96 else 240)
+        content.addView(origin); content.addView(path, LinearLayout.LayoutParams(-1,-2))
+        content.addView(scroll, LinearLayout.LayoutParams(-1,-2))
+        val dialog = AlertDialog.Builder(this).setTitle("移动到文件夹")
+            .setCustomTitle(WorkbenchForms.header(this,"移动到文件夹","",IdeIcon.MOVE)).setView(WorkbenchForms.scroll(this,content))
             .setNegativeButton("取消", null).setPositiveButton("移动到此处", null).showAnimated()
         sizeForm(dialog)
         fun render() {
-            path.text = getString(R.string.move_target_path, workspace.path(destination).ifBlank { "项目根目录" })
+            path.text = getString(R.string.move_target_path, workspace.path(destination).ifBlank { "项目根目录" });path.contentDescription=path.text
             directories.removeAllViews()
-            if (destination != workspace.root) directories.addView(WorkbenchStyle.menuRow(this, "返回上一级").apply {
+            if (destination != workspace.root) directories.addView(WorkbenchStyle.menuRow(this, "返回上一级",iconDrawable=IdeIconDrawable(this,IdeIcon.BACK,muted,dp(20))).apply {
                 setOnClickListener { if (!workspaceBusy) { destination = destination.parentFile!!; render() } }
             })
             val folders = workspace.children(destination).filter { it.isDirectory &&
                 !(file.isDirectory && (it == file || it.path.startsWith(file.path + File.separator))) }
-            folders.forEach { directory -> directories.addView(WorkbenchStyle.menuRow(this, directory.name + "/").apply {
+            folders.forEach { directory -> directories.addView(WorkbenchStyle.menuRow(this, directory.name + "/",iconDrawable=IdeIconDrawable(this,IdeIcon.FOLDER,muted,dp(20))).apply {
                 setOnClickListener { if (!workspaceBusy) { destination = directory; render() } }
             }) }
             if (folders.isEmpty()) directories.addView(label("此目录没有可选子文件夹", 12f, muted).apply { setPadding(dp(12), dp(12), 0, dp(12)) })
@@ -2617,7 +2621,9 @@ class MainActivity : Activity() {
         }) { entries ->
             if (entries.isEmpty()) { alert("没有恢复草稿"); return@ioAction }
             val picker=AlertDialog.Builder(this).setCustomTitle(WorkbenchForms.header(this,"导出恢复草稿","${entries.size} 个草稿 · 选择后导出",IdeIcon.EXPORT))
-                .setItems(entries.mapIndexed { index, draft -> "${index + 1}. ${draft.path}" }.toTypedArray()) { _, which ->
+                .setAdapter(WorkbenchChoiceAdapter(this,entries.map { draft ->
+                    WorkbenchChoice(draft.key,draft.path.substringAfterLast('/'),draft.path.substringBeforeLast('/',"项目根目录"),IdeIconDrawable.file(draft.path),description=draft.path)
+                })) { _, which ->
                     val draft = entries[which]
                     exportContent = draft.text; exportPath = draft.path
                     ioAction("准备恢复导出…", { File(filesDir, "pending-export.txt").writeText(draft.text) }) {
@@ -2626,7 +2632,7 @@ class MainActivity : Activity() {
                             putExtra(Intent.EXTRA_TITLE, draft.path.substringAfterLast('/'))
                         }, 202)
                     }
-                }.showAnimated()
+                }.setNegativeButton("取消",null).showAnimated()
             sizeForm(picker)
         }
     }
@@ -2634,9 +2640,18 @@ class MainActivity : Activity() {
     private fun workspaceMenu() {
         if (!allowFileOperation()) return
         val recent = runCatching { JSONArray(prefs.getString("recentTrees", "[]")) }.getOrDefault(JSONArray())
-        val names = mutableListOf("选择手机目录…", "内部项目（卸载会清除）", "重新载入当前目录")
-        for (i in 0 until recent.length()) names.add("最近：" + recent.getJSONObject(i).optString("name"))
-        val picker=AlertDialog.Builder(this).setCustomTitle(WorkbenchForms.header(this,"工作区",workspace.title,IdeIcon.FOLDER_OPEN)).setItems(names.toTypedArray()) { _, which ->
+        val choices=mutableListOf(
+            WorkbenchChoice("select","选择手机目录…","通过 Android 系统选择项目文件夹",IdeIcon.FOLDER_OPEN),
+            WorkbenchChoice("internal","内部项目","保存在应用内，卸载会清除",IdeIcon.FOLDER,!workspace.external),
+            WorkbenchChoice("reload","重新载入当前目录","",IdeIcon.REFRESH)
+        )
+        for(i in 0 until recent.length()){
+            val entry=recent.getJSONObject(i)
+            choices.add(WorkbenchChoice(entry.optString("uri"),entry.optString("name").ifBlank{"未命名目录"},"最近的系统目录",IdeIcon.FOLDER_OPEN,
+                workspace.external&&entry.optString("uri")==selectedTree,startsGroup=i==0))
+        }
+        val picker=AlertDialog.Builder(this).setCustomTitle(WorkbenchForms.header(this,"工作区",if(workspace.external)workspace.title else "内部项目",IdeIcon.FOLDER_OPEN))
+            .setAdapter(WorkbenchChoiceAdapter(this,choices)) { _, which ->
                 when (which) {
                     0 -> AlertDialog.Builder(this).setTitle("选择真实项目目录")
                         .setMessage("编辑器保存会写回所选目录；权限只限该目录。外部文件卸载后仍由提供方保留。Python 使用私有运行镜像，运行代码产生的文件不会自动同步回外部目录。")
@@ -2645,7 +2660,7 @@ class MainActivity : Activity() {
                     2 -> requestWorkspace(selectedTree)
                     else -> requestWorkspace(recent.getJSONObject(which - 3).getString("uri"))
                 }
-        }.showAnimated()
+        }.setNegativeButton("取消",null).showAnimated()
         sizeForm(picker)
     }
 
