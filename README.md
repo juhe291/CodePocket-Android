@@ -1,13 +1,13 @@
 # CodePocket · Android C++ / Python IDE
 
-> 当前优先级：UI视觉与工作台层次。允许适度装饰，未实现新功能暂缓；保留原保存、编辑和真实运行。见[本批记录](docs/UI_SETTINGS_CHROME_BATCH_2026-10-26.md)和[范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。按[批次节奏](docs/DEVELOPMENT_BATCH_POLICY.md)积累相关修改再统一构建。
+> 当前优先级：UI视觉与工作台层次。允许适度装饰，未实现新功能暂缓；保留原保存、生产Sora和真实运行。见[本批记录](docs/UI_DETAILS_BATCH_2026-10-26.md)和[范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。按[批次节奏](docs/DEVELOPMENT_BATCH_POLICY.md)积累相关修改再统一构建。
 
-**2026-10-26：主工作台与设置中心合并整理。** 手机显示项目名，去掉重复运行入口；23项设置按用途分组，搜索上下文归并，选项弹窗统一范围/图标/当前值，长按键说明按需打开；原草稿、取消和应用保护保留。
+**2026-10-26：只读详情合并整理。** 帮助、许可、按键说明、诊断及终端错误记录统一原生阅读浮层；640dp最大阅读宽度、上下文标题、尺寸跟随、全文选择/复制和关闭返回，设置未应用草稿保持。
 
-- [最新Debug APK](dist/CodePocket-settings-chrome-batch-2026-10-26-debug.apk)（25.45MiB，原签名、arm64-v8a）。
-- [结果与限制](docs/UI_SETTINGS_CHROME_BATCH_2026-10-26.md) · [7张原生预览](docs/settings-chrome-preview/README.md)：主744通过/0失败/1旧跳过，Lint0错误，前批构造提示已消除；Debug实际打包与APK检查通过，本批只构建1次。
-- [可点击样稿](docs/ui-preview/README.md)：46场景、368次场景检查、117项交互、20项配色通过，均为设计示例。
-- 平板只读说明阅读宽度与旧焦点/关键词等问题继续登记；实机IME/键鼠/卓易通/FPS、远端CI及原P2/P3后置。历史见[接续记录](docs/RESUME.md)，不声明整个项目完成。
+- [最新Debug APK](dist/CodePocket-details-batch-2026-10-26-debug.apk)（25.45MiB，原签名、arm64-v8a）。
+- [结果与限制](docs/UI_DETAILS_BATCH_2026-10-26.md) · [9张原生预览](docs/details-batch-preview/README.md)：主App751项中750通过、0失败、1项旧跳过；Lint0错误，主17/Sora1警告，其中1条新增未使用字符串警告已登记。 Debug实际打包、签名及运行模块主机检查通过。
+- [可点击样稿](docs/ui-preview/README.md)为既有设计示例；本批以实际原生Views图和断言验证，不将旧样稿数字当成本轮结果。
+- 实机IME/组合输入、蓝牙键鼠、API24、卓易通、第一帧/FPS、Wandbox远端及GitHub Actions均未验收，按约定后置。旧被动缩窗焦点、关键词状态、未确认单次helper导入问题继续登记；原P2/P3及未实现功能保留暂缓。 历史见[接续记录](docs/RESUME.md)，不声明整个项目完成。
 
 ## 历史主机整合验收
 

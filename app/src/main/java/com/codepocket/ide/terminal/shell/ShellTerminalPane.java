@@ -260,17 +260,11 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     }
     public void showFailureDetails() { showFailureDetails(getContext(), runtime, animations); }
     public static AlertDialog showFailureDetails(Context context, ShellRuntime runtime, boolean animations) {
-        android.widget.ScrollView scroll = new android.widget.ScrollView(context);
-        TextView content = new TextView(context);
-        int inset = Math.round(16 * context.getResources().getDisplayMetrics().density);
-        content.setPadding(inset, inset / 2, inset, inset / 2); content.setTextSize(12); content.setTypeface(Typeface.MONOSPACE);
-        content.setText(runtime.failureDetails()); content.setTextIsSelectable(true);
-        content.setContentDescription(context.getString(com.codepocket.ide.R.string.shell_failure_content));
-        scroll.addView(content, new android.widget.ScrollView.LayoutParams(-1, -2));
-        AlertDialog dialog = new AlertDialog.Builder(context).setTitle(com.codepocket.ide.R.string.shell_failure_title).setView(scroll)
-            .setNegativeButton(com.codepocket.ide.R.string.shell_failure_close, null)
-            .setPositiveButton(com.codepocket.ide.R.string.shell_failure_copy, (d, w) -> runtime.copyFailureDetails()).create();
-        return com.codepocket.ide.animation.DialogMotion.INSTANCE.show(dialog, animations, false);
+        return com.codepocket.ide.ui.ReadOnlyDetails.show(context,
+            context.getString(com.codepocket.ide.R.string.shell_failure_title), "终端 · 启动记录", runtime.failureDetails(),
+            com.codepocket.ide.ui.IdeIcon.TERMINAL, true, animations,
+            context.getString(com.codepocket.ide.R.string.shell_failure_content),
+            context.getString(com.codepocket.ide.R.string.shell_failure_copy), runtime::copyFailureDetails);
     }
     public void showAbout() {
         dialogBuilder().setTitle("真实 Android Shell")

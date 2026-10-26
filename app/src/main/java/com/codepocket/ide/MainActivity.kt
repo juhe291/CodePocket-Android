@@ -3030,20 +3030,17 @@ class MainActivity : Activity() {
     }
 
     private fun showDiagnosticDetails(issue: com.codepocket.ide.editor.InlineIssue) {
-        val content=WorkbenchForms.details(this,getString(R.string.editor_diagnostic_content,issue.source,issue.message),true)
         toolDialog?.dismiss()
-        toolDialog=AlertDialog.Builder(this).setTitle(R.string.editor_diagnostic_details).setView(content)
-            .setNegativeButton(R.string.shell_failure_close,null).setPositiveButton(R.string.editor_copy_diagnostic){_,_->
+        toolDialog=ReadOnlyDetails.show(this,getString(R.string.editor_diagnostic_details),issue.source,
+            getString(R.string.editor_diagnostic_content,issue.source,issue.message),IdeIcon.INFO,true,motionAllowed(),null,
+            getString(R.string.editor_copy_diagnostic),Runnable{
                 (getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText(issue.source,issue.message))
-            }.showAnimated()
-        sizeForm(toolDialog!!,760)
+            })
     }
 
     private fun showReadOnlyDetails(title:String,text:String) {
         toolDialog?.dismiss()
-        toolDialog=AlertDialog.Builder(this).setTitle(title).setView(WorkbenchForms.details(this,text))
-            .setPositiveButton("关闭",null).showAnimated()
-        sizeForm(toolDialog!!,760)
+        toolDialog=ReadOnlyDetails.show(this,title,"CodePocket",text,IdeIcon.HELP,false,motionAllowed(),null,null,null)
     }
 
     private fun alert(message: String) { AlertDialog.Builder(this).setMessage(message).setPositiveButton("确定", null).showAnimated() }

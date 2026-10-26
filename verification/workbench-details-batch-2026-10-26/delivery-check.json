@@ -1,0 +1,8 @@
+{
+  "apk": "dist/CodePocket-details-batch-2026-10-26-debug.apk",
+  "sha256": "8822348f230ad5ea67c829971c39e572d392b446f36cf3d1ebb0dcf50004d5a6",
+  "source_hashes_match": true,
+  "new_artifact_links_checked": 11,
+  "staged_paths_within_batch": true,
+  "host_executables_staged": false
+}

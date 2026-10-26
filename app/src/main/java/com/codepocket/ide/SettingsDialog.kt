@@ -254,10 +254,8 @@ object SettingsDialog {
                     }
                     if(draft.category==3)heading("文件安全",activity.getString(R.string.settings_save_help))
                     if(draft.category==2)details.addView(WorkbenchStyle.menuRow(activity,"补全按键说明").apply{
-                        setOnClickListener{if(!busy)DialogMotion.show(AlertDialog.Builder(activity)
-                            .setCustomTitle(WorkbenchForms.header(activity,"补全按键说明",categories[2],IdeIcon.INPUT))
-                            .setView(WorkbenchForms.details(activity,activity.getString(R.string.completion_key_help)))
-                            .setPositiveButton("关闭",null).create(),current.animations)}
+                        setOnClickListener{if(!busy)ReadOnlyDetails.show(activity,"补全按键说明",categories[2],
+                            activity.getString(R.string.completion_key_help),IdeIcon.INPUT,false,current.animations,null,null,null)}
                     })
                     if(draft.category==4){
                         heading(activity.getString(R.string.settings_run_modes))
@@ -271,7 +269,8 @@ object SettingsDialog {
                             "Sora 编辑器与语法许可" to activity.assets.open("SORA-NOTICE.txt").bufferedReader().use{it.readText()},
                             "GNU LGPL 2.1" to activity.assets.open("LGPL-2.1.txt").bufferedReader().use{it.readText()},
                             "语法与依赖许可证" to listOf("textmate/VSCODE-LICENSE.txt", "textmate/VSCODE-ThirdPartyNotices.txt", "textmate/licenses/APACHE-2.0.txt", "textmate/licenses/EPL-2.0.txt", "textmate/licenses/JONI-MIT.txt", "textmate/licenses/JCODINGS-MIT.txt", "textmate/licenses/DESUGAR-GPL2.txt", "textmate/licenses/DESUGAR-ASSEMBLY-EXCEPTION.txt").joinToString("\n\n") { path -> path + "\n" + activity.assets.open(path).bufferedReader().use { it.readText() } }).forEach{(title,text)->
-                            details.addView(WorkbenchStyle.menuRow(activity,title).apply{setOnClickListener{DialogMotion.show(AlertDialog.Builder(activity).setTitle(title).setView(WorkbenchForms.details(activity,text)).setPositiveButton("关闭",null).create(),current.animations)}})
+                            details.addView(WorkbenchStyle.menuRow(activity,title).apply{setOnClickListener{if(!busy)
+                                ReadOnlyDetails.show(activity,title,categories[6],text,IdeIcon.HELP,false,current.animations,null,null,null)}})
                         }
                     }
                 }

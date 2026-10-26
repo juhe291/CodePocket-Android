@@ -2,7 +2,7 @@
 
 范围按用户最新指令确定：UI视觉优先，允许适度装饰；保留已有项目和真实运行；未实现功能先不接入，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
 
-本批最终验证及APK见[主工作台与设置合并批次](UI_SETTINGS_CHROME_BATCH_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
+本批最终验证及APK见[只读详情合并批次](UI_DETAILS_BATCH_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
 
 | 范围 | 当前源码与实际入口 | 证据及边界 |
 | --- | --- | --- |
@@ -26,7 +26,7 @@
 | 面板操作与配色 | 现有拖高/最大化/恢复/收起、会话关闭、键盘/控制键、复制/清空；TerminalAppearance五种配色与成熟ANSI解析 | TerminalWorkbenchViewTest、ShellUiTest、ShellTerminalTouchTest及TerminalDockIntegrationTest；四动作窄屏/大字体图标化、极窄滚动保持48dp；主机模型保持不代表设备进程存活验收，实际触屏/键鼠交互后置 |
 | 动画/光标 | 原可取消动画、MotionEnvironment、SoraCaretMotion；菜单/侧栏/面板/标签、60/80ms视觉光标、独立闪烁开关 | FullWorkbenchMotionTest、MainCaretMotionIntegrationTest等主机回归；60FPS/高刷没有设备测量结论 |
 | 载入与失败状态 | WorkspacePlaceholder、主题窗口背景/系统栏、原IO和恢复按钮处理器 | WorkspaceStartupIntegrationTest实际IO阻塞/释放、失败前落盘草稿及恢复；系统冷启动真正第一帧仍未验证 |
-| 帮助/许可/详情 | WorkbenchForms只读滚动正文、原说明/许可证/诊断完整复制 | AuxiliarySurfaceIntegrationTest；工作区/草稿两级行与类型图标、完整路径、当前项/取消另由WorkspacePickerIntegrationTest验证；系统文本选择菜单/SAF选择器/输入法继续由Android负责 |
+| 帮助/许可/详情 | ReadOnlyDetails共享上下文标题/640dp宽度/窗口缩放、完整滚动正文与原复制回调 | ReadOnlyDetailsIntegrationTest、AuxiliarySurfaceIntegrationTest及MainSurfaceIntegrationTest；工作区/草稿两级行与类型图标、完整路径、当前项/取消另由WorkspacePickerIntegrationTest验证；系统文本选择菜单/SAF选择器/输入法继续由Android负责 |
 | 状态信息 | 中性底栏、优先真实保存失败，窄/大字体优先主状态和行列；完整信息保留说明，宽窗口正常字体增加缩进和编码 | WorkbenchPathStatusIntegrationTest实际外部冲突、草稿/缓冲保持、成功重试及特殊文件名新编辑回归；状态栏点击设置尚未接入，继续暂缓 |
 | 路径栏 | 最小24dp并随文字增高、中间省略、完整原路径说明及提示；相同路径避免重复文本设置 | 前述实际Main/Sora手机/平板2倍字体及正常高度回归；没有新增路径导航菜单；<360dp高隐藏被动路径、恢复后显示，浮动Insets不直接隐藏 |
 | CI与产物 | build-apk.yml保留原Debug构建、校验及上传；当前本地主APK、示例预览与机器结果归档 | 当前未派发远端Actions，不能声称远端CI通过 |
@@ -34,7 +34,9 @@
 
 ## 登记与验收边界
 
-- 编辑辅助批次记录的ViewConstructor提示已在本批补标准Context构造消除：Lint主16/Sora1既有警告，无规则屏蔽。SettingsChromeIntegrationTest另验证设置分组、选项草稿/取消/应用和旋转搜索保留。平板按需只读说明阅读跨度偏大继续登记，下一批与帮助/许可/详情共同处理。
+- 只读详情批次新增1条UnusedResources：strings.xml:96的shell_failure_close已无引用；共享层仍显示相同“关闭”，旧资源保留，无运行阻塞。按约定先登记，不屏蔽规则，不为此单独重打包。当前主App17/Sora1条警告、零错误。
+
+- 编辑辅助批次记录的ViewConstructor提示已在上一设置批次补标准Context构造消除：当时Lint主16/Sora1既有警告，无规则屏蔽。SettingsChromeIntegrationTest另验证设置分组、选项草稿/取消/应用和旋转搜索保留。平板只读说明阅读跨度已在本批统一为640dp上限，并覆盖缩窗、全文与设置草稿返回；设备系统文本选择菜单仍后置。
 
 - 多标签基本定位已补充5项实际Main/Sora证据：明确导航/关闭当前项/区域变窄后定位，输入和保存保持手动滚动；窄屏长标签完整显示图标、截断名称及关闭按钮。路径/状态栏已有5项实际Main/Sora证据；短窗口/IME路径占位已补充4项Main/Sora主机证据及359/360边界，不据此声称全部输入环境已验收。平板高度过渡后编辑器焦点丢失的主机观察已另记，设备及旧版情况未确定；220dp有空间诊断/200dp无空间详情分别回归。
 - 原InteractionState次级说明仍按文案关键词判断，特殊文件名可能命中；可见摘要已保护旧成功不覆盖新未保存，结构化状态留后续评估。
