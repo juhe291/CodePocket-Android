@@ -2,7 +2,7 @@
 
 范围按用户最新指令确定：UI视觉优先，允许适度装饰；保留已有项目和真实运行；未实现功能先不接入，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
 
-本批最终验证及APK见[菜单上下文记录](UI_MENU_CONTEXT_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
+本批最终验证及APK见[上下文与搜索合并批次](UI_CONTEXT_BATCH_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
 
 | 范围 | 当前源码与实际入口 | 证据及边界 |
 | --- | --- | --- |
@@ -13,12 +13,12 @@
 | 视觉体系与图标 | DesignTokens、IdeControls、IdeIcons；本地Lucide及许可证；灰蓝层次、柔和文件类型色、中性底栏 | 原生及浏览器预览分别标识；没有发光/荧光/夸张渐变。并非全部界面逐张人眼验收 |
 | 触控与文本 | 常用动作48dp组件，长文件名省略但保留完整路径说明，大字体行增长与菜单滚动 | WorkbenchViewsTest、WorkbenchWindowIntegrationTest、MainSurfaceIntegrationTest的实际抽样；不能据此声称所有系统控件都已测量 |
 | 文件树 | ExplorerRow/ExplorerUiState；根与子目录切换、末级目录折叠、工作区展开/滚动、树选中与编辑文件分离；当前未保存缓冲的固定圆点/完整说明 | UiRedesignTest、WorkbenchWindowIntegrationTest、MainFileSettingsIntegrationTest、ExplorerModifiedStateIntegrationTest；收起不关闭文档，真实输入/保存/冲突重试同步状态，保留行/滚动/48dp菜单；不扫描非当前恢复草稿 |
-| 文件表单/选择器 | WorkbenchForms与原新建/重命名/移动/删除；路径区、错误保留、删除确认、实际事务仍受旧校验 | FormSurfaceIntegrationTest、MainFileSettingsIntegrationTest；本批无快捷键行保持原层级，实际移动回归保留 |
+| 文件表单/选择器 | WorkbenchForms与原新建/重命名/移动/删除；锚点文件菜单含路径标题、身份图标、危险分组与旧行隔离，表单仍保留路径区/错误/确认及旧事务校验 | ContextBatchIntegrationTest、FormSurfaceIntegrationTest、MainFileSettingsIntegrationTest；真实脏文件重命名、目录内新建、删除取消及旧回调隔离，实际移动回归保留 |
 | 保存与恢复 | EditorSessions、DraftStore、SAF原链路；冲突/失败保留缓冲与草稿 | MainFileSettingsIntegrationTest、MainSafRecoveryIntegrationTest、WorkspaceStartupIntegrationTest；Windows符号链接用例仍有1旧跳过 |
 | 标签与编辑操作 | 类型图标、固定占位未保存圆点、单独关闭；首次Sora键入刷新标记，编辑工具按空间显示 | WorkbenchViewsTest、EditorTabStabilityIntegrationTest、EditorTabNavigationIntegrationTest、SoraWorkbenchIntegrationTest；输入/保存保持坐标和手动滚动，明确导航/缩窗后当前项可见；长标签保留类型图标及关闭目标 |
 | 分类设置 | 七类、搜索、宽窗口分栏、草稿取消/应用、失败保留与旋转恢复 | SettingsSurfaceVisualTest、MainFileSettingsIntegrationTest；已隐藏bottomOnly工作台中的无效分屏开关；旧panelPreferSide JSON偏好保留，实际Main/Sora往返回归及窄屏大字体说明可达性通过 |
-| 菜单层级 | 固定分类标题与可滚动正文，按进入路径提供48dp返回/方向左键返回，Esc关闭；主分类与命令图标按稳定身份指定；撤销、查找定位、字号、辅助功能按组分隔；快捷键窄屏/大字体换到名称下方 | MainSurfaceIntegrationTest和MenuHierarchyIntegrationTest实际弹窗、返回/旧回调隔离、改名后图标/禁用/派发身份、大字体实际跳转；终端分类/尺寸返回保留会话模型和面板状态；旧列表型选择器保留兼容标题图标映射 |
-| 查找/替换与定位 | SearchDialog及原literal替换；跳转行、项目搜索的现有输入/结果/过时来源保护 | MainSurfaceIntegrationTest、SoraWorkbenchIntegrationTest、EditorSearch相关回归；没有改为新的搜索引擎 |
+| 菜单层级 | 固定分类标题与可滚动正文，按进入路径提供48dp返回/方向左键返回，Esc关闭；主分类与命令图标按稳定身份指定；撤销、查找定位、字号、辅助功能按组分隔；快捷键窄屏/大字体换到名称下方 | MainSurfaceIntegrationTest和MenuHierarchyIntegrationTest实际弹窗、返回/旧回调隔离、改名后图标/禁用/派发身份、大字体实际跳转；终端分类/尺寸/配色返回保留会话模型；会话/配色选择器含标题与当前项，真实Nord设置和已有会话切换保持缓冲；其余旧列表选择器保留兼容映射 |
+| 查找/替换与定位 | SearchDialog及原literal替换；跳转行、项目搜索的范围标题、自适应输入、可滚正文、空结果不留空列表及现有过时来源保护 | ContextBatchIntegrationTest、MainSurfaceIntegrationTest、SoraWorkbenchIntegrationTest、EditorSearch相关回归；280dp/2倍字体真实未保存搜索并定位，没有改为新的搜索引擎 |
 | 语法与括号/角色色 | 当前TextMate语法与词法角色/嵌套括号装饰；深浅主题与真实令牌配色 | SoraWorkbenchIntegrationTest验证真实span颜色、选区/撤销/主题往返；这些颜色不代表深度语义分析 |
 | 补全/片段/参数 | 基础词法候选、内置片段和参数参考；Tab/方向键/Esc、组合输入/异步布局与旧结果保护 | CompletionInteractionTest、MainSurfaceIntegrationTest；Jedi/clangd深语义未接入，代码折叠等额外能力不作为本轮新交付 |
 | 错误反馈 | 基础结构诊断与运行定位映射、红线、点击只读浮层；变化时关闭旧诊断 | MainSurfaceIntegrationTest、SoraWorkbenchIntegrationTest；不是完整LSP/所有实时编译错误检查 |

@@ -40,8 +40,10 @@ class WorkbenchMenu(context:Context,private val anchor:View,private val animate:
         }
         return false
     }
+    private var presentation=0L
     override fun show(){
         dismiss()
+        val token=++presentation
         val p=DesignTokens.forContext(anchor.context);val dp={v:Int->IdeControls.dp(anchor.context,v)}
         val rows=LinearLayout(anchor.context).apply {orientation=LinearLayout.VERTICAL;setPadding(dp(4),dp(6),dp(4),dp(6))}
         var previousDanger:Boolean?=null
@@ -55,7 +57,7 @@ class WorkbenchMenu(context:Context,private val anchor:View,private val animate:
             rows.addView(WorkbenchStyle.menuRow(anchor.context,item.title.toString(),item.isEnabled,item.isChecked,destructive,appearance?.let{IdeIconDrawable(anchor.context,it.icon,if(it.destructive)p.error else p.muted,dp(20))}).apply {
                 isFocusable=item.isEnabled
                 setOnKeyListener{_,_,event->handleMenuKey(event)}
-                setOnClickListener{if(item.isEnabled){dismiss();menu.performIdentifierAction(item.itemId,0)}}
+                setOnClickListener{if(token==presentation && window?.isShowing==true && item.isEnabled){dismiss();menu.performIdentifierAction(item.itemId,0)}}
             },LinearLayout.LayoutParams(-1,-2))
         }
         val display=anchor.resources.displayMetrics
@@ -73,7 +75,7 @@ class WorkbenchMenu(context:Context,private val anchor:View,private val animate:
                 val line=LinearLayout(context).apply{gravity=Gravity.CENTER_VERTICAL;minimumHeight=dp(48)}
                 if(returnAction!=null)line.addView(IdeControls.icon(context,p,IdeIcon.BACK,returnDescription){returnToParent()},LinearLayout.LayoutParams(dp(48),dp(48)))
                 line.addView(TextView(context).apply {
-                    text=title;textSize=14f;setTypeface(null,Typeface.BOLD);setTextColor(p.foreground)
+                    text=title;IdeControls.describe(this,title);textSize=14f;setTypeface(null,Typeface.BOLD);setTextColor(p.foreground)
                     includeFontPadding=false;maxLines=2;ellipsize=android.text.TextUtils.TruncateAt.END
                     setPadding(dp(if(returnAction==null)16 else 8),dp(8),dp(12),dp(8))
                 },LinearLayout.LayoutParams(0,-2,1f))

@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Typeface
 import android.view.Gravity
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -34,6 +36,27 @@ object WorkbenchForms {
             })
             addView(words,LinearLayout.LayoutParams(0,-2,1f))
         }
+    }
+    /** Stack controls when available width or scaled text would squeeze the query. */
+    fun searchControls(context:Context,query:EditText,button:Button)=object:LinearLayout(context){
+        private var stacked:Boolean?=null
+        init { gravity=Gravity.CENTER_VERTICAL; minimumHeight=IdeControls.dp(context,48) }
+        override fun onMeasure(widthMeasureSpec:Int,heightMeasureSpec:Int){
+            val stack=MeasureSpec.getSize(widthMeasureSpec)<IdeControls.dp(context,360) || resources.configuration.fontScale>1.3f
+            if(stacked!=stack){
+            stacked=stack
+            val target=if(stack)VERTICAL else HORIZONTAL
+            if(orientation!=target)orientation=target
+            query.layoutParams=LayoutParams(if(stack)-1 else 0,-2,if(stack)0f else 1f)
+            button.layoutParams=LayoutParams(-2,-2).apply{
+                if(stack){gravity=Gravity.END;topMargin=IdeControls.dp(context,8)}else marginStart=IdeControls.dp(context,8)
+            }
+            }
+            super.onMeasure(widthMeasureSpec,heightMeasureSpec)
+        }
+    }.apply{
+        query.minimumHeight=IdeControls.dp(context,48);button.minimumHeight=IdeControls.dp(context,48)
+        addView(query);addView(button)
     }
     fun scroll(context:Context,body:View)=ScrollView(context).apply{isFillViewport=false;addView(body)}
     /** Decorative heading only: no extra command, focus target or editable text. */

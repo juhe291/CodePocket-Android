@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.TerminalWorkbenchViewTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-26T00:56:31" hostname="JUHE" time="1.649">
+  <properties/>
+  <testcase name="choosingExistingSessionTransfersTerminalFocusWithoutFocusingCode" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.329"/>
+  <testcase name="cppCloudInputRemainsClearlySeparateFromPythonTerminalInput" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.136"/>
+  <testcase name="choosingUnstartedSessionKeepsInputAwayFromEditorWithoutDelayedFocus" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.22"/>
+  <testcase name="completedTaskDoesNotOverrideProblemsSelectionOrReopenPanel" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.106"/>
+  <testcase name="changingSessionWhileEditingCodeDoesNotStealEditorFocus" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.259"/>
+  <testcase name="firstOutputRefreshDoesNotConsumeTheTabletLaunchDecision" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.122"/>
+  <testcase name="topLevelContainsTerminalAndProblemsWithOneEmbeddedShell" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.103"/>
+  <testcase name="noShellShowsOnlyCreateHintNotAnotherRunConsole" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.067"/>
+  <testcase name="repeatedTerminalShortcutRevealsSameSessionAndPaneWithoutTogglingClosed" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.106"/>
+  <testcase name="pythonNeverDisplaysLegacyPrefillControls" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.067"/>
+  <testcase name="historicalOutputSelectionKeepsRealShellAndCannotReplayResults" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.067"/>
+  <testcase name="visitingProblemsAndReturningKeepsSelectedShellAndView" classname="com.codepocket.ide.TerminalWorkbenchViewTest" time="0.067"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

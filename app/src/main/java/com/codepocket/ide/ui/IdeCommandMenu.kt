@@ -26,7 +26,7 @@ object IdeCommandMenu {
         return popup
     }
     /** Presentation follows command identity, including translated or state-dependent titles. */
-    private fun icon(command:IdeCommand,running:Boolean):IdeIcon=when(command){
+    internal fun icon(command:IdeCommand,running:Boolean):IdeIcon=when(command){
         IdeCommand.RUN_STOP->if(running)IdeIcon.STOP else IdeIcon.RUN
         IdeCommand.EXPLORER->IdeIcon.EXPLORER
         IdeCommand.SEARCH,IdeCommand.FIND->IdeIcon.SEARCH
@@ -57,7 +57,7 @@ object IdeCommandMenu {
         IdeCommand.HELP->IdeIcon.HELP
         IdeCommand.FONT_SIZE->IdeIcon.CASE
     }
-    private fun section(command:IdeCommand):Int=when(command){
+    internal fun section(command:IdeCommand):Int=when(command){
         IdeCommand.WORKSPACE,IdeCommand.IMPORT_COPY->1
         IdeCommand.NEW_FILE,IdeCommand.NEW_FOLDER->2
         IdeCommand.SAVE,IdeCommand.EXPORT->3

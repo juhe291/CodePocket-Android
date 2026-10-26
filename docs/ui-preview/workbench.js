@@ -49,7 +49,10 @@ scene=function(name){
  case '帮助菜单':return menu([['快捷键说明','快捷键说明','keyboard'],['帮助与许可','帮助与许可','circle-help']]);
  case '打开终端':openTerminal();return;
  case '切换文件树':toggleExplorer();return;
- case '项目菜单':return menu([['新建文件夹','新建文件夹','folder-plus'],'-',['定位当前文件','工作台','crosshair'],['折叠全部目录','折叠全部','list-collapse'],'-',['打开 / 切换工作区','切换项目','folder-open'],['恢复草稿','恢复草稿','refresh-cw']]);
+ case '项目菜单':return menu([['定位当前文件','工作台','crosshair'],['折叠全部目录','折叠全部','list-collapse'],'-',['新建文件夹','新建文件夹','folder-plus'],'-',['打开 / 切换工作区','切换项目','folder-open'],['导入副本','新建文件','upload'],'-',['导出当前内容','工作台','download'],'-',['重命名当前文件','重命名','pencil'],'-',['删除当前文件','确认删除','trash-2',true],'-',['重新载入当前文件','工作台','refresh-cw'],['恢复草稿','恢复草稿','refresh-cw']]);
+ case '文件菜单':return menu([['打开','工作台','file-code-2'],'-',['重命名','重命名','pencil'],['移动到…','移动到文件夹','move'],'-',['删除','确认删除','trash-2',true]]);
+ case '终端会话':return menu([['Shell 1 · main.py','工作台','terminal'],['Shell 2 · 空闲','工作台','terminal']]);
+ case '项目搜索':case '项目搜索无匹配':return previewProjectSearch(name==='项目搜索无匹配');
  case '折叠全部':if(rootOpen)toggleRoot();return;
  case '终端操作':return menu([['终端操作','终端动作','terminal'],['会话管理','会话动作','files'],['布局与输入','布局与输入','maximize-2'],['配色与帮助','配色与帮助','palette']]);
  case '终端动作':return menu([['新建终端','终端会话','file-plus-2'],['复制记录','工作台','copy'],['粘贴','工作台','clipboard'],['清空显示','工作台','eraser']]);
@@ -227,21 +230,25 @@ decoratePreviewTreeState();
 
 // Context belongs to menu navigation, not the document or terminal session.
 let previewMenuParent=null;
-const previewMenuHeadings={'文件操作':'文件','编辑菜单':'编辑','视图菜单':'视图','运行菜单':'运行','终端菜单':'终端','帮助菜单':'帮助','终端动作':'终端操作','会话动作':'会话管理','布局与输入':'布局与输入','配色与帮助':'配色与帮助','调整面板尺寸':'面板尺寸'};
+const previewMenuHeadings={'文件操作':'文件','编辑菜单':'编辑','视图菜单':'视图','运行菜单':'运行','终端菜单':'终端','帮助菜单':'帮助','终端动作':'终端操作','会话动作':'会话管理','布局与输入':'布局与输入','配色与帮助':'配色与帮助','调整面板尺寸':'面板尺寸','文件菜单':'src/main.py','项目菜单':'资源管理器','终端会话':'终端会话','终端配色':'终端配色'};
 const sceneBeforeMenuContext=scene;
 scene=function(name){
  const parent=previewMenuParent;previewMenuParent=null;
  const result=sceneBeforeMenuContext(name);const popup=document.querySelector('#layers .popup');
  if(!popup)return result;
  popup.dataset.menuScene=name;
- if(name==='主菜单'||name==='终端操作'||name==='布局与输入')popup.querySelectorAll('.menurow').forEach(row=>row.addEventListener('click',()=>{previewMenuParent=name;},{capture:true}));
+ if(name==='主菜单'||name==='终端操作'||name==='布局与输入'||name==='配色与帮助')popup.querySelectorAll('.menurow').forEach(row=>row.addEventListener('click',()=>{previewMenuParent=name;},{capture:true}));
  const title=previewMenuHeadings[name];if(!title)return result;
  const body=document.createElement('div');body.className='menu-content';body.append(...popup.childNodes);
  const header=document.createElement('div');header.className='menu-heading';
- if(parent==='主菜单'||parent==='终端操作'||parent==='布局与输入'){
-  popup.dataset.menuBack=parent;const back=document.createElement('button');back.className='menu-back';back.title=parent==='主菜单'?'返回工作台菜单':parent==='布局与输入'?'返回布局与输入':'返回终端菜单';back.innerHTML=icon('arrow-left');back.onclick=()=>scene(parent);header.append(back);
+ if(parent==='主菜单'||parent==='终端操作'||parent==='布局与输入'||parent==='配色与帮助'){
+  popup.dataset.menuBack=parent;const back=document.createElement('button');back.className='menu-back';back.title=parent==='主菜单'?'返回工作台菜单':parent==='布局与输入'?'返回布局与输入':parent==='配色与帮助'?'返回配色与帮助':'返回终端菜单';back.innerHTML=icon('arrow-left');back.onclick=()=>scene(parent);header.append(back);
  }
- const label=document.createElement('strong');label.className='menu-heading-title';label.textContent=title;header.append(label);
+ const label=document.createElement('strong');label.className='menu-heading-title';label.textContent=title;label.title=title;header.append(label);
+ if(name==='终端会话'||name==='终端配色'){
+  const selected=name==='终端会话'?0:['跟随界面','CodePocket Dark','Nord','Dracula','Light'].indexOf(saved.terminal);
+  body.querySelectorAll('.menurow').forEach((row,i)=>{row.setAttribute('aria-checked',String(i===selected));if(i===selected)row.querySelector('svg').outerHTML=icon('check');});
+ }
  popup.classList.add('has-menu-heading');popup.append(header,body);return result;
 };
 $('#scene').add(new Option('终端菜单','终端菜单'));$('#scene').add(new Option('调整面板尺寸','调整面板尺寸'));
@@ -249,3 +256,12 @@ document.addEventListener('keydown',event=>{
  const popup=document.querySelector('#layers .popup');
  if(event.key==='ArrowLeft'&&popup?.dataset.menuBack){event.preventDefault();scene(popup.dataset.menuBack);}
 });
+
+// Design examples only; the Android search continues to use its real workspace worker.
+function previewProjectSearch(empty){
+ const result=empty?'no_such_token':'greet';
+ modal('项目搜索','<div class="search-scope">'+icon('search')+'<span>Algorithms</span></div><div class="search-controls"><input aria-label="项目查找文本" value="'+result+'"><button type="button">搜索</button></div><label class="search-case"><input type="checkbox">区分大小写</label><p class="search-summary">'+(empty?'找到 0 处匹配':'找到 2 处匹配')+'</p><div class="search-results" '+(empty?'hidden':'')+'>'+[2,6].map(line=>'<button class="search-result" onclick="closeLayers()"><span>'+icon('file-code-2')+'main.py:'+line+'</span><code>'+ (line===2?'def greet(name):':'print(greet(name))')+'</code></button>').join('')+'</div>','关闭');
+ const form=$('.modal');form.classList.add('project-search');form.querySelector('.actions').firstElementChild.remove();
+ form.querySelector('.search-controls button').onclick=()=>scene('项目搜索无匹配');
+}
+$('#scene').add(new Option('项目搜索无匹配','项目搜索无匹配'));

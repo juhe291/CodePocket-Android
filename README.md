@@ -1,13 +1,13 @@
 # CodePocket · Android C++ / Python IDE
 
-> 当前优先级：UI视觉与工作台层次。允许适度装饰，尚未实现的新功能暂缓；原有保存、编辑和真实运行保留。见[本轮记录](docs/UI_MENU_CONTEXT_2026-10-26.md)与[完整范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。 后续按[批次验证节奏](docs/DEVELOPMENT_BATCH_POLICY.md)积累相关修改再统一构建。
+> 当前优先级：UI视觉与工作台层次。允许适度装饰，尚未实现的新功能暂缓；保留原有保存、编辑和真实运行。见[本批记录](docs/UI_CONTEXT_BATCH_2026-10-26.md)与[完整范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。按[批次节奏](docs/DEVELOPMENT_BATCH_POLICY.md)积累相关修改再统一构建。
 
-**2026-10-26：分类菜单增加固定标题和返回层级。** 手机可点返回按钮或用方向左键返回，正文滚动时入口保留；平板直接分类菜单减少重复按钮。终端分类图标和危险操作分组明确，原文件树状态、短窗口布局及真实运行保持。
+**2026-10-26：一批整理文件操作、资源管理器、终端选择器和项目搜索。** 统一锚点菜单和上下文标题，保留安全确认；终端配色可返回父分类，搜索适配窄屏/大字体，空结果减少留白。
 
-- [最新Debug APK](dist/CodePocket-menu-context-2026-10-26-debug.apk)（25.44MiB，原签名、arm64-v8a）。
-- [实际结果与限制](docs/UI_MENU_CONTEXT_2026-10-26.md) · [原生预览](docs/menu-context-preview/README.md)：主App720通过/0失败/1旧跳过，Lint0错误，Debug实际打包及APK检查通过。
-- [可点击样稿](docs/ui-preview/README.md)：36场景、288次场景检查、54项交互和20项配色检查通过；均为设计示例。
-- 前批焦点、关键词状态等问题仍登记；实机IME/键鼠/卓易通/FPS及远端CI仍后置。历史见[接续记录](docs/RESUME.md)，本轮不等于整个项目完成。
+- [最新Debug APK](dist/CodePocket-context-batch-2026-10-26-debug.apk)（25.44MiB，原签名、arm64-v8a）。
+- [实际结果与限制](docs/UI_CONTEXT_BATCH_2026-10-26.md) · [原生预览](docs/context-batch-preview/README.md)：主App726通过/0失败/1旧跳过，Lint0错误，Debug实际打包和APK检查通过。
+- [可点击样稿](docs/ui-preview/README.md)：37场景、296次场景检查、62项交互和20项配色检查通过，均为设计示例。
+- 前批焦点、关键词状态等问题继续登记；实机IME/键鼠/卓易通/FPS及远端CI后置。历史见[接续记录](docs/RESUME.md)，不声明整个项目完成。
 
 ## 历史主机整合验收
 

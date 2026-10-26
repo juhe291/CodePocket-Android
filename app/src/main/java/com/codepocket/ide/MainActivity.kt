@@ -1296,10 +1296,17 @@ class MainActivity : Activity() {
 
     private fun showExplorerCommands(anchor: View) {
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
+        (menu as? WorkbenchMenu)?.setHeading("资源管理器")
         menu.menu.add(0, 100, 0, "定位当前文件")
+        (menu as? WorkbenchMenu)?.setItemAppearance(100,IdeIcon.LOCATE)
         menu.menu.add(0, 101, 1, "折叠全部目录")
+        (menu as? WorkbenchMenu)?.setItemAppearance(101,IdeIcon.COLLAPSE)
         menu.menu.add(1,102,2,IdeCommand.NEW_FOLDER.title).isEnabled=IdeCommands.enabled(IdeCommand.NEW_FOLDER,commandContext())
-        IdeCommands.explorerMenuItems.forEachIndexed { index, command -> menu.menu.add(1, index, index + 2, command.title).isEnabled = IdeCommands.enabled(command, commandContext()) }
+        (menu as? WorkbenchMenu)?.setItemAppearance(102,IdeIcon.ADD_FOLDER)
+        IdeCommands.explorerMenuItems.forEachIndexed { index, command ->
+            menu.menu.add(IdeCommandMenu.section(command),index,index+3,command.title).isEnabled=IdeCommands.enabled(command,commandContext())
+            (menu as? WorkbenchMenu)?.setItemAppearance(index,IdeCommandMenu.icon(command,running),command==IdeCommand.DELETE)
+        }
         menu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 100 -> revealCurrentFileInTree()
@@ -1439,7 +1446,7 @@ class MainActivity : Activity() {
             val entry = entries[key] ?: return@update
             (view as ExplorerRow).bind(entry.path, entry.depth + 1, entry.folder, entry.open,
                 entry.path == (explorerSelection ?: activePath), moving, modified = entry.path == activePath && dirty)
-            view.setMenuAction { fileMenu(entry.file) }
+            view.setMenuAction { fileMenu(entry.file, view) }
             view.setOnClickListener {
                 if (workspaceBusy) return@setOnClickListener
                 explorerSelection = entry.path
@@ -1452,31 +1459,49 @@ class MainActivity : Activity() {
                     switchFile(entry.path); explorerDialog?.dismiss(); explorerDialog = null
                 }
             }
-            view.setOnLongClickListener { fileMenu(entry.file); true }
+            view.setOnLongClickListener { fileMenu(entry.file, view); true }
             view.setOnGenericMotionListener { _, event ->
                 if (event.actionMasked == MotionEvent.ACTION_BUTTON_PRESS && event.buttonState and MotionEvent.BUTTON_SECONDARY != 0) {
-                    fileMenu(entry.file); true
+                    fileMenu(entry.file, view); true
                 } else false
             }
 
         }
     }
 
-    private fun fileMenu(file: File) {
-        val entries = if (file.isDirectory)
-            arrayOf("在此新建文件", "在此新建文件夹", "重命名", "移动到…", "删除")
-        else arrayOf("打开", "重命名", "移动到…", "删除")
-        AlertDialog.Builder(this).setTitle(workspace.path(file)).setItems(entries) { _, index ->
-            val action = entries[index]
-            when (action) {
-                "打开" -> { switchFile(workspace.path(file)); explorerDialog?.dismiss() }
-                "在此新建文件" -> { currentDirectory = workspace.path(file); askCreate(false) }
-                "在此新建文件夹" -> { currentDirectory = workspace.path(file); askCreate(true) }
-                "重命名" -> askRename(file)
-                "移动到…" -> askMove(file)
-                "删除" -> askDelete(file)
+    private enum class FileAction(val title:String,val icon:IdeIcon,val group:Int) {
+        OPEN("打开",IdeIcon.FILE,0), NEW_FILE("在此新建文件",IdeIcon.ADD_FILE,0),
+        NEW_FOLDER("在此新建文件夹",IdeIcon.ADD_FOLDER,0), RENAME("重命名",IdeIcon.RENAME,1),
+        MOVE("移动到…",IdeIcon.MOVE,1), DELETE("删除",IdeIcon.DELETE,2)
+    }
+
+    private fun fileMenu(file: File, anchor: View) {
+        if(workspaceBusy || !anchor.isAttachedToWindow)return
+        val origin=workspace
+        val path=origin.path(file)
+        commandMenu?.dismiss()
+        val popup=DialogMotion.menu(this,anchor,motionAllowed())
+        (popup as? WorkbenchMenu)?.setHeading(path.ifBlank{origin.title})
+        val actions=if(file.isDirectory)listOf(FileAction.NEW_FILE,FileAction.NEW_FOLDER,FileAction.RENAME,FileAction.MOVE,FileAction.DELETE)
+            else listOf(FileAction.OPEN,FileAction.RENAME,FileAction.MOVE,FileAction.DELETE)
+        actions.forEachIndexed { order, action ->
+            popup.menu.add(action.group,action.ordinal+1,order,action.title).isEnabled=
+                !workspaceBusy && (action==FileAction.OPEN || (!running && !saving))
+            (popup as? WorkbenchMenu)?.setItemAppearance(action.ordinal+1,action.icon,action==FileAction.DELETE)
+        }
+        popup.setOnMenuItemClickListener { item ->
+            if(!isDestroyed && workspace===origin && !workspaceBusy && anchor.isAttachedToWindow)when(FileAction.entries.getOrNull(item.itemId-1)) {
+                FileAction.OPEN -> { switchFile(path); explorerDialog?.dismiss() }
+                FileAction.NEW_FILE -> { currentDirectory=path; askCreate(false) }
+                FileAction.NEW_FOLDER -> { currentDirectory=path; askCreate(true) }
+                FileAction.RENAME -> askRename(file)
+                FileAction.MOVE -> askMove(file)
+                FileAction.DELETE -> askDelete(file)
+                null -> Unit
             }
-        }.showAnimated()
+            true
+        }
+        commandMenu=popup;popup.show()
     }
 
     private fun sizeForm(dialog:AlertDialog,maximumDp:Int=560) {
@@ -2318,14 +2343,15 @@ class MainActivity : Activity() {
         }
         val case = android.widget.CheckBox(this).apply { text = "区分大小写" }
         val message = TextView(this).apply { textSize=12f;setTextColor(muted);tag=SurfaceTextTone.MUTED;setPadding(0,dp(8),0,dp(8));visibility=View.GONE }
-        val list = android.widget.ListView(this).apply{visibility=View.GONE}
+        val list = android.widget.ListView(this).apply{visibility=View.GONE;isNestedScrollingEnabled=true}
         val search = android.widget.Button(this).apply { text = "搜索" }
-        val searchRow=LinearLayout(this).apply{gravity=Gravity.CENTER_VERTICAL}
-        searchRow.addView(query,LinearLayout.LayoutParams(0,dp(48),1f));searchRow.addView(search,LinearLayout.LayoutParams(-2,dp(48)).apply{marginStart=dp(8)})
+        val searchRow=WorkbenchForms.searchControls(this,query,search)
         layout.addView(searchRow);layout.addView(case);layout.addView(message)
         list.divider=android.graphics.drawable.ColorDrawable(palette.border);list.dividerHeight=dp(1)
         layout.addView(list,LinearLayout.LayoutParams(-1,dp(if(root.height/resources.displayMetrics.density<480)96 else 240)))
-        val dialog = AlertDialog.Builder(this).setTitle("项目搜索").setView(layout).setNegativeButton("关闭", null).create()
+        val dialog = AlertDialog.Builder(this).setTitle("项目搜索")
+            .setCustomTitle(WorkbenchForms.header(this,"项目搜索",if(targetWorkspace.external)targetWorkspace.title else "内部项目",IdeIcon.SEARCH))
+            .setView(WorkbenchForms.scroll(this,layout)).setNegativeButton("关闭", null).create()
         var request = 0L
         var dialogSearch: ProjectSearch? = null
         var hits = emptyList<ProjectSearch.SearchResult>()
@@ -2337,13 +2363,14 @@ class MainActivity : Activity() {
             val generation = ++request
             val caseSensitive = case.isChecked
             val buffers = mapOf(activePath to editor.text.toString())
-            hits = emptyList(); list.adapter = null;list.visibility=View.VISIBLE;message.visibility=View.VISIBLE;message.text = "正在搜索…"
+            hits = emptyList(); list.adapter = null;list.visibility=View.GONE;message.visibility=View.VISIBLE;message.text = "正在搜索…"
             WorkspaceIo.executor.execute {
                 val response = runCatching { engine.search(needle, caseSensitive, 200, buffers) }
                 runOnUiThread {
                     if (isDestroyed || !dialog.isShowing || toolDialog !== dialog || workspace !== targetWorkspace || generation != request) return@runOnUiThread
                     response.onSuccess { found ->
                         hits = found
+                        list.visibility=if(found.isEmpty())View.GONE else View.VISIBLE
                         list.adapter = object:android.widget.ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
                             found.map { "${it.path}:${it.lineNumber}\n${it.lineContent.take(160)}" }) {
                             override fun getView(position:Int,convertView:View?,parent:ViewGroup):View {
@@ -2838,10 +2865,11 @@ class MainActivity : Activity() {
 
     private fun showTerminalChoices(anchor: View) {
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
+        (menu as? WorkbenchMenu)?.setHeading("终端会话")
         val choices = terminalRegistry.catalog.entries().map { e -> e.id to e.name() }
         choices.forEachIndexed { index, choice -> menu.menu.add(0, index, index, choice.second).apply {
             isCheckable = true; isChecked = choice.first == terminalRegistry.catalog.selectedId()
-        } }
+        }; (menu as? WorkbenchMenu)?.setItemAppearance(index,IdeIcon.TERMINAL) }
         menu.setOnMenuItemClickListener { item ->
             val id = choices.getOrNull(item.itemId)?.first
             if (id != null && terminalRegistry.catalog.select(id)) {
@@ -2861,13 +2889,16 @@ class MainActivity : Activity() {
         } catch (failure: IllegalStateException) { alert(failure.message ?: "无法新建终端") }
     }
 
-    private fun showTerminalPalette(anchor: View): android.widget.PopupMenu {
+    private fun showTerminalPalette(anchor: View): android.widget.PopupMenu = showTerminalPalette(anchor,null)
+
+    private fun showTerminalPalette(anchor: View, onBack:(()->Unit)?): android.widget.PopupMenu {
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
+        (menu as? WorkbenchMenu)?.setHeading("终端配色","返回配色与帮助",onBack)
         val themes = TerminalTheme.values()
         val names = listOf("跟随界面配色", "CodePocket Dark 配色", "Nord 配色", "Dracula 配色", "Light 配色")
         themes.forEachIndexed { index, theme -> menu.menu.add(0, index, index, names[index]).apply {
             isCheckable = true; isChecked = settings.terminalTheme == theme
-        } }
+        }; (menu as? WorkbenchMenu)?.setItemAppearance(index,IdeIcon.PALETTE) }
         menu.setOnMenuItemClickListener { item ->
             themes.getOrNull(item.itemId)?.let { applySettings(settings.copy(terminalTheme = it)) }; true
         }
@@ -2930,7 +2961,7 @@ class MainActivity : Activity() {
                 6 -> ShellTerminalPane.showFailureDetails(this, entry.value.runtime, motionAllowed())
                 7 -> shellPane?.ensureSession()
                 8 -> shellPane?.showAbout()
-                9 -> showTerminalPalette(anchor)
+                9 -> showTerminalPalette(anchor) { if(!isDestroyed&&anchor.isAttachedToWindow&&terminalRegistry.catalog.selected()===entry)showTerminalActionGroup(anchor,3) }
                 10 -> setPresetInputExpanded(true)
                 20 -> newShellSession()
                 21 -> showPanelSizeMenu(anchor) { if(!isDestroyed&&anchor.isAttachedToWindow&&terminalRegistry.catalog.selected()===entry)showTerminalActionGroup(anchor,2) }
