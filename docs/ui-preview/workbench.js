@@ -12,7 +12,7 @@ const railPrimary=document.createElement('div');railPrimary.className='rail-prim
 [...previewRail.querySelectorAll('button:not(.bottom)')].forEach(b=>railPrimary.append(b));
 railPrimary.insertAdjacentHTML('beforeend','<button class="icon" title="运行预览" onclick="scene(\'运行状态\')">'+icon('play')+'</button>');previewRail.prepend(railPrimary);railPrimary.firstElementChild.classList.add('selected');
 const desktopMenu=document.createElement('nav');desktopMenu.className='desktop-menu';desktopMenu.setAttribute('aria-label','工作台菜单');
-const menuGroups=[['文件','文件操作','files'],['编辑','编辑菜单','pencil'],['视图','视图菜单','maximize-2'],['运行','运行菜单','play'],['终端','终端操作','terminal'],['帮助','帮助菜单','circle-help']];
+const menuGroups=[['文件','文件操作','files'],['编辑','编辑菜单','pencil'],['视图','视图菜单','maximize-2'],['运行','运行菜单','play'],['终端','终端菜单','terminal'],['帮助','帮助菜单','circle-help']];
 desktopMenu.innerHTML=menuGroups.map(g=>`<button onclick="scene('${g[1]}')">${g[0]}</button>`).join('');$('.top').prepend(desktopMenu);
 const previewSizes={tablet:[1280,800,'平板横屏'],tabletPortrait:[800,1200,'平板竖屏'],phoneLandscape:[840,411,'手机横屏'],phone:[411,891,'手机竖屏']};
 $('#device').innerHTML=Object.entries(previewSizes).map(([k,v])=>`<option value="${k}">${v[2]} · ${v[0]} × ${v[1]}</option>`).join('');
@@ -33,6 +33,8 @@ scene=function(name){
  closeLayers();
  switch(name){
  case '紧凑编辑区':previewHeightOverride=240;previewLayout(false);previewApp.classList.remove('termmax');previewTerminal.classList.add('hidden');return;
+ case '调整面板尺寸':return menu([['减小面板','工作台','minimize-2'],['增大面板','工作台','maximize-2'],['恢复默认尺寸','工作台','refresh-cw']]);
+ case '终端菜单':return menu([['打开终端','打开终端','terminal'],['最大化 / 恢复','最大化 / 恢复','maximize-2'],['收起终端','收起终端','chevron-down'],'-',['清空终端显示','工作台','eraser'],['调整面板尺寸','调整面板尺寸','move']]);
  case '打开工作区':case '工作区载入失败':return previewWorkspaceState(name==='工作区载入失败');
  case '主菜单':return menu(menuGroups.map(g=>[g[0],g[1],g[2]]));
  case '编辑菜单':return menu([['撤销','工作台','undo-2',false,'Ctrl+Z'],['重做','工作台','redo-2',false,'Ctrl+Y / Ctrl+Shift+Z'],'-',
@@ -52,7 +54,7 @@ scene=function(name){
  case '终端操作':return menu([['终端操作','终端动作','terminal'],['会话管理','会话动作','files'],['布局与输入','布局与输入','maximize-2'],['配色与帮助','配色与帮助','palette']]);
  case '终端动作':return menu([['新建终端','终端会话','file-plus-2'],['复制记录','工作台','copy'],['粘贴','工作台','clipboard'],['清空显示','工作台','eraser']]);
  case '会话动作':return menu([['选择会话','终端会话','terminal'],['重命名会话','重命名','pencil'],'-',['关闭当前会话','结束会话','trash-2',true]]);
- case '布局与输入':return menu([['显示键盘','显示键盘','keyboard'],['控制键','控制键','keyboard'],['最大化 / 恢复','最大化 / 恢复','maximize-2'],['收起终端','收起终端','chevron-down']]);
+ case '布局与输入':return menu([['调整面板尺寸','调整面板尺寸','move'],['显示键盘','显示键盘','keyboard'],['控制键','控制键','keyboard'],['最大化 / 恢复','最大化 / 恢复','maximize-2'],['收起终端','收起终端','chevron-down']]);
  case '配色与帮助':return menu([['终端配色','终端配色','palette'],['快捷键说明','快捷键说明','keyboard'],['帮助与许可','帮助与许可','circle-help']]);
  case '最大化 / 恢复':openTerminal();previewApp.classList.toggle('termmax');return;
  case '收起终端':previewApp.classList.remove('termmax');previewTerminal.classList.add('hidden');return;
@@ -222,3 +224,28 @@ function decoratePreviewTreeState(){
  });
 }
 decoratePreviewTreeState();
+
+// Context belongs to menu navigation, not the document or terminal session.
+let previewMenuParent=null;
+const previewMenuHeadings={'文件操作':'文件','编辑菜单':'编辑','视图菜单':'视图','运行菜单':'运行','终端菜单':'终端','帮助菜单':'帮助','终端动作':'终端操作','会话动作':'会话管理','布局与输入':'布局与输入','配色与帮助':'配色与帮助','调整面板尺寸':'面板尺寸'};
+const sceneBeforeMenuContext=scene;
+scene=function(name){
+ const parent=previewMenuParent;previewMenuParent=null;
+ const result=sceneBeforeMenuContext(name);const popup=document.querySelector('#layers .popup');
+ if(!popup)return result;
+ popup.dataset.menuScene=name;
+ if(name==='主菜单'||name==='终端操作'||name==='布局与输入')popup.querySelectorAll('.menurow').forEach(row=>row.addEventListener('click',()=>{previewMenuParent=name;},{capture:true}));
+ const title=previewMenuHeadings[name];if(!title)return result;
+ const body=document.createElement('div');body.className='menu-content';body.append(...popup.childNodes);
+ const header=document.createElement('div');header.className='menu-heading';
+ if(parent==='主菜单'||parent==='终端操作'||parent==='布局与输入'){
+  popup.dataset.menuBack=parent;const back=document.createElement('button');back.className='menu-back';back.title=parent==='主菜单'?'返回工作台菜单':parent==='布局与输入'?'返回布局与输入':'返回终端菜单';back.innerHTML=icon('arrow-left');back.onclick=()=>scene(parent);header.append(back);
+ }
+ const label=document.createElement('strong');label.className='menu-heading-title';label.textContent=title;header.append(label);
+ popup.classList.add('has-menu-heading');popup.append(header,body);return result;
+};
+$('#scene').add(new Option('终端菜单','终端菜单'));$('#scene').add(new Option('调整面板尺寸','调整面板尺寸'));
+document.addEventListener('keydown',event=>{
+ const popup=document.querySelector('#layers .popup');
+ if(event.key==='ArrowLeft'&&popup?.dataset.menuBack){event.preventDefault();scene(popup.dataset.menuBack);}
+});

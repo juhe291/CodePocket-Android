@@ -103,7 +103,7 @@ class MainSurfaceIntegrationTest {
     }
     @Test @Config(qualifiers="w280dp-h900dp") fun LargeNarrowEditMenuKeepsFullShortcutsAndRealNavigation(){
         ReflectionHelpers.callInstanceMethod<Unit>(main,"showWorkbenchMenu",ClassParameter.from(View::class.java,anchor()),ClassParameter.from(WorkbenchMenuGroup::class.java,WorkbenchMenuGroup.EDIT))
-        idle(100);val window=popup();val scroll=window.contentView as ScrollView
+        idle(100);val window=popup();val scroll=views(window.contentView).filterIsInstance<ScrollView>().single()
         for(label in views(window.contentView).filterIsInstance<TextView>()){
             textFits(label)
             val layout=label.layout!!;val last=minOf(layout.lineCount,label.maxLines)-1

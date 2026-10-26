@@ -1,13 +1,13 @@
 # CodePocket · Android C++ / Python IDE
 
-> 当前优先级：UI视觉与工作台层次。允许适度装饰，尚未实现的新功能暂缓；原有保存、编辑和真实运行保留。见[本轮记录](docs/UI_EXPLORER_STATE_2026-10-26.md)与[完整范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。
+> 当前优先级：UI视觉与工作台层次。允许适度装饰，尚未实现的新功能暂缓；原有保存、编辑和真实运行保留。见[本轮记录](docs/UI_MENU_CONTEXT_2026-10-26.md)与[完整范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。
 
-**2026-10-26：文件树与标签同步显示未保存状态。** 小圆点固定占位，成功保存后清除，失败时保留；根目录折叠和抽屉重开保留当前文件状态。既有柔和图标/标题层次、中性底栏和短窗口布局保持。
+**2026-10-26：分类菜单增加固定标题和返回层级。** 手机可点返回按钮或用方向左键返回，正文滚动时入口保留；平板直接分类菜单减少重复按钮。终端分类图标和危险操作分组明确，原文件树状态、短窗口布局及真实运行保持。
 
-- [最新Debug APK](dist/CodePocket-explorer-state-2026-10-26-debug.apk)（25.44MiB，原签名、arm64-v8a）。
-- [真实结果与限制](docs/UI_EXPLORER_STATE_2026-10-26.md) · [原生预览](docs/explorer-state-preview/README.md)：主App 716通过/0失败/1旧跳过，Lint0错误，实际Debug打包及APK检查通过。
-- [可点击样稿](docs/ui-preview/README.md)：34场景、272次场景检查、48项交互和20项配色检查通过；均为设计示例。
-- 被动缩窗焦点、旧状态关键词等问题仍登记；实机IME/键鼠/卓易通/FPS与远端CI后置。历史批次见[接续记录](docs/RESUME.md)，本轮不等于整个项目完成。
+- [最新Debug APK](dist/CodePocket-menu-context-2026-10-26-debug.apk)（25.44MiB，原签名、arm64-v8a）。
+- [实际结果与限制](docs/UI_MENU_CONTEXT_2026-10-26.md) · [原生预览](docs/menu-context-preview/README.md)：主App720通过/0失败/1旧跳过，Lint0错误，Debug实际打包及APK检查通过。
+- [可点击样稿](docs/ui-preview/README.md)：36场景、288次场景检查、54项交互和20项配色检查通过；均为设计示例。
+- 前批焦点、关键词状态等问题仍登记；实机IME/键鼠/卓易通/FPS及远端CI仍后置。历史见[接续记录](docs/RESUME.md)，本轮不等于整个项目完成。
 
 ## 历史主机整合验收
 

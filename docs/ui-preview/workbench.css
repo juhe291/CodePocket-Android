@@ -61,3 +61,10 @@ body.light .kw{color:#4d6386}body.light .str{color:#8e4630}body.light .fn{color:
 .tree-dirty-indicator{width:16px;flex:0 0 16px;height:6px;position:relative}
 .tree-dirty-indicator::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--text);left:5px;top:0;visibility:hidden}
 .treeitem.dirty .tree-dirty-indicator::after{visibility:visible}
+
+/* Section context stays fixed while the command list scrolls. */
+.popup.has-menu-heading{display:flex;flex-direction:column;overflow:hidden;padding:0}
+.menu-heading{display:flex;align-items:center;min-height:48px;flex:0 0 auto;background:var(--panel);border-bottom:1px solid var(--line)}
+.menu-heading-title{padding:10px 16px;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu-heading .menu-back{display:flex;align-items:center;justify-content:center;flex:0 0 48px;width:48px;height:48px;min-height:48px;border:0;border-radius:0;background:transparent;color:var(--text);padding:0}
+.menu-back svg{width:20px;height:20px}.menu-content{padding:6px 4px;overflow-y:auto;min-height:0;flex:1 1 auto}

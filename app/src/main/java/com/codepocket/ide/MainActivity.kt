@@ -729,13 +729,15 @@ class MainActivity : Activity() {
         popup.setOnMenuItemClickListener { item ->
             anchor.post { if(anchor.isAttachedToWindow) {
                 if(item.itemId==2000)showSettings()
-                else WorkbenchMenuGroup.entries.getOrNull(item.itemId-1000)?.let { showWorkbenchMenu(anchor,it) }
+                else WorkbenchMenuGroup.entries.getOrNull(item.itemId-1000)?.let { showWorkbenchMenu(anchor,it,true) }
             } };true
         }
         commandMenu=popup;popup.show()
     }
 
-    private fun showWorkbenchMenu(anchor: View,group:WorkbenchMenuGroup) {
+    private fun showWorkbenchMenu(anchor: View,group:WorkbenchMenuGroup) = showWorkbenchMenu(anchor,group,false)
+
+    private fun showWorkbenchMenu(anchor: View,group:WorkbenchMenuGroup,returnToCategories:Boolean) {
         val commands=when(group) {
             WorkbenchMenuGroup.FILE->listOf(IdeCommand.WORKSPACE,IdeCommand.NEW_FILE,IdeCommand.NEW_FOLDER,
                 IdeCommand.SAVE,IdeCommand.IMPORT_COPY,IdeCommand.EXPORT,IdeCommand.RELOAD,IdeCommand.RECOVER)
@@ -746,12 +748,15 @@ class MainActivity : Activity() {
             WorkbenchMenuGroup.TERMINAL->listOf(IdeCommand.PANEL,IdeCommand.MAXIMIZE_TERMINAL,IdeCommand.CLOSE_TERMINAL,IdeCommand.CLEAR_TERMINAL,IdeCommand.PANEL_SIZE)
             WorkbenchMenuGroup.HELP->IdeCommands.settingsMenuItems.filter { it!=IdeCommand.THEME }
         }
-        showContextCommands(anchor,commands)
+        val back: (() -> Unit)? = if(returnToCategories) ({ if(!isDestroyed&&!workspaceBusy&&anchor.isAttachedToWindow)showCommandMenu(anchor) }) else null
+        showContextCommands(anchor,commands,group.title,back)
     }
 
-    private fun showContextCommands(anchor: View, commands: List<IdeCommand>) {
+    private fun showContextCommands(anchor: View, commands: List<IdeCommand>) = showContextCommands(anchor,commands,null,null)
+
+    private fun showContextCommands(anchor: View, commands: List<IdeCommand>, title:String?, back:(()->Unit)?) {
         commandMenu?.dismiss()
-        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands.filter { isCpp() || it !in listOf(IdeCommand.PRESET_INPUT,IdeCommand.CLEAR_INPUT) }, ::dispatchCommand, motionAllowed())
+        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands.filter { isCpp() || it !in listOf(IdeCommand.PRESET_INPUT,IdeCommand.CLEAR_INPUT) }, ::dispatchCommand, motionAllowed(),title,back)
     }
 
     private fun dispatchCommand(command: IdeCommand) {
@@ -934,9 +939,12 @@ class MainActivity : Activity() {
         if (editorRegion.visibility != View.VISIBLE) closePanel()
     }
 
-    private fun showPanelSizeMenu(anchor: View) {
+    private fun showPanelSizeMenu(anchor: View) = showPanelSizeMenu(anchor,null)
+
+    private fun showPanelSizeMenu(anchor: View,back:(()->Unit)?) {
         panelResize.cancelGesture(); commandMenu?.dismiss()
         val menu = DialogMotion.menu(this, anchor, motionAllowed())
+        (menu as? WorkbenchMenu)?.apply{setHeading("面板尺寸","返回布局与输入",back);setItemAppearance(1,IdeIcon.RESTORE);setItemAppearance(2,IdeIcon.MAXIMIZE);setItemAppearance(3,IdeIcon.REFRESH)}
         menu.menu.add(0, 1, 0, R.string.panel_smaller).isEnabled = panelLayout?.resizable == true
         menu.menu.add(0, 2, 1, R.string.panel_larger).isEnabled = panelLayout?.resizable == true
         menu.menu.add(0, 3, 2, R.string.panel_reset)
@@ -2866,6 +2874,11 @@ class MainActivity : Activity() {
         menu.show(); return menu
     }
 
+    private enum class TerminalMenuSection(val title:String,val icon:IdeIcon) {
+        ACTIONS("终端操作",IdeIcon.TERMINAL), SESSIONS("会话管理",IdeIcon.EXPLORER),
+        LAYOUT("布局与输入",IdeIcon.MOVE), APPEARANCE("配色与帮助",IdeIcon.PALETTE)
+    }
+
     private fun showTerminalActions(anchor: View) = showTerminalActionGroup(anchor,-1)
 
     private fun showTerminalActionGroup(anchor:View,section:Int) {
@@ -2879,12 +2892,19 @@ class MainActivity : Activity() {
         val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证", "终端配色",
             ) + if(isCpp())listOf("编辑 C++ 云端预填输入")else emptyList()
         if(section<0){
-            listOf("终端操作","会话管理","布局与输入","配色与帮助").forEachIndexed { index,title->menu.menu.add(0,100+index,index,title) }
+            TerminalMenuSection.entries.forEach { category ->
+                menu.menu.add(0,100+category.ordinal,category.ordinal,category.title)
+                (menu as? WorkbenchMenu)?.setItemAppearance(100+category.ordinal,category.icon)
+            }
             menu.setOnMenuItemClickListener { item->
                 if(terminalRegistry.catalog.selected()===entry)showTerminalActionGroup(anchor,item.itemId-100)
                 true
             }
             menu.show();return
+        }
+        val category=TerminalMenuSection.entries.getOrNull(section)?:return
+        (menu as? WorkbenchMenu)?.setHeading(category.title,"返回终端菜单") {
+            if(!isDestroyed&&anchor.isAttachedToWindow&&terminalRegistry.catalog.selected()===entry)showTerminalActionGroup(anchor,-1)
         }
         val ids=when(section){
             0->listOf(0,1,2,3)
@@ -2894,7 +2914,10 @@ class MainActivity : Activity() {
         }
         ids.forEachIndexed{order,id->
             val title=when(id){20->"新建终端";21->"调整面板尺寸";22->"收起运行面板";else->titles[id]}
-            menu.menu.add(0,id,order,title)
+            val group=when(id){1,2,7,10,6,8->1;3,5->2;else->0}
+            menu.menu.add(group,id,order,title)
+            val icon=when(id){0,10->IdeIcon.INPUT;1->IdeIcon.COPY;2->IdeIcon.PASTE;3->IdeIcon.CLEAR;4->IdeIcon.RENAME;5->IdeIcon.DELETE;6->IdeIcon.INFO;7->IdeIcon.REFRESH;8->IdeIcon.HELP;9->IdeIcon.PALETTE;20->IdeIcon.ADD;21->IdeIcon.MOVE;else->IdeIcon.DOWN}
+            (menu as? WorkbenchMenu)?.setItemAppearance(id,icon,id==5)
         }
         menu.setOnMenuItemClickListener { item ->
             if (terminalRegistry.catalog.selected() === entry) when (item.itemId) {
@@ -2910,7 +2933,7 @@ class MainActivity : Activity() {
                 9 -> showTerminalPalette(anchor)
                 10 -> setPresetInputExpanded(true)
                 20 -> newShellSession()
-                21 -> showPanelSizeMenu(anchor)
+                21 -> showPanelSizeMenu(anchor) { if(!isDestroyed&&anchor.isAttachedToWindow&&terminalRegistry.catalog.selected()===entry)showTerminalActionGroup(anchor,2) }
                 22 -> togglePanel()
             }
             true
