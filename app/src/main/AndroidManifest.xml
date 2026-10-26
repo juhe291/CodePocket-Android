@@ -9,6 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CodePocket">
         <service android:name=".PythonExecutionService" android:exported="false" android:process=":python" />
+        <service android:name=".PythonAnalysisService" android:exported="false" android:process=":analysis" />
         <activity
             android:name=".MainActivity"
             android:resizeableActivity="true"

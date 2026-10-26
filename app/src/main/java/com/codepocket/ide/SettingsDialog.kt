@@ -268,6 +268,7 @@ object SettingsDialog {
                             "Lucide 图标许可证" to activity.assets.open("icon-licenses/LUCIDE-LICENSE.txt").bufferedReader().use{it.readText()},
                             "Sora 编辑器与语法许可" to activity.assets.open("SORA-NOTICE.txt").bufferedReader().use{it.readText()},
                             "GNU LGPL 2.1" to activity.assets.open("LGPL-2.1.txt").bufferedReader().use{it.readText()},
+                            "Python 语义分析许可" to listOf("semantic-licenses/JEDI-LICENSE.txt","semantic-licenses/PARSO-LICENSE.txt","semantic-licenses/TYPESHED-LICENSE.txt","semantic-licenses/DJANGO-STUBS-LICENSE.txt").joinToString("\n\n"){path->path+"\n"+activity.assets.open(path).bufferedReader().use{it.readText()}},
                             "语法与依赖许可证" to listOf("textmate/VSCODE-LICENSE.txt", "textmate/VSCODE-ThirdPartyNotices.txt", "textmate/licenses/APACHE-2.0.txt", "textmate/licenses/EPL-2.0.txt", "textmate/licenses/JONI-MIT.txt", "textmate/licenses/JCODINGS-MIT.txt", "textmate/licenses/DESUGAR-GPL2.txt", "textmate/licenses/DESUGAR-ASSEMBLY-EXCEPTION.txt").joinToString("\n\n") { path -> path + "\n" + activity.assets.open(path).bufferedReader().use { it.readText() } }).forEach{(title,text)->
                             details.addView(WorkbenchStyle.menuRow(activity,title).apply{setOnClickListener{if(!busy)
                                 ReadOnlyDetails.show(activity,title,categories[6],text,IdeIcon.HELP,false,current.animations,null,null,null)}})

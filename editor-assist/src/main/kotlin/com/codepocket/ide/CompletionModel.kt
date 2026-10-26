@@ -4,13 +4,15 @@ import com.codepocket.editor.surface.EditorSurface
 import com.codepocket.editor.surface.PopupGeometry
 
 enum class CompletionKind(val icon: String, val title: String) {
-    KEYWORD("K", "关键字"), TYPE("T", "类型名称"), BUILTIN("ƒ", "内置/常用名称"), IDENTIFIER("abc", "文件中出现的名称"), SNIPPET("{}", "内置代码片段")
+    KEYWORD("K", "关键字"), TYPE("T", "类型名称"), BUILTIN("ƒ", "内置/常用名称"), IDENTIFIER("abc", "文件中出现的名称"), SNIPPET("{}", "内置代码片段"),
+    FUNCTION("ƒ", "函数/方法"), MODULE("M", "模块"), VARIABLE("x", "变量"), PARAMETER("p", "参数")
 }
 enum class CompletionArrows { EXPLICIT, WHEN_VISIBLE, OFF }
 data class CompletionItem(val label: String, val kind: CompletionKind, val detail: String, val snippetId: String? = null)
 data class CompletionEdit(val change: TextChange, val snippet: SnippetExpansion? = null)
 data class CompletionRequest(val document: String, val revision: Long, val code: String, val caret: Int, val end: Int, val cpp: Boolean)
-data class CompletionBatch(val request: CompletionRequest, val start: Int, val end: Int, val items: List<CompletionItem>) {
+data class CompletionBatch(val request: CompletionRequest, val start: Int, val end: Int, val items: List<CompletionItem>,
+    val source: String? = null, val currentFileOnly: Boolean = false) {
     fun edit(current: CompletionRequest, index: Int, maxChars: Int = 200000): TextChange? =
         insertion(current, index, AssistOptions(), maxChars)?.change
 
@@ -77,6 +79,7 @@ object LexicalCompletion {
                     CompletionKind.TYPE -> "常用 C++ 类型名称；未验证头文件、命名空间或声明。"
                     CompletionKind.KEYWORD -> "语言关键字参考；当前为基础词法补全。"
                     CompletionKind.BUILTIN -> "常用名称参考；未进行类型分析或校验当前作用域。"
+                    else -> "基础词法候选。"
                 })
             }.toList()
         val snippets = if (includeSnippets) CodeSnippets.candidates(request, prefix) else emptyList()

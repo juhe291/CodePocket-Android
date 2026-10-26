@@ -28,7 +28,10 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Run Python executor tests
+      - name: Install pinned Python analysis dependencies
+        run: python -m pip install --require-hashes -r app/requirements.txt
+
+      - name: Run Python executor and static analysis tests
         run: python -m unittest discover -s tests -v
 
       - name: Setup Gradle 8.9
@@ -69,6 +72,9 @@ jobs:
       - name: Verify bundled Python bytecode
         run: python scripts/verify_apk.py app/build/outputs/apk/debug/app-debug.apk --output verification/apk-inspection.json
 
+      - name: Verify bundled semantic backend and dependencies
+        run: python scripts/verify_semantics_apk.py app/build/outputs/apk/debug/app-debug.apk --output verification/semantic-apk-inspection.json
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
@@ -87,6 +93,7 @@ jobs:
             app/build/reports/lint-results-debug.*
             editor-sora/build/reports/lint-results-debug.*
             verification/apk-inspection.json
+            verification/semantic-apk-inspection.json
             verification/snippet-inspection.json
             verification/shell-startup-inspection.json
             verification/snippet-fixtures/*.cpp

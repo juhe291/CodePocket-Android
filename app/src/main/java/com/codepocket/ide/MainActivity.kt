@@ -100,6 +100,11 @@ class MainActivity : Activity() {
     private var assistLayoutTask: Runnable? = null
     private val completionExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
     private var completionTask: java.util.concurrent.Future<*>? = null
+    private var semanticClient: PythonSemanticClient? = null
+    private val semanticExecutor = java.util.concurrent.ThreadPoolExecutor(1,1,0,java.util.concurrent.TimeUnit.MILLISECONDS,
+        java.util.concurrent.LinkedBlockingQueue<Runnable>(2),java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy())
+    private var semanticCompletionTask: java.util.concurrent.Future<*>? = null
+    private var semanticSignatureTask: java.util.concurrent.Future<*>? = null
     private val completionConsumedKeys = mutableSetOf<Int>()
     private var quietEdit = false
     private var editorPort: DocumentEditorPort? = null
@@ -450,6 +455,7 @@ class MainActivity : Activity() {
         projectSearch?.cancel(); explorerResizeHandle?.cancelGesture()
         toolDialog?.dismiss(); commandMenu?.dismiss(); commandMenu = null
         hideCompletion(); completionExecutor.shutdownNow(); signatureExecutor.shutdownNow(); completionConsumedKeys.clear()
+        semanticClient?.close(); semanticClient=null; semanticExecutor.shutdownNow()
         cancelWorkbenchMotion()
         explorerDialog?.dismiss()
     }
@@ -1918,6 +1924,7 @@ class MainActivity : Activity() {
         hideSignatureHelp(suppress)
         if (suppress && ::sessions.isInitialized && ::editor.isInitialized) completionSuppressed = completionRequest()
         completionGeneration++; completionTask?.cancel(true); completionTask = null
+        semanticCompletionTask?.cancel(true); semanticCompletionTask=null
         completionBatch = null
         completionPopup?.dismiss(animated = suppress && motionEnabled())
     }
@@ -1941,18 +1948,38 @@ class MainActivity : Activity() {
         hideCompletion()
         val generation = completionGeneration
         val includeSnippets = snippetSession == null
-        completionTask = completionExecutor.submit {
-            val batch = LexicalCompletion.complete(request, includeSnippets)
-            if (Thread.currentThread().isInterrupted || isDestroyed) return@submit
+        fun publish(batch:CompletionBatch?,semantic:Boolean=false,available:Boolean=true) {
             runOnUiThread {
                 if (isDestroyed || isFinishing || !hasWindowFocus() || generation != completionGeneration || workspaceBusy ||
                     request != completionRequest() || !editor.hasFocus() || !editor.isShown ||
                     editor.isComposing ||
                     toolDialog?.isShowing == true || explorerDialog?.isShowing == true) return@runOnUiThread
                 if (waitForAssistLayout(signature = false, explicit = force)) return@runOnUiThread
+                if(semantic && completionPopup?.isShowing==true && completionPopup?.userInteracted==true)return@runOnUiThread
+                if(!semantic && !request.cpp && request.code.length<=45000 &&
+                    (force || request.code.getOrNull(request.caret-1)?.let{it=='.' || it=='_' || it.isLetterOrDigit()}==true)){
+                    val client=semanticClient?:PythonSemanticClient(this).also{semanticClient=it}
+                    val location=SemanticLocation(workspace.root.path,activePath.replace(java.io.File.separatorChar,'/'),!workspace.external)
+                    semanticExecutor.purge()
+                    semanticCompletionTask=semanticExecutor.submit{
+                        val analysis=client.analyze(request,location,"complete")
+                        if(!Thread.currentThread().isInterrupted && !isDestroyed){
+                            if(analysis.available){
+                                val snippets=batch?.items?.filter{it.snippetId!=null}.orEmpty()
+                                val prefix=batch?.let{request.code.substring(it.start,request.caret)}
+                                val exact=snippets.filter{item->CodeSnippets.all(false).firstOrNull{it.id==item.snippetId}?.trigger==prefix}
+                                val upgraded=analysis.completion?.let{it.copy(items=(exact+it.items+snippets.filterNot{it in exact}).take(30))}
+                                    ?:batch?.takeIf{snippets.isNotEmpty()}?.copy(items=snippets)
+                                publish(upgraded,true)
+                            }else if(force && batch==null)publish(null,true,false)
+                        }
+                    }
+                }
                 if (batch == null) {
-                    if (force) status.setText(if (LexicalCompletion.memberContext(request))
-                        R.string.completion_members_pending else R.string.completion_empty)
+                    if(semantic){completionBatch=null;completionPopup?.dismiss(false)}
+                    if (force) status.setText(if(semantic)if(available)R.string.semantic_empty else R.string.semantic_unavailable
+                        else if(!request.cpp)R.string.semantic_loading else if(LexicalCompletion.memberContext(request))
+                            R.string.completion_members_pending else R.string.completion_empty)
                     return@runOnUiThread
                 }
                 hideSignatureHelp()
@@ -1961,6 +1988,7 @@ class MainActivity : Activity() {
                     { index -> acceptCompletion(index) }, {
                         completionBatch?.let { completionSuppressed = it.request }
                         completionBatch = null; completionGeneration++; completionTask?.cancel(true)
+                        semanticCompletionTask?.cancel(true)
                     }).also { completionPopup = it }
                 editor.finishMotion() // Popup and drawn caret must agree on the real insertion point immediately.
                 if (!popup.show(batch, motionEnabled())) {
@@ -1969,12 +1997,17 @@ class MainActivity : Activity() {
                 }
             }
         }
+        completionTask=completionExecutor.submit{
+            val batch=LexicalCompletion.complete(request,includeSnippets)
+            if(!Thread.currentThread().isInterrupted && !isDestroyed)publish(batch)
+        }
     }
 
     private fun hideSignatureHelp(suppress: Boolean = false) {
         cancelAssistLayout()
         if (suppress && ::sessions.isInitialized && ::editor.isInitialized) signatureSuppressed = completionRequest()
         signatureGeneration++; signatureTask?.cancel(true); signatureTask = null
+        semanticSignatureTask?.cancel(true); semanticSignatureTask=null
         signaturePopup?.dismiss(animated = suppress && motionEnabled())
     }
 
@@ -1993,16 +2026,25 @@ class MainActivity : Activity() {
         if (!force && signatureSuppressed == request) return
         hideSignatureHelp()
         val generation = signatureGeneration
-        signatureTask = signatureExecutor.submit {
-            val found = SignatureHelp.find(request)
-            if (Thread.currentThread().isInterrupted || isDestroyed) return@submit
+        fun publish(found:SignatureResult?,semantic:Boolean=false) {
             runOnUiThread {
                 if (isDestroyed || isFinishing || !hasWindowFocus() || generation != signatureGeneration || workspaceBusy ||
                     request != completionRequest() || !editor.hasFocus() || !editor.isShown ||
                     editor.isComposing ||
                     toolDialog?.isShowing == true || explorerDialog?.isShowing == true || completionPopup?.isShowing == true) return@runOnUiThread
                 if (waitForAssistLayout(signature = true, explicit = force)) return@runOnUiThread
+                if(semantic && signaturePopup?.isShowing==true && signaturePopup?.userInteracted==true)return@runOnUiThread
+                if(!semantic && !request.cpp && request.code.take(request.caret).contains('(')){
+                    val client=semanticClient?:PythonSemanticClient(this).also{semanticClient=it}
+                    val location=SemanticLocation(workspace.root.path,activePath.replace(java.io.File.separatorChar,'/'),!workspace.external)
+                    semanticExecutor.purge()
+                    semanticSignatureTask=semanticExecutor.submit{
+                        val analysis=client.analyze(request,location,"signature")
+                        if(analysis.available && !Thread.currentThread().isInterrupted && !isDestroyed)publish(analysis.signature,true)
+                    }
+                }
                 if (found == null || !found.matches(completionRequest())) {
+                    if(semantic)signaturePopup?.dismiss(false)
                     if (force) status.setText(R.string.signature_empty)
                     return@runOnUiThread
                 }
@@ -2011,6 +2053,10 @@ class MainActivity : Activity() {
                 editor.finishMotion()
                 if (!popup.show(found, motionEnabled()) && force) status.setText(R.string.signature_no_space)
             }
+        }
+        signatureTask=signatureExecutor.submit{
+            val found=SignatureHelp.find(request)
+            if(!Thread.currentThread().isInterrupted && !isDestroyed)publish(found)
         }
     }
 

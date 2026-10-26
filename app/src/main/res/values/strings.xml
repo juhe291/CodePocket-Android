@@ -1,4 +1,12 @@
 <resources>
+    <string name="completion_semantic">Python 语义 · %1$s</string>
+    <string name="completion_semantic_file">%1$s · 当前文件/标准库</string>
+    <string name="semantic_loading">正在分析 Python，暂用基础词法补全</string>
+    <string name="semantic_empty">没有可用的 Python 语义候选</string>
+    <string name="semantic_unavailable">Python 语义暂不可用，保留基础词法补全</string>
+    <string name="signature_semantic_heading">Python 参数 %1$d/%2$d</string>
+    <string name="signature_semantic_notice">Jedi 静态分析 · 当前代码与已保存项目模块</string>
+    <string name="signature_semantic_file_notice">Jedi 静态分析 · 当前文件/标准库</string>
     <string name="search_replaced_count">已替换 %1$d 项</string>
     <string name="settings_save_help">关闭停顿保存后，Ctrl+S/保存按钮仍可使用；离开页面仍会保存，恢复草稿始终保留。\n\n应用内项目随卸载清除，请导出备份；已授权目录通过 Android SAF 写回原目录。Python 在真实终端本地交互运行；C++ 源码与预填 stdin 发往 Wandbox，完成后返回结果。</string>
     <string name="completion_lexical">基础词法补全</string>

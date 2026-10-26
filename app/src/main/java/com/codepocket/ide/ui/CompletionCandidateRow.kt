@@ -36,7 +36,7 @@ class CompletionCandidateRow(context:Context,private val labelColor:Int,private 
     }
     fun bind(item:CompletionItem,selected:Boolean){
         label.text=context.getString(R.string.completion_item,"",item.label).trim();kind.text=item.kind.title
-        val icon=when(item.kind){CompletionKind.KEYWORD->IdeIcon.CASE;CompletionKind.TYPE->IdeIcon.HEADER;CompletionKind.BUILTIN->IdeIcon.BRACKETS;CompletionKind.IDENTIFIER->IdeIcon.TEXT;CompletionKind.SNIPPET->IdeIcon.CODE}
+        val icon=when(item.kind){CompletionKind.KEYWORD->IdeIcon.CASE;CompletionKind.TYPE->IdeIcon.HEADER;CompletionKind.BUILTIN,CompletionKind.FUNCTION->IdeIcon.BRACKETS;CompletionKind.IDENTIFIER,CompletionKind.VARIABLE,CompletionKind.PARAMETER->IdeIcon.TEXT;CompletionKind.SNIPPET->IdeIcon.CODE;CompletionKind.MODULE->IdeIcon.FOLDER}
         val color=when(item.kind){CompletionKind.TYPE->IdeIconDrawable.color(IdeIcon.HEADER,p);CompletionKind.KEYWORD->p.accentText;else->muted}
         glyph.setImageDrawable(IdeIconDrawable(context,icon,color,dp(18)))
         isSelected=selected;setBackgroundColor(if(selected)p.selection else base)

@@ -38,6 +38,8 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         private set
     var explicitSelection = false
         private set
+    var userInteracted = false
+        private set
     private val adapter = object : BaseAdapter() {
         override fun getCount() = items.size
         override fun getItem(position: Int) = items[position]
@@ -51,6 +53,7 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
     }
     private val list = ListView(activity).apply {
         adapter = this@CompletionPopup.adapter; dividerHeight = 0; isFocusable = false
+        setOnTouchListener{_,event->if(event.actionMasked==android.view.MotionEvent.ACTION_DOWN)userInteracted=true;false}
         setOnItemClickListener { _, _, index, _ -> accept(index) }
     }
     private val popup = PopupWindow(content, 1, 1, false).apply {
@@ -69,10 +72,11 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
     val isShowing get() = popup.isShowing
     private val heading = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL;setBackgroundColor(com.codepocket.ide.ui.DesignTokens.forContext(activity).panel) }
 
-    init {
-        heading.addView(TextView(activity).apply {
+    private val sourceHeading=TextView(activity).apply {
             setText(R.string.completion_lexical);setSingleLine();ellipsize=android.text.TextUtils.TruncateAt.END;contentDescription=activity.getString(R.string.completion_lexical); textSize = 11f; setTextColor(muted); setPadding(dp(8), 0, 0, 0)
-        }, LinearLayout.LayoutParams(0, dp(48), 1f))
+    }
+    init {
+        heading.addView(sourceHeading, LinearLayout.LayoutParams(0, dp(48), 1f))
         heading.addView(com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),com.codepocket.ide.ui.IdeIcon.CLOSE,
             activity.getString(R.string.completion_close)) { dismiss() }, LinearLayout.LayoutParams(dp(48),dp(48)))
         content.addView(heading); content.addView(list, LinearLayout.LayoutParams(-1, 0, 1f)); content.addView(details)
@@ -81,7 +85,10 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
     fun show(batch: CompletionBatch, animate: Boolean): Boolean {
         val alreadyShowing = isShowing
         document = batch.request.document; revision = batch.request.revision; offset = batch.request.caret
-        items = batch.items; selectedIndex = 0; explicitSelection = false
+        items = batch.items; selectedIndex = 0; explicitSelection = false;userInteracted=false
+        sourceHeading.text=if(batch.source==null)activity.getString(R.string.completion_lexical)
+            else activity.getString(if(batch.currentFileOnly)R.string.completion_semantic_file else R.string.completion_semantic,batch.source)
+        com.codepocket.ide.ui.IdeControls.describe(sourceHeading,sourceHeading.text.toString())
         adapter.notifyDataSetChanged(); updateDetails()
         if (!reposition()) return false
         popup.exitTransition = if (com.codepocket.ide.animation.MotionEnvironment.enabled(activity, animate))
@@ -94,7 +101,7 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
 
     fun move(delta: Int) {
         if (items.isEmpty()) return
-        explicitSelection = true; selectedIndex = (selectedIndex + delta).coerceIn(0, items.lastIndex)
+        explicitSelection = true;userInteracted=true; selectedIndex = (selectedIndex + delta).coerceIn(0, items.lastIndex)
         adapter.notifyDataSetChanged(); list.setSelection(selectedIndex); updateDetails(); reposition()
     }
 

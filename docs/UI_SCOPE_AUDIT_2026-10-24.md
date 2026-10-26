@@ -1,8 +1,8 @@
 # UI 范围核对与剩余事项（更新至2026-10-26）
 
-范围按用户最新指令确定：UI视觉优先，允许适度装饰；保留已有项目和真实运行；未实现功能先不接入，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
+范围按用户最新指令确定：零碎UI润色暂停，已授权按P2计划推进Python真实补全；保留已有项目和真实运行，其他未列入当批的功能暂缓，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
 
-本批最终验证及APK见[只读详情合并批次](UI_DETAILS_BATCH_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
+本批最终验证及APK见[Python真实补全接入批次](P2_PYTHON_SEMANTICS_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
 
 | 范围 | 当前源码与实际入口 | 证据及边界 |
 | --- | --- | --- |
@@ -20,7 +20,7 @@
 | 菜单层级 | 固定分类标题与可滚动正文，按进入路径提供48dp返回/方向左键返回，Esc关闭；主分类与命令图标按稳定身份指定；撤销、查找定位、字号、辅助功能按组分隔；快捷键窄屏/大字体换到名称下方 | MainSurfaceIntegrationTest和MenuHierarchyIntegrationTest实际弹窗、返回/旧回调隔离、改名后图标/禁用/派发身份、大字体实际跳转；终端分类/尺寸/配色返回保留会话模型；会话/配色选择器含标题与当前项，真实Nord设置和已有会话切换保持缓冲；其余旧列表选择器保留兼容映射 |
 | 查找/替换与定位 | SearchDialog及原literal替换；跳转行、项目搜索的范围标题、自适应输入、可滚正文、空结果不留空列表及现有过时来源保护 | ContextBatchIntegrationTest、MainSurfaceIntegrationTest、SoraWorkbenchIntegrationTest、EditorSearch相关回归；280dp/2倍字体真实未保存搜索并定位，没有改为新的搜索引擎 |
 | 语法与括号/角色色 | 当前TextMate语法与词法角色/嵌套括号装饰；深浅主题与真实令牌配色 | SoraWorkbenchIntegrationTest验证真实span颜色、选区/撤销/主题往返；这些颜色不代表深度语义分析 |
-| 补全/片段/参数 | 基础词法候选的类型/名称/说明分层、窄屏优先名称；内置片段分语言/触发词/说明，单/多形式参数参考与布局后横向定位；原Tab/方向键/Esc、组合输入/异步布局与旧结果保护 | AssistSurfaceIntegrationTest、CompletionInteractionTest、MainSurfaceIntegrationTest；真实提供器/模板、方向键/Tab、插入/导航/撤销和参考形式/滚动分别回归；Jedi/clangd深语义未接入，代码折叠等额外能力不作为本轮新交付 |
+| 补全/片段/参数 | 基础词法候选的类型/名称/说明分层、窄屏优先名称；内置片段分语言/触发词/说明，单/多形式参数参考与布局后横向定位；原Tab/方向键/Esc、组合输入/异步布局与旧结果保护 | AssistSurfaceIntegrationTest、CompletionInteractionTest、MainSurfaceIntegrationTest；真实提供器/模板、方向键/Tab、插入/导航/撤销和参考形式/滚动分别回归；Python/Jedi成员与真实参数已接主App，证据见P2_PYTHON_SEMANTICS_2026-10-26.md及新21项；Android实际分析未实测，C++/clangd及其他额外能力仍后置 |
 | 错误反馈 | 基础结构诊断与运行定位映射、红线、点击只读浮层；变化时关闭旧诊断 | MainSurfaceIntegrationTest、SoraWorkbenchIntegrationTest；不是完整LSP/所有实时编译错误检查 |
 | 真实终端与运行 | 单一真实PTY及其会话管理；Python本地桥、C++既有Wandbox完成后返回/预填stdin；第三方提示保持 | 当前运行模块/原生库逐字节保留，Python源码/APK字节码及主机Shell/片段实际检查；本轮不能证明Android Chaquopy/mksh或Wandbox远端执行已实机通过 |
 | 面板操作与配色 | 现有拖高/最大化/恢复/收起、会话关闭、键盘/控制键、复制/清空；TerminalAppearance五种配色与成熟ANSI解析 | TerminalWorkbenchViewTest、ShellUiTest、ShellTerminalTouchTest及TerminalDockIntegrationTest；四动作窄屏/大字体图标化、极窄滚动保持48dp；主机模型保持不代表设备进程存活验收，实际触屏/键鼠交互后置 |
@@ -30,9 +30,11 @@
 | 状态信息 | 中性底栏、优先真实保存失败，窄/大字体优先主状态和行列；完整信息保留说明，宽窗口正常字体增加缩进和编码 | WorkbenchPathStatusIntegrationTest实际外部冲突、草稿/缓冲保持、成功重试及特殊文件名新编辑回归；状态栏点击设置尚未接入，继续暂缓 |
 | 路径栏 | 最小24dp并随文字增高、中间省略、完整原路径说明及提示；相同路径避免重复文本设置 | 前述实际Main/Sora手机/平板2倍字体及正常高度回归；没有新增路径导航菜单；<360dp高隐藏被动路径、恢复后显示，浮动Insets不直接隐藏 |
 | CI与产物 | build-apk.yml保留原Debug构建、校验及上传；当前本地主APK、示例预览与机器结果归档 | 当前未派发远端Actions，不能声称远端CI通过 |
-| 明确后置范围 | WebView/网页左右移动/辅助栏内容、Git/插件/账号、Jedi/clangd等深语义及原P2/P3 | 原需求与研究文件保留；auxiliarySlot隐藏，不放假网页/商店或伪造语义候选 |
+| 明确后置范围 | WebView/网页左右移动/辅助栏内容、Git/插件/账号、C++/clangd及其余P2/P3，Python多未保存标签/SAF项目快照 | 原需求与研究文件保留；auxiliarySlot隐藏，不放假网页/商店或伪造语义候选 |
 
 ## 登记与验收边界
+
+- Python补全接入新增ClickableViewAccessibility一条：用于冻结用户已操作的候选，触摸监听返回false保留ListView原处理；不屏蔽规则，设备无障碍待验收。当前主18/Sora1警告、零错误。
 
 - 只读详情批次新增1条UnusedResources：strings.xml:96的shell_failure_close已无引用；共享层仍显示相同“关闭”，旧资源保留，无运行阻塞。按约定先登记，不屏蔽规则，不为此单独重打包。当前主App17/Sora1条警告、零错误。
 

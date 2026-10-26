@@ -1,13 +1,13 @@
 # CodePocket · Android C++ / Python IDE
 
-> 当前优先级：UI视觉与工作台层次。允许适度装饰，未实现新功能暂缓；保留原保存、生产Sora和真实运行。见[本批记录](docs/UI_DETAILS_BATCH_2026-10-26.md)和[范围核对](docs/UI_SCOPE_AUDIT_2026-10-24.md)。按[批次节奏](docs/DEVELOPMENT_BATCH_POLICY.md)积累相关修改再统一构建。
+> 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心能力，零碎UI润色暂停。Python真实补全首批已完成代码/主机/APK验证；设备运行验收仍后置，下一批补多文件未保存上下文与SAF快照。以下历史记录保留当时含义，当前事实以本批报告和RESUME为准。
 
-**2026-10-26：只读详情合并整理。** 帮助、许可、按键说明、诊断及终端错误记录统一原生阅读浮层；640dp最大阅读宽度、上下文标题、尺寸跟随、全文选择/复制和关闭返回，设置未应用草稿保持。
+**2026-10-26：Python真实补全与参数接入。** Python真实成员/标准库/已保存内部模块补全与函数参数接入同一主App；当前未保存正文参与，来源明确，失败保留词法/内置参考。
 
-- [最新Debug APK](dist/CodePocket-details-batch-2026-10-26-debug.apk)（25.45MiB，原签名、arm64-v8a）。
-- [结果与限制](docs/UI_DETAILS_BATCH_2026-10-26.md) · [9张原生预览](docs/details-batch-preview/README.md)：主App751项中750通过、0失败、1项旧跳过；Lint0错误，主17/Sora1警告，其中1条新增未使用字符串警告已登记。 Debug实际打包、签名及运行模块主机检查通过。
-- [可点击样稿](docs/ui-preview/README.md)为既有设计示例；本批以实际原生Views图和断言验证，不将旧样稿数字当成本轮结果。
-- 实机IME/组合输入、蓝牙键鼠、API24、卓易通、第一帧/FPS、Wandbox远端及GitHub Actions均未验收，按约定后置。旧被动缩窗焦点、关键词状态、未确认单次helper导入问题继续登记；原P2/P3及未实现功能保留暂缓。 历史见[接续记录](docs/RESUME.md)，不声明整个项目完成。
+- [最新Debug APK](dist/CodePocket-python-semantics-2026-10-26-debug.apk)（30.93MiB，原签名，arm64-v8a）。
+- [结果与限制](docs/P2_PYTHON_SEMANTICS_2026-10-26.md) · [3张原生预览](docs/python-semantic-preview/README.md)：主771通过/1旧跳过，定向79通过，Lint0错误；Python源码63、APK原运行39/语义19及运行专项通过。
+- 已验证内部项目已保存模块和当前未保存正文；其他未保存标签、SAF项目快照、C++语义留后续。新增1条非阻塞触摸监听Lint提示已登记。
+- Android分析服务/JNI实际运行、IME/键鼠/API24/卓易通/性能及远端CI未验收；[交接](docs/RESUME.md)。原保存、Sora、真实Python/C++运行和PTY保持。
 
 ## 历史主机整合验收
 
@@ -261,6 +261,7 @@ JDK 17、Gradle 8.9、AGP 8.7.3、Kotlin 1.9.25、Chaquopy 17.1.0、Python 3.13�
 构建机需要包含 venv 的完整 Python 3.13；最小嵌入包不可直接代替。本次工具和依赖缓存位于忽略提交的 .tools，不改变系统 Java。通常命令：
 
 ```powershell
+python -m pip install --require-hashes -r app/requirements.txt
 python -m unittest discover -s tests -v
 .\gradlew.bat :app:testDebugUnitTest :app:lintDebug :app:assembleDebug --stacktrace
 # 本机已有便携环境时：

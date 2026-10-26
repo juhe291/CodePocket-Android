@@ -1,0 +1,74 @@
+{
+  "engine": "Jedi 0.20.1",
+  "backend_sha256": "65b3368de6b80bbcca8109706f5b1bcf2d02cd24d05105456dc5f2d92f6b2a17",
+  "real_backend": true,
+  "android_execution": false,
+  "cases": {
+    "list": {
+      "code": "items: list[str] = []\nitems.ap",
+      "caret": 30,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"append\", \"kind\": \"function\", \"detail\": \"def append\\nAppend object to the end of the list.\"}], \"signatures\": [], \"start\": 28, \"end\": 30}"
+    },
+    "json": {
+      "code": "import json\njson.lo",
+      "caret": 19,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"load\", \"kind\": \"function\", \"detail\": \"def load\\nDeserialize ``fp`` (a ``.read()``-supporting file-like object containing\\na JSON document) to a Python object.\\n\\n``object_hook`` is an optional function that will be called with the\\nresult of any object literal decode (a ``dict``). The return value of\\n``object_hook`` will be used instead of the ``dict``. This feature\\ncan be used to implement custom decoders (e.g. JSON-RPC class hinting).\\n\\n``object_pairs_hook`` is an optional function that will be called with the\\nresult of any object literal decoded with an ordered list of pairs.  The\\nreturn value of ``object_pairs_hook`` will be used in\"}, {\"label\": \"loads\", \"kind\": \"function\", \"detail\": \"def loads\\nDeserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance\\ncontaining a JSON document) to a Python object.\\n\\n``object_hook`` is an optional function that will be called with the\\nresult of any object literal decode (a ``dict``). The return value of\\n``object_hook`` will be used instead of the ``dict``. This feature\\ncan be used to implement custom decoders (e.g. JSON-RPC class hinting).\\n\\n``object_pairs_hook`` is an optional function that will be called with the\\nresult of any object literal decoded with an ordered list of pairs.  The\\nreturn value of ``object_pairs_hook`` will be us\"}], \"signatures\": [], \"start\": 17, \"end\": 19}"
+    },
+    "instance": {
+      "code": "class Learner:\n    def solve(self, task): pass\nLearner().so",
+      "caret": 59,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"solve\", \"kind\": \"function\", \"detail\": \"def solve\\n\"}], \"signatures\": [], \"start\": 57, \"end\": 59}"
+    },
+    "module": {
+      "code": "from sibling import Token\nToken().ru",
+      "caret": 36,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"run\", \"kind\": \"function\", \"detail\": \"def run\\n\"}], \"signatures\": [], \"start\": 34, \"end\": 36}"
+    },
+    "middle": {
+      "code": "value='text'\nvalue.uppxx",
+      "caret": 22,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"upper\", \"kind\": \"function\", \"detail\": \"def upper\\nReturn a copy of the string converted to uppercase.\"}], \"signatures\": [], \"start\": 19, \"end\": 24}"
+    },
+    "unicode": {
+      "code": "name='😀中文'\r\nitems=[];items.ap",
+      "caret": 30,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"append\", \"kind\": \"function\", \"detail\": \"def append\\nAppend object to the end of the list.\"}], \"signatures\": [], \"start\": 28, \"end\": 30}"
+    },
+    "signature": {
+      "code": "def combine(left: int, right: str='x'): return right\ncombine(1,",
+      "caret": 63,
+      "mode": "signature",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [], \"signatures\": [{\"name\": \"combine\", \"parameters\": [\"left: int\", \"right: str='x'\"], \"active\": 1, \"opened\": 60, \"detail\": \"\"}]}"
+    },
+    "shadowed": {
+      "code": "def print(custom: str): pass\nprint(custom=",
+      "caret": 42,
+      "mode": "signature",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [], \"signatures\": [{\"name\": \"print\", \"parameters\": [\"custom: str\"], \"active\": 0, \"opened\": 34, \"detail\": \"\"}]}"
+    },
+    "unknown": {
+      "code": "unknown_object.",
+      "caret": 15,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [], \"signatures\": []}"
+    },
+    "prefix": {
+      "code": "project_value=1\np",
+      "caret": 17,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"pass\", \"kind\": \"keyword\", \"detail\": \"keyword pass\\nThe \\\"pass\\\" statement\\n********************\\n\\n   pass_stmt ::= \\\"pass\\\"\\n\\n\\\"pass\\\" is a null operation \\u2014 when it is executed, nothing happens. It\\nis useful as a placeholder when a statement is required syntactically,\\nbut no code needs to be executed, for example:\\n\\n   def f(arg): pass    # a function that does nothing (yet)\\n\\n   class C: pass       # a class with no methods (yet)\"}, {\"label\": \"pow\", \"kind\": \"function\", \"detail\": \"def pow\\nEquivalent to base**exp with 2 arguments or base**exp % mod with 3 arguments\\n\\nSome types, such as ints, are able to use a more efficient algorithm when\\ninvoked using the three argument form.\"}, {\"label\": \"print\", \"kind\": \"function\", \"detail\": \"def print\\nPrints the values to a stream, or to sys.stdout by default.\\n\\nsep\\n  string inserted between values, default a space.\\nend\\n  string appended after the last value, default a newline.\\nfile\\n  a file-like object (stream); defaults to the current sys.stdout.\\nflush\\n  whether to forcibly flush the stream.\"}, {\"label\": \"project_value\", \"kind\": \"statement\", \"detail\": \"project_value=1\\n\"}, {\"label\": \"property\", \"kind\": \"class\", \"detail\": \"class property\\nProperty attribute.\\n\\n  fget\\n    function to be used for getting an attribute value\\n  fset\\n    function to be used for setting an attribute value\\n  fdel\\n    function to be used for del'ing an attribute\\n  doc\\n    docstring\\n\\nTypical use is to define a managed attribute x:\\n\\nclass C(object):\\n    def getx(self): return self._x\\n    def setx(self, value): self._x = value\\n    def delx(self): del self._x\\n    x = property(getx, setx, delx, \\\"I'm the 'x' property.\\\")\\n\\nDecorators make defining new properties or modifying existing ones easy:\\n\\nclass C(object):\\n    @property\\n    def x(self):\\n    \"}, {\"label\": \"PendingDeprecationWarning\", \"kind\": \"class\", \"detail\": \"class PendingDeprecationWarning\\nBase class for warnings about features which will be deprecated\\nin the future.\"}, {\"label\": \"PermissionError\", \"kind\": \"class\", \"detail\": \"class PermissionError\\nNot enough permissions.\"}, {\"label\": \"ProcessLookupError\", \"kind\": \"class\", \"detail\": \"class ProcessLookupError\\nProcess not found.\"}, {\"label\": \"PythonFinalizationError\", \"kind\": \"class\", \"detail\": \"class PythonFinalizationError\\nOperation blocked during Python finalization.\"}], \"signatures\": [], \"start\": 16, \"end\": 17}"
+    },
+    "snippet": {
+      "code": "for",
+      "caret": 3,
+      "mode": "complete",
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"format\", \"kind\": \"function\", \"detail\": \"def format\\nReturn type(value).__format__(value, format_spec)\\n\\nMany built-in types implement format_spec according to the\\nFormat Specification Mini-language. See help('FORMATTING').\\n\\nIf type(value) does not supply a method named __format__\\nand format_spec is empty, then str(value) is returned.\\nSee also help('SPECIALMETHODS').\"}], \"signatures\": [], \"start\": 0, \"end\": 3}"
+    }
+  }
+}

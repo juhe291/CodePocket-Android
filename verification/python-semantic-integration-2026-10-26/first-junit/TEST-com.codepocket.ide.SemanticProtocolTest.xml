@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.SemanticProtocolTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-26T09:51:19" hostname="JUHE" time="0.137">
+  <properties/>
+  <testcase name="exactMiddleTokenReplacementKeepsTheUnchangedPrefixAndUndoSource" classname="com.codepocket.ide.SemanticProtocolTest" time="0.029"/>
+  <testcase name="malformedOrSplitSurrogateEditsAreRejected" classname="com.codepocket.ide.SemanticProtocolTest" time="0.017"/>
+  <testcase name="unicodeOffsetsAreAndroidUtf16AndDoNotDeleteEmoji" classname="com.codepocket.ide.SemanticProtocolTest" time="0.017"/>
+  <testcase name="noResultIsDifferentFromBackendFailure" classname="com.codepocket.ide.SemanticProtocolTest" time="0.018"/>
+  <testcase name="actualListAndClassMembersHaveTheirRealKinds" classname="com.codepocket.ide.SemanticProtocolTest" time="0.016"/>
+  <testcase name="actualSignaturesOverrideCuratedSameNameAndCarryCurrentParameter" classname="com.codepocket.ide.SemanticProtocolTest" time="0.021"/>
+  <testcase name="clientPassesCurrentFileScopeAndNeverAnalyzesCppOrOversizedCode" classname="com.codepocket.ide.SemanticProtocolTest" time="0.019"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

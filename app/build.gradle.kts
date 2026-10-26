@@ -40,8 +40,15 @@ android {
 chaquopy {
     defaultConfig {
         version = "3.13"
+        // Jedi reads its bundled stubs and Python sources by filesystem path.
+        extractPackages("jedi", "parso")
         providers.gradleProperty("codepocket.buildPython").orNull?.let { buildPython(it) }
-        // Embedded CPython standard library; no pip requirements.
+        pip {
+            install("-r", "requirements.txt")
+            providers.gradleProperty("codepocket.semanticWheels").orNull?.let { wheels ->
+                options("--no-index", "--find-links", wheels)
+            }
+        }
     }
 }
 

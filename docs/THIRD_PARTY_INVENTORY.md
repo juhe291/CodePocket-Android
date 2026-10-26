@@ -1,5 +1,9 @@
 # 第三方依赖与许可证初步清单
 
+## 2026-10-26 Python语义接入增补
+
+主App新增固定版本Jedi 0.20.1（MIT）及Parso 0.8.7（MIT），精确wheel摘要在app/requirements.txt，离线构建使用.tools/semantic-wheels；不是用户全局Python依赖。Jedi随包typeshed和django-stubs原始许可一并保留，四份通知位于app/src/main/assets/semantic-licenses，设置→帮助与许可→Python语义分析许可可查看。Jedi/Parso按Chaquopy extractPackages提取供文件系统读取；代码/数据实际打包检查以本批报告为准。其余依赖及原许可边界继续保留，不据此宣称整个项目发布通知已完整。
+
 2026-10-15 阶段 0。依据当前构建配置、本地实际制品 POM、Wrapper 声明和 APK 检查记录整理。当前为审查清单，尚不是完整发布通知包。
 
 POM 原文快照及机器可读索引位于 [license-metadata.json](../verification/stage0-2026-10-15/license-metadata.json) 和同目录 license-metadata/；运行时依赖图见 runtime-dependencies.log。缓存中的其他旧版本制品不等于当前 App 依赖。

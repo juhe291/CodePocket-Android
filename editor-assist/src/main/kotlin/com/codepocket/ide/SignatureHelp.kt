@@ -13,7 +13,7 @@ data class SignatureForm(val parts: List<String>, val positional: List<Int>,
 }
 
 data class BuiltinSignature(val name: String, val cpp: Boolean, val forms: List<SignatureForm>,
-    val description: String, val source: String)
+    val description: String, val source: String, val semantic: Boolean = false, val currentFileOnly: Boolean = false)
 
 /** Curated reference only. No symbol lookup, overload resolution, evaluation or network calls. */
 object BuiltinSignatures {
@@ -55,9 +55,10 @@ object BuiltinSignatures {
 }
 
 data class SignatureResult(val request: CompletionRequest, val reference: BuiltinSignature,
-    val openOffset: Int, val argument: Int, val keyword: String?) {
+    val openOffset: Int, val argument: Int, val keyword: String?, val actualParameters: List<Int?>? = null) {
     fun matches(current: CompletionRequest) = request == current
-    fun active(form: Int) = reference.forms.getOrNull(form)?.parameter(argument, keyword)
+    fun active(form: Int) = if(actualParameters!=null)actualParameters.getOrNull(form)
+        else reference.forms.getOrNull(form)?.parameter(argument, keyword)
 }
 
 /** Bounded lexical call context, deliberately declining ambiguous constructs instead of guessing. */

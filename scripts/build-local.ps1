@@ -40,6 +40,7 @@ try {
         $options += @('-I', '.tools/mirror.init.gradle', '-Dhttp.nonProxyHosts=*.aliyun.com')
     }
     if ($BuildPython) { $options += "-Pcodepocket.buildPython=$BuildPython" }
+    if (Test-Path '.tools/semantic-wheels') { $options += "-Pcodepocket.semanticWheels=$projectRoot/.tools/semantic-wheels" }
     if ($ProxyHost) {
         $options += @("-Dhttps.proxyHost=$ProxyHost", "-Dhttps.proxyPort=$ProxyPort", "-Dhttp.proxyHost=$ProxyHost", "-Dhttp.proxyPort=$ProxyPort")
     }
