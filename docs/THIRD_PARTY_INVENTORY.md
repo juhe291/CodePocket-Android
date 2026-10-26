@@ -1,5 +1,9 @@
 # 第三方依赖与许可证初步清单
 
+## 2026-10-27 C++候选核验（尚未接入）
+
+[前置报告](P2_CPP_SEMANTICS_PROBE_2026-10-27.md)保存真实候选GPG/摘要/ELF依赖与12份通知。LLVM/Clang、libc++、libffi、libxml2、zlib、Zstd库与libiconv分别核对，libiconv1.19完整对应源码已取得。原生只是.tools缓存中的试验闭包，当前生产APK仍为P2-B；NDK r30完整notices、重链接说明、生产许可入口和对应源码交付未完成，不据此宣称发布许可清单已闭合。
+
 ## 2026-10-26 Python语义接入增补
 
 主App新增固定版本Jedi 0.20.1（MIT）及Parso 0.8.7（MIT），精确wheel摘要在app/requirements.txt，离线构建使用.tools/semantic-wheels；不是用户全局Python依赖。Jedi随包typeshed和django-stubs原始许可一并保留，四份通知位于app/src/main/assets/semantic-licenses，设置→帮助与许可→Python语义分析许可可查看。Jedi/Parso按Chaquopy extractPackages提取供文件系统读取；代码/数据实际打包检查以本批报告为准。其余依赖及原许可边界继续保留，不据此宣称整个项目发布通知已完整。

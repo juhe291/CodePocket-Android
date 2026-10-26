@@ -1,5 +1,7 @@
 # CodePocket · Android C++ / Python IDE
 
+> 2026-10-27开发中：[C++语义前置验证](docs/P2_CPP_SEMANTICS_PROBE_2026-10-27.md)已取得真实arm64静态证据与15项同版本主机LSP结果；仍需接入主App、补齐许可交付并验证实际APK。当前安装包继续使用下方P2-B，不把主机探测称作Android运行通过。
+
 > 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心能力，零碎UI润色暂停。P2-B项目上下文已完成代码/主机/APK验证；下一步C++语义，设备运行验收仍后置。整个计划尚未完成。
 
 **2026-10-26：Python跨文件未保存上下文与SAF新鲜快照。**

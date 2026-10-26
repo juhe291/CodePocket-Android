@@ -1,0 +1,16 @@
+{
+  "preflight_verified": true,
+  "real_lsp_cases": 15,
+  "original_apk_unchanged": true,
+  "production_sources_unchanged": true,
+  "candidate_native_files": 9,
+  "native_raw_bytes": 219813944,
+  "probe_zip_bytes": 70112897,
+  "source_signature_verified": true,
+  "notices_collected": 12,
+  "app_regression_not_rerun": true,
+  "new_apk_built": false,
+  "android_execution": false,
+  "production_integrated": false,
+  "full_goal_complete": false
+}

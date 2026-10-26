@@ -1,0 +1,22 @@
+dot: PASS (35 ms)
+arrow: PASS (28 ms)
+namespace: PASS (29 ms)
+vector: PASS (708 ms)
+unicode_crlf: PASS (708 ms)
+middle: PASS (29 ms)
+signature: PASS (26 ms)
+overload: PASS (25 ms)
+overload_arity: PASS (30 ms)
+unsaved_header: PASS (43 ms)
+scope: PASS (29 ms)
+unknown: PASS (27 ms)
+prefix: PASS (28 ms)
+updated_header: PASS
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-semantic-probe-2026-10-27\probe-lsp.py", line 192, in <module>
+    if __name__ == '__main__': main()
+                               ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-semantic-probe-2026-10-27\probe-lsp.py", line 173, in main
+    assert expected in found and not forbidden.intersection(found), response
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'id': 16, 'jsonrpc': '2.0', 'result': {'isIncomplete': False, 'items': [{'detail': 'void', 'filterText': 'save', 'insertText': 'save()', 'insertTextFormat': 2, 'kind': 2, 'label': ' save()', 'score': 0.9368076324462891, 'sortText': '40902d60save', 'textEdit': {'newText': 'save()', 'range': {'end': {'character': 26, 'line': 1}, 'start': {'character': 26, 'line': 1}}}}]}}

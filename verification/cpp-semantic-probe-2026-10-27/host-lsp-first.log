@@ -1,0 +1,11 @@
+dot: PASS (5 ms)
+arrow: PASS (4 ms)
+namespace: PASS (3 ms)
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-semantic-probe-2026-10-27\probe-lsp.py", line 168, in <module>
+    if __name__ == '__main__': main()
+                               ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-semantic-probe-2026-10-27\probe-lsp.py", line 144, in main
+    if tag in ('vector', 'unicode_crlf'): assert 'push_back' in names(response), response
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'id': 5, 'jsonrpc': '2.0', 'result': {'isIncomplete': False, 'items': []}}

@@ -1,0 +1,7 @@
+gpg: invalid key resource URL 'C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\gnupg\\termux.gpg'
+gpg: keyblock resource '(null)': General error
+gpg: key 5A897D96E57CF20C: 2 signatures not checked due to missing keys
+gpg: no writable keyring found: Not found
+gpg: error reading 'C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\termux-autobuilds.gpg': General error
+gpg: import from 'C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\termux-autobuilds.gpg' failed: General error
+gpg: Total number processed: 0

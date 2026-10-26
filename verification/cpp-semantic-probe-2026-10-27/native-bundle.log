@@ -1,0 +1,12 @@
+{
+  "real_elf_inputs": true,
+  "source_archives_gpg_verified": true,
+  "native_count": 9,
+  "raw_bytes": 219813944,
+  "probe_zip_bytes": 70112897,
+  "zip_is_not_an_apk": true,
+  "all_dependencies_resolved": true,
+  "existing_jni_libraries_untouched": true,
+  "android_execution": false,
+  "production_integrated": false
+}
