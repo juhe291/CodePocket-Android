@@ -1,0 +1,97 @@
+{
+  "apk": "dist/CodePocket-settings-chrome-batch-2026-10-26-debug.apk",
+  "bytes": 26681355,
+  "sha256": "383f893c147d34d5de610d82e6a458910c3b424a8c89cf1bc5ff95004938dd34",
+  "junit": {
+    "tests": 745,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 16
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "browser": {
+    "cases": 368,
+    "checks": 117,
+    "paletteChecks": 20,
+    "scenes": 46,
+    "devices": 4,
+    "themes": 2,
+    "errors": [],
+    "failures": [],
+    "androidDeviceVerified": false
+  },
+  "baseline_tests": 6,
+  "baseline_failures": 6,
+  "targeted": {
+    "tests": 38,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "retained_test_cases": 739,
+  "new_test_cases": 6,
+  "no_new_skips": true,
+  "native_previews": 7,
+  "browser_screenshots": 230,
+  "old_apks_preserved": 85,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "signature": "passed",
+  "signer_sha256": "d58e4cd7c849ebcf3cf35fde35f1d201c2569bb9ef11f2b48a4ba80cacd10408",
+  "alignment_16kb": "passed",
+  "zip_crc": "passed",
+  "packaged_theme_matches_source": true,
+  "final_package_task_executed": true,
+  "apk_build_invocations": 1,
+  "view_constructor_warning_resolved": true,
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false,
+  "production_changed": [
+    "MainToolbar.kt: real workspace name, quiet folder/disclosure icons, full path and compact text",
+    "MainActivity.kt: remove duplicate rail Run callback, preserve top Run/F5/menu",
+    "SettingsDialog.kt: stable option identities, section grouping, once-per-group search context, shared choice rows and on-demand complete key help",
+    "CompletionCandidateRow.kt: normal Context constructor, original explicit palette constructor preserved"
+  ],
+  "validation_boundary": "Real Main/Sora buffer, workspace picker, settings cancel/apply/recreate and native View drawings under Robolectric. Browser is design-only. No live Android IME/BT keyboard, PTY, Chaquopy device, Harmony, API24, frame rate or Wandbox/remote Actions validation.",
+  "retained_deferred_issues": [
+    "Passive tablet height transition may lose Sora focus; old/device cause unconfirmed",
+    "InteractionState secondary explanation is keyword based",
+    "Prior single packaged helper import failure remains unconfirmed, full reruns pass",
+    "Original P2/P3 and unimplemented feature scope remain deferred"
+  ],
+  "test_refinement": "Baseline six real UI failures. First 38 targeted tests passed. Workspace picker title assertion corrected to current production header (工作区); prior main structure brand assertion updated to actual short workspace name while retaining width/hierarchy checks. Added complete on-demand help content assertion before final full run; no test identities removed or added skips.",
+  "deferred_visual_observation": "平板按键说明只读弹窗沿用原生默认宽度，文字可滚动/关闭且完整，但横向阅读跨度偏大；下一批与帮助/许可/详情浮层统一收窄，不为此单独生成APK。",
+  "settings_model_preservation": {
+    "original_options": 23,
+    "current_options": 23,
+    "option_order_labels_getters_setters_unchanged": true,
+    "scope": "Only stable key arguments removed for exact source comparison; section presentation reorders rows within category."
+  }
+}

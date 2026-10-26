@@ -29,36 +29,57 @@ object SettingsDialog {
             }.getOrDefault(Draft(current))
         }
     }
-    private data class Spec(val category:Int,val title:String,val help:String,val bool:((AppSettings)->Boolean)?=null,
+    private data class Spec(val key:String,val category:Int,val title:String,val help:String,val bool:((AppSettings)->Boolean)?=null,
         val toggle:((AppSettings,Boolean)->AppSettings)?=null,val options:List<String> = emptyList(),
         val selected:((AppSettings)->Int)?=null,val choose:((AppSettings,Int)->AppSettings)?=null)
     private fun specs(activity:Activity):List<Spec> = buildList {
-        fun toggle(c:Int,t:String,h:String,get:(AppSettings)->Boolean,set:(AppSettings,Boolean)->AppSettings){add(Spec(c,t,h,get,set))}
-        fun choice(c:Int,t:String,h:String,options:List<String>,get:(AppSettings)->Int,set:(AppSettings,Int)->AppSettings){add(Spec(c,t,h,options=options,selected=get,choose=set))}
-        choice(0,"界面主题","工作台、菜单与设置使用同一套主题",listOf("深色","浅色","跟随系统"),{it.theme.ordinal},{s,i->s.copy(theme=UiTheme.values()[i])})
-        choice(1,"语法主题","当前为词法高亮，尚非深度语义分析",listOf("跟随界面","Dark+","Light+"),{it.syntax.ordinal},{s,i->s.copy(syntax=SyntaxTheme.values()[i])})
-        choice(1,"代码字号","预览与实际字号均使用 sp",(10..28).map{"$it sp"},{it.fontSize-10},{s,i->s.copy(fontSize=i+10)})
-        choice(1,"缩进宽度","Tab 和智能缩进共同使用",listOf("2 列","4 列","8 列"),{listOf(2,4,8).indexOf(it.tabWidth)},{s,i->s.copy(tabWidth=listOf(2,4,8)[i])})
-        toggle(1,"使用空格缩进","关闭后插入 Tab 字符",{it.useSpaces},{s,v->s.copy(useSpaces=v)})
-        toggle(1,"显示行号","与源码逻辑行保持一致",{it.lineNumbers},{s,v->s.copy(lineNumbers=v)})
-        toggle(1,"自动换行","按编辑区可用宽度折行",{it.wordWrap},{s,v->s.copy(wordWrap=v)})
-        toggle(1,"自动缩进","换行后继承适当缩进",{it.autoIndent},{s,v->s.copy(autoIndent=v)})
-        toggle(1,"补齐括号和引号","保留已有组合输入和撤销行为",{it.autoPairs},{s,v->s.copy(autoPairs=v)})
-        toggle(2,"基础词法补全","提供关键词、缓冲区符号及内置候选",{it.autoCompletion},{s,v->s.copy(autoCompletion=v)})
-        toggle(2,activity.getString(R.string.signature_setting),"显示支持的函数参数与简短说明",{it.signatureHelp},{s,v->s.copy(signatureHelp=v)})
-        toggle(2,"Tab 接受补全","关闭时 Tab 始终执行缩进",{it.completionTab},{s,v->s.copy(completionTab=v)})
-        toggle(2,"Enter 接受选中候选","只接受方向键明确选中的候选",{it.completionEnter},{s,v->s.copy(completionEnter=v)})
-        choice(2,"候选方向键","默认上下键选择候选；Esc 关闭后移动代码光标",listOf("主动触发后导航候选","候选可见时导航","始终移动代码光标"),{it.completionArrows.ordinal},{s,i->s.copy(completionArrows=CompletionArrows.values()[i])})
-        toggle(2,"编程符号栏","代码输入时显示 Tab、括号等快捷操作",{it.symbolBar},{s,v->s.copy(symbolBar=v)})
-        toggle(3,"自动保存","编辑停顿后写回；失败时保留恢复草稿",{it.autoSave},{s,v->s.copy(autoSave=v)})
-        choice(3,"自动保存延迟","离开页面仍保留现有保存保护",listOf("700 ms","1500 ms","3000 ms"),{listOf(700,1500,3000).indexOf(it.autoSaveDelayMs).coerceAtLeast(0)},{s,i->s.copy(autoSaveDelayMs=listOf(700,1500,3000)[i])})
-        choice(4,"终端字号","真实终端与运行结果共用字号偏好",(10..24).map{"$it sp"},{it.terminalFontSize-10},{s,i->s.copy(terminalFontSize=i+10)})
-        choice(4,"终端配色","切换配色保留正在运行的会话",listOf("跟随界面","CodePocket Dark","Nord","Dracula","Light"),{it.terminalTheme.ordinal},{s,i->s.copy(terminalTheme=TerminalTheme.values()[i])})
-        toggle(4,"输入代码时临时收起终端","仅在键盘实际占用底部空间时生效",{it.collapsePanelOnIme},{s,v->s.copy(collapsePanelOnIme=v)})
+        fun toggle(key:String,c:Int,t:String,h:String,get:(AppSettings)->Boolean,set:(AppSettings,Boolean)->AppSettings){add(Spec(key,c,t,h,get,set))}
+        fun choice(key:String,c:Int,t:String,h:String,options:List<String>,get:(AppSettings)->Int,set:(AppSettings,Int)->AppSettings){add(Spec(key,c,t,h,options=options,selected=get,choose=set))}
+        choice("theme",0,"界面主题","工作台、菜单与设置使用同一套主题",listOf("深色","浅色","跟随系统"),{it.theme.ordinal},{s,i->s.copy(theme=UiTheme.values()[i])})
+        choice("syntax",1,"语法主题","当前为词法高亮，尚非深度语义分析",listOf("跟随界面","Dark+","Light+"),{it.syntax.ordinal},{s,i->s.copy(syntax=SyntaxTheme.values()[i])})
+        choice("fontSize",1,"代码字号","预览与实际字号均使用 sp",(10..28).map{"$it sp"},{it.fontSize-10},{s,i->s.copy(fontSize=i+10)})
+        choice("tabWidth",1,"缩进宽度","Tab 和智能缩进共同使用",listOf("2 列","4 列","8 列"),{listOf(2,4,8).indexOf(it.tabWidth)},{s,i->s.copy(tabWidth=listOf(2,4,8)[i])})
+        toggle("useSpaces",1,"使用空格缩进","关闭后插入 Tab 字符",{it.useSpaces},{s,v->s.copy(useSpaces=v)})
+        toggle("lineNumbers",1,"显示行号","与源码逻辑行保持一致",{it.lineNumbers},{s,v->s.copy(lineNumbers=v)})
+        toggle("wordWrap",1,"自动换行","按编辑区可用宽度折行",{it.wordWrap},{s,v->s.copy(wordWrap=v)})
+        toggle("autoIndent",1,"自动缩进","换行后继承适当缩进",{it.autoIndent},{s,v->s.copy(autoIndent=v)})
+        toggle("autoPairs",1,"补齐括号和引号","保留已有组合输入和撤销行为",{it.autoPairs},{s,v->s.copy(autoPairs=v)})
+        toggle("autoCompletion",2,"基础词法补全","提供关键词、缓冲区符号及内置候选",{it.autoCompletion},{s,v->s.copy(autoCompletion=v)})
+        toggle("signatureHelp",2,activity.getString(R.string.signature_setting),"显示支持的函数参数与简短说明",{it.signatureHelp},{s,v->s.copy(signatureHelp=v)})
+        toggle("completionTab",2,"Tab 接受补全","关闭时 Tab 始终执行缩进",{it.completionTab},{s,v->s.copy(completionTab=v)})
+        toggle("completionEnter",2,"Enter 接受选中候选","只接受方向键明确选中的候选",{it.completionEnter},{s,v->s.copy(completionEnter=v)})
+        choice("completionArrows",2,"候选方向键","默认上下键选择候选；Esc 关闭后移动代码光标",listOf("主动触发后导航候选","候选可见时导航","始终移动代码光标"),{it.completionArrows.ordinal},{s,i->s.copy(completionArrows=CompletionArrows.values()[i])})
+        toggle("symbolBar",2,"编程符号栏","代码输入时显示 Tab、括号等快捷操作",{it.symbolBar},{s,v->s.copy(symbolBar=v)})
+        toggle("autoSave",3,"自动保存","编辑停顿后写回；失败时保留恢复草稿",{it.autoSave},{s,v->s.copy(autoSave=v)})
+        choice("autoSaveDelayMs",3,"自动保存延迟","离开页面仍保留现有保存保护",listOf("700 ms","1500 ms","3000 ms"),{listOf(700,1500,3000).indexOf(it.autoSaveDelayMs).coerceAtLeast(0)},{s,i->s.copy(autoSaveDelayMs=listOf(700,1500,3000)[i])})
+        choice("terminalFontSize",4,"终端字号","真实终端与运行结果共用字号偏好",(10..24).map{"$it sp"},{it.terminalFontSize-10},{s,i->s.copy(terminalFontSize=i+10)})
+        choice("terminalTheme",4,"终端配色","切换配色保留正在运行的会话",listOf("跟随界面","CodePocket Dark","Nord","Dracula","Light"),{it.terminalTheme.ordinal},{s,i->s.copy(terminalTheme=TerminalTheme.values()[i])})
+        toggle("collapsePanelOnIme",4,"输入代码时临时收起终端","仅在键盘实际占用底部空间时生效",{it.collapsePanelOnIme},{s,v->s.copy(collapsePanelOnIme=v)})
         // Retain the serialized legacy preference; this bottom-only workbench exposes no side-dock switch.
-        toggle(5,"动画总开关","遵从系统减少动画与省电策略",{it.animations},{s,v->s.copy(animations=v)})
-        toggle(5,"平滑移动代码光标","键入约60ms，短距离导航约80ms；实际输入位置即时更新",{it.cursorMovement},{s,v->s.copy(cursorMovement=v)})
-        toggle(5,"柔和闪烁代码光标","输入时清晰显示，停顿后柔和闪烁；关闭后常亮",{it.cursorBlink},{s,v->s.copy(cursorBlink=v)})
+        toggle("animations",5,"动画总开关","遵从系统减少动画与省电策略",{it.animations},{s,v->s.copy(animations=v)})
+        toggle("cursorMovement",5,"平滑移动代码光标","键入约60ms，短距离导航约80ms；实际输入位置即时更新",{it.cursorMovement},{s,v->s.copy(cursorMovement=v)})
+        toggle("cursorBlink",5,"柔和闪烁代码光标","输入时清晰显示，停顿后柔和闪烁；关闭后常亮",{it.cursorBlink},{s,v->s.copy(cursorBlink=v)})
+    }
+    // Property identities stay stable across translated labels and search rendering.
+    private fun section(key:String):String?=when(key){
+        "syntax","fontSize","lineNumbers","wordWrap"->"显示与配色"
+        "tabWidth","useSpaces","autoIndent","autoPairs"->"缩进与输入"
+        "autoCompletion","signatureHelp"->"候选与参考"
+        "completionTab","completionEnter","completionArrows"->"补全按键"
+        "symbolBar"->"触屏输入"
+        "terminalFontSize","terminalTheme"->"终端显示"
+        "collapsePanelOnIme"->"窗口与键盘"
+        "animations"->"动画策略"
+        "cursorMovement","cursorBlink"->"代码光标"
+        else->null
+    }
+    private fun optionIcon(spec:Spec):IdeIcon=when(spec.key){
+        "theme","syntax","terminalTheme"->IdeIcon.PALETTE
+        "fontSize","terminalFontSize"->IdeIcon.CASE
+        "tabWidth"->IdeIcon.BRACKETS
+        "autoSaveDelayMs"->IdeIcon.SAVE
+        "completionArrows"->IdeIcon.NEXT
+        else->categoryIcons[spec.category]
     }
     fun checkpoint(dialog:AlertDialog?):String? = if(dialog?.isShowing!=true)null else (dialog.window?.decorView?.getTag(R.id.settings_checkpoint) as? (() -> String))?.invoke()
     fun show(activity:Activity,current:AppSettings,save:(AppSettings)->Unit):AlertDialog = show(activity,current,save,null,null)
@@ -133,6 +154,18 @@ object SettingsDialog {
             row.setOnClickListener{if(!busy){draft.scroll=0;draft.category=index;search.setText("");draft.query="";render()}}
             return row
         }
+        fun groupCaption(title:String){
+            val line=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL;setPadding(0,dp(20),0,dp(4))}
+            line.addView(TextView(activity).apply{text=title;textSize=12f;setTextColor(p.muted);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(-2,-2))
+            line.addView(View(activity).apply{setBackgroundColor(p.border);importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO},LinearLayout.LayoutParams(0,dp(1),1f).apply{marginStart=dp(12)})
+            details.addView(line,LinearLayout.LayoutParams(-1,-2))
+        }
+        fun terminalPreview(){
+            val preview=LinearLayout(activity).apply{setPadding(dp(12),dp(12),dp(12),dp(12));gravity=Gravity.CENTER_VERTICAL}
+            com.codepocket.ide.terminal.shell.TerminalAppearance.palette(draft.value.terminalTheme.name,draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20)).ansi.slice(1..6).forEach{c->preview.addView(View(activity).apply{background=WorkbenchStyle.shape(activity,c,radius=4)},LinearLayout.LayoutParams(dp(24),dp(16)).apply{marginEnd=dp(8)})}
+            details.addView(preview)
+            details.addView(TextView(activity).apply{text="配色示意 · 应用后生效";textSize=12f;setTextColor(p.muted)})
+        }
         fun row(spec:Spec){
             val item=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL;minimumHeight=dp(72);setPadding(0,dp(14),0,dp(14));background=IdeControls.feedback(activity,p)}
             val words=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL}
@@ -150,8 +183,13 @@ object SettingsDialog {
                 item.setOnClickListener {
                     if(busy)return@setOnClickListener
                     draft.scroll=scroller.scrollY
-                    val picker=AlertDialog.Builder(activity).setTitle(spec.title).setSingleChoiceItems(spec.options.toTypedArray(),spec.selected.invoke(draft.value),null).setNegativeButton("取消",null).create()
+                    val selected=spec.selected.invoke(draft.value).coerceIn(0,spec.options.lastIndex)
+                    val choices=spec.options.mapIndexed{index,label->WorkbenchChoice("${spec.key}:$index",label,"",optionIcon(spec),index==selected,monospaceTitle=spec.key=="fontSize"||spec.key=="terminalFontSize")}
+                    val scope=categories[spec.category]+(section(spec.key)?.let{" · $it"}?:"")
+                    val picker=AlertDialog.Builder(activity).setCustomTitle(WorkbenchForms.header(activity,spec.title,scope,optionIcon(spec)))
+                        .setSingleChoiceItems(WorkbenchChoiceAdapter(activity,choices),selected,null).setNegativeButton("取消",null).create()
                     DialogMotion.show(picker,current.animations)
+                    picker.window?.setLayout(minOf(dp(560),(root.width-dp(32)).coerceAtLeast(dp(200))),-2)
                     picker.listView.setOnItemClickListener{_,_,index,_->if(!busy){draft.value=spec.choose!!.invoke(draft.value,index);picker.dismiss();render()}}
                 }
             }
@@ -180,12 +218,19 @@ object SettingsDialog {
                     details.addView(WorkbenchForms.sectionHeading(activity,"搜索结果","",IdeIcon.SEARCH))
                     val matches=all.filter{(it.title+it.help+categories[it.category]).contains(draft.query,true)}
                     if(matches.isEmpty())heading("没有匹配的设置")
-                    matches.forEach{spec->details.addView(TextView(activity).apply{text=categories[spec.category];textSize=11f;setTextColor(p.muted);setPadding(dp(8),dp(14),0,0)});row(spec)}
+                    matches.groupBy{it.category to section(it.key)}.forEach{(group,items)->
+                        groupCaption(categories[group.first]+(group.second?.let{" · $it"}?:""))
+                        items.forEach(::row)
+                    }
                 }
                 draft.category<0->{details.addView(WorkbenchForms.sectionHeading(activity,"工作台偏好","",IdeIcon.SETTINGS));categories.indices.forEach{details.addView(categoryRow(it))}}
                 else->{
                     details.addView(WorkbenchForms.sectionHeading(activity,categories[draft.category],"",categoryIcons[draft.category]))
-                    all.filter{it.category==draft.category}.forEach(::row)
+                    all.filter{it.category==draft.category}.groupBy{section(it.key)}.forEach{(title,items)->
+                        if(title!=null)groupCaption(title)
+                        items.forEach(::row)
+                        if(draft.category==4&&title=="终端显示")terminalPreview()
+                    }
                     if(draft.category==0){
                         val samplePalette=DesignTokens.palette(draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20))
                         val example=LinearLayout(activity).apply{
@@ -207,14 +252,13 @@ object SettingsDialog {
                         details.addView(example,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(20)})
                         details.addView(TextView(activity).apply{text="主题预览 · 应用后生效";textSize=11f;setTextColor(p.muted);setPadding(0,dp(8),0,0)})
                     }
-                    if(draft.category==4){
-                        val preview=LinearLayout(activity).apply{setPadding(dp(12),dp(12),dp(12),dp(12));gravity=Gravity.CENTER_VERTICAL}
-                        com.codepocket.ide.terminal.shell.TerminalAppearance.palette(draft.value.terminalTheme.name,draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20)).ansi.slice(1..6).forEach{c->preview.addView(View(activity).apply{background=WorkbenchStyle.shape(activity,c,radius=4)},LinearLayout.LayoutParams(dp(24),dp(16)).apply{marginEnd=dp(8)})}
-                        details.addView(preview)
-                        details.addView(TextView(activity).apply{text="配色示意 · 应用后生效";textSize=12f;setTextColor(p.muted)})
-                    }
                     if(draft.category==3)heading("文件安全",activity.getString(R.string.settings_save_help))
-                    if(draft.category==2)heading("补全按键说明",activity.getString(R.string.completion_key_help))
+                    if(draft.category==2)details.addView(WorkbenchStyle.menuRow(activity,"补全按键说明").apply{
+                        setOnClickListener{if(!busy)DialogMotion.show(AlertDialog.Builder(activity)
+                            .setCustomTitle(WorkbenchForms.header(activity,"补全按键说明",categories[2],IdeIcon.INPUT))
+                            .setView(WorkbenchForms.details(activity,activity.getString(R.string.completion_key_help)))
+                            .setPositiveButton("关闭",null).create(),current.animations)}
+                    })
                     if(draft.category==4){
                         heading(activity.getString(R.string.settings_run_modes))
                         engineInfo(IdeIcon.PYTHON,R.string.settings_python_mode,R.string.settings_python_mode_help)

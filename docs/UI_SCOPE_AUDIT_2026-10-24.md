@@ -2,14 +2,14 @@
 
 范围按用户最新指令确定：UI视觉优先，允许适度装饰；保留已有项目和真实运行；未实现功能先不接入，新发现的非阻塞问题登记。下表区分源码实现、主机证据和仍未验证的设备行为，不能把当前主机通过等同于整个项目完成。
 
-本批最终验证及APK见[编辑辅助合并批次](UI_ASSIST_BATCH_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
+本批最终验证及APK见[主工作台与设置合并批次](UI_SETTINGS_CHROME_BATCH_2026-10-26.md)。历史阶段的测试数字只表示当时版本；当前完整用例清单以本批test-case-manifest.json为准。
 
 | 范围 | 当前源码与实际入口 | 证据及边界 |
 | --- | --- | --- |
 | 现有原生工程 | MainActivity、Kotlin原生Views、生产editor-sora；未重建项目 | Gradle测试/Lint/Debug及实际APK检查；不是完整Sora重迁移 |
 | 四类窗口 | ActivityBar全高，topWorkspace放边栏/编辑器，底部面板横跨其下、状态栏在导航右侧 | WorkbenchStructureIntegrationTest、WorkbenchWindowIntegrationTest；按实际窗口尺寸，含600×480及840边界 |
 | 手机/平板布局 | 窄/矮窗口文件抽屉，足够空间可调侧栏；平板新启动35%终端、手机收起 | 前述实际Main/Sora测试及配置恢复用例；实际IME/自由窗口过渡仍待设备 |
-| 入口精简 | 顶部终端/运行/单一全局更多；项目搜索在导航、当前文件查找在编辑区；编辑区无重复更多 | AuxiliarySurfaceIntegrationTest；面板局部更多管理终端，不是第二个全局菜单 |
+| 入口精简 | 顶部终端/运行/单一全局更多，手机实际项目名/工作区入口，导航去除重复运行；项目搜索在导航、当前文件查找在编辑区；编辑区无重复更多 | AuxiliarySurfaceIntegrationTest；面板局部更多管理终端，不是第二个全局菜单 |
 | 视觉体系与图标 | DesignTokens、IdeControls、IdeIcons；本地Lucide及许可证；灰蓝层次、柔和文件类型色、中性底栏 | 原生及浏览器预览分别标识；没有发光/荧光/夸张渐变。并非全部界面逐张人眼验收 |
 | 触控与文本 | 常用动作48dp组件，长文件名省略但保留完整路径说明，大字体行增长与菜单滚动 | WorkbenchViewsTest、WorkbenchWindowIntegrationTest、MainSurfaceIntegrationTest的实际抽样；不能据此声称所有系统控件都已测量 |
 | 文件树 | ExplorerRow/ExplorerUiState；根与子目录切换、末级目录折叠、工作区展开/滚动、树选中与编辑文件分离；当前未保存缓冲的固定圆点/完整说明 | UiRedesignTest、WorkbenchWindowIntegrationTest、MainFileSettingsIntegrationTest、ExplorerModifiedStateIntegrationTest；收起不关闭文档，真实输入/保存/冲突重试同步状态，保留行/滚动/48dp菜单；不扫描非当前恢复草稿 |
@@ -34,7 +34,7 @@
 
 ## 登记与验收边界
 
-- 编辑辅助批次新增1条ViewConstructor警告：CompletionCandidateRow由代码传入配色创建，没有布局工具识别的标准构造形式；实际App资源中无XML引用。按非阻塞问题先登记的约定保留，后续共享组件整理时补设计器构造，不关闭Lint规则。详见[本批记录](UI_ASSIST_BATCH_2026-10-26.md)。
+- 编辑辅助批次记录的ViewConstructor提示已在本批补标准Context构造消除：Lint主16/Sora1既有警告，无规则屏蔽。SettingsChromeIntegrationTest另验证设置分组、选项草稿/取消/应用和旋转搜索保留。平板按需只读说明阅读跨度偏大继续登记，下一批与帮助/许可/详情共同处理。
 
 - 多标签基本定位已补充5项实际Main/Sora证据：明确导航/关闭当前项/区域变窄后定位，输入和保存保持手动滚动；窄屏长标签完整显示图标、截断名称及关闭按钮。路径/状态栏已有5项实际Main/Sora证据；短窗口/IME路径占位已补充4项Main/Sora主机证据及359/360边界，不据此声称全部输入环境已验收。平板高度过渡后编辑器焦点丢失的主机观察已另记，设备及旧版情况未确定；220dp有空间诊断/200dp无空间详情分别回归。
 - 原InteractionState次级说明仍按文案关键词判断，特殊文件名可能命中；可见摘要已保护旧成功不覆盖新未保存，结构化状态留后续评估。

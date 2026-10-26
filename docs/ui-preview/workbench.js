@@ -10,7 +10,7 @@ const previewTabs=document.createElement('div');previewTabs.className='tabstrip'
 previewExplorer.querySelector('[title="新建文件夹"]').remove();
 const railPrimary=document.createElement('div');railPrimary.className='rail-primary';
 [...previewRail.querySelectorAll('button:not(.bottom)')].forEach(b=>railPrimary.append(b));
-railPrimary.insertAdjacentHTML('beforeend','<button class="icon" title="运行预览" onclick="scene(\'运行状态\')">'+icon('play')+'</button>');previewRail.prepend(railPrimary);railPrimary.firstElementChild.classList.add('selected');
+previewRail.prepend(railPrimary);railPrimary.firstElementChild.classList.add('selected');
 const desktopMenu=document.createElement('nav');desktopMenu.className='desktop-menu';desktopMenu.setAttribute('aria-label','工作台菜单');
 const menuGroups=[['文件','文件操作','files'],['编辑','编辑菜单','pencil'],['视图','视图菜单','maximize-2'],['运行','运行菜单','play'],['终端','终端菜单','terminal'],['帮助','帮助菜单','circle-help']];
 desktopMenu.innerHTML=menuGroups.map(g=>`<button onclick="scene('${g[1]}')">${g[0]}</button>`).join('');$('.top').prepend(desktopMenu);
@@ -22,7 +22,7 @@ function previewLayout(reset=false){
  const size=previewSizes[$('#device').value];previewApp.style.width=size[0]+'px';previewApp.style.height=(previewHeightOverride??size[1])+'px';
  const width=previewApp.clientWidth,height=previewApp.clientHeight;previewApp.classList.toggle('compact-captions',height<360);const drawer=width<600||height<480;
  isPhone=width<840||height<480;previewApp.classList.toggle('phone',drawer);previewApp.classList.toggle('drawer-mode',drawer);previewApp.classList.toggle('stacked-settings',isPhone);previewApp.classList.toggle('desktop',width>=1000);previewApp.classList.toggle('compact-top',width<600);
- $('.top .title').textContent=width<600?'CodePocket':'Algorithms';
+ $('.top .title').innerHTML=icon('folder-open')+'<span>Algorithms</span>'+icon('chevron-down');$('.top .title').onclick=()=>scene('切换项目');
  if(reset){closeLayers();previewExplorer.classList.remove('hidden');previewApp.classList.remove('termmax');previewTerminal.classList.toggle('hidden',drawer);previewTerminal.classList.toggle('open',!drawer);}
 }
 $('#device').onchange=()=>previewLayout(true);window.addEventListener('resize',()=>previewLayout(false));

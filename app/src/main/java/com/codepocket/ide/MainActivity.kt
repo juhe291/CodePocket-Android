@@ -532,8 +532,7 @@ class MainActivity : Activity() {
         contentHost = content
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
 
-        activityBar = ActivityBar(this, palette, { dispatchCommand(IdeCommand.SEARCH) }, ::showSettings,
-            { dispatchCommand(IdeCommand.RUN_STOP) }) { dispatchCommand(IdeCommand.EXPLORER) }.also {
+        activityBar = ActivityBar(this, palette, { dispatchCommand(IdeCommand.SEARCH) }, ::showSettings) { dispatchCommand(IdeCommand.EXPLORER) }.also {
             content.addView(it, LinearLayout.LayoutParams(dp(48), -1))
         }
         val work = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }

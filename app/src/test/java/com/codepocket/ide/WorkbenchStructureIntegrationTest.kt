@@ -70,7 +70,7 @@ class WorkbenchStructureIntegrationTest {
     @Test @Config(qualifiers="w1280dp-h800dp") fun tabletLandscapeDark(){hierarchy(true);capture("tablet-landscape-dark")}
     @Test @Config(qualifiers="w800dp-h1200dp") fun tabletPortraitLight(){hierarchy(true);capture("tablet-portrait-light")}
     @Test @Config(qualifiers="w840dp-h411dp") fun phoneLandscapeDark(){hierarchy(false);assertFalse(field<Boolean>("panelVisible"));capture("phone-landscape-dark")}
-    @Test @Config(qualifiers="w411dp-h891dp") fun phonePortraitDark(){hierarchy(false);assertTrue(views(field("mainToolbar")).filterIsInstance<android.widget.TextView>().any{it.text.toString()=="CodePocket" && it.width>=96});assertFalse(field<Boolean>("panelVisible"));capture("phone-portrait-dark")}
+    @Test @Config(qualifiers="w411dp-h891dp") fun phonePortraitDark(){hierarchy(false);assertTrue(views(field("mainToolbar")).filterIsInstance<android.widget.TextView>().any{it.text.toString()==field<Workspace>("workspace").title.substringBefore("（").substringBefore(" · ") && it.width>=96});assertFalse(field<Boolean>("panelVisible"));capture("phone-portrait-dark")}
     @Test @Config(qualifiers="w411dp-h891dp") fun phonePortraitLight(){hierarchy(false);capture("phone-portrait-light")}
     @Test @Config(qualifiers="w1280dp-h800dp") fun terminalMaximizeRestoreKeepsRailFilesAndEditor(){
         val content=editor.text;editor.setSelection(3);val pane=field<View>("explorerPane");val rail=field<View>("activityBar")

@@ -1,12 +1,12 @@
 # CodePocket 可点击工作台设计预览
 
-打开 [index.html](index.html)，可选择手机竖屏/横屏、平板竖屏/横屏和深浅主题。44种界面场景覆盖工作台、菜单、表单、设置、补全及终端状态。使用本地CSS/JS/SVG资源，可以离线查看。
+打开 [index.html](index.html)，可选择手机竖屏/横屏、平板竖屏/横屏和深浅主题。46种界面场景覆盖工作台、菜单、表单、设置、补全及终端状态。使用本地CSS/JS/SVG资源，可以离线查看。
 
-**所有文件和输出均为设计示例，不执行代码，不是APK或Android设备截图。** 原生App继续使用真实Python/Wandbox/单一PTY；实际诊断交互见[诊断原生预览](../diagnostic-ui-preview/README.md)与[标题原生预览](../heading-polish-preview/README.md)与[载入原生预览](../startup-ui-preview/README.md)与[命令原生预览](../command-ui-preview/README.md)与[终端工具区预览](../terminal-dock-preview/README.md)与[设置原生预览](../settings-consistency-preview/README.md)与[标签状态原生预览](../tab-stability-preview/README.md)与[导航原生预览](../tab-navigation-preview/README.md)与[最新路径/底栏原生预览](../path-status-preview/README.md)，代码配色见[原生配色预览](../token-theme-preview/README.md)与[窗口预览](../search-entry-preview/README.md)和[最新APK](../../dist/CodePocket-assist-batch-2026-10-26-debug.apk)。
+**所有文件和输出均为设计示例，不执行代码，不是APK或Android设备截图。** 原生App继续使用真实Python/Wandbox/单一PTY；实际诊断交互见[诊断原生预览](../diagnostic-ui-preview/README.md)与[标题原生预览](../heading-polish-preview/README.md)与[载入原生预览](../startup-ui-preview/README.md)与[命令原生预览](../command-ui-preview/README.md)与[终端工具区预览](../terminal-dock-preview/README.md)与[设置原生预览](../settings-consistency-preview/README.md)与[标签状态原生预览](../tab-stability-preview/README.md)与[导航原生预览](../tab-navigation-preview/README.md)与[最新路径/底栏原生预览](../path-status-preview/README.md)，代码配色见[原生配色预览](../token-theme-preview/README.md)与[窗口预览](../search-entry-preview/README.md)和[最新APK](../../dist/CodePocket-settings-chrome-batch-2026-10-26-debug.apk)。
 
 2026-10-24在原样稿基础上同步全高Activity Bar、上方文件树/编辑器、横跨工作区的底部终端和中性状态栏；移除顶部重复项目搜索与编辑区重复更多、合并文件夹操作。增加目录示例层级、设置分类图标及标题底座、细分隔线、简洁路径区与柔和选中短线；不引入荧光/光晕/夸张渐变。未实现功能仍暂缓，样稿不作为功能交付。
 
-本轮Playwright真实浏览器：44场景×4窗口×2主题=352次场景/横向边界检查，加81项交互与20项实际配色检查全部通过，未发现页面脚本错误。新增载入/失败状态及示例恢复导航，编辑菜单九项命令分组及320px快捷键排版及终端四入口/控制键展开收起检查；另核对360px宽度、减少动画、目录折叠、设置取消/应用及终端入口。检查的是浏览器样稿，不代表AndroidIME/键鼠/卓易通/FPS通过。
+本轮Playwright真实浏览器：46场景×4窗口×2主题=368次场景/横向边界检查，加117项交互与20项实际配色检查全部通过，未发现页面脚本错误。新增载入/失败状态及示例恢复导航，编辑菜单九项命令分组及320px快捷键排版及终端四入口/控制键展开收起检查；另核对360px宽度、减少动画、目录折叠、设置取消/应用及终端入口。检查的是浏览器样稿，不代表AndroidIME/键鼠/卓易通/FPS通过。
 
 | 窗口 | 深色工作台 | 浅色工作台 | 深色设置 | 浅色设置 |
 | --- | --- | --- | --- | --- |
@@ -36,3 +36,5 @@
 2026-10-26同步工作区当前项/最近目录、同名草稿的文件/目录两级行、深层移动与空目录布局；新增3种长名称/路径场景，正文滚动时取消保持位置。[原生预览](../pickers-batch-preview/README.md) · [真实测试与限制](../UI_PICKERS_BATCH_2026-10-26.md)。
 
 2026-10-26同步补全名称/类型/说明、单/多形式内置参考和单语言片段菜单；增加大字体候选、多形式参考、片段占位符导航，并补齐片段选择场景，独立assist.js保持本地可读。[原生预览](../assist-batch-preview/README.md) · [真实输入/插入/滚动验证及限制](../UI_ASSIST_BATCH_2026-10-26.md)。
+
+本批同步手机项目标题、去除导航重复运行、23项设置分组/单次搜索上下文和选项/按需说明层。实际App图见[主工作台与设置原生预览](../settings-chrome-preview/README.md)。

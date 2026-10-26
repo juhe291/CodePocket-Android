@@ -20,8 +20,10 @@ class MainToolbar(context: Context, private val palette: IdePalette,
     private fun dp(value:Int)=IdeControls.dp(context,value)
     private val menus=LinearLayout(context)
     private val titleView=TextView(context).apply {
-        textSize=12f;setTextColor(palette.muted);gravity=Gravity.CENTER_VERTICAL
-        setSingleLine();ellipsize=TextUtils.TruncateAt.END;setPadding(dp(12),0,dp(8),0)
+        textSize=13f;setTextColor(palette.foreground);setTypeface(null,android.graphics.Typeface.BOLD);gravity=Gravity.CENTER_VERTICAL
+        setSingleLine();ellipsize=TextUtils.TruncateAt.MIDDLE;setPadding(dp(12),0,dp(8),0)
+        setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(context,IdeIcon.FOLDER_OPEN,palette.muted,dp(16)),null,IdeIconDrawable(context,IdeIcon.DOWN,palette.muted,dp(12)),null)
+        compoundDrawablePadding=dp(8);background=IdeControls.feedback(context,palette)
         setOnClickListener{onTitle()}
     }
     private val terminal=IdeControls.icon(context,palette,IdeIcon.TERMINAL,"打开终端",onTerminal)
@@ -45,7 +47,7 @@ class MainToolbar(context: Context, private val palette: IdePalette,
     }
     // Rail owns navigation on every window, no duplicated Explorer button in the title bar.
     fun setSidebarPresent(present:Boolean)=Unit
-    fun setTitle(title:String,fullPath:String){projectTitle=title;titleView.text=title;IdeControls.describe(titleView,fullPath)}
+    fun setTitle(title:String,fullPath:String){projectTitle=title;if(titleView.text.toString()!=title)titleView.text=title;IdeControls.describe(titleView,fullPath)}
     fun setRunState(active:Boolean,enabled:Boolean) {
         run.isEnabled=enabled;run.alpha=if(enabled)1f else .4f
         if(running==active)return
@@ -54,7 +56,7 @@ class MainToolbar(context: Context, private val palette: IdePalette,
     }
     override fun onMeasure(widthMeasureSpec:Int,heightMeasureSpec:Int) {
         val budget=(MeasureSpec.getSize(widthMeasureSpec)/resources.displayMetrics.density).toInt()
-        val heading=if(budget<600)"CodePocket" else projectTitle
+        val heading=projectTitle
         if(titleView.text.toString()!=heading)titleView.text=heading
         menus.visibility=if(budget>=1000 && resources.configuration.fontScale<=1.3f)VISIBLE else GONE
         terminal.visibility=if(budget>=144)VISIBLE else GONE

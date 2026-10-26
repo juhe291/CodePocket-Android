@@ -13,6 +13,8 @@ import com.codepocket.ide.R
 
 /** A non-focusable list row. Narrow layouts yield metadata width to the actual candidate name. */
 class CompletionCandidateRow(context:Context,private val labelColor:Int,private val base:Int,private val muted:Int):LinearLayout(context){
+    constructor(context:Context):this(context,DesignTokens.forContext(context))
+    private constructor(context:Context,palette:IdePalette):this(context,palette.foreground,palette.overlay,palette.muted)
     private val p=DesignTokens.forContext(context)
     private fun dp(v:Int)=IdeControls.dp(context,v)
     private val glyph=ImageView(context).apply{importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO}

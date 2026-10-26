@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorCaretMotionTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-26T05:59:02" hostname="JUHE" time="3.664">
+  <properties/>
+  <testcase name="animatedDamageIncludesThePreviouslyDrawnCaretPixels" classname="com.codepocket.ide.EditorCaretMotionTest" time="2.017"/>
+  <testcase name="nativeCursorAndInputConnectionStayEnabled" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.1"/>
+  <testcase name="selectedTextHidesTheCustomCaretWithoutChangingSelection" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.072"/>
+  <testcase name="navigationChangesRealSelectionBeforeTheVisualMotionFinishes" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.057"/>
+  <testcase name="composingInputIsNativeAndNeverInterpolatesTheInsertionPoint" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.071"/>
+  <testcase name="detachingTheActualEditorStopsItsBlinkWithoutCallingTheControllerManually" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.381"/>
+  <testcase name="smoothBlinkHasIntermediateOpacityAndNeverChangesTextOrFocus" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.219"/>
+  <testcase name="movementCanBeDisabledIndependentlyOfSoftBlink" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.194"/>
+  <testcase name="disablingBlinkLeavesAnOpaqueCaretAndNoRepeatingAnimator" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.182"/>
+  <testcase name="multilineEmojiAndScrolledCoordinatesStayAtNativeUtf16Offsets" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.068"/>
+  <testcase name="typingAnimatesOnlyTheVisibleCaretAndDoesNotDelayNativeText" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.079"/>
+  <testcase name="losingFocusOrDetachingStopsAllAnimationCallbacks" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.088"/>
+  <testcase name="disablingAllMotionSnapsNavigationAndKeepsTheCaretVisible" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.07"/>
+  <testcase name="logicalCaretAndPopupAnchorUseTheSameActualLayoutCoordinates" classname="com.codepocket.ide.EditorCaretMotionTest" time="0.065"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>
