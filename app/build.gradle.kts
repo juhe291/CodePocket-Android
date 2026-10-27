@@ -74,7 +74,7 @@ tasks.named("preBuild").configure { dependsOn(checkCppRuntime) }
 // AGP does not package BUILD_EXECUTABLE outputs. Build the installed PIE explicitly
 // and stage it with the lib*.so name required by Android native-library extraction.
 val prepareCppRunner by tasks.registering {
-    inputs.files("src/main/jni/cpp_runner.c", "src/main/jni/Android.mk")
+    inputs.files("src/main/jni/cpp_runner.c", "src/main/jni/cpp_fault.h", "src/main/jni/Android.mk")
     val staged = layout.buildDirectory.file("cpp-runner/jni/arm64-v8a/libcodepocket_cpp_runner.so")
     outputs.file(staged)
     doLast {

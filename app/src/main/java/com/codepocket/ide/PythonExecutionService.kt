@@ -76,9 +76,11 @@ internal fun RunResult.toBundle(id: Long) = Bundle().apply {
     putLong("id", id); putString("stdout", stdout); putString("stderr", stderr)
     putString("exit", exitCode); putLong("elapsed", elapsedMs); putString("engine", engine); putString("kind", kind.name)
     errorLine?.let { putInt("line", it) }; putString("file", errorFile)
+    putString("sourceHash",errorSourceHash)
 }
 internal fun runResultFromBundle(data: Bundle) = RunResult(
     data.getString("stdout").orEmpty(), data.getString("stderr").orEmpty(), data.getString("exit", "—"),
     data.getLong("elapsed"), if (data.containsKey("line")) data.getInt("line") else null,
-    data.getString("engine").orEmpty(), RunKind.valueOf(data.getString("kind")!!), data.getString("file")
+    data.getString("engine").orEmpty(), RunKind.valueOf(data.getString("kind")!!), data.getString("file"),
+    errorSourceHash=data.getString("sourceHash")
 )

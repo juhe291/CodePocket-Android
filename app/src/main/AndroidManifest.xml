@@ -12,6 +12,7 @@
         <service android:name=".PythonExecutionService" android:exported="false" android:process=":python" />
         <service android:name=".PythonAnalysisService" android:exported="false" android:process=":analysis" />
         <service android:name=".CppAnalysisService" android:exported="false" android:process=":cpp_analysis" />
+        <service android:name=".CppExecutionService" android:exported="false" android:process=":cpp_run" />
         <activity
             android:name=".MainActivity"
             android:resizeableActivity="true"

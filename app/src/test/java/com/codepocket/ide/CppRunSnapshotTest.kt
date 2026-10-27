@@ -40,4 +40,15 @@ class CppRunSnapshotTest {
         assertFalse(File(snapshot.source, script.name).exists()); snapshot.close()
         assertThrows(IllegalArgumentException::class.java) { CppRunSnapshot.capture(temp.newFolder(), ws, store, emptyMap(), "header.hpp", "") }
     }
+    @Test fun executionServiceCanReopenOnlyAnUnusedCanonicalJobUnderItsOwnParent() {
+        val ws=workspace();val store=drafts();val parent=temp.newFolder()
+        val snapshot=CppRunSnapshot.capture(parent,ws,store,emptyMap(),"main.cpp","int main(){return 0;}")
+        val reopened=CppRunSnapshot.open(parent,snapshot.directory,"main.cpp")
+        assertEquals(snapshot.texts,reopened.texts);assertTrue(reopened.isCurrent())
+        assertThrows(IllegalArgumentException::class.java){CppRunSnapshot.open(temp.newFolder(),snapshot.directory,"main.cpp")}
+        assertThrows(IllegalArgumentException::class.java){CppRunSnapshot.open(parent,snapshot.directory,"../main.cpp")}
+        File(snapshot.build,"old-output.o").writeText("previous build")
+        assertThrows(IllegalArgumentException::class.java){CppRunSnapshot.open(parent,snapshot.directory,"main.cpp")}
+        snapshot.close();reopened.close()
+    }
 }

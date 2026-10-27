@@ -20,6 +20,13 @@ internal interface ExecutionProcess : Closeable {
     val stderr: InputStream
     fun poll(): ExecutionExit?
 }
+internal interface TerminalExecutionProcess : ExecutionProcess {
+    val faults: InputStream get() = java.io.ByteArrayInputStream(ByteArray(0))
+    fun faultMapsAndResume(): String? = null
+    fun write(bytes: ByteArray, offset: Int, length: Int): Int
+    fun eof()
+    fun resize(rows: Int, columns: Int)
+}
 internal object NativeExecutionBridge {
     private val loaded by lazy { System.loadLibrary("codepocket_execute"); true }
     fun launch(arguments: List<String>, directory: String, environment: List<String>, terminal: IntArray?, cpu: Int, memoryMb: Int): Long {
@@ -31,9 +38,13 @@ internal object NativeExecutionBridge {
     external fun status(handle: Long): Int
     external fun read(handle: Long, channel: Int, limit: Int): ByteArray?
     external fun stop(handle: Long)
+    external fun write(handle: Long, bytes: ByteArray, offset: Int, length: Int): Int
+    external fun eof(handle: Long)
+    external fun resize(handle: Long, rows: Int, columns: Int)
+    external fun faultMapsAndResume(handle: Long): ByteArray?
 }
 internal class NativeExecutionProcess(arguments: List<String>, directory: String, environment: List<String>,
-    terminal: IntArray? = null, cpu: Int = 30, memoryMb: Int = 1536) : ExecutionProcess {
+    terminal: IntArray? = null, cpu: Int = 30, memoryMb: Int = 1536) : TerminalExecutionProcess {
     private val handle=NativeExecutionBridge.launch(arguments,directory,environment,terminal,cpu,memoryMb)
     private val closed=AtomicBoolean()
     private inner class Reader(private val channel: Int):InputStream() {
@@ -54,6 +65,11 @@ internal class NativeExecutionProcess(arguments: List<String>, directory: String
     }
     override val stdout:InputStream=Reader(1)
     override val stderr:InputStream=Reader(2)
+    override val faults:InputStream=Reader(3)
+    override fun faultMapsAndResume()=NativeExecutionBridge.faultMapsAndResume(handle)?.toString(Charsets.UTF_8)
     override fun poll():ExecutionExit?=ExecutionExit.decode(NativeExecutionBridge.status(handle))
+    override fun write(bytes:ByteArray,offset:Int,length:Int)=if(closed.get())-1 else NativeExecutionBridge.write(handle,bytes,offset,length)
+    override fun eof(){check(!closed.get());NativeExecutionBridge.eof(handle)}
+    override fun resize(rows:Int,columns:Int){if(!closed.get())NativeExecutionBridge.resize(handle,rows,columns)}
     override fun close(){if(closed.compareAndSet(false,true))NativeExecutionBridge.stop(handle)}
 }

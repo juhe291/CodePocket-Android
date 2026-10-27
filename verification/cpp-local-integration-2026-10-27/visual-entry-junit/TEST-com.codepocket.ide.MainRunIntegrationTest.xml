@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainRunIntegrationTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-27T12:13:01" hostname="JUHE" time="4.775">
+  <properties/>
+  <testcase name="localCppF5SavesSoraCapturesTheProjectAndNeverRequestsCloudConsentOnHostBridgeFailure" classname="com.codepocket.ide.MainRunIntegrationTest" time="1.805"/>
+  <testcase name="saveConflictBlocksF5WithoutStartingOrDiscardingRecoverableCode" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.526"/>
+  <testcase name="f5SavesActualSoraBytesAndReportsMissingHostBridgeTruthfully" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.562"/>
+  <testcase name="localCppHelperDiagnosticChecksTheExecutedHelperHashBeforeMovingTheRealSoraCaret" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.462"/>
+  <testcase name="cppCtrlEnterRequiresThirdPartyConsentAndCancelNeverStartsTheNetwork" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.591"/>
+  <testcase name="editDuringPendingSaveRunsOnlyTheNewestSavedRevision" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.427"/>
+  <testcase name="emptyCodeIsRejectedBeforeAnyRunSessionIsStarted" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.402"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

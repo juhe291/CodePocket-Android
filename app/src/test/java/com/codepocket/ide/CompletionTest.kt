@@ -112,7 +112,10 @@ class CompletionTest {
         assertEquals(18,old.fontSize);assertTrue(old.completionEnter);assertFalse(old.completionTab)
         assertFalse(old.autoSave);assertEquals(TerminalTheme.NORD,old.terminalTheme)
         assertEquals(CompletionArrows.OFF,AppSettings.fromJson("""{"version":8,"completionArrows":"OFF"}""").completionArrows)
-        assertEquals(9,org.json.JSONObject(old.toJson()).getInt("version"))
+        val migrated=org.json.JSONObject(old.toJson())
+        assertEquals(10,migrated.getInt("version"))
+        assertEquals(CppBackend.CLOUD.name,migrated.getString("cppBackend"))
+        assertEquals(CppBuildScope.CURRENT.name,migrated.getString("cppBuildScope"))
         assertEquals(old,AppSettings.fromJson(old.toJson()))
     }
     @Test fun allThreeArrowChoicesRemainConfigurableInCurrentSettings() {

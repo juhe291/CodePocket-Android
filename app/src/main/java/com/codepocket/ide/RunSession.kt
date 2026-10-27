@@ -41,6 +41,11 @@ object RunSession {
     private var sourceKey: String? = null
     private var sourceHash = ""
     private var cppRun = false
+    private var localCppMode=false
+    private var localCppRunning=false
+    private var cppSnapshot:CppRunSnapshot?=null
+    private var cppScope=CppBuildScope.CURRENT
+    private var localCppClient:LocalCppRunClient?=null
     private var deadline: Runnable? = null
     private var terminalOwner: ShellRuntime? = null
     private var terminalControl: ShellRuntime.RunControl? = null
@@ -58,11 +63,13 @@ object RunSession {
     val waitingForInput get() = running && terminalClock?.state == TerminalRunClock.State.WAITING
     private fun now() = android.os.SystemClock.uptimeMillis()
 
-    fun start(app: Context, code: String, input: String, cpp: Boolean, sourcePath: String, projectRoot: String, identity: String,
+    internal fun start(app: Context, code: String, input: String, cpp: Boolean, sourcePath: String, projectRoot: String, identity: String,
         pythonEntry: String = sourcePath, entryKey: String? = null, terminal: ShellRuntime? = null,
-        interactive: Boolean = false): Boolean {
+        interactive: Boolean = false, cppJob:CppRunSnapshot?=null, scope:CppBuildScope=CppBuildScope.CURRENT): Boolean {
         check(Looper.myLooper() == Looper.getMainLooper())
+        require(cppJob==null || cpp && terminal!=null)
         val id = tickets.begin() ?: return false
+        localCppMode=cppJob!=null;localCppRunning=false;cppSnapshot=cppJob;cppScope=scope;localCppClient=null
         startupStage="准备本地终端";terminalOwner=terminal;interactiveInput=interactive;outputBytes=0;bindingRetries=0
         terminalClock=if(terminal!=null&&!cpp)TerminalRunClock(now())else null
         val displayFile=File(sourcePath).name
@@ -72,7 +79,7 @@ object RunSession {
                 if(code==3){stop();return true}
                 return code==4&&!acceptsInput()
             }
-            override fun acceptsInput() = !cpp&&interactive&&terminalClock?.state!=TerminalRunClock.State.STARTING
+            override fun acceptsInput() = if(localCppMode)interactive&&localCppRunning else !cpp&&interactive&&terminalClock?.state!=TerminalRunClock.State.STARTING
             override fun output(bytes:Int):Boolean {
                 outputBytes+=bytes
                 if(outputBytes>220000&&tickets.accepts(id)) {
@@ -80,13 +87,15 @@ object RunSession {
                 }
                 return true
             }
-            override fun label() = "$displayFile · "+if(cpp)"C++ · Wandbox云端 · 预填输入，完成后返回结果"
+            override fun label() = "$displayFile · "+if(localCppMode)"C++ · 本地 Clang21 · "+if(localCppRunning)"运行中 · Ctrl+C停止" else startupStage
+                else if(cpp)"C++ · Wandbox云端 · 预填输入，完成后返回结果"
                 else when(terminalClock?.state) {
                     TerminalRunClock.State.WAITING -> "Python · 等待终端输入 · Enter提交 / Ctrl+D结束输入"
                     TerminalRunClock.State.RUNNING -> if(interactive)"Python · 运行中 · Ctrl+C停止" else "Python · 使用预填输入 · Ctrl+C停止"
                     else -> "Python · $startupStage"
                 }
             override fun shellPromptReturned() {
+                if(tickets.accepts(id)&&localCppMode){finish(id,RunSession.terminal(RunKind.SERVICE,"本地 C++ 终端桥已退出"));return}
                 if(tickets.accepts(id)&&terminalClock?.state==TerminalRunClock.State.STARTING)
                     finish(id,RunSession.terminal(RunKind.SERVICE,"Python前台桥在启动完成前已退出（$startupStage）。请查看终端中的启动错误；可以修改后重新运行。"))
             }
@@ -94,17 +103,19 @@ object RunSession {
         }
         terminalControl=control
         if(terminal!=null&&!terminal.beginForeground(control)) {
-            tickets.finish(id);terminalOwner=null;terminalControl=null;terminalClock=null;return false
+            tickets.finish(id);terminalOwner=null;terminalControl=null;terminalClock=null;cppSnapshot=null;return false
         }
         running = true; result = null; application = app.applicationContext as android.app.Application
         began = System.nanoTime(); path = sourcePath; root = projectRoot; workspaceId = identity; cppRun = cpp
         executionPath = pythonEntry; sourceKey = entryKey; sourceHash = DocumentTree.digest(code)
         listener?.invoke()
         if(terminalClock!=null) scheduleTerminalDeadline(id)
+        else if(localCppMode)scheduleLocalCppDeadline(id,100000,"本地 C++ 准备或构建超时，已停止")
         else deadline = Runnable { if (tickets.accepts(id)) finish(id, RunSession.terminal(RunKind.TIMEOUT,
             if (cpp) "云端请求总时间超过45秒，已停止等待；服务端任务可能仍在运行。" else "Python总时间超过10秒，已停止执行。")) }
             .also { main.postDelayed(it, if (cpp) 45000 else 10000) }
-        if (cpp) {
+        if(localCppMode)connectTerminal(id,code,input)
+        else if (cpp) {
             val cancel = RunCancellation(); cancellation = cancel
             future = executor.submit {
                 val response = try { WandboxEngine.run(code, input, cancel) }
@@ -114,6 +125,25 @@ object RunSession {
             }
         } else if(terminal!=null) connectTerminal(id,code,input) else bindPython(id, code, input)
         return true
+    }
+
+    private fun scheduleLocalCppDeadline(id:Long,millis:Long,message:String) {
+        deadline?.let(main::removeCallbacks)
+        deadline=Runnable{if(tickets.accepts(id))finish(id,terminal(RunKind.TIMEOUT,message))}.also{main.postDelayed(it,millis)}
+    }
+    private fun bindLocalCpp(id:Long,input:String,streams:TerminalBridgeBroker.Streams) {
+        val app=application?:return;val snapshot=cppSnapshot?:return
+        terminalStreams=null;startup("连接本地 C++ 执行服务")
+        val client=LocalCppRunClient(app,id,snapshot,cppScope,input,root,streams,{tickets.accepts(id)},{stage->
+            if(tickets.accepts(id)) {
+                if(stage=="running") {
+                    localCppRunning=true;startup("运行中")
+                    scheduleLocalCppDeadline(id,305000,"本地 C++ 终端会话超过5分钟，已停止")
+                } else startup(stage)
+                listener?.invoke()
+            }
+        },{response->finish(id,response)})
+        localCppClient=client;client.start()
     }
 
     private fun scheduleTerminalDeadline(id:Long) {
@@ -151,10 +181,12 @@ object RunSession {
             }
             override fun connected(broker:TerminalBridgeBroker,streams:TerminalBridgeBroker.Streams) {
                 if(!tickets.accepts(id)){streams.close();broker.close();return}
-                terminalStreams=streams;startup("连接 Python 独立服务");bindPython(id,code,input)
+                terminalStreams=streams
+                if(localCppMode)bindLocalCpp(id,input,streams)
+                else {startup("连接 Python 独立服务");bindPython(id,code,input)}
             }
             override fun disconnected(broker:TerminalBridgeBroker,error:String) {
-                if(tickets.accepts(id))finish(id,terminal(RunKind.CANCELLED,"终端前台桥已退出，Python已停止：$error"))
+                if(tickets.accepts(id))finish(id,terminal(RunKind.CANCELLED,"终端前台桥已退出，${if(localCppMode)"本地 C++" else "Python"}已停止：$error"))
             }
         })
     }
@@ -236,13 +268,17 @@ object RunSession {
     fun stop() {
         check(Looper.myLooper() == Looper.getMainLooper())
         val id = tickets.active ?: return
-        finish(id, terminal(RunKind.CANCELLED, if (cppRun)
+        finish(id, terminal(RunKind.CANCELLED, if(localCppMode)"已停止本地 C++ 运行。" else if (cppRun)
             "已取消本地等待；Wandbox 服务端任务可能继续执行。" else "已停止 Python 运行。"))
     }
     private fun elapsed() = (System.nanoTime() - began) / 1000000
     private fun terminal(kind: RunKind, message: String) = RunResult("", message, "—", elapsed(),
-        engine = if (cppRun) "Wandbox" else "Python · 独立进程", kind = kind)
+        engine = if(localCppMode)CppExecutionService.ENGINE else if (cppRun) "Wandbox" else "Python · 独立进程", kind = kind)
     private fun finish(id: Long, response: RunResult) {
+        if(!tickets.accepts(id))return
+        localCppClient?.takeIf{!it.released}?.let{
+            localCppRunning=false;startup("正在停止本地 C++");it.cancel(response);return
+        }
         if (!tickets.finish(id)) return
         deadline?.let(main::removeCallbacks); deadline = null
         val cancel = cancellation; cancellation = null
@@ -260,7 +296,11 @@ object RunSession {
         terminalOwner=null;terminalControl=null;terminalClock=null
         if(owner!=null&&control!=null) {
             owner.clearForeground(control)
-            if(cppRun) {
+            if(localCppMode) {
+                owner.appendExternal("\r\n[本地 C++ · ${response.kind.label}]\r\n"+
+                    (if(response.kind==RunKind.COMPILE)response.stdout else "")+response.stderr+
+                    "\r\n[退出码 ${response.exitCode} · ${response.elapsedMs}ms]\r\n")
+            } else if(cppRun) {
                 owner.appendExternal("\r\n[Wandbox · 云端预填输入 · ${response.kind.label}]\r\n"+response.stdout+
                     (if(response.stderr.isNotEmpty())"\r\n"+response.stderr else "")+"\r\n[退出码 ${response.exitCode} · ${response.elapsedMs}ms]\r\n")
                 owner.redrawPrompt()
@@ -273,7 +313,14 @@ object RunSession {
         terminalLaunchFile?.let { runCatching { it.delete() } };terminalLaunchFile=null
         connection?.let { runCatching { application?.unbindService(it) } }; connection = null
         application = null
-        result = response.copy(sourcePath = path, projectRoot = root, workspaceId = workspaceId, sourceKey = sourceKey, sourceHash = sourceHash)
+        val diagnosticPath=response.errorFile?.let { file ->
+            runCatching { File(file).canonicalPath.removePrefix(File(root).canonicalPath+File.separator).replace(File.separatorChar,'/') }.getOrNull()
+        }
+        val diagnosticHash=cppSnapshot?.texts?.get(diagnosticPath)?.let(DocumentTree::digest)
+        result = response.copy(sourcePath = path, projectRoot = root, workspaceId = workspaceId, sourceKey = sourceKey, sourceHash = sourceHash,
+            errorSourceHash=diagnosticHash?:response.errorSourceHash)
+        localCppClient?.close();localCppClient=null
+        cppSnapshot?.let{runCatching{it.close()}};cppSnapshot=null;localCppRunning=false
         running = false
         listener?.invoke()
     }

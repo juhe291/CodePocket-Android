@@ -1,0 +1,113 @@
+{
+  "package": {
+    "Package": "llvm",
+    "Version": "21.1.8-3",
+    "Architecture": "aarch64",
+    "Filename": "pool/main/l/llvm/llvm_21.1.8-3_aarch64.deb",
+    "Size": "14911960",
+    "SHA256": "2d17e4dde485cae71e6872d19ce1d44555789208708b4e0fd15ebf6818a146d3",
+    "Depends": "libllvm (= 21.1.8-3)"
+  },
+  "original": {
+    "file": "C:/Users/q1684/Desktop/\u5b89\u5353\u7aef\u7f16\u8bd1\u5668/CodePocket-Android/.tools/cpp-local-probe/llvm-symbolizer",
+    "bytes": 81328,
+    "sha256": "62b5533ba8fa07f005963967733cbab8530c27b7202e98a469d32762c56cdb99",
+    "elf_class": 64,
+    "endian": "little",
+    "machine": 183,
+    "aarch64": true,
+    "type": 3,
+    "entry": 33032,
+    "interpreter": "/system/bin/linker64",
+    "soname": null,
+    "needed": [
+      "libc.so",
+      "libLLVM.so",
+      "libc++_shared.so"
+    ],
+    "runpaths": [
+      "/data/data/com.termux/files/usr/lib"
+    ],
+    "android_notes": [
+      {
+        "api": 24,
+        "ndk": "r29"
+      }
+    ],
+    "loads": [
+      {
+        "offset": 0,
+        "vaddr": 0,
+        "bytes": 70944,
+        "align": 16384
+      },
+      {
+        "offset": 70944,
+        "vaddr": 87328,
+        "bytes": 8184,
+        "align": 16384
+      },
+      {
+        "offset": 79128,
+        "vaddr": 111896,
+        "bytes": 24,
+        "align": 16384
+      }
+    ],
+    "load_segments_16k_compatible": true,
+    "text_relocations": false,
+    "contains_termux_prefix": true,
+    "android_execution": false
+  },
+  "patched": {
+    "file": "C:/Users/q1684/Desktop/\u5b89\u5353\u7aef\u7f16\u8bd1\u5668/CodePocket-Android/.tools/cpp-local-probe/libcodepocket_symbolizer.so",
+    "bytes": 81328,
+    "sha256": "3babb781f9f76401d378318d0ca1d456a99d84a756faa67654433bc3b5941ed3",
+    "elf_class": 64,
+    "endian": "little",
+    "machine": 183,
+    "aarch64": true,
+    "type": 3,
+    "entry": 33032,
+    "interpreter": "/system/bin/linker64",
+    "soname": null,
+    "needed": [
+      "libc.so",
+      "libcpA_.so",
+      "libcpB_______.so"
+    ],
+    "runpaths": [
+      "$ORIGIN"
+    ],
+    "android_notes": [
+      {
+        "api": 24,
+        "ndk": "r29"
+      }
+    ],
+    "loads": [
+      {
+        "offset": 0,
+        "vaddr": 0,
+        "bytes": 70944,
+        "align": 16384
+      },
+      {
+        "offset": 70944,
+        "vaddr": 87328,
+        "bytes": 8184,
+        "align": 16384
+      },
+      {
+        "offset": 79128,
+        "vaddr": 111896,
+        "bytes": 24,
+        "align": 16384
+      }
+    ],
+    "load_segments_16k_compatible": true,
+    "text_relocations": false,
+    "contains_termux_prefix": false,
+    "android_execution": false
+  }
+}

@@ -10,7 +10,8 @@ import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-internal data class CppCommandResult(val exit: ExecutionExit, val stdout: String, val stderr: String)
+internal data class CppCommandResult(val exit: ExecutionExit, val stdout: String, val stderr: String,
+    val fault: CppRuntimeFault? = null)
 
 /** One owned native generation per command. Both pipes drain concurrently and share a budget. */
 internal class CppCommandExecutor(private val launch: () -> ExecutionProcess,

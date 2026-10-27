@@ -81,4 +81,41 @@ class MainRunIntegrationTest {
         val dialog=ShadowAlertDialog.getLatestAlertDialog();assertTrue(dialog.isShowing);assertTrue(dialog.findViewById<android.widget.TextView>(android.R.id.message).text.contains("输入代码"))
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();idle()
     }
+    @Test fun localCppF5SavesSoraCapturesTheProjectAndNeverRequestsCloudConsentOnHostBridgeFailure(){
+        switch("main.cpp")
+        val current=field<AppSettings>("settings")
+        ReflectionHelpers.setField(main,"settings",current.copy(cppBackend=CppBackend.LOCAL,cppBuildScope=CppBuildScope.PROJECT))
+        val header=workspace.create(workspace.root,"local-value.hpp",false);workspace.write(header,"constexpr int value=1;\n")
+        val draftKey=field<EditorSessions>("sessions").key("local-value.hpp")
+        val drafts=field<DraftStore>("drafts");drafts.put(draftKey,"local-value.hpp","constexpr int value=2;\n")
+        val code="#include \"local-value.hpp\"\nint main(){return value;}\n"
+        edit(code);val content=editor.text;key(KeyEvent.KEYCODE_F5);drain()
+        val response=RunSession.result!!
+        assertEquals(RunKind.SERVICE,response.kind);assertEquals(CppExecutionService.ENGINE,response.engine)
+        assertTrue(response.stderr.contains("app_process"));assertEquals("",response.stdout)
+        assertEquals(DocumentTree.digest(code),response.sourceHash);assertEquals(workspace.resolve("main.cpp").path,response.sourcePath)
+        assertEquals(code,workspace.resolve("main.cpp").readText());assertSame(content,editor.text)
+        assertFalse(main.getSharedPreferences("codepocket_v2",0).getBoolean("wandboxConsent",false));assertFalse(RunSession.running)
+        assertEquals("constexpr int value=1;\n",workspace.read(header));assertEquals("constexpr int value=2;\n",drafts.analysisTexts(mapOf("local-value.hpp" to draftKey))["local-value.hpp"])
+        assertTrue(File(main.cacheDir,"cpp-runs").listFiles().isNullOrEmpty())
+    }
+    @Test fun localCppHelperDiagnosticChecksTheExecutedHelperHashBeforeMovingTheRealSoraCaret() {
+        val helper=workspace.create(workspace.root,"fault.cpp",false)
+        val source="int helper(){\n return 7;\n}\n";workspace.write(helper,source)
+        val response=RunResult("","fault.cpp:2: runtime fault","signal 11",4,errorLine=2,
+            engine=CppExecutionService.ENGINE,kind=RunKind.RUNTIME,errorFile=helper.path,
+            sourcePath=workspace.resolve("main.cpp").path,projectRoot=workspace.root.path,workspaceId=workspace.identity,
+            errorSourceHash=DocumentTree.digest(source))
+        // IPC carries proof for the helper, rather than reusing main.cpp's hash.
+        assertEquals(response.errorSourceHash,runResultFromBundle(response.toBundle(71)).errorSourceHash)
+        ReflectionHelpers.setField(main,"result",response)
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"gotoError");drain();ready()
+        assertEquals("fault.cpp",field<String>("activePath"));assertEquals(source.indexOf(" return"),editor.selectionStart)
+        edit(source.replace("7","8"));editor.setSelection(0)
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"gotoError");drain();ready()
+        assertEquals(0,editor.selectionStart);assertEquals(source.replace("7","8"),editor.text.toString())
+        val status=field<android.widget.TextView>("status")
+        assertEquals(main.getString(R.string.editor_diagnostic_changed),status.text.toString())
+        assertEquals(source,workspace.read(helper))
+    }
 }

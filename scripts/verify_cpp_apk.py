@@ -31,7 +31,10 @@ def main():
         actual_lock = json.loads(apk.read('assets/cpp-source/cpp-runtime-lock.json'))
         assert actual_lock == lock
         assert manifest['target'] == 'aarch64-linux-android24'
+        assert len(manifest['libraries']) == len(lock['libraries'])
+        assert {item['name'] for item in manifest['libraries']} == {item['packaged_name'] for item in lock['libraries']}
         natives = []
+        execution_images = []
         with tempfile.TemporaryDirectory(dir=ROOT / '.tools', prefix='cpp-apk-inspect-') as directory:
             for item in manifest['libraries']:
                 name = item['name']; data = apk.read('lib/arm64-v8a/' + name)
@@ -45,13 +48,34 @@ def main():
                 assert inspected['runpaths'] in ([], ['$ORIGIN'])
                 assert all(note['api'] <= 24 for note in inspected['android_notes'])
                 assert all(value in lock['aliases'].values() or value in {'libc.so', 'libm.so', 'libdl.so', 'liblog.so', 'libandroid.so', 'libz.so'} for value in inspected['needed'])
-                if name == manifest['executable']: assert inspected['interpreter'] == '/system/bin/linker64' and inspected['entry'] > 0
+                if name in {manifest[key] for key in ('executable','compiler','linker','symbolizer')}:
+                    assert inspected['interpreter'] == '/system/bin/linker64' and inspected['entry'] > 0
                 natives.append(dict(name=name, sha256=item['sha256'], bytes=len(data), needed=inspected['needed'], alignment_16k=True))
             bridge = apk.read('lib/arm64-v8a/libcodepocket_analysis.so')
             target = Path(directory) / 'libcodepocket_analysis.so'; target.write_bytes(bridge)
             inspected = elf(target)
             assert inspected['aarch64'] and inspected['load_segments_16k_compatible'] and not inspected['text_relocations']
             assert all(note['api'] <= 24 for note in inspected['android_notes'])
+            for name in ('libcodepocket_execute.so','libcodepocket_cpp_runner.so'):
+                data=apk.read('lib/arm64-v8a/'+name)
+                target=Path(directory)/name;target.write_bytes(data);inspected=elf(target)
+                assert inspected['aarch64'] and inspected['load_segments_16k_compatible'] and not inspected['text_relocations']
+                assert all(note['api']<=24 for note in inspected['android_notes'])
+                assert set(inspected['needed'])<=set(('libc.so','libm.so','libdl.so'))
+                if name=='libcodepocket_cpp_runner.so':
+                    assert inspected['type']==3 and inspected['interpreter']=='/system/bin/linker64' and inspected['entry']>0
+                    staged=ROOT/'app/build/cpp-runner/jni/arm64-v8a'/name
+                    assert data==staged.read_bytes(), 'Installed runner differs from current build output'
+                execution_images.append(dict(name=name,sha256=digest(data),bytes=len(data),needed=inspected['needed'],alignment_16k=True))
+        support=manifest['build_support'];data=apk.read('assets/'+support['asset'])
+        assert len(data)==support['bytes'] and digest(data)==support['sha256']
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            assert archive.testzip() is None and len(archive.namelist())==len(set(archive.namelist()))==support['entries']==4
+            assert set(archive.namelist())=={item['name'] for item in lock['build_support']}
+            assert sum(item.file_size for item in archive.infolist())==support['uncompressed_bytes']<=2*1024*1024
+            for item in lock['build_support']:
+                value=archive.read(item['name'])
+                assert len(value)==item['bytes'] and digest(value)==item['sha256']
         spec = manifest['headers']; data = apk.read('assets/' + spec['asset'])
         assert len(data) == spec['bytes'] and digest(data) == spec['sha256']
         with zipfile.ZipFile(io.BytesIO(data)) as headers:
@@ -82,7 +106,7 @@ def main():
     report = dict(apk_sha256=digest(args.apk.read_bytes()), apk_bytes=args.apk.stat().st_size,
         baseline_sha256=digest(args.baseline.read_bytes()), baseline_bytes=args.baseline.stat().st_size,
         native_libraries=natives, native_bytes=sum(item['bytes'] for item in natives), bridge_bytes=len(bridge),
-        headers=spec, corresponding_source=source, notices=notices,
+        headers=spec, build_support=support, execution_images=execution_images, corresponding_source=source, notices=notices,
         original_native_unchanged=original_native, original_python_assets_unchanged=original_python,
         abi='arm64-v8a', target_api=24, zip_crc=True, real_android_execution=False)
     args.output.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')

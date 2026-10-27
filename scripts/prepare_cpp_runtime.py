@@ -140,7 +140,7 @@ def prepare(args):
     manifest = dict(engine=lock['engine'], version=lock['version'], target=lock['target'], libraries=libraries,
         executable='libcodepocket_clangd.so', headers=dict(asset='cpp-runtime/headers.zip', sha256=sha(header_zip), bytes=header_zip.stat().st_size,
             entries=len(headers), uncompressed_bytes=sum(map(len, headers.values()))),
-        compiler='libcodepocket_clang.so', linker='libcodepocket_lld.so',
+        compiler='libcodepocket_clang.so', linker='libcodepocket_lld.so', symbolizer='libcodepocket_symbolizer.so',
         build_support=dict(asset='cpp-runtime/build-support.zip', sha256=sha(support_zip), bytes=support_zip.stat().st_size,
             entries=len(support), uncompressed_bytes=sum(map(len, support.values()))),
         corresponding_source=dict(asset='cpp-source/' + source_asset.name, sha256=sha(source_asset), bytes=source_asset.stat().st_size,

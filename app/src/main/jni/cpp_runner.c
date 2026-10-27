@@ -1,5 +1,8 @@
 /* Installed native executable. Generated code is a private read-only shared object,
  * never an execve target in app-writable storage. Runs only in the owned child. */
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -9,12 +12,14 @@
 #include <dlfcn.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "cpp_fault.h"
 #endif
 
 int main(int argc, char **argv) {
     if (argc != 2) { fputs("CodePocket: expected one program path\n", stderr); return 125; }
 #ifndef _WIN32
     signal(SIGPIPE, SIG_DFL);
+    if (cpp_fault_install() != 0) { fputs("CodePocket: cannot configure fault reporting\n",stderr); return 125; }
 #endif
     setvbuf(stdout, NULL, _IONBF, 0);
     setvbuf(stderr, NULL, _IONBF, 0);

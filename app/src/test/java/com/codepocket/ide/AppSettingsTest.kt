@@ -25,4 +25,14 @@ class AppSettingsTest {
         assertFalse(MotionPolicy.enabled(false, 1f, false)); assertFalse(MotionPolicy.enabled(true, 0f, false))
         assertFalse(MotionPolicy.enabled(true, 1f, true)); assertFalse(MotionPolicy.enabled(true, Float.NaN, false))
     }
+    @Test fun localCppAndProjectScopeRoundTripWhileLegacyAndUnknownPreferencesKeepCloudDefault() {
+        val original=AppSettings(cppBackend=CppBackend.LOCAL,cppBuildScope=CppBuildScope.PROJECT)
+        assertEquals(original,AppSettings.fromJson(original.toJson()))
+        for(json in listOf<String?>(null,"{\"version\":9}","{\"cppBackend\":\"future\",\"cppBuildScope\":\"unknown\"}")) {
+            val settings=AppSettings.fromJson(json)
+            assertEquals(CppBackend.CLOUD,settings.cppBackend);assertEquals(CppBuildScope.CURRENT,settings.cppBuildScope)
+        }
+        val checkpoint=SettingsDialog.Draft(original.copy(cppBackend=CppBackend.CLOUD),original).checkpoint()
+        assertEquals(original,SettingsDialog.Draft.restore(AppSettings(),checkpoint).value)
+    }
 }

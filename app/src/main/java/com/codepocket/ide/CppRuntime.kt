@@ -51,6 +51,12 @@ internal class CppRuntime(private val context: Context) {
         require(compiler.canExecute() && linker.canExecute())
         return CppToolchainPaths(compiler, linker, headers, support, File(native, "libcpB_______.so"))
     }
+    fun installedRunner(): File = File(native,"libcodepocket_cpp_runner.so").also {
+        require(it.canonicalFile.parentFile == native && it.isFile && it.canExecute()) { "安装包缺少本地 C++ 运行器" }
+    }
+    fun symbolizer(): File = File(native,manifest.getString("symbolizer")).also {
+        require(it.name=="libcodepocket_symbolizer.so" && it.canonicalFile.parentFile==native && it.isFile && it.canExecute())
+    }
     fun create(root: File, cancelled: () -> Boolean, own: (AnalysisProcess) -> Unit): CppLspEngine {
         checkLibraries()
         val executable = File(native, manifest.getString("executable")); require(executable.canExecute())

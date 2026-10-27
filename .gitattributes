@@ -16,3 +16,5 @@ app/src/main/assets/cpp-licenses/CLANG-LICENSE.txt -text
 app/src/main/assets/cpp-licenses/LLD-LICENSE.txt -text
 app/src/main/assets/cpp-licenses/COMPILER-RT-LICENSE.txt -text
 verification/cpp-local-integration-2026-10-27/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+# Exact generated snippets include deliberately indented blank tab stops.
+verification/cpp-local-integration-2026-10-27/snippet-fixtures/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

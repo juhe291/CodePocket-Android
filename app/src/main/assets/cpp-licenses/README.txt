@@ -1,4 +1,4 @@
-CodePocket C++ 工具：clangd / Clang / LLD 21.1.8
+CodePocket C++ 工具：clangd / Clang / LLD / llvm-symbolizer 21.1.8
 
 clangd 在设备本地静态分析，不执行项目代码，不上传代码。
 本地 C++ 模式由 Clang/LLD 构建并由独立子进程执行用户代码；
@@ -9,7 +9,8 @@ clangd 在设备本地静态分析，不执行项目代码，不上传代码。
 来源及固定版本：
 https://packages.termux.dev/apt/termux-main/
 https://github.com/termux/termux-packages
-clang / lld / libllvm / libcompiler-rt 21.1.8-3（LLVM Apache-2.0 WITH LLVM-exception 等，保留完整通知）
+clang / lld / llvm / libllvm / libcompiler-rt 21.1.8-3（LLVM Apache-2.0 WITH LLVM-exception 等，保留完整通知）
+llvm 包只提取本地故障源码定位工具 llvm-symbolizer，不查询网络调试符号服务。
 libc++ 30（Android NDK r30 来源，保留 LLVM 及 NDK 通知）
 libffi 3.8（MIT）、libxml2 2.15.4-1（MIT）、zlib 1.3.2（zlib）
 zstd 1.5.7-1（采用库的 BSD 选项；未分发 GPL 命令行工具）

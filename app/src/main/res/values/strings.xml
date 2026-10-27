@@ -126,7 +126,6 @@
     <string name="settings_run_modes">运行方式</string>
     <string name="settings_python_mode">Python · 本地</string>
     <string name="settings_python_mode_help">在当前终端中交互输入</string>
-    <string name="settings_cpp_mode">C++17 · 云端</string>
-    <string name="settings_cpp_mode_help">预填输入，完成后返回结果。
-代码和输入会发送至第三方 Wandbox。</string>
+    <string name="settings_cpp_mode">C++17 · 本地或云端</string>
+    <string name="settings_cpp_mode_help">云端模式：代码和输入会发送至第三方 Wandbox；本地使用真实终端，CPU 限制10秒，会话最长5分钟。</string>
 </resources>

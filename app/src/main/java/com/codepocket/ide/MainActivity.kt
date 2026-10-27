@@ -2816,7 +2816,10 @@ class MainActivity : Activity() {
         if (code.isBlank()) { alert("请先输入代码"); return }
         if (code.length > 100000 || input.length() > 20000) { alert("代码最多 10 万字符；输入最多 2 万字符"); return }
         val cpp = isCpp(); val stdin = input.text.toString()
-        if (cpp && !consented && !prefs.getBoolean("wandboxConsent", false)) {
+        val localCpp=cpp && settings.cppBackend==CppBackend.LOCAL
+        val scope=settings.cppBuildScope
+        if(localCpp && !CppBuildPlan.translationUnit(activePath)){alert("请选择 C/C++ 源文件作为入口");return}
+        if (cpp && !localCpp && !consented && !prefs.getBoolean("wandboxConsent", false)) {
             AlertDialog.Builder(this).setTitle("C++ 云端运行")
                 .setMessage("当前 C++ 源码和标准输入将发送至第三方 Wandbox 服务。请勿提交密码或私人资料。Python 在本地运行。")
                 .setNegativeButton("取消", null).setPositiveButton("同意并运行") { _, _ ->
@@ -2836,16 +2839,24 @@ class MainActivity : Activity() {
         shellPane?.ensureSession()
         val owner = terminalRegistry.catalog.selected()!!.value.runtime
         val interactive = true
-        fun launch(entry: String, root: String, key: String?) {
+        fun launch(entry: String, root: String, key: String?, job:CppRunSnapshot?=null) {
             if (!RunSession.start(applicationContext,code,stdin,cpp,runningFile,root,workspace.identity,
-                entry,key,owner,interactive)) alert("当前终端正在执行命令。请先停止它或新建终端后运行。")
+                entry,key,owner,interactive,job,scope)) {job?.close();alert("当前终端正在执行命令。请先停止它或新建终端后运行。")}
         }
         // A remembered-open panel can still be temporarily GONE under the editor IME.
         // Explicit Run must reveal it too; hiding the IME does not focus/show the terminal keyboard.
         hideKeyboard()
         if (panelLayout?.showPanel != true) togglePanel() else updateImeLayout()
         val projectRoot = workspace.root.absolutePath
-        if (!cpp && workspace.external) {
+        if(localCpp) {
+            val target=workspace;val path=activePath;val keys=sessions.analysisKeys();val key=sessions.key(path)
+            ioAction("正在准备本地 C++ 项目副本…", {
+                CppRunSnapshot.capture(File(cacheDir.canonicalFile,"cpp-runs"),target,drafts,keys,path,code)
+            }) { snapshot ->
+                if(workspace!==target || activePath!=path || editor.text.toString()!=code){snapshot.close();status.text="源码已变化，请重新运行"}
+                else launch(runningFile,projectRoot,key,snapshot)
+            }
+        } else if (!cpp && workspace.external) {
             val path = activePath
             ioAction("正在同步 Python 源码与运行资源…", {
                 val snapshot = workspace.preparePythonRun()
@@ -3088,7 +3099,8 @@ class MainActivity : Activity() {
             }
             val source = editorPort?.snapshot()?.buffer ?: return@jump
             val located = editorPort?.locateDiagnostic(EditorDiagnostic(source, line,
-                if (relative == entry) origin.sourceKey else null, if (relative == entry) origin.sourceHash else null))
+                if(origin.errorSourceHash!=null)source.key else if (relative == entry) origin.sourceKey else null,
+                origin.errorSourceHash ?: if (relative == entry) origin.sourceHash else null))
                 ?: DiagnosticStatus.NO_DOCUMENT
             if (located.located) { hideCompletion(); clearSnippet() }
             when (located) {

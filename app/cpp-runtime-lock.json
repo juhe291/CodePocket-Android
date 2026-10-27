@@ -14,6 +14,15 @@
       "SHA256": "9fb565013b96ce10abd8f8f217aaebb48f72873f53acbf8886329bcea841a21c",
       "Depends": "libcompiler-rt, lld, llvm, ndk-sysroot, libllvm (= 21.1.8-3)"
     },
+    "llvm": {
+      "Package": "llvm",
+      "Version": "21.1.8-3",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/l/llvm/llvm_21.1.8-3_aarch64.deb",
+      "Size": "14911960",
+      "SHA256": "2d17e4dde485cae71e6872d19ce1d44555789208708b4e0fd15ebf6818a146d3",
+      "Depends": "libllvm (= 21.1.8-3)"
+    },
     "libllvm": {
       "Package": "libllvm",
       "Version": "21.1.8-3",
@@ -212,6 +221,14 @@
       "packaged_name": "libcodepocket_lld.so",
       "sha256": "4f84c10a34724239eac3379a52ff25f314eb96413983fbac8dbff3f73dba4a20",
       "bytes": 5871888
+    },
+    {
+      "package": "llvm",
+      "member": "bin/llvm-symbolizer",
+      "source_sha256": "62b5533ba8fa07f005963967733cbab8530c27b7202e98a469d32762c56cdb99",
+      "packaged_name": "libcodepocket_symbolizer.so",
+      "sha256": "3babb781f9f76401d378318d0ca1d456a99d84a756faa67654433bc3b5941ed3",
+      "bytes": 81328
     }
   ],
   "source": {

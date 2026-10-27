@@ -17,6 +17,17 @@ internal class CppRunSnapshot private constructor(val directory: File, val sourc
         remove(directory)
     }
     companion object {
+        /** The private service reopens only a direct, canonical job under its own cache. */
+        fun open(parent: File, directory: File, entry: String): CppRunSnapshot {
+            require(parent.canonicalFile == parent.absoluteFile && directory.canonicalFile == directory.absoluteFile)
+            require(directory.parentFile == parent && directory.name.matches(Regex("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}")))
+            val source = File(directory,"source"); val build = File(directory,"build")
+            require(source.isDirectory && build.isDirectory && source.canonicalFile == source && build.canonicalFile == build)
+            require(build.listFiles()?.isEmpty() == true)
+            val content = PythonSources.local(source,CppSources::isSource)
+            require(entry in content && CppBuildPlan.translationUnit(entry))
+            return CppRunSnapshot(directory,source,build,entry,content){true}
+        }
         fun capture(parent: File, workspace: Workspace, drafts: DraftStore, keys: Map<String, String>,
             path: String, code: String): CppRunSnapshot {
             require(CppBuildPlan.translationUnit(path) && code.length <= Workspace.MAX_CHARS && !code.contains('\u0000'))

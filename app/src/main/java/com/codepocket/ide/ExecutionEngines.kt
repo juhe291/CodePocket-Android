@@ -25,7 +25,8 @@ data class RunResult(
     val projectRoot: String? = null,
     val workspaceId: String? = null,
     val sourceKey: String? = null,
-    val sourceHash: String? = null
+    val sourceHash: String? = null,
+    val errorSourceHash: String? = null
 ) {
     val successful: Boolean get() = kind == RunKind.SUCCESS
 }

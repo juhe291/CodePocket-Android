@@ -54,6 +54,8 @@ object SettingsDialog {
         choice("autoSaveDelayMs",3,"自动保存延迟","离开页面仍保留现有保存保护",listOf("700 ms","1500 ms","3000 ms"),{listOf(700,1500,3000).indexOf(it.autoSaveDelayMs).coerceAtLeast(0)},{s,i->s.copy(autoSaveDelayMs=listOf(700,1500,3000)[i])})
         choice("terminalFontSize",4,"终端字号","真实终端与运行结果共用字号偏好",(10..24).map{"$it sp"},{it.terminalFontSize-10},{s,i->s.copy(terminalFontSize=i+10)})
         choice("terminalTheme",4,"终端配色","切换配色保留正在运行的会话",listOf("跟随界面","CodePocket Dark","Nord","Dracula","Light"),{it.terminalTheme.ordinal},{s,i->s.copy(terminalTheme=TerminalTheme.values()[i])})
+        choice("cppBackend",4,"C++ 运行方式","云端须确认发送；本地失败不会自动上传",listOf("Wandbox 云端","设备本地 · Clang21"),{it.cppBackend.ordinal},{s,i->s.copy(cppBackend=CppBackend.values()[i])})
+        choice("cppBuildScope",4,"本地 C++ 构建范围","项目模式编译所有 C/C++ 源文件；多个独立 main 请用当前文件",listOf("当前文件（可引用项目头文件）","整个项目"),{it.cppBuildScope.ordinal},{s,i->s.copy(cppBuildScope=CppBuildScope.values()[i])})
         toggle("collapsePanelOnIme",4,"输入代码时临时收起终端","仅在键盘实际占用底部空间时生效",{it.collapsePanelOnIme},{s,v->s.copy(collapsePanelOnIme=v)})
         // Retain the serialized legacy preference; this bottom-only workbench exposes no side-dock switch.
         toggle("animations",5,"动画总开关","遵从系统减少动画与省电策略",{it.animations},{s,v->s.copy(animations=v)})
@@ -68,6 +70,7 @@ object SettingsDialog {
         "completionTab","completionEnter","completionArrows"->"补全按键"
         "symbolBar"->"触屏输入"
         "terminalFontSize","terminalTheme"->"终端显示"
+        "cppBackend","cppBuildScope"->"代码运行"
         "collapsePanelOnIme"->"窗口与键盘"
         "animations"->"动画策略"
         "cursorMovement","cursorBlink"->"代码光标"
