@@ -1,0 +1,626 @@
+{
+  "real_backend": true,
+  "android_execution": false,
+  "cases": {
+    "system": {
+      "code": "#include <iost",
+      "caret": 14,
+      "response": {
+        "id": 2,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "iostream>",
+              "insertText": "iostream>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " iostream>",
+              "score": 0.787254273891449,
+              "sortText": "40b67681iostream>",
+              "textEdit": {
+                "newText": "iostream>",
+                "range": {
+                  "end": {
+                    "character": 14,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "iostream>"
+      ],
+      "expected": "iostream"
+    },
+    "project": {
+      "code": "#include \"mod",
+      "caret": 13,
+      "response": {
+        "id": 3,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "model.hpp\"",
+              "insertText": "model.hpp\"",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " model.hpp\"",
+              "score": 0.787254273891449,
+              "sortText": "40b67681model.hpp\"",
+              "textEdit": {
+                "newText": "model.hpp\"",
+                "range": {
+                  "end": {
+                    "character": 13,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "model.hpp\""
+      ],
+      "expected": "model.hpp"
+    },
+    "nested": {
+      "code": "#include \"sub/fi",
+      "caret": 16,
+      "response": {
+        "id": 4,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "file.hpp\"",
+              "insertText": "file.hpp\"",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " file.hpp\"",
+              "score": 0.787254273891449,
+              "sortText": "40b67681file.hpp\"",
+              "textEdit": {
+                "newText": "file.hpp\"",
+                "range": {
+                  "end": {
+                    "character": 16,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 14,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "file.hpp\""
+      ],
+      "expected": "file.hpp"
+    },
+    "middle": {
+      "code": "#include \"sub/fiOLD.hpp\"\n",
+      "caret": 16,
+      "response": {
+        "id": 5,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "file.hpp\"",
+              "insertText": "file.hpp\"",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " file.hpp\"",
+              "score": 0.787254273891449,
+              "sortText": "40b67681file.hpp\"",
+              "textEdit": {
+                "newText": "file.hpp\"",
+                "range": {
+                  "end": {
+                    "character": 24,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 14,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "file.hpp\""
+      ],
+      "expected": "file.hpp"
+    },
+    "closed-system": {
+      "code": "#include <vector>\n",
+      "caret": 13,
+      "response": {
+        "id": 6,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "vecintrin.h>",
+              "insertText": "vecintrin.h>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " vecintrin.h>",
+              "score": 0.787254273891449,
+              "sortText": "40b67681vecintrin.h>",
+              "textEdit": {
+                "newText": "vecintrin.h>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "vector>",
+              "insertText": "vector>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " vector>",
+              "score": 0.787254273891449,
+              "sortText": "40b67681vector>",
+              "textEdit": {
+                "newText": "vector>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "__vector/",
+              "insertText": "__vector/",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " __vector/",
+              "score": 0.787254273891449,
+              "sortText": "4114df95__vector/",
+              "textEdit": {
+                "newText": "__vector/",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "andes_vector.h>",
+              "insertText": "andes_vector.h>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " andes_vector.h>",
+              "score": 0.787254273891449,
+              "sortText": "4114df95andes_vector.h>",
+              "textEdit": {
+                "newText": "andes_vector.h>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "arm_vector_types.h>",
+              "insertText": "arm_vector_types.h>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " arm_vector_types.h>",
+              "score": 0.787254273891449,
+              "sortText": "4114df95arm_vector_types.h>",
+              "textEdit": {
+                "newText": "arm_vector_types.h>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "riscv_vector.h>",
+              "insertText": "riscv_vector.h>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " riscv_vector.h>",
+              "score": 0.787254273891449,
+              "sortText": "4114df95riscv_vector.h>",
+              "textEdit": {
+                "newText": "riscv_vector.h>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "sifive_vector.h>",
+              "insertText": "sifive_vector.h>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " sifive_vector.h>",
+              "score": 0.787254273891449,
+              "sortText": "4114df95sifive_vector.h>",
+              "textEdit": {
+                "newText": "sifive_vector.h>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "vecintrin.h>",
+        "vector>",
+        "__vector/",
+        "andes_vector.h>",
+        "arm_vector_types.h>",
+        "riscv_vector.h>",
+        "sifive_vector.h>"
+      ],
+      "expected": "vector"
+    },
+    "directory": {
+      "code": "#include \"su",
+      "caret": 12,
+      "response": {
+        "id": 7,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "sub/",
+              "insertText": "sub/",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " sub/",
+              "score": 0.787254273891449,
+              "sortText": "40b67681sub/",
+              "textEdit": {
+                "newText": "sub/",
+                "range": {
+                  "end": {
+                    "character": 12,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "__support/",
+              "insertText": "__support/",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " __support/",
+              "score": 0.787254273891449,
+              "sortText": "4168d8e1__support/",
+              "textEdit": {
+                "newText": "__support/",
+                "range": {
+                  "end": {
+                    "character": 12,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "__stddef_unreachable.h\"",
+              "insertText": "__stddef_unreachable.h\"",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " __stddef_unreachable.h\"",
+              "score": 0.787254273891449,
+              "sortText": "42367681__stddef_unreachable.h\"",
+              "textEdit": {
+                "newText": "__stddef_unreachable.h\"",
+                "range": {
+                  "end": {
+                    "character": 12,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "sub/",
+        "__support/",
+        "__stddef_unreachable.h\""
+      ],
+      "expected": "sub/"
+    },
+    "directory-next": {
+      "code": "#include \"sub/",
+      "caret": 14,
+      "response": {
+        "id": 8,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "file.hpp\"",
+              "insertText": "file.hpp\"",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " file.hpp\"",
+              "score": 0.787254273891449,
+              "sortText": "40b67681file.hpp\"",
+              "textEdit": {
+                "newText": "file.hpp\"",
+                "range": {
+                  "end": {
+                    "character": 14,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 14,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "file.hpp\""
+      ],
+      "expected": "file.hpp"
+    },
+    "system-nested": {
+      "code": "#include <sys/sta",
+      "caret": 17,
+      "response": {
+        "id": 9,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "stat.h>",
+              "insertText": "stat.h>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " stat.h>",
+              "score": 0.787254273891449,
+              "sortText": "40b67681stat.h>",
+              "textEdit": {
+                "newText": "stat.h>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 14,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "statfs.h>",
+              "insertText": "statfs.h>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " statfs.h>",
+              "score": 0.787254273891449,
+              "sortText": "40b67681statfs.h>",
+              "textEdit": {
+                "newText": "statfs.h>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 14,
+                    "line": 0
+                  }
+                }
+              }
+            },
+            {
+              "filterText": "statvfs.h>",
+              "insertText": "statvfs.h>",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " statvfs.h>",
+              "score": 0.787254273891449,
+              "sortText": "40b67681statvfs.h>",
+              "textEdit": {
+                "newText": "statvfs.h>",
+                "range": {
+                  "end": {
+                    "character": 17,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 14,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "stat.h>",
+        "statfs.h>",
+        "statvfs.h>"
+      ],
+      "expected": "stat.h"
+    },
+    "unicode-crlf": {
+      "code": "// 😀中文\r\n#include \"sub/fi",
+      "caret": 25,
+      "response": {
+        "id": 10,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "file.hpp\"",
+              "insertText": "file.hpp\"",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " file.hpp\"",
+              "score": 0.787254273891449,
+              "sortText": "40b67681file.hpp\"",
+              "textEdit": {
+                "newText": "file.hpp\"",
+                "range": {
+                  "end": {
+                    "character": 16,
+                    "line": 1
+                  },
+                  "start": {
+                    "character": 14,
+                    "line": 1
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "file.hpp\""
+      ],
+      "expected": "file.hpp"
+    },
+    "closed-project": {
+      "code": "#include \"model.hpp\"\n",
+      "caret": 13,
+      "response": {
+        "id": 11,
+        "jsonrpc": "2.0",
+        "result": {
+          "isIncomplete": false,
+          "items": [
+            {
+              "filterText": "model.hpp\"",
+              "insertText": "model.hpp\"",
+              "insertTextFormat": 1,
+              "kind": 17,
+              "label": " model.hpp\"",
+              "score": 0.787254273891449,
+              "sortText": "40b67681model.hpp\"",
+              "textEdit": {
+                "newText": "model.hpp\"",
+                "range": {
+                  "end": {
+                    "character": 20,
+                    "line": 0
+                  },
+                  "start": {
+                    "character": 10,
+                    "line": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "names": [
+        "model.hpp\""
+      ],
+      "expected": "model.hpp"
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "totals": {
+    "tests": 29,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.CompletionTest.acceptingChosenCandidateDoesNotSilentlyUseFirstItem",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.languagesRemainSeparateAndLargeFilesKeepOnlyBuiltinFallback",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.acceptingInMiddleOfWordReplacesWholeTokenWithUtf16Offsets",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.allThreeArrowChoicesRemainConfigurableInCurrentSettings",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.candidatesAreNeverAppliedToChangedDocumentOrSelection",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.legacyExplicitModeMigratesButOffAndOtherSettingsArePreserved",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.placementFitsVisibleWindowAndFlipsAboveKeyboard",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.keyboardDefaultsNavigateVisibleCandidatesAndKeepNewlineNative",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.lexicalResultsDoNotPretendToResolveMembersOrLiteralContents",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CompletionTest.completionPreferencesMigrateAndRoundTripWithoutChangingDefaults",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderCompletionTest.actualSystemAndProjectFilesAreHeaderCandidatesWithOneClosingDelimiter",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderCompletionTest.actualClosedAndMiddlePathsConsumeTheOldSuffixAndDoNotDuplicateQuotes",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderCompletionTest.fileKindCannotBypassIncludeContextOrEditTheDirectiveOrFollowingCode",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderCompletionTest.actualDirectoryCandidateRemainsOpenAndTheNextLevelUsesItsOwnEdit",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderCompletionTest.headerCandidateCannotInsertANewDirectiveEscapeQuotesOrUseSymbolSnippets",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderCompletionTest.headerEditsKeepRevisionDocumentSelectionAndSizeGates",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.realSignaturesPreserveOverloadsAndActualSecondParameters",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.updatedAndClosedHeaderFixturesDoNotResurrectPreviousDefinitions",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.semanticSnippetStopsAreParsedAndUnsupportedGrammarFailsClosed",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.malformedRangesSurrogatesExtraEditsAndWrongEnginesCannotProduceAnInsertion",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.fuzzyIndexNamesOutsideTheTypedPrefixAreFilteredWithoutInventingAFallback",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.unicodeCrLfOffsetsAndFinalStopKeepEmojiAndPlaceCaretInsideArguments",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.actualDotArrowNamespaceAndAndroidStandardLibraryHaveRealKindsAndEdits",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.clientSendsTheUnsavedUtf16SnapshotAndRejectsUnsupportedLanguages",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppSemanticProtocolTest.middleTokenConsumesItsSuffixAndUsesTheExistingRevisionGate",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SharedAssistContractTest.appOptionsAndStandaloneOptionsProduceTheSameCandidatesAndEdits",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SharedAssistContractTest.defaultStandalonePolicyStillNavigatesVisibleCandidatesAndPreservesEnter",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SharedAssistContractTest.appPersistenceRemainsVersionNineAndKeepsNonEditorPreferences",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SharedAssistContractTest.actualTemplatesKeepCustomIndentationCrlfAndUnicodeAcrossTheSharedBoundary",
+      "status": "passed"
+    }
+  ]
+}

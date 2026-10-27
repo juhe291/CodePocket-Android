@@ -5,7 +5,8 @@ import com.codepocket.editor.surface.PopupGeometry
 
 enum class CompletionKind(val icon: String, val title: String) {
     KEYWORD("K", "关键字"), TYPE("T", "类型名称"), BUILTIN("ƒ", "内置/常用名称"), IDENTIFIER("abc", "文件中出现的名称"), SNIPPET("{}", "内置代码片段"),
-    FUNCTION("ƒ", "函数/方法"), MODULE("M", "模块"), VARIABLE("x", "变量"), PARAMETER("p", "参数")
+    FUNCTION("ƒ", "函数/方法"), MODULE("M", "模块"), VARIABLE("x", "变量"), PARAMETER("p", "参数"),
+    HEADER("h", "头文件"), DIRECTORY("/", "目录")
 }
 enum class CompletionArrows { EXPLICIT, WHEN_VISIBLE, OFF }
 data class CompletionItem(val label: String, val kind: CompletionKind, val detail: String, val snippetId: String? = null,

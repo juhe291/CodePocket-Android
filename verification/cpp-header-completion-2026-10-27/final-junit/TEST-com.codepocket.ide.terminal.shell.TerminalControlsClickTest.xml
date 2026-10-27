@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.terminal.shell.TerminalControlsClickTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-27T15:47:44" hostname="JUHE" time="0.169">
+  <properties/>
+  <testcase name="controlsAndEachShortcutAreSafeWithAnAttachedTerminal" classname="com.codepocket.ide.terminal.shell.TerminalControlsClickTest" time="0.092"/>
+  <testcase name="controlsAndEachShortcutAreSafeBeforeAProcessStarts" classname="com.codepocket.ide.terminal.shell.TerminalControlsClickTest" time="0.077"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

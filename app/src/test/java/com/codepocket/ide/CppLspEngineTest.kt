@@ -23,8 +23,9 @@ class CppLspEngineTest {
     }
     @Test fun productionEngineCommunicatesWithRealPinnedHostClangdAndAndroidHeaders() {
         val cache = File(CppFixtures.root, ".tools/cpp-runtime")
+        val suffix = if (System.getProperty("os.name").orEmpty().startsWith("Windows", true)) ".exe" else ""
         val executable = System.getProperty("codepocket.hostClangd")?.let(::File)
-            ?: File(cache, "host/clangd_21.1.8/bin/clangd.exe")
+            ?: File(cache, "host/clangd_21.1.8/bin/clangd$suffix")
         assertTrue("Prepare the pinned host clangd before this test", executable.isFile)
         val sysroot = System.getProperty("codepocket.cppSysroot")?.let(::File) ?: File(cache, "headers/sysroot")
         val resource = System.getProperty("codepocket.cppResource")?.let(::File) ?: File(cache, "headers/clang")

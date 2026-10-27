@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CompletionInteractionTest" tests="32" skipped="0" failures="0" errors="0" timestamp="2026-10-27T15:36:11" hostname="JUHE" time="21.265">
+  <properties/>
+  <testcase name="explicitSignatureWaitsForLayoutWhenAutomaticHelpIsOff" classname="com.codepocket.ide.CompletionInteractionTest" time="9.533"/>
+  <testcase name="shiftedPlusNumpadAndRepeatedZoomRespectFontLimits" classname="com.codepocket.ide.CompletionInteractionTest" time="0.964"/>
+  <testcase name="automaticCompletionAndSignatureResumeAfterLayout" classname="com.codepocket.ide.CompletionInteractionTest" time="0.681"/>
+  <testcase name="tabletHiddenZoomRetainsInputFocusAndRespectsComposition" classname="com.codepocket.ide.CompletionInteractionTest" time="1.225"/>
+  <testcase name="escapeCancelsTheWaitingRequestWithoutEditingOrReopening" classname="com.codepocket.ide.CompletionInteractionTest" time="0.483"/>
+  <testcase name="permanentlyBusyLayoutHasABoundedWaitAndCanBeRequestedAgain" classname="com.codepocket.ide.CompletionInteractionTest" time="0.557"/>
+  <testcase name="enterStillCreatesNewlineByDefaultEvenAfterCandidateNavigation" classname="com.codepocket.ide.CompletionInteractionTest" time="0.454"/>
+  <testcase name="automaticCandidatesAcceptPhysicalArrowsAndTabWithoutMovingCaret" classname="com.codepocket.ide.CompletionInteractionTest" time="0.424"/>
+  <testcase name="committedEnglishTypingAutomaticallyShowsRealCandidates" classname="com.codepocket.ide.CompletionInteractionTest" time="0.395"/>
+  <testcase name="cppAutomaticArrowsChoosePrivateInsteadOfTheFirstPrintfItem" classname="com.codepocket.ide.CompletionInteractionTest" time="0.36"/>
+  <testcase name="waitingRequestCannotStealInputFocusOrReopenAfterWindowFocusLoss" classname="com.codepocket.ide.CompletionInteractionTest" time="0.407"/>
+  <testcase name="ctrlEqualsAndMinusResizeOnlyCodeAndRememberTheSetting" classname="com.codepocket.ide.CompletionInteractionTest" time="0.277"/>
+  <testcase name="fontZoomDoesNotDestroyTheNativeUndoHistory" classname="com.codepocket.ide.CompletionInteractionTest" time="0.258"/>
+  <testcase name="unfinishedCompositionDoesNotRewriteOrOfferAStaleCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.318"/>
+  <testcase name="configuredEnterAcceptsTheArrowSelectedCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.278"/>
+  <testcase name="physicalTabAcceptsTheVisibleCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.253"/>
+  <testcase name="compactEditorStillShowsAtLeastOneUsableCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.267"/>
+  <testcase name="cppKeywordsAlsoAppearAndAcceptTab" classname="com.codepocket.ide.CompletionInteractionTest" time="0.318"/>
+  <testcase name="touchingOutsideTheCandidateAndTabStillDismissesIt" classname="com.codepocket.ide.CompletionInteractionTest" time="0.268"/>
+  <testcase name="replacingTheBufferOrChangingSelectionInvalidatesTheWaitingRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.246"/>
+  <testcase name="tabletAutomaticCandidatesAlsoRetainPhysicalArrows" classname="com.codepocket.ide.CompletionInteractionTest" time="0.28"/>
+  <testcase name="layoutStartingAfterCandidateCalculationAlsoKeepsTheExplicitRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.292"/>
+  <testcase name="explicitCompletionWaitsForLayoutWhenAutomaticCompletionIsOff" classname="com.codepocket.ide.CompletionInteractionTest" time="0.187"/>
+  <testcase name="automaticRefreshCannotReplaceTheWaitingExplicitModeAndLatestShortcutWins" classname="com.codepocket.ide.CompletionInteractionTest" time="0.272"/>
+  <testcase name="layoutStartingAfterSignatureCalculationAlsoKeepsTheExplicitRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.214"/>
+  <testcase name="explicitAndOffModesRemainAvailableAfterTheDefaultChanges" classname="com.codepocket.ide.CompletionInteractionTest" time="0.304"/>
+  <testcase name="tabletRealWordwrapReflowRetainsPhysicalCompletionAndSnippetFields" classname="com.codepocket.ide.CompletionInteractionTest" time="0.303"/>
+  <testcase name="holdingArrowClampsAtListEdgesAndEscReturnsToCodeNavigation" classname="com.codepocket.ide.CompletionInteractionTest" time="0.318"/>
+  <testcase name="fontZoomWaitsForCompositionAndIgnoresNonEditorFocus" classname="com.codepocket.ide.CompletionInteractionTest" time="0.244"/>
+  <testcase name="toolbarTabRetainsCandidatesUntilItsClickIsAccepted" classname="com.codepocket.ide.CompletionInteractionTest" time="0.292"/>
+  <testcase name="toolbarTabDoesNotModifyChineseComposition" classname="com.codepocket.ide.CompletionInteractionTest" time="0.223"/>
+  <testcase name="phoneHiddenMenuZoomsCodeAndPreservesNativeHistoryAndSelection" classname="com.codepocket.ide.CompletionInteractionTest" time="0.366"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

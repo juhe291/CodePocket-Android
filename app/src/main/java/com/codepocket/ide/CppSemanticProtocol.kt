@@ -70,6 +70,7 @@ object CppSemanticProtocol {
         val array = if (result is JSONArray) result else (result as JSONObject).getJSONArray("items")
         require(array.length() <= 100)
         val items = mutableListOf<CompletionItem>()
+        val header = CppHeaderCompletion.context(request)
         var filtered = 0
         for (i in 0 until array.length()) {
             val parsed = runCatching {
@@ -80,6 +81,11 @@ object CppSemanticProtocol {
                 val start = offset(request.code, range.getJSONObject("start"))
                 var end = offset(request.code, range.getJSONObject("end"))
                 require(start <= request.caret && end >= request.caret)
+                if (header != null || item.optInt("kind") in setOf(17, 19)) {
+                    val found = CppHeaderCompletion.item(requireNotNull(header), request, item, start, end)
+                    if (found == null) filtered++
+                    return@runCatching found
+                }
                 require(request.code.substring(start, end).all(::identifier))
                 val prefix = request.code.substring(start, request.caret)
                 val filter = item.optString("filterText", item.getString("label").trim())

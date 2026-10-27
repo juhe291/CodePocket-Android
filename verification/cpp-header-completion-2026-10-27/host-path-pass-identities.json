@@ -1,0 +1,22 @@
+{
+  "totals": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.CppHeaderEngineTest.productionEngineReturnsActualFileDirectoryAndMiddlePathEditsWithoutWritingTheBuffer",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppLspEngineTest.frameLengthIsUtf8BytesAndMalformedFramesFailClosed",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppLspEngineTest.productionEngineCommunicatesWithRealPinnedHostClangdAndAndroidHeaders",
+      "status": "passed"
+    }
+  ]
+}

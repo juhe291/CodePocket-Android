@@ -2,9 +2,14 @@
 
 > 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心功能，零碎UI润色暂停。Python项目上下文与C++语义接入已完成代码/主机/APK验证；Android执行验收仍后置，整个计划尚未完成。
 
-> 2026-10-27：[本地 C++ 接入](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md)已完成代码/主机/APK验证，Android执行验收仍后置。下一批优先补齐头文件 Tab 补全，原后续 P2/P3 范围继续。
+> 2026-10-27：[本地 C++ 接入](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md)已完成代码/主机/APK验证，Android执行验收仍后置。头文件 Tab 补全也已完成代码/主机/APK验证，原后续 P2/P3 范围继续。
 
-**2026-10-27：本地 C++ 构建/终端接入。**
+**2026-10-27：C++ 头文件 Tab 补全接入。**
+
+- [最新 Debug APK](dist/CodePocket-header-tab-2026-10-27-debug.apk)（110.07 MiB，原签名，arm64-v8a）。系统/项目头文件、目录继续、路径替换和 Tab/撤销沿用同一主编辑器。
+- [结果与限制](docs/P2_CPP_HEADER_COMPLETION_2026-10-27.md) · [3 张原生图](docs/cpp-header-preview/README.md)：869 项中 868 通过、1 旧跳过，定向 90/终端 146 全通过，Lint 零错误。实际 APK 与旧运行内容、原签名核验通过；Android 设备验收仍后置。
+
+**历史：2026-10-27 本地 C++ 构建/终端接入。**
 
 - [最新 Debug APK](dist/CodePocket-local-cpp-2026-10-27-debug.apk)（110.07 MiB，原签名，arm64-v8a）。本地/云端和当前文件/项目范围沿用同一运行入口；本地失败不会静默上传。
 - [结果与限制](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md) · [7 张原生图](docs/local-cpp-preview/README.md)：855 项中 854 通过、1 旧跳过，定向 87/终端 146 全通过，Lint 零错误。真实包内工具/支持文件、原运行内容及原签名已核对。

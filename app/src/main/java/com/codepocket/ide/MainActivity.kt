@@ -1960,7 +1960,7 @@ class MainActivity : Activity() {
                 if (waitForAssistLayout(signature = false, explicit = force)) return@runOnUiThread
                 if(semantic && completionPopup?.isShowing==true && completionPopup?.userInteracted==true)return@runOnUiThread
                 if(!semantic && request.code.length<=45000 &&
-                    (force || LexicalCompletion.memberContext(request) || request.code.getOrNull(request.caret-1)?.let{it=='.' || it=='_' || it.isLetterOrDigit()}==true)){
+                    (force || CppHeaderCompletion.context(request)!=null || LexicalCompletion.memberContext(request) || request.code.getOrNull(request.caret-1)?.let{it=='.' || it=='_' || it.isLetterOrDigit()}==true)){
                     val client=if(request.cpp)null else semanticClient?:PythonSemanticClient(this).also{semanticClient=it}
                     val cppClient=if(!request.cpp)null else cppSemanticClient?:CppSemanticClient(this).also{cppSemanticClient=it}
                     val targetWorkspace=workspace;val keys=sessions.analysisKeys();val path=activePath
@@ -2166,7 +2166,8 @@ class MainActivity : Activity() {
         val result = applyChange(insertion.change, keepSnippet = insertion.snippet == null,
             source = EditorSnapshot(source.document, source.revision, source.code, source.caret, source.end))
         if (!finishEditorChange(result, insertion.snippet)) return false
-        completionSuppressed = completionRequest()
+        val current = completionRequest()
+        completionSuppressed = if (insertion.change.text.endsWith('/') && CppHeaderCompletion.context(current)!=null) null else current
         return true
     }
 
