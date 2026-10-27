@@ -1,0 +1,10 @@
+{
+  "command": [
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\android-sdk\\ndk\\27.2.12479018\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe",
+    "--version"
+  ],
+  "cwd": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-probe\\android-build",
+  "returncode": 0,
+  "stdout": "Android (12470979, based on r522817c) clang version 18.0.3 (https://android.googlesource.com/toolchain/llvm-project d8003a456d14a3deb8054cdaa529ffbf02d9b262)\nTarget: x86_64-w64-windows-gnu\nThread model: posix\nInstalledDir: C:/Users/q1684/Desktop/\u5b89\u5353\u7aef\u7f16\u8bd1\u5668/CodePocket-Android/.tools/android-sdk/ndk/27.2.12479018/toolchains/llvm/prebuilt/windows-x86_64/bin\n",
+  "stderr": ""
+}

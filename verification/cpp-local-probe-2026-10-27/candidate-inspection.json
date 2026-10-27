@@ -1,0 +1,238 @@
+{
+  "native_files": [
+    {
+      "package": "clang",
+      "member": "bin/clang-21",
+      "bytes": 121040,
+      "original_sha256": "3599a121ecc11b433d23bc43545bc0441f9a8ffcc587ea18e312d88188fcf282",
+      "staged_name": "libcodepocket_clang.so",
+      "staged_sha256": "a92b55e51e39062e5565bfa275995b4c5c03548261f4156365f40fa40d2b50f5",
+      "needed": [
+        "libc.so",
+        "libcpC______.so",
+        "libcpA_.so",
+        "libcpB_______.so"
+      ],
+      "runpaths": [
+        "$ORIGIN"
+      ],
+      "android_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ],
+      "dynamic_strings_changed": 4,
+      "alignment_16k": true
+    },
+    {
+      "package": "clang",
+      "member": "bin/clang-format",
+      "bytes": 101696,
+      "original_sha256": "4845cace772bbb9a08f59218731eca509e40bb744c8dcf7d658694eef77a09ed",
+      "staged_name": "libcodepocket_format.so",
+      "staged_sha256": "6e5c68be02754ed1b2b1a9cc42cac01dbd96fd3af003a091b8c2e060da1faaf7",
+      "needed": [
+        "libc.so",
+        "libcpC______.so",
+        "libcpA_.so",
+        "libcpB_______.so"
+      ],
+      "runpaths": [
+        "$ORIGIN"
+      ],
+      "android_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ],
+      "dynamic_strings_changed": 4,
+      "alignment_16k": true
+    },
+    {
+      "package": "lld",
+      "member": "bin/lld",
+      "bytes": 5871888,
+      "original_sha256": "7a0e3dad3eaeaf7ec0e85337ab1047470141e95aae11e4b51eb12c749c1a561a",
+      "staged_name": "libcodepocket_lld.so",
+      "staged_sha256": "4f84c10a34724239eac3379a52ff25f314eb96413983fbac8dbff3f73dba4a20",
+      "needed": [
+        "libc.so",
+        "libcpG.so",
+        "libcpH___.so",
+        "libcpA_.so",
+        "libcpB_______.so"
+      ],
+      "runpaths": [
+        "$ORIGIN"
+      ],
+      "android_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ],
+      "dynamic_strings_changed": 5,
+      "alignment_16k": true
+    }
+  ],
+  "support_files": [
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.asan-aarch64-android.a",
+      "bytes": 5999288
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.asan-preinit-aarch64-android.a",
+      "bytes": 1432
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.asan_cxx-aarch64-android.a",
+      "bytes": 37372
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.asan_static-aarch64-android.a",
+      "bytes": 7952
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.builtins-aarch64-android.a",
+      "bytes": 409982
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.fuzzer-aarch64-android.a",
+      "bytes": 3319274
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.fuzzer_interceptors-aarch64-android.a",
+      "bytes": 21902
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.fuzzer_no_main-aarch64-android.a",
+      "bytes": 3316412
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.hwasan-aarch64-android.a",
+      "bytes": 3320528
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.hwasan-preinit-aarch64-android.a",
+      "bytes": 1442
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.hwasan_cxx-aarch64-android.a",
+      "bytes": 30418
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.lsan-aarch64-android.a",
+      "bytes": 2252028
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.profile-aarch64-android.a",
+      "bytes": 177716
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.stats-aarch64-android.a",
+      "bytes": 1835064
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.stats_client-aarch64-android.a",
+      "bytes": 7082
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.tsan-aarch64-android.a",
+      "bytes": 6808704
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.tsan_cxx-aarch64-android.a",
+      "bytes": 37276
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.ubsan_minimal-aarch64-android.a",
+      "bytes": 41262
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.ubsan_standalone-aarch64-android.a",
+      "bytes": 2158902
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.ubsan_standalone_cxx-aarch64-android.a",
+      "bytes": 43570
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/liborc_rt-aarch64-android.a",
+      "bytes": 753650
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/crt_pad_segment.o",
+      "bytes": 840
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/crtbegin_dynamic.o",
+      "bytes": 4856
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/crtbegin_so.o",
+      "bytes": 4696
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/crtend_android.o",
+      "bytes": 912
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/crtend_so.o",
+      "bytes": 912
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/libatomic.a",
+      "bytes": 150
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/libc++experimental.a",
+      "bytes": 3992
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/libcompiler_rt-extras.a",
+      "bytes": 13274
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/libunwind.a",
+      "bytes": 92456
+    }
+  ],
+  "missing": [],
+  "compiler_found": true,
+  "linker_found": true,
+  "android_execution": false,
+  "production_integrated": false,
+  "current_apk_sha256": "d828aff66043ec8bfd9c877b8f7b53873f2a7205a66b657ff248e7f78694d4cc"
+}

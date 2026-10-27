@@ -2,6 +2,8 @@
 
 > 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心功能，零碎UI润色暂停。Python项目上下文与C++语义接入已完成代码/主机/APK验证；Android执行验收仍后置，整个计划尚未完成。
 
+> 2026-10-27：[本地C++前置验证](docs/P2_LOCAL_CPP_PROBE_2026-10-27.md)已取得固定工具静态核验、真实主机共享库运行和Android交叉产物证据，下一步接入现有App。尚未在Android执行，也未为此生成新APK；下方C++语义版仍是最新已验证安装包。
+
 **2026-10-27：同一主 App 接入 C++ clangd 成员补全与真实参数。**
 
 - [最新Debug APK](dist/CodePocket-cpp-semantics-2026-10-27-debug.apk)（108.27MiB，原签名，arm64-v8a）。新增工具链体积约77.04MiB；安装后原生库/头文件还占额外空间。
