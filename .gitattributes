@@ -10,3 +10,9 @@ app/src/main/assets/terminal-licenses/** -text whitespace=cr-at-eol,-blank-at-eo
 # Shared production editor assets retain the same upstream bytes after the move.
 editor-sora/src/main/assets/textmate/** -text whitespace=cr-at-eol
 editor-sora/src/main/assets/textmate/licenses/** whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+
+# Retain the original bytes/spacing of added upstream notices and raw tool diagnostics.
+app/src/main/assets/cpp-licenses/CLANG-LICENSE.txt -text
+app/src/main/assets/cpp-licenses/LLD-LICENSE.txt -text
+app/src/main/assets/cpp-licenses/COMPILER-RT-LICENSE.txt -text
+verification/cpp-local-integration-2026-10-27/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

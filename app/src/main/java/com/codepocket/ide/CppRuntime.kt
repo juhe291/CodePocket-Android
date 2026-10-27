@@ -9,11 +9,12 @@ import java.util.UUID
 internal class CppRuntime(private val context: Context) {
     private val native = File(context.applicationInfo.nativeLibraryDir).canonicalFile
     private val manifest by lazy { JSONObject(context.assets.open("cpp-runtime/manifest.json").bufferedReader().use { it.readText() }) }
-    private val headers: File by lazy { prepareHeaders() }
-    private fun prepareHeaders(): File {
+    private val headers: File by lazy { prepareArchive("headers", "headers.zip", CppHeaderArchive::extract) }
+    private val support: File by lazy { prepareArchive("build_support", "build-support.zip", CppBuildSupport::extract) }
+    private fun prepareArchive(key: String, asset: String, extract: (java.io.InputStream, File, Int, Long) -> Unit): File {
         require(manifest.getString("engine") == CppSemanticProtocol.ENGINE && manifest.getString("version") == "21.1.8-3")
-        val spec = manifest.getJSONObject("headers"); val hash = spec.getString("sha256")
-        require(hash.matches(Regex("[0-9a-f]{64}")) && spec.getString("asset") == "cpp-runtime/headers.zip")
+        val spec = manifest.getJSONObject(key); val hash = spec.getString("sha256")
+        require(hash.matches(Regex("[0-9a-f]{64}")) && spec.getString("asset") == "cpp-runtime/$asset")
         val directory = File(context.filesDir, "cpp-runtime").absoluteFile
         require(directory.isDirectory || directory.mkdirs()); require(directory.canonicalFile == directory)
         val ready = File(directory, hash)
@@ -23,16 +24,18 @@ internal class CppRuntime(private val context: Context) {
                 val zip = File(pending, "headers.zip")
                 context.assets.open(spec.getString("asset")).use { input -> zip.outputStream().use { input.copyTo(it) } }
                 require(zip.length() == spec.getLong("bytes") && CppHeaderArchive.sha256(zip.inputStream()) == hash)
-                CppHeaderArchive.extract(zip.inputStream(), pending, spec.getInt("entries"), spec.getLong("uncompressed_bytes"))
+                extract(zip.inputStream(), pending, spec.getInt("entries"), spec.getLong("uncompressed_bytes"))
                 require(zip.delete()); File(pending, ".ready").writeText(hash)
-                require(!ready.exists() && pending.renameTo(ready))
+                // Analysis and execution services may prepare the same immutable headers.
+                // Accept a completed winner; never overwrite it with our pending directory.
+                if (!ready.exists()) pending.renameTo(ready)
+                require(File(ready, ".ready").isFile && File(ready, ".ready").readText() == hash)
             } finally { if (pending.exists()) pending.deleteRecursively() }
         }
         require(ready.canonicalFile == ready && File(ready, ".ready").readText() == hash)
-        require(File(ready, "sysroot/include/c++/v1/vector").isFile && File(ready, "clang/include/stddef.h").isFile)
         return ready
     }
-    fun create(root: File, cancelled: () -> Boolean, own: (AnalysisProcess) -> Unit): CppLspEngine {
+    private fun checkLibraries() {
         val inputs = manifest.getJSONArray("libraries")
         for (i in 0 until inputs.length()) {
             val item = inputs.getJSONObject(i); val name = item.getString("name")
@@ -40,8 +43,19 @@ internal class CppRuntime(private val context: Context) {
             val file = File(native, name)
             require(file.canonicalFile.parentFile == native && file.isFile && file.length() == item.getLong("bytes"))
         }
+    }
+    fun toolchain(): CppToolchainPaths {
+        checkLibraries()
+        val compiler = File(native, manifest.getString("compiler")); val linker = File(native, manifest.getString("linker"))
+        require(compiler.name == "libcodepocket_clang.so" && linker.name == "libcodepocket_lld.so")
+        require(compiler.canExecute() && linker.canExecute())
+        return CppToolchainPaths(compiler, linker, headers, support, File(native, "libcpB_______.so"))
+    }
+    fun create(root: File, cancelled: () -> Boolean, own: (AnalysisProcess) -> Unit): CppLspEngine {
+        checkLibraries()
         val executable = File(native, manifest.getString("executable")); require(executable.canExecute())
         val trustedHeaders = headers
+        require(File(trustedHeaders, "sysroot/include/c++/v1/vector").isFile && File(trustedHeaders, "clang/include/stddef.h").isFile)
         val commands = File(context.filesDir, "cpp-empty-commands").apply { require(isDirectory || mkdirs()) }
         require(commands.listFiles()?.isEmpty() == true)
         val arguments = listOf(executable.path, "--enable-config=false", "--background-index=false", "--clang-tidy=false",

@@ -1,0 +1,54 @@
+{
+  "windows": {
+    "url": "https://dl.google.com/android/repository/android-ndk-r30-windows.zip",
+    "archive_bytes": 727980788,
+    "files": [
+      {
+        "name": "clang.exe",
+        "method": 8,
+        "crc32": 225089407,
+        "compressed": 39472209,
+        "uncompressed": 99559064,
+        "offset": 182700401,
+        "member": "android-ndk-r30/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe",
+        "sha256": "6b7a698ccd1d5ef7375b7733f0675a166c560112961d3e5df0f275565a9201bc"
+      },
+      {
+        "name": "libwinpthread-1.dll",
+        "method": 8,
+        "crc32": 1484228431,
+        "compressed": 44131,
+        "uncompressed": 96408,
+        "offset": 362111362,
+        "member": "android-ndk-r30/toolchains/llvm/prebuilt/windows-x86_64/bin/libwinpthread-1.dll",
+        "sha256": "c9019ab753c2faa5e5da94e3fd4395f1d3d0e7d2509f5ed2d96cccff7f8b9357"
+      },
+      {
+        "name": "libxml2.dll",
+        "method": 8,
+        "crc32": 2617752741,
+        "compressed": 552966,
+        "uncompressed": 1200792,
+        "offset": 362155602,
+        "member": "android-ndk-r30/toolchains/llvm/prebuilt/windows-x86_64/bin/libxml2.dll",
+        "sha256": "e15a377aa308e3f7ba948e6d6622a5dea2308256dbc65858074b61d867af6148"
+      }
+    ]
+  },
+  "linux": {
+    "url": "https://dl.google.com/android/repository/android-ndk-r30-linux.zip",
+    "archive_bytes": 738633529,
+    "files": [
+      {
+        "method": 8,
+        "crc32": 429975020,
+        "compressed": 60509302,
+        "uncompressed": 153783400,
+        "offset": 256254615,
+        "member": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-21",
+        "name": "clang",
+        "sha256": "ad535f0b6fc303edba958b51636169ff0291c6e36463236c99ff8abcaa34247c"
+      }
+    ]
+  }
+}

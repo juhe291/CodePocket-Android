@@ -1,19 +1,20 @@
-CodePocket C++ 静态语义分析：clangd 21.1.8
+CodePocket C++ 工具：clangd / Clang / LLD 21.1.8
 
-本组件仅在设备本地分析，不执行项目代码，不上传代码。
-分析与原有 C++（Wandbox）运行、Python 运行及 PTY 分开。
+clangd 在设备本地静态分析，不执行项目代码，不上传代码。
+本地 C++ 模式由 Clang/LLD 构建并由独立子进程执行用户代码；
+云端 Wandbox 仍须遵循原发送确认，本地失败不会自动上传。
 默认分析参数为 C++17、aarch64-linux-android24 和 Android NDK 头文件；
 第三方库、项目自定义编译参数及其他目标平台暂不保证正确。
 
 来源及固定版本：
 https://packages.termux.dev/apt/termux-main/
 https://github.com/termux/termux-packages
-clang / libllvm 21.1.8-3（LLVM Apache-2.0 WITH LLVM-exception 等，保留完整通知）
+clang / lld / libllvm / libcompiler-rt 21.1.8-3（LLVM Apache-2.0 WITH LLVM-exception 等，保留完整通知）
 libc++ 30（Android NDK r30 来源，保留 LLVM 及 NDK 通知）
 libffi 3.8（MIT）、libxml2 2.15.4-1（MIT）、zlib 1.3.2（zlib）
 zstd 1.5.7-1（采用库的 BSD 选项；未分发 GPL 命令行工具）
 libiconv 1.19（库 LGPL 2.1 或更新版本；未分发 iconv 命令行程序）
-ndk-sysroot 30（头文件的各自许可见四份 Android NDK r30 通知）
+ndk-sysroot 30（头文件、CRT 和 libunwind 的许可见四份 Android NDK r30 通知）
 这些依赖的许可分别保留，不以项目自身许可替代。
 
 完整对应源码随同 APK 提供：

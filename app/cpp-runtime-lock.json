@@ -93,6 +93,24 @@
       "Installed-Size": "1216",
       "SHA256": "fe9481b1dc101c6c3552943f25435109fd522aecc615ae49594f9fbee863bb37",
       "Depends": null
+    },
+    "lld": {
+      "Package": "lld",
+      "Version": "21.1.8-3",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/l/lld/lld_21.1.8-3_aarch64.deb",
+      "Size": "2812212",
+      "SHA256": "6299c8fdff59dcff972f6b444805bcdb211c2bd797a64d2ddb3875e699f30630",
+      "Depends": "libllvm (= 21.1.8-3)"
+    },
+    "libcompiler-rt": {
+      "Package": "libcompiler-rt",
+      "Version": "21.1.8-3",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/libc/libcompiler-rt/libcompiler-rt_21.1.8-3_aarch64.deb",
+      "Size": "3024604",
+      "SHA256": "89de02f642e34fa6494ad16105bd08510bd1dbdbe4fdb2b297aaa4f4e8e534b6",
+      "Depends": "libc++"
     }
   },
   "repository": "https://packages-cf.termux.dev/apt/termux-main",
@@ -178,11 +196,57 @@
       "packaged_name": "libcpB_______.so",
       "sha256": "25bda017cca68e19d4808665f918b00366b8d295802613553841bd94c0190fc7",
       "bytes": 1423696
+    },
+    {
+      "package": "clang",
+      "member": "bin/clang-21",
+      "source_sha256": "3599a121ecc11b433d23bc43545bc0441f9a8ffcc587ea18e312d88188fcf282",
+      "packaged_name": "libcodepocket_clang.so",
+      "sha256": "a92b55e51e39062e5565bfa275995b4c5c03548261f4156365f40fa40d2b50f5",
+      "bytes": 121040
+    },
+    {
+      "package": "lld",
+      "member": "bin/lld",
+      "source_sha256": "7a0e3dad3eaeaf7ec0e85337ab1047470141e95aae11e4b51eb12c749c1a561a",
+      "packaged_name": "libcodepocket_lld.so",
+      "sha256": "4f84c10a34724239eac3379a52ff25f314eb96413983fbac8dbff3f73dba4a20",
+      "bytes": 5871888
     }
   ],
   "source": {
     "url": "https://mirrors.kernel.org/gnu/libiconv/libiconv-1.19.tar.gz",
     "filename": "libiconv-1.19.tar.gz",
     "sha256": "88dd96a8c0464eca144fc791ae60cd31cd8ee78321e67397e25fc095c4a19aa6"
-  }
+  },
+  "build_support": [
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/crtbegin_so.o",
+      "name": "crtbegin_so.o",
+      "bytes": 4696,
+      "sha256": "e0d8a93dd50ec6de576f44c2f915f3f713fc4a171f778536622e9ad1b651003b"
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/crtend_so.o",
+      "name": "crtend_so.o",
+      "bytes": 912,
+      "sha256": "bd8ca7451afaaffa734ffc1dfca13c88cf9630d862d8051187c1343d28592d4e"
+    },
+    {
+      "package": "ndk-sysroot",
+      "member": "lib/libunwind.a",
+      "name": "libunwind.a",
+      "bytes": 92456,
+      "sha256": "bfbe474acf75b59fd2f19f0b7210588aa662410d5d8d0996812fe50e9e0143ab"
+    },
+    {
+      "package": "libcompiler-rt",
+      "member": "lib/clang/21/lib/linux/libclang_rt.builtins-aarch64-android.a",
+      "name": "clang/21/lib/linux/libclang_rt.builtins-aarch64-android.a",
+      "bytes": 409982,
+      "sha256": "9aeed0613b933c2c79a7c366371b5910681b740b78093d33237fd31c67345cb2"
+    }
+  ]
 }

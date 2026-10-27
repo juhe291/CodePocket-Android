@@ -1,0 +1,9 @@
+{
+  "arguments": [
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-integration\\runner.exe",
+    "./argv.dll"
+  ],
+  "returncode": 0,
+  "stdout": "1:program\n",
+  "stderr": ""
+}

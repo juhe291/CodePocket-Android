@@ -9,6 +9,9 @@ internal object CppLicenses {
     val entries = listOf(
         "来源、对应源码与重链接" to "README.txt",
         "LLVM / clangd / libc++" to "LLVM-LICENSE.txt",
+        "Clang 编译器" to "CLANG-LICENSE.txt",
+        "LLD 链接器" to "LLD-LICENSE.txt",
+        "compiler-rt 运行支持" to "COMPILER-RT-LICENSE.txt",
         "LLVM 历史 NCSA" to "NCSA.txt",
         "libffi" to "LIBFFI-COPYRIGHT.txt",
         "libxml2" to "LIBXML2-COPYRIGHT.txt",

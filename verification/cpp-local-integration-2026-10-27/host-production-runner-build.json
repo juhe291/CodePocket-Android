@@ -1,0 +1,14 @@
+{
+  "arguments": [
+    "C:\\mingw64\\bin\\gcc.exe",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\app\\src\\main\\jni\\cpp_runner.c",
+    "-o",
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-integration\\runner.exe"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\app\\src\\main\\jni\\cpp_runner.c: In function 'main':\nC:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\app\\src\\main\\jni\\cpp_runner.c:27:34: warning: cast between incompatible function types from 'FARPROC' {aka 'long long int (*)()'} to 'int (*)(int,  char **)' [-Wcast-function-type]\n   27 |     int (*entry)(int, char **) = (int (*)(int, char **))GetProcAddress(library, \"main\");\n      |                                  ^\n"
+}

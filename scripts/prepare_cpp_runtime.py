@@ -59,12 +59,13 @@ def prepare(args):
     raw = CACHE / 'original'; raw.mkdir(parents=True, exist_ok=True)
     native = CACHE / 'jni/arm64-v8a'; native.mkdir(parents=True, exist_ok=True)
     assets = CACHE / 'assets'; assets.mkdir(exist_ok=True)
-    headers = {}; header_links = []; originals = {}
+    headers = {}; header_links = []; originals = {}; support = {}
     for package, meta in lock['packages'].items():
         filename = PurePosixPath(meta['Filename']).name
         archive = obtain(filename, meta['SHA256'], lock['repository'] + '/' + meta['Filename'], args.fetch,
-                         [ROOT / '.tools/cpp-semantic-probe/debs' / filename])
+                         [ROOT / '.tools/cpp-semantic-probe/debs' / filename, ROOT / '.tools/cpp-local-probe/debs' / filename])
         needed = {item['member']: item for item in lock['libraries'] if item['package'] == package}
+        build_inputs = {item['member']: item for item in lock.get('build_support', []) if item['package'] == package}
         prefix = 'lib/clang/21/include/' if package == 'clang' else 'include/' if package == 'ndk-sysroot' else None
         for name, compressed in ar_members(archive):
             if not name.startswith('data.tar'): continue
@@ -72,6 +73,12 @@ def prepare(args):
                 for entry in tar:
                     member = usr_path(entry.name)
                     if member is None: continue
+                    if member in build_inputs and entry.isfile():
+                        item = build_inputs[member]
+                        assert entry.size == item['bytes'] and entry.size <= 1024 * 1024
+                        data = tar.extractfile(entry).read()
+                        assert hashlib.sha256(data).hexdigest() == item['sha256']
+                        support[item['name']] = data
                     if member in needed and entry.isfile():
                         item = needed[member]; target = raw / item['packaged_name']
                         with tar.extractfile(entry) as source, target.open('wb') as stream: shutil.copyfileobj(source, stream, 1024 * 1024)
@@ -112,6 +119,8 @@ def prepare(args):
     expected_names = {item['name'] for item in libraries}
     assert {f.name for f in native.iterdir()} == expected_names, 'Stale native output: clear only .tools/cpp-runtime/jni before changing engine versions'
     header_zip = assets / 'cpp-runtime/headers.zip'; deterministic_zip(header_zip, headers)
+    assert len(support) == len(lock.get('build_support', [])) == 4
+    support_zip = assets / 'cpp-runtime/build-support.zip'; deterministic_zip(support_zip, support)
     original = lock['source']
     source = args.iconv_source.resolve() if args.iconv_source else obtain(original['filename'], original['sha256'], original['url'], args.fetch,
         [ROOT / '.tools/cpp-semantic-probe/sources' / original['filename']])
@@ -131,12 +140,20 @@ def prepare(args):
     manifest = dict(engine=lock['engine'], version=lock['version'], target=lock['target'], libraries=libraries,
         executable='libcodepocket_clangd.so', headers=dict(asset='cpp-runtime/headers.zip', sha256=sha(header_zip), bytes=header_zip.stat().st_size,
             entries=len(headers), uncompressed_bytes=sum(map(len, headers.values()))),
+        compiler='libcodepocket_clang.so', linker='libcodepocket_lld.so',
+        build_support=dict(asset='cpp-runtime/build-support.zip', sha256=sha(support_zip), bytes=support_zip.stat().st_size,
+            entries=len(support), uncompressed_bytes=sum(map(len, support.values()))),
         corresponding_source=dict(asset='cpp-source/' + source_asset.name, sha256=sha(source_asset), bytes=source_asset.stat().st_size,
             user_modified=bool(args.iconv_source)))
     (assets / 'cpp-runtime/manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     (CACHE / 'prepared.json').write_text(json.dumps(dict(lock_sha256=sha(ROOT / 'app/cpp-runtime-lock.json'), manifest=manifest), indent=2) + '\n')
     print('Prepared', len(libraries), 'native files,', len(headers), 'headers and complete libiconv corresponding source; no APK built')
     if args.fetch_host:
+        from prepare_cpp_host_compiler import prepare as prepare_compiler
+        prepare_compiler(args.fetch)
+        for name, data in support.items():
+            target = CACHE / 'build-support' / name
+            target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(data)
         host_headers = CACHE / 'headers'
         for name, data in headers.items():
             target = host_headers / name

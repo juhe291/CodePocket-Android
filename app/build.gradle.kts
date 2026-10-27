@@ -38,6 +38,7 @@ android {
     externalNativeBuild { ndkBuild { path = file("src/main/jni/Android.mk") } }
     sourceSets.getByName("main") {
         jniLibs.srcDir(rootProject.file(".tools/cpp-runtime/jni"))
+        jniLibs.srcDir(layout.buildDirectory.dir("cpp-runner/jni"))
         assets.srcDir(rootProject.file(".tools/cpp-runtime/assets"))
     }
     packaging {
@@ -69,6 +70,31 @@ val checkCppRuntime by tasks.registering {
     }
 }
 tasks.named("preBuild").configure { dependsOn(checkCppRuntime) }
+
+// AGP does not package BUILD_EXECUTABLE outputs. Build the installed PIE explicitly
+// and stage it with the lib*.so name required by Android native-library extraction.
+val prepareCppRunner by tasks.registering {
+    inputs.files("src/main/jni/cpp_runner.c", "src/main/jni/Android.mk")
+    val staged = layout.buildDirectory.file("cpp-runner/jni/arm64-v8a/libcodepocket_cpp_runner.so")
+    outputs.file(staged)
+    doLast {
+        val ndk = File(androidComponents.sdkComponents.sdkDirectory.get().asFile, "ndk/${android.ndkVersion}")
+        val directory = layout.buildDirectory.dir("cpp-runner").get().asFile
+        val windows = System.getProperty("os.name").startsWith("Windows", ignoreCase = true)
+        val arguments = listOf("NDK_PROJECT_PATH=null", "APP_BUILD_SCRIPT=${file("src/main/jni/Android.mk")}",
+            "NDK_OUT=${File(directory, "obj")}", "NDK_LIBS_OUT=${File(directory, "libs")}",
+            "APP_ABI=arm64-v8a", "APP_PLATFORM=android-24", "APP_SUPPORT_FLEXIBLE_PAGE_SIZES=true", "codepocket_cpp_runner") +
+            if (windows) listOf("HOST_OS=windows", "HOST_ARCH=x86_64") else emptyList()
+        exec {
+            commandLine(if (windows) listOf("cmd", "/c", File(ndk, "ndk-build.cmd").path) + arguments
+                else listOf(File(ndk, "ndk-build").path) + arguments)
+        }
+        val built = File(directory, "obj/local/arm64-v8a/codepocket_cpp_runner")
+        check(built.isFile)
+        staged.get().asFile.apply { parentFile.mkdirs(); built.copyTo(this, overwrite = true) }
+    }
+}
+tasks.named("preBuild").configure { dependsOn(prepareCppRunner) }
 
 chaquopy {
     defaultConfig {
