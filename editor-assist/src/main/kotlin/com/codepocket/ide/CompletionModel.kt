@@ -8,7 +8,8 @@ enum class CompletionKind(val icon: String, val title: String) {
     FUNCTION("ƒ", "函数/方法"), MODULE("M", "模块"), VARIABLE("x", "变量"), PARAMETER("p", "参数")
 }
 enum class CompletionArrows { EXPLICIT, WHEN_VISIBLE, OFF }
-data class CompletionItem(val label: String, val kind: CompletionKind, val detail: String, val snippetId: String? = null)
+data class CompletionItem(val label: String, val kind: CompletionKind, val detail: String, val snippetId: String? = null,
+    val semanticInsertion: CompletionEdit? = null)
 data class CompletionEdit(val change: TextChange, val snippet: SnippetExpansion? = null)
 data class CompletionRequest(val document: String, val revision: Long, val code: String, val caret: Int, val end: Int, val cpp: Boolean)
 data class CompletionBatch(val request: CompletionRequest, val start: Int, val end: Int, val items: List<CompletionItem>,
@@ -22,6 +23,14 @@ data class CompletionBatch(val request: CompletionRequest, val start: Int, val e
         if (item.snippetId != null) {
             val expanded = CodeSnippets.expand(item.snippetId, current, settings, maxChars) ?: return null
             return CompletionEdit(expanded.change, expanded)
+        }
+        item.semanticInsertion?.let { insertion ->
+            val edit = insertion.change
+            if (edit.start !in 0..current.caret || edit.end !in current.caret..current.code.length) return null
+            val length = current.code.length.toLong() - (edit.end - edit.start) + edit.text.length
+            if (length !in 0..maxChars.toLong() || edit.selectionStart !in 0..length.toInt() ||
+                edit.selectionEnd !in edit.selectionStart..length.toInt()) return null
+            return insertion
         }
         if (current.code.length.toLong() - (end - start) + item.label.length > maxChars) return null
         return CompletionEdit(TextChange(start, end, item.label, start + item.label.length))

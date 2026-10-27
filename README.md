@@ -1,10 +1,14 @@
 # CodePocket · Android C++ / Python IDE
 
-> 2026-10-27开发中：[C++语义前置验证](docs/P2_CPP_SEMANTICS_PROBE_2026-10-27.md)已取得真实arm64静态证据与15项同版本主机LSP结果；仍需接入主App、补齐许可交付并验证实际APK。当前安装包继续使用下方P2-B，不把主机探测称作Android运行通过。
+> 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心功能，零碎UI润色暂停。Python项目上下文与C++语义接入已完成代码/主机/APK验证；Android执行验收仍后置，整个计划尚未完成。
 
-> 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心能力，零碎UI润色暂停。P2-B项目上下文已完成代码/主机/APK验证；下一步C++语义，设备运行验收仍后置。整个计划尚未完成。
+**2026-10-27：同一主 App 接入 C++ clangd 成员补全与真实参数。**
 
-**2026-10-26：Python跨文件未保存上下文与SAF新鲜快照。**
+- [最新Debug APK](dist/CodePocket-cpp-semantics-2026-10-27-debug.apk)（108.27MiB，原签名，arm64-v8a）。新增工具链体积约77.04MiB；安装后原生库/头文件还占额外空间。
+- [结果与限制](docs/P2_CPP_SEMANTICS_2026-10-27.md) · [4张原生图](docs/cpp-semantic-preview/README.md)：821项中820通过、1旧跳过，定向91通过，Lint零错误；实际包内C++依赖、头文件、源码、通知及原运行内容检查通过。
+- 未将Windows clangd/主机Main-Sora/JNI静态检查称作Android设备已运行。下一步本地C++可行性、多文件运行、批量用例和格式化，原P3保留。
+
+**历史：2026-10-26 Python跨文件未保存上下文与SAF新鲜快照。**
 
 - [最新Debug APK](dist/CodePocket-python-project-context-2026-10-26-debug.apk)（31.23MiB，原签名，arm64-v8a）。
 - [结果与限制](docs/P2_PYTHON_PROJECT_CONTEXT_2026-10-26.md) · [3张原生图](docs/python-project-context-preview/README.md)：主793通过/1旧跳过，定向132通过，Lint0错误；Python源码66、实际APK语义22与运行专项通过。
@@ -276,12 +280,17 @@ JDK 17、Gradle 8.9、AGP 8.7.3、Kotlin 1.9.25、Chaquopy 17.1.0、Python 3.13�
 ```powershell
 python -m pip install --require-hashes -r app/requirements.txt
 python -m unittest discover -s tests -v
+# 首次显式下载固定 C++ 依赖；已有缓存可省略 --fetch：
+python scripts/prepare_cpp_runtime.py --fetch --fetch-host
 .\gradlew.bat :app:testDebugUnitTest :app:lintDebug :app:assembleDebug --stacktrace
 # 本机已有便携环境时：
 .\scripts\build-local.ps1 -ProxyHost 127.0.0.1 -UseLocalMirror
+# 全新本机构建可另加 -FetchCppRuntime，Gradle 不隐式下载本组件。
 ```
 
 Linux/macOS 使用 bash ./gradlew。构建 Python 不在 PATH 时可传 -Pcodepocket.buildPython=完整路径。Windows 中文路径可能需要 -Pandroid.overridePathCheck=true；本地脚本已配置。正式依赖源保持 Google/Maven Central，临时镜像只在 .tools 中。
+
+C++分析使用锁定的Termux/LLVM制品及NDK头文件；JNI桥沿用NDK27.2.12479018。准备脚本核对摘要并随包交付完整对应源码与许可。实际包检查可运行 `scripts/verify_cpp_apk.py`，细节见[C++接入报告](docs/P2_CPP_SEMANTICS_2026-10-27.md)。
 
 Kotlin 测试完成后，可用 `python scripts/verify_snippets.py --junit app/build/test-results/testDebugUnitTest --output verification/snippet-inspection.json --cpp-compiler g++` 真实执行生成模板。主机构建机需 g++（Windows 可传完整路径）；此编译器不打包至 App，App 中 C++ 仍使用 Wandbox。
 

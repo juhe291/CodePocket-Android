@@ -28,6 +28,7 @@ class DocumentTree(private val gateway: DocumentGateway, private val recovery: F
     fun pathId(path: String) = node(path).id
     /** Enumerate the live provider, including additions/removals since the editor mirror was made. */
     fun pythonSources(): Map<String, String> = PythonSources.provider(gateway)
+    fun cppSources(): Map<String, String> = PythonSources.provider(gateway, CppSources::isSource)
     fun copyForRun(destination: File) {
         require(destination.mkdirs()) { "无法创建独立运行快照" }
         var total = 0

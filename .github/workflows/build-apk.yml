@@ -45,6 +45,9 @@ jobs:
       - name: Install SDK 35
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
 
+      - name: Prepare pinned local C++ analysis runtime and host comparison tool
+        run: python scripts/prepare_cpp_runtime.py --fetch --fetch-host
+
       - name: Run Kotlin regression tests and Android lint
         run: bash ./gradlew :terminal-emulator:testDebugUnitTest :app:testDebugUnitTest :app:lintDebug :editor-sora:lintDebug --stacktrace --no-daemon
 

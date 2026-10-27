@@ -87,7 +87,7 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
         document = batch.request.document; revision = batch.request.revision; offset = batch.request.caret
         items = batch.items; selectedIndex = 0; explicitSelection = false;userInteracted=false
         sourceHeading.text=if(batch.source==null)activity.getString(R.string.completion_lexical)
-            else activity.getString(if(batch.currentFileOnly)R.string.completion_semantic_file else R.string.completion_semantic,batch.source)
+            else activity.getString(if(batch.currentFileOnly)R.string.completion_semantic_file else if(batch.request.cpp)R.string.completion_cpp_semantic else R.string.completion_semantic,batch.source)
         com.codepocket.ide.ui.IdeControls.describe(sourceHeading,sourceHeading.text.toString())
         adapter.notifyDataSetChanged(); updateDetails()
         if (!reposition()) return false

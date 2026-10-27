@@ -1,3 +1,5 @@
+import java.security.MessageDigest
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +10,7 @@ android {
     namespace = "com.codepocket.ide"
     compileSdk = 35
     buildToolsVersion = "35.0.0"
+    ndkVersion = "27.2.12479018"
 
     defaultConfig {
         applicationId = "com.codepocket.ide"
@@ -18,6 +21,11 @@ android {
 
         // Mobile phones/tablets: keeps the APK reasonably small.
         ndk { abiFilters += listOf("arm64-v8a") }
+        externalNativeBuild { ndkBuild {
+            arguments += listOf("APP_PLATFORM=android-24", "APP_SUPPORT_FLEXIBLE_PAGE_SIZES=true")
+            if (System.getProperty("os.name").startsWith("Windows", ignoreCase = true))
+                arguments += listOf("HOST_OS=windows", "HOST_ARCH=x86_64")
+        } }
     }
 
     compileOptions {
@@ -27,6 +35,17 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { viewBinding = false }
+    externalNativeBuild { ndkBuild { path = file("src/main/jni/Android.mk") } }
+    sourceSets.getByName("main") {
+        jniLibs.srcDir(rootProject.file(".tools/cpp-runtime/jni"))
+        assets.srcDir(rootProject.file(".tools/cpp-runtime/assets"))
+    }
+    packaging {
+        jniLibs.useLegacyPackaging = true
+        // Preserve the original Python/PTY ELF bytes as well as the pinned analysis closure.
+        // Configuring an app-level NDK would otherwise re-strip the previously packaged libs.
+        jniLibs.keepDebugSymbols += setOf("**/*.so")
+    }
     testOptions {
         unitTests.isIncludeAndroidResources = true
         unitTests.all {
@@ -36,6 +55,20 @@ android {
         }
     }
 }
+
+// No implicit network during Gradle. The explicit preparation script checks every pinned input.
+val checkCppRuntime by tasks.registering {
+    doLast {
+        val prepared = rootProject.file(".tools/cpp-runtime/prepared.json")
+        check(prepared.isFile && rootProject.file(".tools/cpp-runtime/assets/cpp-runtime/manifest.json").isFile) {
+            "Prepare C++ inputs first: python scripts/prepare_cpp_runtime.py --fetch --fetch-host"
+        }
+        val digest = MessageDigest.getInstance("SHA-256").digest(file("cpp-runtime-lock.json").readBytes())
+            .joinToString("") { "%02x".format(it) }
+        check(prepared.readText().contains("\"lock_sha256\": \"$digest\"")) { "C++ lock changed: rerun scripts/prepare_cpp_runtime.py" }
+    }
+}
+tasks.named("preBuild").configure { dependsOn(checkCppRuntime) }
 
 chaquopy {
     defaultConfig {

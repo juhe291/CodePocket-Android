@@ -88,7 +88,7 @@ object SemanticProtocol {
 }
 
 /** One lazy binding shared by completion/signature workers; no work or waiting on the UI thread. */
-internal class AndroidSemanticTransport(context:Context):SemanticTransport {
+internal class AndroidSemanticTransport(context:Context, private val service:Class<out android.app.Service> = PythonAnalysisService::class.java):SemanticTransport {
     private val app=context.applicationContext
     private val lock=Any()
     private var connection:Connection?=null
@@ -115,7 +115,7 @@ internal class AndroidSemanticTransport(context:Context):SemanticTransport {
     private fun connect():Connection?=synchronized(lock){
         if(closed)null else connection?:Connection().also{next->
             connection=next
-            next.bound=runCatching{app.bindService(Intent(app,PythonAnalysisService::class.java),next,Context.BIND_AUTO_CREATE)}.getOrDefault(false)
+            next.bound=runCatching{app.bindService(Intent(app,service),next,Context.BIND_AUTO_CREATE)}.getOrDefault(false)
             if(!next.bound)next.ready.countDown()
         }
     }

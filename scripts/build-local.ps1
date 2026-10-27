@@ -4,7 +4,8 @@ param(
     [string]$BuildPython,
     [string]$ProxyHost,
     [int]$ProxyPort = 7890,
-    [switch]$UseLocalMirror
+    [switch]$UseLocalMirror,
+    [switch]$FetchCppRuntime
 )
 
 $ErrorActionPreference = 'Stop'
@@ -27,6 +28,10 @@ try {
     if ($BuildPython) {
         & $BuildPython -c 'import sys, venv; assert sys.version_info[:2] == (3, 13), "Requires Python 3.13"'
         if ($LASTEXITCODE -ne 0) { throw '构建 Python 必须是包含 venv 的完整 3.13，不能直接使用最小嵌入包。' }
+        $cppOptions = @('scripts/prepare_cpp_runtime.py', '--fetch-host')
+        if ($FetchCppRuntime) { $cppOptions += '--fetch' }
+        & $BuildPython @cppOptions
+        if ($LASTEXITCODE -ne 0) { throw '固定 C++ 依赖未准备好。首次下载可显式传 -FetchCppRuntime；网络/摘要错误不会被跳过。' }
     }
     $env:ANDROID_USER_HOME = Join-Path $projectRoot '.tools/android-user'
     $env:GRADLE_USER_HOME = Join-Path $projectRoot '.tools/gradle-home'

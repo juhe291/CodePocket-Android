@@ -106,7 +106,7 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
         cycleControls.forEach{it.visibility=if(reference.forms.size>1)View.VISIBLE else View.GONE}
         variant = variant.coerceIn(reference.forms.indices)
         val form = reference.forms[variant]
-        title.text = activity.getString(if(reference.semantic)R.string.signature_semantic_heading else R.string.signature_heading, variant + 1, reference.forms.size)
+        title.text = activity.getString(if(reference.semantic)if(reference.cpp)R.string.signature_cpp_semantic_heading else R.string.signature_semantic_heading else R.string.signature_heading, variant + 1, reference.forms.size)
         com.codepocket.ide.ui.IdeControls.describe(title,title.text.toString())
         val label = form.label(reference.name)
         val range = form.range(reference.name, match.active(variant))
@@ -117,7 +117,7 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
             }
         }
         details.text = reference.description
-        disclaimer.setText(if(reference.semantic)if(reference.currentFileOnly)R.string.signature_semantic_file_notice else R.string.signature_semantic_notice
+        disclaimer.setText(if(reference.semantic)if(reference.cpp)R.string.signature_cpp_semantic_notice else if(reference.currentFileOnly)R.string.signature_semantic_file_notice else R.string.signature_semantic_notice
             else if (reference.cpp) R.string.signature_cpp_notice else R.string.signature_python_notice)
         signature.contentDescription = activity.getString(R.string.signature_accessibility, label,
             range?.let { label.substring(it.first, it.second) } ?: activity.getString(R.string.signature_unmapped))

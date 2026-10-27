@@ -1,4 +1,10 @@
 <resources>
+    <string name="completion_cpp_semantic">C++ 语义 · %1$s</string>
+    <string name="semantic_cpp_loading">正在分析 C++，暂用基础词法补全</string>
+    <string name="semantic_cpp_empty">没有可用的 C++ 语义候选</string>
+    <string name="semantic_cpp_unavailable">C++ 语义暂不可用，保留基础词法补全</string>
+    <string name="signature_cpp_semantic_heading">C++ 参数 %1$d/%2$d</string>
+    <string name="signature_cpp_semantic_notice">clangd 静态分析 · C++17 / Android 头文件</string>
     <string name="semantic_document_limit">当前文件超过语义分析限制，保留基础补全</string>
     <string name="completion_semantic">Python 语义 · %1$s</string>
     <string name="completion_semantic_file">%1$s · 当前文件/标准库</string>

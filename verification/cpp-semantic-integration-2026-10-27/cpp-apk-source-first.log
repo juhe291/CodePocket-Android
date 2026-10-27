@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 93, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 63, in main
+    source = manifest['corresponding_source']; data = apk.read('assets/' + source['asset'])
+                                                      ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\zipfile\__init__.py", line 1602, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\zipfile\__init__.py", line 1639, in open
+    zinfo = self.getinfo(name)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\zipfile\__init__.py", line 1567, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named 'assets/cpp-source/libiconv-1.19.tar.gz' in the archive"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.InteractionTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-27T01:37:06" hostname="JUHE" time="0.025">
+  <properties/>
+  <testcase name="backPrioritizesTransientUiBeforeExit" classname="com.codepocket.ide.InteractionTest" time="0.004"/>
+  <testcase name="globalMenuStaysShortAndRecoversEveryHiddenNavigationControl" classname="com.codepocket.ide.InteractionTest" time="0.012"/>
+  <testcase name="logicalCaretDoesNotDependOnWrappingOrInvalidNativeSelection" classname="com.codepocket.ide.InteractionTest" time="0.0"/>
+  <testcase name="dirtyStatusKeepsFailuresButDoesNotClaimTheCurrentBufferIsSaved" classname="com.codepocket.ide.InteractionTest" time="0.0"/>
+  <testcase name="pixelGeometryUsesDensityAndActuallyAvailableHeight" classname="com.codepocket.ide.InteractionTest" time="0.004"/>
+  <testcase name="resizeUsesGestureStartAndRejectsInvalidInput" classname="com.codepocket.ide.InteractionTest" time="0.0"/>
+  <testcase name="clearingOutputDoesNotEraseResultAndSurvivesRenderingSameRun" classname="com.codepocket.ide.InteractionTest" time="0.001"/>
+  <testcase name="contextMenusAreShortAndDataActionsAreDistinct" classname="com.codepocket.ide.InteractionTest" time="0.001"/>
+  <testcase name="shortWideWindowsKeepEditorAndOutputInASideSplit" classname="com.codepocket.ide.InteractionTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

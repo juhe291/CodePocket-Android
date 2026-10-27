@@ -1,0 +1,493 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+WARNING: The option setting 'android.overridePathCheck=true' is experimental.
+The current default is 'false'.
+
+> Task :editor-assist:checkKotlinGradlePluginConfigurationErrors
+> Task :editor-surface:compileJava UP-TO-DATE
+> Task :editor-assist:compileKotlin UP-TO-DATE
+> Task :editor-assist:compileJava NO-SOURCE
+> Task :editor-assist:processResources NO-SOURCE
+> Task :editor-assist:classes UP-TO-DATE
+> Task :editor-assist:jar UP-TO-DATE
+> Task :editor-surface:processResources NO-SOURCE
+> Task :editor-surface:classes UP-TO-DATE
+> Task :editor-surface:jar UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors
+> Task :app:checkCppRuntime
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :editor-sora:preBuild UP-TO-DATE
+> Task :editor-sora:preDebugBuild UP-TO-DATE
+> Task :editor-sora:writeDebugAarMetadata UP-TO-DATE
+> Task :terminal-emulator:preBuild UP-TO-DATE
+> Task :terminal-emulator:preDebugBuild UP-TO-DATE
+> Task :terminal-emulator:writeDebugAarMetadata UP-TO-DATE
+> Task :terminal-view:preBuild UP-TO-DATE
+> Task :terminal-view:preDebugBuild UP-TO-DATE
+> Task :terminal-view:writeDebugAarMetadata UP-TO-DATE
+> Task :workspace-core:preBuild UP-TO-DATE
+> Task :workspace-core:preDebugBuild UP-TO-DATE
+> Task :workspace-core:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :editor-sora:generateDebugResValues UP-TO-DATE
+> Task :editor-sora:generateDebugResources UP-TO-DATE
+> Task :editor-sora:packageDebugResources UP-TO-DATE
+> Task :terminal-emulator:generateDebugResValues UP-TO-DATE
+> Task :terminal-emulator:generateDebugResources UP-TO-DATE
+> Task :terminal-emulator:packageDebugResources UP-TO-DATE
+> Task :terminal-view:generateDebugResValues UP-TO-DATE
+> Task :terminal-view:generateDebugResources UP-TO-DATE
+> Task :terminal-view:packageDebugResources UP-TO-DATE
+> Task :workspace-core:generateDebugResValues UP-TO-DATE
+> Task :workspace-core:generateDebugResources UP-TO-DATE
+> Task :workspace-core:packageDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :editor-sora:extractDeepLinksDebug UP-TO-DATE
+> Task :editor-sora:processDebugManifest UP-TO-DATE
+> Task :terminal-emulator:extractDeepLinksDebug UP-TO-DATE
+> Task :terminal-emulator:processDebugManifest UP-TO-DATE
+> Task :terminal-view:extractDeepLinksDebug UP-TO-DATE
+> Task :terminal-view:processDebugManifest UP-TO-DATE
+> Task :workspace-core:extractDeepLinksDebug UP-TO-DATE
+> Task :workspace-core:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :editor-sora:compileDebugLibraryResources UP-TO-DATE
+> Task :editor-sora:parseDebugLocalResources UP-TO-DATE
+> Task :editor-sora:generateDebugRFile UP-TO-DATE
+> Task :terminal-emulator:compileDebugLibraryResources UP-TO-DATE
+> Task :terminal-emulator:parseDebugLocalResources UP-TO-DATE
+> Task :terminal-emulator:generateDebugRFile UP-TO-DATE
+> Task :terminal-view:compileDebugLibraryResources UP-TO-DATE
+> Task :terminal-view:parseDebugLocalResources UP-TO-DATE
+> Task :terminal-view:generateDebugRFile UP-TO-DATE
+> Task :workspace-core:compileDebugLibraryResources UP-TO-DATE
+> Task :workspace-core:parseDebugLocalResources UP-TO-DATE
+> Task :workspace-core:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :editor-sora:javaPreCompileDebug UP-TO-DATE
+> Task :editor-sora:compileDebugJavaWithJavac UP-TO-DATE
+> Task :editor-sora:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :terminal-emulator:javaPreCompileDebug UP-TO-DATE
+> Task :terminal-emulator:compileDebugJavaWithJavac UP-TO-DATE
+> Task :terminal-emulator:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :terminal-view:javaPreCompileDebug UP-TO-DATE
+> Task :terminal-view:compileDebugJavaWithJavac UP-TO-DATE
+> Task :terminal-view:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :workspace-core:checkKotlinGradlePluginConfigurationErrors
+> Task :workspace-core:compileDebugKotlin UP-TO-DATE
+> Task :workspace-core:javaPreCompileDebug UP-TO-DATE
+> Task :workspace-core:compileDebugJavaWithJavac NO-SOURCE
+> Task :workspace-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:findDebugPythonCommand
+> Task :app:extractDebugPythonBuildPackages UP-TO-DATE
+> Task :app:installDebugPythonRequirements UP-TO-DATE
+> Task :app:mergeDebugPythonSources UP-TO-DATE
+> Task :app:generateDebugPythonProxies UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :app:preDebugUnitTestBuild
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:generateDebugPythonMiscAssets UP-TO-DATE
+> Task :app:generateDebugPythonRequirementsAssets UP-TO-DATE
+> Task :app:generateDebugPythonSourceAssets UP-TO-DATE
+> Task :app:generateDebugPythonBuildAssets UP-TO-DATE
+> Task :editor-sora:mergeDebugShaders UP-TO-DATE
+> Task :editor-sora:compileDebugShaders NO-SOURCE
+> Task :editor-sora:generateDebugAssets UP-TO-DATE
+> Task :editor-sora:packageDebugAssets UP-TO-DATE
+> Task :terminal-emulator:mergeDebugShaders UP-TO-DATE
+> Task :terminal-emulator:compileDebugShaders NO-SOURCE
+> Task :terminal-emulator:generateDebugAssets UP-TO-DATE
+> Task :terminal-emulator:packageDebugAssets UP-TO-DATE
+> Task :terminal-view:mergeDebugShaders UP-TO-DATE
+> Task :terminal-view:compileDebugShaders NO-SOURCE
+> Task :terminal-view:generateDebugAssets UP-TO-DATE
+> Task :terminal-view:packageDebugAssets UP-TO-DATE
+> Task :workspace-core:mergeDebugShaders UP-TO-DATE
+> Task :workspace-core:compileDebugShaders NO-SOURCE
+> Task :workspace-core:generateDebugAssets UP-TO-DATE
+> Task :workspace-core:packageDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :editor-sora:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :editor-sora:processDebugJavaRes NO-SOURCE
+> Task :terminal-emulator:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :terminal-emulator:processDebugJavaRes NO-SOURCE
+> Task :terminal-view:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :terminal-view:processDebugJavaRes NO-SOURCE
+> Task :workspace-core:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :workspace-core:processDebugJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+> Task :editor-assist:compileTestKotlin NO-SOURCE
+> Task :editor-assist:compileTestJava NO-SOURCE
+> Task :editor-assist:processTestResources NO-SOURCE
+> Task :editor-assist:testClasses UP-TO-DATE
+> Task :editor-assist:test NO-SOURCE
+> Task :terminal-emulator:preDebugUnitTestBuild UP-TO-DATE
+> Task :terminal-emulator:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :terminal-emulator:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :terminal-emulator:compileDebugUnitTestJavaWithJavac UP-TO-DATE
+> Task :terminal-emulator:processDebugUnitTestJavaRes NO-SOURCE
+> Task :terminal-emulator:testDebugUnitTest
+> Task :editor-sora:mergeDebugJniLibFolders UP-TO-DATE
+> Task :editor-sora:mergeDebugNativeLibs NO-SOURCE
+> Task :editor-sora:stripDebugDebugSymbols NO-SOURCE
+> Task :editor-sora:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :editor-sora:extractDebugAnnotations UP-TO-DATE
+> Task :editor-sora:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :editor-sora:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :editor-sora:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :editor-sora:prepareDebugArtProfile UP-TO-DATE
+> Task :editor-sora:prepareLintJarForPublish UP-TO-DATE
+> Task :editor-sora:mergeDebugJavaResource UP-TO-DATE
+> Task :editor-sora:syncDebugLibJars UP-TO-DATE
+> Task :editor-sora:bundleDebugLocalLintAar UP-TO-DATE
+> Task :workspace-core:mergeDebugJniLibFolders UP-TO-DATE
+> Task :workspace-core:mergeDebugNativeLibs NO-SOURCE
+> Task :workspace-core:stripDebugDebugSymbols NO-SOURCE
+> Task :workspace-core:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :workspace-core:extractDebugAnnotations
+> Task :workspace-core:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :workspace-core:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :workspace-core:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :workspace-core:prepareDebugArtProfile UP-TO-DATE
+> Task :workspace-core:prepareLintJarForPublish UP-TO-DATE
+> Task :workspace-core:mergeDebugJavaResource UP-TO-DATE
+> Task :workspace-core:syncDebugLibJars
+> Task :workspace-core:bundleDebugLocalLintAar
+> Task :terminal-view:mergeDebugJniLibFolders UP-TO-DATE
+> Task :terminal-view:mergeDebugNativeLibs NO-SOURCE
+> Task :terminal-view:stripDebugDebugSymbols NO-SOURCE
+> Task :terminal-view:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :terminal-view:extractDebugAnnotations UP-TO-DATE
+> Task :terminal-view:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :terminal-view:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :terminal-view:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :terminal-view:prepareDebugArtProfile UP-TO-DATE
+> Task :terminal-view:prepareLintJarForPublish UP-TO-DATE
+> Task :terminal-view:mergeDebugJavaResource UP-TO-DATE
+> Task :terminal-view:syncDebugLibJars UP-TO-DATE
+> Task :terminal-view:bundleDebugLocalLintAar UP-TO-DATE
+> Task :terminal-emulator:configureNdkBuildDebug[arm64-v8a]
+> Task :terminal-emulator:buildNdkBuildDebug[arm64-v8a]
+> Task :terminal-emulator:mergeDebugJniLibFolders UP-TO-DATE
+> Task :terminal-emulator:mergeDebugNativeLibs UP-TO-DATE
+> Task :terminal-emulator:stripDebugDebugSymbols UP-TO-DATE
+> Task :terminal-emulator:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :terminal-emulator:extractDebugAnnotations UP-TO-DATE
+> Task :terminal-emulator:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :terminal-emulator:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :terminal-emulator:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :terminal-emulator:prepareDebugArtProfile UP-TO-DATE
+> Task :terminal-emulator:prepareLintJarForPublish UP-TO-DATE
+> Task :terminal-emulator:mergeDebugJavaResource UP-TO-DATE
+> Task :terminal-emulator:syncDebugLibJars UP-TO-DATE
+> Task :terminal-emulator:bundleDebugLocalLintAar UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :editor-sora:createFullJarDebug UP-TO-DATE
+> Task :editor-sora:writeDebugLintModelMetadata UP-TO-DATE
+> Task :terminal-emulator:createFullJarDebug UP-TO-DATE
+> Task :terminal-emulator:writeDebugLintModelMetadata UP-TO-DATE
+> Task :terminal-view:createFullJarDebug UP-TO-DATE
+> Task :terminal-view:writeDebugLintModelMetadata UP-TO-DATE
+> Task :workspace-core:createFullJarDebug
+> Task :workspace-core:writeDebugLintModelMetadata UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :editor-sora:extractProguardFiles UP-TO-DATE
+> Task :editor-sora:generateDebugLintModel UP-TO-DATE
+> Task :terminal-emulator:extractProguardFiles UP-TO-DATE
+> Task :terminal-emulator:generateDebugLintModel UP-TO-DATE
+> Task :terminal-view:extractProguardFiles UP-TO-DATE
+> Task :terminal-view:generateDebugLintModel UP-TO-DATE
+> Task :workspace-core:extractProguardFiles UP-TO-DATE
+> Task :workspace-core:generateDebugLintModel
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :editor-sora:lintAnalyzeDebug UP-TO-DATE
+> Task :terminal-emulator:lintAnalyzeDebug UP-TO-DATE
+> Task :terminal-view:lintAnalyzeDebug UP-TO-DATE
+> Task :editor-sora:preDebugAndroidTestBuild UP-TO-DATE
+> Task :editor-sora:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :editor-sora:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :editor-sora:preDebugUnitTestBuild UP-TO-DATE
+> Task :editor-sora:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :editor-sora:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :editor-sora:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :terminal-emulator:preDebugAndroidTestBuild UP-TO-DATE
+> Task :terminal-emulator:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :terminal-emulator:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :terminal-emulator:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :terminal-emulator:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :terminal-emulator:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :terminal-view:preDebugAndroidTestBuild UP-TO-DATE
+> Task :terminal-view:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :terminal-view:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :terminal-view:preDebugUnitTestBuild UP-TO-DATE
+> Task :terminal-view:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :terminal-view:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :terminal-view:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :workspace-core:preDebugAndroidTestBuild UP-TO-DATE
+> Task :workspace-core:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :workspace-core:generateDebugAndroidTestLintModel
+> Task :workspace-core:preDebugUnitTestBuild UP-TO-DATE
+> Task :workspace-core:generateDebugUnitTestLintModel
+> Task :workspace-core:lintAnalyzeDebugAndroidTest
+> Task :workspace-core:lintAnalyzeDebugUnitTest
+> Task :editor-sora:generateDebugLintReportModel UP-TO-DATE
+> Task :editor-sora:lintReportDebug UP-TO-DATE
+> Task :editor-sora:lintDebug
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:compressDebugAssets
+> Task :app:l8DexDesugarLibDebug UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :editor-sora:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :workspace-core:bundleLibRuntimeToDirDebug
+> Task :app:mergeDebugJavaResource
+> Task :terminal-view:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :terminal-emulator:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug
+> Task :app:configureNdkBuildDebug[arm64-v8a] FAILED
+> Task :app:mergeProjectDexDebug
+> Task :workspace-core:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugUnitTest
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:configureNdkBuildDebug[arm64-v8a]'.
+> [CXX1429] error when building with ndkBuild using C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\jni\Android.mk: Android NDK: Unable to determine HOST_OS from uname -s:     
+  Android NDK: Please define HOST_OS in your environment.    
+  
+  C++ build system [configure] failed while executing:
+      @echo off
+      "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\android-sdk\\ndk\\27.2.12479018\\ndk-build.cmd" ^
+        "NDK_PROJECT_PATH=null" ^
+        "APP_BUILD_SCRIPT=C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\src\\main\\jni\\Android.mk" ^
+        "APP_ABI=arm64-v8a" ^
+        "NDK_ALL_ABIS=arm64-v8a" ^
+        "NDK_DEBUG=1" ^
+        "NDK_OUT=C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\build\\intermediates\\cxx\\Debug\\1o172b6b/obj" ^
+        "NDK_LIBS_OUT=C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\build\\intermediates\\cxx\\Debug\\1o172b6b/lib" ^
+        "APP_PLATFORM=android-24" ^
+        "APP_SUPPORT_FLEXIBLE_PAGE_SIZES=true" ^
+        "APP_SHORT_COMMANDS=false" ^
+        "LOCAL_SHORT_COMMANDS=false" ^
+        -B ^
+        -n
+    from C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app
+  process_begin: CreateProcess(NULL, uname -s, ...) failed.
+  C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/.tools/android-sdk/ndk/27.2.12479018/build/../build/core/init.mk:144: pipe: No error
+  C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/.tools/android-sdk/ndk/27.2.12479018/build/../build/core/init.mk:163: *** Android NDK: Aborting.    .  Stop. : com.android.ide.common.process.ProcessException: Android NDK: Unable to determine HOST_OS from uname -s:     
+  Android NDK: Please define HOST_OS in your environment.    
+  
+  C++ build system [configure] failed while executing:
+      @echo off
+      "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\android-sdk\\ndk\\27.2.12479018\\ndk-build.cmd" ^
+        "NDK_PROJECT_PATH=null" ^
+        "APP_BUILD_SCRIPT=C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\src\\main\\jni\\Android.mk" ^
+        "APP_ABI=arm64-v8a" ^
+        "NDK_ALL_ABIS=arm64-v8a" ^
+        "NDK_DEBUG=1" ^
+        "NDK_OUT=C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\build\\intermediates\\cxx\\Debug\\1o172b6b/obj" ^
+        "NDK_LIBS_OUT=C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\build\\intermediates\\cxx\\Debug\\1o172b6b/lib" ^
+        "APP_PLATFORM=android-24" ^
+        "APP_SUPPORT_FLEXIBLE_PAGE_SIZES=true" ^
+        "APP_SHORT_COMMANDS=false" ^
+        "LOCAL_SHORT_COMMANDS=false" ^
+        -B ^
+        -n
+    from C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app
+  process_begin: CreateProcess(NULL, uname -s, ...) failed.
+  C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/.tools/android-sdk/ndk/27.2.12479018/build/../build/core/init.mk:144: pipe: No error
+  C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/.tools/android-sdk/ndk/27.2.12479018/build/../build/core/init.mk:163: *** Android NDK: Aborting.    .  Stop.
+  	at com.android.build.gradle.internal.cxx.process.ExecuteProcessKt.execute(ExecuteProcess.kt:288)
+  	at com.android.build.gradle.internal.cxx.process.ExecuteProcessKt$executeProcess$1.invoke(ExecuteProcess.kt:108)
+  	at com.android.build.gradle.internal.cxx.process.ExecuteProcessKt$executeProcess$1.invoke(ExecuteProcess.kt:106)
+  	at com.android.build.gradle.internal.cxx.timing.TimingEnvironmentKt.time(TimingEnvironment.kt:32)
+  	at com.android.build.gradle.internal.cxx.process.ExecuteProcessKt.executeProcess(ExecuteProcess.kt:106)
+  	at com.android.build.gradle.internal.cxx.process.ExecuteProcessKt.executeProcess$default(ExecuteProcess.kt:85)
+  	at com.android.build.gradle.tasks.NdkBuildExternalNativeJsonGenerator.executeProcess(NdkBuildExternalNativeJsonGenerator.kt:73)
+  	at com.android.build.gradle.tasks.ExternalNativeJsonGenerator$configureOneAbi$1$1$3.invoke(ExternalNativeJsonGenerator.kt:247)
+  	at com.android.build.gradle.tasks.ExternalNativeJsonGenerator$configureOneAbi$1$1$3.invoke(ExternalNativeJsonGenerator.kt:247)
+  	at com.android.build.gradle.internal.cxx.timing.TimingEnvironmentKt.time(TimingEnvironment.kt:32)
+  	at com.android.build.gradle.tasks.ExternalNativeJsonGenerator.configureOneAbi(ExternalNativeJsonGenerator.kt:247)
+  	at com.android.build.gradle.tasks.ExternalNativeJsonGenerator.configure(ExternalNativeJsonGenerator.kt:113)
+  	at com.android.build.gradle.tasks.ExternalNativeBuildJsonTask.doTaskAction(ExternalNativeBuildJsonTask.kt:89)
+  	at com.android.build.gradle.internal.tasks.UnsafeOutputsTask$taskAction$$inlined$recordTaskAction$1.invoke(BaseTask.kt:78)
+  	at com.android.build.gradle.internal.tasks.Blocks.recordSpan(Blocks.java:51)
+  	at com.android.build.gradle.internal.tasks.UnsafeOutputsTask.taskAction(UnsafeOutputsTask.kt:81)
+  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+  	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+  	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+  	at org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:125)
+  	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.doExecute(StandardTaskAction.java:58)
+  	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:51)
+  	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:29)
+  	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:244)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:29)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:26)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:47)
+  	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+  	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+  	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+  	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+  	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+  	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+  	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+  	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+  	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+  	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+  	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+  	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+  	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+  	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+  	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+  	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+  	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+  	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+  	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+  	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+  	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+  	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+  	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+  	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+  	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$1(BuildCacheStep.java:75)
+  	at org.gradle.internal.Either$Right.fold(Either.java:175)
+  	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+  	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+  	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+  	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+  	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+  	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+  	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+  	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+  	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+  	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+  	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+  	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+  	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+  	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+  	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+  	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+  	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+  	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+  	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:105)
+  	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:54)
+  	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+  	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+  	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+  	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:56)
+  	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+  	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+  	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+  	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+  	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+  	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+  	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+  	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+  	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+  	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+  	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+  	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+  	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+  	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+  	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+  	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+  	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+  	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+  	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+  	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+  	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:61)
+  	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+  	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+  	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+  	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+  	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+  	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+  	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+  	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+  	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+  	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+  	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+  	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+  	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+  	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+  	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+  	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+  	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+  	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+  	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+  	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+  	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+  	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+  	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+  	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+  	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+  	at java.base/java.lang.Thread.run(Thread.java:840)
+  Caused by: com.android.ide.common.process.ProcessException: Error while executing process C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\android-sdk\ndk\27.2.12479018\ndk-build.cmd with arguments {NDK_PROJECT_PATH=null APP_BUILD_SCRIPT=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\jni\Android.mk APP_ABI=arm64-v8a NDK_ALL_ABIS=arm64-v8a NDK_DEBUG=1 NDK_OUT=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\build\intermediates\cxx\Debug\1o172b6b/obj NDK_LIBS_OUT=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\build\intermediates\cxx\Debug\1o172b6b/lib APP_PLATFORM=android-24 APP_SUPPORT_FLEXIBLE_PAGE_SIZES=true APP_SHORT_COMMANDS=false LOCAL_SHORT_COMMANDS=false -B -n}
+  	at com.android.build.gradle.internal.process.GradleProcessResult.buildProcessException(GradleProcessResult.java:73)
+  	at com.android.build.gradle.internal.process.GradleProcessResult.assertNormalExitValue(GradleProcessResult.java:48)
+  	at com.android.build.gradle.internal.cxx.process.ExecuteProcessKt.execute(ExecuteProcess.kt:277)
+  	... 141 more
+  Caused by: org.gradle.process.internal.ExecException: Process 'command 'C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\android-sdk\ndk\27.2.12479018\ndk-build.cmd'' finished with non-zero exit value 2
+  	at org.gradle.process.internal.DefaultExecHandle$ExecResultImpl.assertNormalExitValue(DefaultExecHandle.java:442)
+  	at com.android.build.gradle.internal.process.GradleProcessResult.assertNormalExitValue(GradleProcessResult.java:46)
+  	... 142 more
+
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 2m 44s
+223 actionable tasks: 32 executed, 191 up-to-date

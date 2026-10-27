@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.SignatureHelpTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-27T01:37:28" hostname="JUHE" time="0.02">
+  <properties/>
+  <testcase name="resultsAreBoundToTheExactBufferRevisionAndSelection" classname="com.codepocket.ide.SignatureHelpTest" time="0.003"/>
+  <testcase name="memberCallsAndDeclarationsDoNotClaimBuiltinSemantics" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="bracketsStringsAndCommentsDoNotAddOuterArguments" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="escapeDoesNotStealSoftKeyboardOrCompositionOrModifiedEvents" classname="com.codepocket.ide.SignatureHelpTest" time="0.001"/>
+  <testcase name="signatureSettingUpgradesDefaultsAndRoundTripsIndependently" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="innerKnownCallWinsAndClosingItRestoresOuterCall" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="referenceKeepsLanguagesSourcesAndSimplifiedFormsExplicit" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="referenceFormsAreNotResolvedAsTypesOrOverloads" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="incompleteCallsWorkButSelectionsLimitsAndMismatchesDecline" classname="com.codepocket.ide.SignatureHelpTest" time="0.001"/>
+  <testcase name="utf16CrLfAndMultipleLinesKeepExactOpenOffset" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="caretInsideLiteralOrCommentDeclinesIncludingUnclosedEnds" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="cancelledRequestsStopAndManyCompletedCallsDoNotLeakOldContext" classname="com.codepocket.ide.SignatureHelpTest" time="0.015"/>
+  <testcase name="keywordsAndMarkersNeverBecomeFakePositionalParameters" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="unsupportedGrammarDeclinesInsteadOfCountingTheWrongComma" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="activeRangesCoverTheDisplayedParameterOnly" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <testcase name="positionalAndVariadicParametersAreDifferent" classname="com.codepocket.ide.SignatureHelpTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

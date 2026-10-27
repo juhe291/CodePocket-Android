@@ -1,0 +1,188 @@
+{
+  "engine": "clangd 21.1.8",
+  "version": "21.1.8-3",
+  "target": "aarch64-linux-android24",
+  "signature_fingerprint": "CC72CF8BA7DBFA0182877D045A897D96E57CF20C",
+  "packages": {
+    "clang": {
+      "Package": "clang",
+      "Version": "21.1.8-3",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/c/clang/clang_21.1.8-3_aarch64.deb",
+      "Size": "30740228",
+      "Installed-Size": "186820",
+      "SHA256": "9fb565013b96ce10abd8f8f217aaebb48f72873f53acbf8886329bcea841a21c",
+      "Depends": "libcompiler-rt, lld, llvm, ndk-sysroot, libllvm (= 21.1.8-3)"
+    },
+    "libllvm": {
+      "Package": "libllvm",
+      "Version": "21.1.8-3",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/libl/libllvm/libllvm_21.1.8-3_aarch64.deb",
+      "Size": "30733892",
+      "Installed-Size": "169564",
+      "SHA256": "5056a73f2645fc9c0759e6f94a1bd6edcf36305acaef58dc685211ced9cc2a02",
+      "Depends": "libc++, libffi, libxml2, ncurses, zlib, zstd"
+    },
+    "libc++": {
+      "Package": "libc++",
+      "Version": "30",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/libc/libc++/libc++_30_aarch64.deb",
+      "Size": "341604",
+      "Installed-Size": "1432",
+      "SHA256": "53d0b84a7ba7459024257cb94d5b136fe13ef858567f65a8064b35950799f2ca",
+      "Depends": null
+    },
+    "ndk-sysroot": {
+      "Package": "ndk-sysroot",
+      "Version": "30",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/n/ndk-sysroot/ndk-sysroot_30_aarch64.deb",
+      "Size": "1996888",
+      "Installed-Size": "28436",
+      "SHA256": "73502f9b04fce210c430c83bf9ae2b8e332ba5c319f3eb94a61ba5cef090f787",
+      "Depends": null
+    },
+    "zlib": {
+      "Package": "zlib",
+      "Version": "1.3.2",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/z/zlib/zlib_1.3.2_aarch64.deb",
+      "Size": "62840",
+      "Installed-Size": "264",
+      "SHA256": "75e7d0af17fcc3b40004309fdc00a1ddb9ae08346dce5e269902c34ac3966ac9",
+      "Depends": null
+    },
+    "libxml2": {
+      "Package": "libxml2",
+      "Version": "2.15.4-1",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/libx/libxml2/libxml2_2.15.4-1_aarch64.deb",
+      "Size": "442652",
+      "Installed-Size": "1648",
+      "SHA256": "d315861bbcf716cfb088f53cddab9fb6a96430cc66769f79774cc69c2f53bcff",
+      "Depends": "libandroid-glob, libiconv, zlib"
+    },
+    "libffi": {
+      "Package": "libffi",
+      "Version": "3.8.0",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/libf/libffi/libffi_3.8.0_aarch64.deb",
+      "Size": "37592",
+      "Installed-Size": "240",
+      "SHA256": "4f255badf74cd31f6a2801c17fa1444199c84c834b517b7c843e2fe9ebe91d77",
+      "Depends": null
+    },
+    "zstd": {
+      "Package": "zstd",
+      "Version": "1.5.7-1",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/z/zstd/zstd_1.5.7-1_aarch64.deb",
+      "Size": "360488",
+      "Installed-Size": "1308",
+      "SHA256": "e1b4a5113648da8de189620ba1fce74c48b2d0833d9043391b9a1c91fb606fd3",
+      "Depends": "liblzma, zlib"
+    },
+    "libiconv": {
+      "Package": "libiconv",
+      "Version": "1.19",
+      "Architecture": "aarch64",
+      "Filename": "pool/main/libi/libiconv/libiconv_1.19_aarch64.deb",
+      "Size": "562724",
+      "Installed-Size": "1216",
+      "SHA256": "fe9481b1dc101c6c3552943f25435109fd522aecc615ae49594f9fbee863bb37",
+      "Depends": null
+    }
+  },
+  "repository": "https://packages-cf.termux.dev/apt/termux-main",
+  "aliases": {
+    "libLLVM.so": "libcpA_.so",
+    "libc++_shared.so": "libcpB_______.so",
+    "libclang-cpp.so": "libcpC______.so",
+    "libffi.so": "libcpD.so",
+    "libiconv.so": "libcpE__.so",
+    "libxml2.so.16": "libcpF____.so",
+    "libz.so.1": "libcpG.so",
+    "libzstd.so.1": "libcpH___.so"
+  },
+  "libraries": [
+    {
+      "package": "clang",
+      "member": "bin/clangd",
+      "source_sha256": "52df30a8ba834154f1cf3b6deb47b1c2663cba7c6bc45035b247483ba813337b",
+      "packaged_name": "libcodepocket_clangd.so",
+      "sha256": "b74b281229984a2f068a3a1c421b8b7e1cf0a86091bbde43dd3caefd929e1a74",
+      "bytes": 18662672
+    },
+    {
+      "package": "clang",
+      "member": "lib/libclang-cpp.so",
+      "source_sha256": "1f2f35ec08f3e24ff23bfa6c0e1a8f2cd2c818fa2c772268b26aff123aacd4d4",
+      "packaged_name": "libcpC______.so",
+      "sha256": "c78ce173c4a3642098897e35f03587a1878ec7c137e68bb459e037e7da560d55",
+      "bytes": 62972824
+    },
+    {
+      "package": "libllvm",
+      "member": "lib/libLLVM.so",
+      "source_sha256": "ae20f8a19dcd84740bb3b3c7cc5845ec44f5143cbf7dab44a64160a4b7f21fa0",
+      "packaged_name": "libcpA_.so",
+      "sha256": "0e8c200507532c0a6064a90306921e7e1b20079e2af8e190888c8e984464669e",
+      "bytes": 133597776
+    },
+    {
+      "package": "libffi",
+      "member": "lib/libffi.so",
+      "source_sha256": "e118d741361c64015c074c5e1f24e42e44292d0d694ca3ba1e109205c10421f9",
+      "packaged_name": "libcpD.so",
+      "sha256": "4d36fd8dd8d8dd0257634211e6e679777faeeed92efdf16647a032afc8b6b7b0",
+      "bytes": 87128
+    },
+    {
+      "package": "zlib",
+      "member": "lib/libz.so.1.3.2",
+      "source_sha256": "c47748ed4b6ca6a2ecd664bab04795f3493956ab1f5cddc4ba0efa737ef3b711",
+      "packaged_name": "libcpG.so",
+      "sha256": "949e05d707fd449b6382edd5e5dbb9991a28794f59b317ae621c92532b1d8e1d",
+      "bytes": 72880
+    },
+    {
+      "package": "zstd",
+      "member": "lib/libzstd.so.1.5.7",
+      "source_sha256": "1677d5e828c1839f111f0261697c08f99a5e4e80434659ab88e5ff859a1374f7",
+      "packaged_name": "libcpH___.so",
+      "sha256": "fadacda4b719edab0857ed2c027aee28dcf90f795fa35e43bb3711bc9c4fc705",
+      "bytes": 820840
+    },
+    {
+      "package": "libxml2",
+      "member": "lib/libxml2.so.16.1.4",
+      "source_sha256": "ed8fca535487054960e6a4edb0b4a14c5efe6256710f3b2f0bf66f59343960e6",
+      "packaged_name": "libcpF____.so",
+      "sha256": "3cdbdec19f16ff3cd612cc445394f48238d717936e9f59fcfef8c0a3c7dd0e81",
+      "bytes": 1092824
+    },
+    {
+      "package": "libiconv",
+      "member": "lib/libiconv.so",
+      "source_sha256": "aa51a75a69449e02f7712635148b280167dcbda9433f1d16de5c931432b05b01",
+      "packaged_name": "libcpE__.so",
+      "sha256": "ac9cd5e352fccdbe6989e20d59cf674417e63ef13ef17afd60e36b4a1864c80a",
+      "bytes": 1083304
+    },
+    {
+      "package": "libc++",
+      "member": "lib/libc++_shared.so",
+      "source_sha256": "05bef9d3901910c3ff8ab450b03bc8b28383d363a2290f2f7b9aed7331ea6ff7",
+      "packaged_name": "libcpB_______.so",
+      "sha256": "25bda017cca68e19d4808665f918b00366b8d295802613553841bd94c0190fc7",
+      "bytes": 1423696
+    }
+  ],
+  "source": {
+    "url": "https://mirrors.kernel.org/gnu/libiconv/libiconv-1.19.tar.gz",
+    "filename": "libiconv-1.19.tar.gz",
+    "sha256": "88dd96a8c0464eca144fc791ae60cd31cd8ee78321e67397e25fc095c4a19aa6"
+  }
+}

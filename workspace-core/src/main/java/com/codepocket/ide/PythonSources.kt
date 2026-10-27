@@ -29,7 +29,7 @@ object PythonSources {
             text[path] = value.removePrefix("\uFEFF")
         }
     }
-    fun local(root: File): Map<String, String> {
+    fun local(root: File, accepts: (String) -> Boolean = ::isSource): Map<String, String> {
         val scan = Scan()
         fun visit(folder: File, prefix: String, depth: Int) {
             scan.check()
@@ -40,7 +40,7 @@ object PythonSources {
                 require(child.canonicalFile == child.absoluteFile) { "项目分析不跟随符号链接" }
                 val path = prefix + child.name
                 if (child.isDirectory) visit(child, "$path/", depth + 1)
-                else if (isSource(path)) {
+                else if (accepts(path)) {
                     require(child.isFile && child.length() <= 1_000_000) { "项目分析源码过大或已移除" }
                     val value = child.inputStream().use { stream -> Workspace.utf8Reader(stream).use { Workspace.readLimited(it, Workspace.MAX_CHARS) } }
                     scan.add(path, value)
@@ -51,7 +51,7 @@ object PythonSources {
         visit(root, "", 0)
         return scan.text.toMap()
     }
-    fun provider(gateway: DocumentGateway): Map<String, String> {
+    fun provider(gateway: DocumentGateway, accepts: (String) -> Boolean = ::isSource): Map<String, String> {
         val scan = Scan()
         val visited = mutableSetOf(gateway.root.id)
         fun visit(id: String, prefix: String, depth: Int) {
@@ -64,7 +64,7 @@ object PythonSources {
                 if (node.name in excluded) return@forEach
                 val path = prefix + node.name
                 if (node.directory) visit(node.id, "$path/", depth + 1)
-                else if (isSource(path)) scan.add(path, gateway.read(node.id))
+                else if (accepts(path)) scan.add(path, gateway.read(node.id))
             }
         }
         visit(gateway.root.id, "", 0)

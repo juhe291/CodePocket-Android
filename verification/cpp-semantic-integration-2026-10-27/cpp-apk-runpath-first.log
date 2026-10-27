@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 91, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 43, in main
+    assert inspected['runpaths'] == ['$ORIGIN']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,9 @@
+{
+  "source_files": 54,
+  "source_hashes_match": true,
+  "relative_links_checked": 8,
+  "apk_sha256_matches": true,
+  "existing_ci_change": "one preparation step, explicitly authorized; no remote run",
+  "android_execution": false,
+  "full_goal_complete": false
+}

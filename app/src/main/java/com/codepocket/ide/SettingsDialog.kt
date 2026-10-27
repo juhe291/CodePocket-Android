@@ -264,6 +264,9 @@ object SettingsDialog {
                     }
                     if(draft.category==6){
                         heading("CodePocket","原生 Android C++ / Python 学习工作台")
+                        details.addView(WorkbenchStyle.menuRow(activity,"C++ 语义分析许可与源码").apply{
+                            setOnClickListener{if(!busy)CppLicenses.show(activity,current.animations)}
+                        })
                         listOf("快捷键说明" to activity.getString(R.string.shortcuts_help),"运行与权限说明" to activity.getString(R.string.python_terminal_help),
                             "Lucide 图标许可证" to activity.assets.open("icon-licenses/LUCIDE-LICENSE.txt").bufferedReader().use{it.readText()},
                             "Sora 编辑器与语法许可" to activity.assets.open("SORA-NOTICE.txt").bufferedReader().use{it.readText()},

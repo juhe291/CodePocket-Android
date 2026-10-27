@@ -1,0 +1,74 @@
+[
+  {
+    "name": "android-ndk-r30/NOTICE",
+    "method": 8,
+    "crc32": 3275927238,
+    "compressed": 43422,
+    "uncompressed": 493924,
+    "offset": 1503
+  },
+  {
+    "name": "android-ndk-r30/sources/third_party/googletest/NOTICE",
+    "method": 8,
+    "crc32": 4169993118,
+    "compressed": 771,
+    "uncompressed": 1475,
+    "offset": 39437634
+  },
+  {
+    "name": "android-ndk-r30/sources/android/native_app_glue/NOTICE",
+    "method": 8,
+    "crc32": 3759503947,
+    "compressed": 370,
+    "uncompressed": 577,
+    "offset": 43624544
+  },
+  {
+    "name": "android-ndk-r30/sources/android/cpufeatures/NOTICE",
+    "method": 8,
+    "crc32": 3862697070,
+    "compressed": 371,
+    "uncompressed": 577,
+    "offset": 43644146
+  },
+  {
+    "name": "android-ndk-r30/sources/android/ndk_helper/NOTICE",
+    "method": 8,
+    "crc32": 3862697070,
+    "compressed": 371,
+    "uncompressed": 577,
+    "offset": 43658609
+  },
+  {
+    "name": "android-ndk-r30/sources/cxx-stl/system/NOTICE",
+    "method": 8,
+    "crc32": 3371961823,
+    "compressed": 1008,
+    "uncompressed": 3677,
+    "offset": 43688330
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/NOTICE",
+    "method": 8,
+    "crc32": 1578516871,
+    "compressed": 7405,
+    "uncompressed": 130424,
+    "offset": 76539173
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/sysroot/NOTICE",
+    "method": 8,
+    "crc32": 1133117359,
+    "compressed": 38161,
+    "uncompressed": 472407,
+    "offset": 76551895
+  },
+  {
+    "name": "android-ndk-r30/NOTICE.toolchain",
+    "method": 8,
+    "crc32": 3843378478,
+    "compressed": 90365,
+    "uncompressed": 777125,
+    "offset": 736811763
+  }
+]

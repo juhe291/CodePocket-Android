@@ -1,0 +1,64 @@
+{
+  "apk": "dist/CodePocket-cpp-semantics-2026-10-27-debug.apk",
+  "bytes": 113531674,
+  "sha256": "d828aff66043ec8bfd9c877b8f7b53873f2a7205a66b657ff248e7f78694d4cc",
+  "apk_size_delta_bytes": 80780795,
+  "junit": {
+    "tests": 821,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "targeted": {
+    "tests": 91,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "terminal": {
+    "tests": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "old_cases_preserved": 794,
+  "new_cases": 27,
+  "no_new_skips": true,
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 20
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 4,
+        "ClickableViewAccessibility": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "python_source_tests": 66,
+  "actual_apk_semantic_tests": 22,
+  "cpp_real_host_cases": 15,
+  "cpp_native_files": 9,
+  "cpp_native_bytes": 219813944,
+  "cpp_header_entries": 3486,
+  "cpp_header_bytes": 35320086,
+  "corresponding_source_bundled": true,
+  "original_native_unchanged": 10,
+  "chaquopy_assets_unchanged": 20,
+  "old_apks_preserved": 89,
+  "previews_viewed": 4,
+  "android_execution": false,
+  "full_goal_complete": false
+}
