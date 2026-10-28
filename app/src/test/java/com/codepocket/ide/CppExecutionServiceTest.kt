@@ -29,6 +29,21 @@ class CppExecutionServiceTest {
         repeat(400){Shadows.shadowOf(Looper.getMainLooper()).idle();if(check())return;Thread.sleep(5)}
         fail("C++ execution worker did not settle")
     }
+    @Test fun startupFailurePreservesTheLastStageAndConcreteCauseAfterOwnedCleanup(){
+        val controller=Robolectric.buildService(CppExecutionService::class.java).create();val service=controller.get()
+        try {
+            val child=Child();val results=CopyOnWriteArrayList<Bundle>()
+            val backend:(Bundle,()->Boolean,(ExecutionProcess?)->Unit,(String)->Unit)->RunResult={_,_,own,stage->
+                own(child);stage("准备本地工具链");throw IllegalArgumentException("test constraint")
+            }
+            ReflectionHelpers.setField(service,"executeRun",backend)
+            val reply=Messenger(Handler(Looper.getMainLooper()){m->if(m.what==CppExecutionService.RESULT){assertTrue(child.closed.get());results.add(m.data)};true})
+            Messenger(service.onBind(Intent())).send(Message.obtain(null,CppExecutionService.RUN).apply{replyTo=reply;data=Bundle().apply{putLong("id",61)}})
+            waitUntil{results.size==1};val result=runResultFromBundle(results.single())
+            assertEquals(RunKind.SERVICE,result.kind);assertTrue(result.stderr.contains("准备本地工具链"))
+            assertTrue(result.stderr.contains("IllegalArgumentException"));assertTrue(result.stderr.contains("test constraint"));assertEquals(1,child.closes.get())
+        }finally{controller.destroy()}
+    }
     @Test fun privateServiceSeparatesExecutionAndCancellationWaitsForOwnedCleanup(){
         val controller=Robolectric.buildService(CppExecutionService::class.java).create();val service=controller.get()
         try {

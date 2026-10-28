@@ -2873,8 +2873,10 @@ class MainActivity : Activity() {
     private fun renderRunState() {
         if (!::mainToolbar.isInitialized) return
         updateMainToolbarState()
+        val previous = result
         outputDisplay.synchronize(RunSession.result, running)
         result = RunSession.result
+        if (!running && result?.kind == RunKind.SERVICE && result !== previous) selectedOutput = 1
         editorAnalysis?.request()
         showOutput(selectedOutput)
         if (running) status.text = if (RunSession.waitingForInput) "等待终端输入 · Enter 提交 / Ctrl+D 结束输入" else "正在执行，请稍候…"

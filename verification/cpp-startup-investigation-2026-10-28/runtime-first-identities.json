@@ -1,0 +1,66 @@
+{
+  "totals": {
+    "tests": 14,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.CppBuildSupportTest.unknownTraversalAndOversizedArchivesCannotWriteOutsideOwnedDirectory",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppBuildSupportTest.actualPreparedSupportMatchesAllFourPinnedFiles",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderArchiveTest.boundedExtractionPreservesActualHeaderText",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderArchiveTest.duplicateEntriesCannotReplaceAnExistingPrivateFile",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppHeaderArchiveTest.traversalUnexpectedPathsAndSizeOrCountMismatchesFailClosed",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppRuntimePreparationTest.anExistingPrivateFileIsNeverOverwrittenByRuntimePreparation",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppRuntimePreparationTest.trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.MainRunIntegrationTest.localCppF5SavesSoraCapturesTheProjectAndNeverRequestsCloudConsentOnHostBridgeFailure",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainRunIntegrationTest.saveConflictBlocksF5WithoutStartingOrDiscardingRecoverableCode",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainRunIntegrationTest.f5SavesActualSoraBytesAndReportsMissingHostBridgeTruthfully",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainRunIntegrationTest.localCppHelperDiagnosticChecksTheExecutedHelperHashBeforeMovingTheRealSoraCaret",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainRunIntegrationTest.cppCtrlEnterRequiresThirdPartyConsentAndCancelNeverStartsTheNetwork",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainRunIntegrationTest.editDuringPendingSaveRunsOnlyTheNewestSavedRevision",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainRunIntegrationTest.emptyCodeIsRejectedBeforeAnyRunSessionIsStarted",
+      "status": "passed"
+    }
+  ]
+}

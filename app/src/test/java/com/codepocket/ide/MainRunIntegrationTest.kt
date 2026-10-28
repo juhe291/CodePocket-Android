@@ -1,6 +1,8 @@
 package com.codepocket.ide
 
 import android.app.AlertDialog
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
@@ -98,6 +100,24 @@ class MainRunIntegrationTest {
         assertFalse(main.getSharedPreferences("codepocket_v2",0).getBoolean("wandboxConsent",false));assertFalse(RunSession.running)
         assertEquals("constexpr int value=1;\n",workspace.read(header));assertEquals("constexpr int value=2;\n",drafts.analysisTexts(mapOf("local-value.hpp" to draftKey))["local-value.hpp"])
         assertTrue(File(main.cacheDir,"cpp-runs").listFiles().isNullOrEmpty())
+    }
+    @Test fun localCppStartupFailureShowsItsExactReasonAndDoesNotKeepStealingTheChosenOutputTab(){
+        switch("main.cpp");val settings=field<AppSettings>("settings")
+        ReflectionHelpers.setField(main,"settings",settings.copy(cppBackend=CppBackend.LOCAL))
+        val code="int main(){return 0;}\n";edit(code);key(KeyEvent.KEYCODE_F5);drain()
+        val failure=requireNotNull(RunSession.result);assertEquals(RunKind.SERVICE,failure.kind)
+        assertTrue(failure.stderr.contains("app_process"));assertEquals(1,field<Int>("selectedOutput"))
+        assertEquals(failure.stderr,field<android.widget.TextView>("consoleText").text.toString())
+        val view=main.findViewById<View>(android.R.id.content)
+        view.measure(View.MeasureSpec.makeMeasureSpec(main.resources.displayMetrics.widthPixels,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(main.resources.displayMetrics.heightPixels,View.MeasureSpec.EXACTLY))
+        view.layout(0,0,view.measuredWidth,view.measuredHeight);idle()
+        val bitmap=Bitmap.createBitmap(view.width,view.height,Bitmap.Config.ARGB_8888);view.draw(Canvas(bitmap))
+        val cwd=File(System.getProperty("user.dir")!!);val root=if(cwd.name=="app")cwd.parentFile else cwd
+        val image=File(root,"verification/cpp-startup-investigation-2026-10-28/previews/phone-service-failure.png")
+        image.parentFile!!.mkdirs();image.outputStream().use{assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG,100,it))};bitmap.recycle()
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"showOutput",ClassParameter.from(Int::class.javaPrimitiveType,3))
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"renderRunState");idle()
+        assertEquals(3,field<Int>("selectedOutput"));assertEquals(code,editor.text.toString())
     }
     @Test fun localCppHelperDiagnosticChecksTheExecutedHelperHashBeforeMovingTheRealSoraCaret() {
         val helper=workspace.create(workspace.root,"fault.cpp",false)

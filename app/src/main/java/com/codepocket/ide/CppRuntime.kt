@@ -7,6 +7,8 @@ import java.util.UUID
 
 /** All inputs come from the installed APK. No project scripts, shell, or network download. */
 internal class CppRuntime(private val context: Context) {
+    // Context owns this boundary. Android may expose the private root through a legitimate alias.
+    private val files = context.filesDir.canonicalFile
     private val native = File(context.applicationInfo.nativeLibraryDir).canonicalFile
     private val manifest by lazy { JSONObject(context.assets.open("cpp-runtime/manifest.json").bufferedReader().use { it.readText() }) }
     private val headers: File by lazy { prepareArchive("headers", "headers.zip", CppHeaderArchive::extract) }
@@ -15,8 +17,9 @@ internal class CppRuntime(private val context: Context) {
         require(manifest.getString("engine") == CppSemanticProtocol.ENGINE && manifest.getString("version") == "21.1.8-3")
         val spec = manifest.getJSONObject(key); val hash = spec.getString("sha256")
         require(hash.matches(Regex("[0-9a-f]{64}")) && spec.getString("asset") == "cpp-runtime/$asset")
-        val directory = File(context.filesDir, "cpp-runtime").absoluteFile
-        require(directory.isDirectory || directory.mkdirs()); require(directory.canonicalFile == directory)
+        val directory = File(files, "cpp-runtime")
+        require(directory.isDirectory || directory.mkdirs()) { "无法创建本地 C++ 工具缓存目录" }
+        require(directory.canonicalFile == directory) { "本地 C++ 工具缓存目录被重定向" }
         val ready = File(directory, hash)
         if (!File(ready, ".ready").isFile) {
             val pending = File(directory, ".pending-${UUID.randomUUID()}"); require(pending.mkdir())
@@ -41,14 +44,16 @@ internal class CppRuntime(private val context: Context) {
             val item = inputs.getJSONObject(i); val name = item.getString("name")
             require(name.matches(Regex("lib[A-Za-z0-9_]+\\.so")))
             val file = File(native, name)
-            require(file.canonicalFile.parentFile == native && file.isFile && file.length() == item.getLong("bytes"))
+            require(file.canonicalFile.parentFile == native && file.isFile && file.length() == item.getLong("bytes")) {
+                "安装包的本地 C++ 工具缺失或大小不符：$name"
+            }
         }
     }
     fun toolchain(): CppToolchainPaths {
         checkLibraries()
         val compiler = File(native, manifest.getString("compiler")); val linker = File(native, manifest.getString("linker"))
         require(compiler.name == "libcodepocket_clang.so" && linker.name == "libcodepocket_lld.so")
-        require(compiler.canExecute() && linker.canExecute())
+        require(compiler.canExecute() && linker.canExecute()) { "此系统无法执行安装包中的本地 C++ 编译器或链接器" }
         return CppToolchainPaths(compiler, linker, headers, support, File(native, "libcpB_______.so"))
     }
     fun installedRunner(): File = File(native,"libcodepocket_cpp_runner.so").also {
@@ -62,12 +67,12 @@ internal class CppRuntime(private val context: Context) {
         val executable = File(native, manifest.getString("executable")); require(executable.canExecute())
         val trustedHeaders = headers
         require(File(trustedHeaders, "sysroot/include/c++/v1/vector").isFile && File(trustedHeaders, "clang/include/stddef.h").isFile)
-        val commands = File(context.filesDir, "cpp-empty-commands").apply { require(isDirectory || mkdirs()) }
+        val commands = File(files, "cpp-empty-commands").apply { require(isDirectory || mkdirs()) }
         require(commands.listFiles()?.isEmpty() == true)
         val arguments = listOf(executable.path, "--enable-config=false", "--background-index=false", "--clang-tidy=false",
             "--header-insertion=never", "--function-arg-placeholders=false", "--completion-style=detailed", "--completion-parse=always",
             "--all-scopes-completion=false", "--use-dirty-headers", "-j=2", "--limit-results=30", "--pch-storage=memory", "--log=error", "--compile-commands-dir=${commands.path}")
-        val environment = listOf("PATH=/system/bin", "LD_LIBRARY_PATH=${native.path}", "HOME=${context.filesDir.path}",
+        val environment = listOf("PATH=/system/bin", "LD_LIBRARY_PATH=${native.path}", "HOME=${files.path}",
             "TMPDIR=${context.cacheDir.path}", "LANG=C.UTF-8")
         val flags = listOf("-xc++", "-std=c++17", "--target=aarch64-linux-android24", "--sysroot=${File(trustedHeaders, "sysroot").path}",
             "-resource-dir=${File(trustedHeaders, "clang").path}", "-isystem", File(trustedHeaders, "sysroot/include/c++/v1").path,

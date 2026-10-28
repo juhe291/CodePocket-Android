@@ -20,7 +20,8 @@ internal object CppHeaderArchive {
                 require(name.startsWith("sysroot/include/") || name.startsWith("clang/include/"))
                 val file = File(destination, name)
                 require(file.canonicalPath.startsWith(destination.path + File.separator))
-                require(file.parentFile!!.isDirectory || file.parentFile!!.mkdirs()); require(file.createNewFile())
+                require(file.parentFile!!.isDirectory || file.parentFile!!.mkdirs()) { "无法创建 C++ 头文件目录：$name" }
+                require(file.createNewFile()) { "无法创建 C++ 头文件（重名或文件系统限制）：$name" }
                 var bytes = 0L
                 file.outputStream().use { out ->
                     val buffer = ByteArray(32768)

@@ -59,6 +59,8 @@ class CppExecutionService : Service() {
         try { request.reply.binder.linkToDeath(death,0) }
         catch (_: RemoteException) { active=null;closeDescriptors(request.args);return }
         worker.execute {
+            var failureStage="校验终端与运行副本"
+            fun reason(error:Throwable)=error.javaClass.simpleName+": "+(error.message?.takeIf{it.isNotBlank()}?:"未提供异常说明")
             val result=try {
                 executeRun(request.args,{destroyed||request.cancelled.get()}, { process ->
                     synchronized(ownership) {
@@ -68,14 +70,15 @@ class CppExecutionService : Service() {
                         else {ownedProcess=process;processOwner=request}
                     }
                 }, { stage ->
+                    failureStage=stage
                     if(!destroyed&&!request.cancelled.get())runCatching { request.reply.send(Message.obtain(null,STATE).apply {
                         data=Bundle().apply{putLong("id",request.id);putString("stage",stage)}
                     }) }
                 })
             } catch (_: CancellationException) { RunResult("","已停止本地 C++ 运行","130",0,engine=ENGINE,kind=RunKind.CANCELLED) }
             catch (error: TimeoutException) { RunResult("",error.message.orEmpty(),"124",0,engine=ENGINE,kind=RunKind.TIMEOUT) }
-            catch (error: Exception) { RunResult("","本地 C++ 执行失败：${error.message}","—",0,engine=ENGINE,kind=RunKind.SERVICE) }
-            catch (error: LinkageError) { RunResult("","本地 C++ 原生运行器不可用：${error.message}","—",0,engine=ENGINE,kind=RunKind.SERVICE) }
+            catch (error: Exception) { RunResult("","本地 C++ 在“$failureStage”阶段执行失败：${reason(error)}","—",0,engine=ENGINE,kind=RunKind.SERVICE) }
+            catch (error: LinkageError) { RunResult("","本地 C++ 在“$failureStage”阶段原生运行器不可用：${reason(error)}","—",0,engine=ENGINE,kind=RunKind.SERVICE) }
             finally {
                 synchronized(ownership) {
                     if(processOwner===request){ownedProcess?.close();ownedProcess=null;processOwner=null}
@@ -93,10 +96,12 @@ class CppExecutionService : Service() {
         }
     }
     private fun executeNative(args: Bundle, cancelled: () -> Boolean, own: (ExecutionProcess?) -> Unit, stage: (String) -> Unit): RunResult {
+        stage("校验运行副本")
         val directory=File(requireNotNull(args.getString("job"))).absoluteFile
         val snapshot=CppRunSnapshot.open(File(cacheDir,"cpp-runs").canonicalFile,directory,requireNotNull(args.getString("entry")))
         return snapshot.use {
             val input=args.getString("stdin").orEmpty();require(input.length<=20000)
+            stage("连接真实终端")
             @Suppress("DEPRECATION")
             val tty=listOf("ttyIn","ttyOut","ttyErr").map{requireNotNull(args.getParcelable<ParcelFileDescriptor>(it))}
             tty.forEach{require(NativeTerminalIO.dimensions(it.fd)!=null){"本地 C++ 需要真实终端"}}
