@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainRunIntegrationTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-28T06:25:43" hostname="JUHE" time="13.359">
+  <properties/>
+  <testcase name="actualHostPythonDraftErrorPassesThroughTheProductionDecoderAndLocatesTheRealSoraHelper" classname="com.codepocket.ide.MainRunIntegrationTest" time="8.675"/>
+  <testcase name="localCppF5SavesSoraCapturesTheProjectAndNeverRequestsCloudConsentOnHostBridgeFailure" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.877"/>
+  <testcase name="saveConflictBlocksF5WithoutStartingOrDiscardingRecoverableCode" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.524"/>
+  <testcase name="pythonF5PreservesOtherDraftsAndCleansOnlyItsOwnedJobWhenTheHostBridgeCannotStart" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.424"/>
+  <testcase name="f5SavesActualSoraBytesAndReportsMissingHostBridgeTruthfully" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.443"/>
+  <testcase name="localCppStartupFailureShowsItsExactReasonAndDoesNotKeepStealingTheChosenOutputTab" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.604"/>
+  <testcase name="localCppHelperDiagnosticChecksTheExecutedHelperHashBeforeMovingTheRealSoraCaret" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.433"/>
+  <testcase name="cppCtrlEnterRequiresThirdPartyConsentAndCancelNeverStartsTheNetwork" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.434"/>
+  <testcase name="editDuringPendingSaveRunsOnlyTheNewestSavedRevision" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.391"/>
+  <testcase name="emptyCodeIsRejectedBeforeAnyRunSessionIsStarted" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.269"/>
+  <testcase name="destroyedActivityDiscardsItsPreparedPythonJobWithoutStartingAProgram" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.285"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

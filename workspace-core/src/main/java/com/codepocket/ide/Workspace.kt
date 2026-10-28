@@ -16,9 +16,8 @@ class Workspace private constructor(directory: File, seedSamples: Boolean, priva
     /** Fresh, read-only analysis input. Never updates the editor mirror or saved-base hashes. */
     fun pythonSources(): Map<String, String> = documents?.pythonSources() ?: PythonSources.local(root)
     fun cppSources(): Map<String, String> = documents?.cppSources() ?: PythonSources.local(root, CppSources::isSource)
-    fun preparePythonRun(): File {
+    fun preparePythonRun(destination: File = File(root.parentFile, "run-" + java.util.UUID.randomUUID())): File {
         val tree = documents ?: return root
-        val destination = File(root.parentFile, "run-" + java.util.UUID.randomUUID())
         tree.copyForRun(destination)
         return destination
     }

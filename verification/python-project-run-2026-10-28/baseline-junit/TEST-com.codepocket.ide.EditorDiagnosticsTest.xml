@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorDiagnosticsTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-28T05:47:39" hostname="JUHE" time="0.065">
+  <properties/>
+  <testcase name="editingAfterRunningRejectsTheOldLocationEvenAtTheSameLineCount" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.005"/>
+  <testcase name="replacingAFileWithTheSameContentStillRejectsTheOldFileIdentity" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.001"/>
+  <testcase name="missingImportedFileProofIsClearlyLineOnly" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.002"/>
+  <testcase name="matchingRunSourceFindsTheActualErrorLine" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.003"/>
+  <testcase name="realInternalPathsResolveThroughTheWorkspaceBoundary" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.021"/>
+  <testcase name="neighboringRootTraversalAndUnmappedFilesAreRejected" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.01"/>
+  <testcase name="outOfRangeErrorsNeverFallBackToTheLastLine" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.001"/>
+  <testcase name="compositionUnavailableAndChangedSelectionDoNotMoveTheCaret" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.001"/>
+  <testcase name="safExecutionSnapshotPathsMapBackToNestedWorkspaceFiles" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.017"/>
+  <testcase name="partialProofNeverClaimsAVerifiedRunVersion" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.0"/>
+  <testcase name="unicodeAndCrlfDiagnosticOffsetsRemainUtf16" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.001"/>
+  <testcase name="aTrailingNewlineHasARealEmptyFinalLine" classname="com.codepocket.ide.EditorDiagnosticsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

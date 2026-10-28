@@ -32,39 +32,27 @@ data class RunResult(
 }
 
 object PythonEngine {
-    fun run(context: android.content.Context, code: String, input: String, filename: String = "main.py", projectDir: String = ""): RunResult {
+    fun run(context: android.content.Context, code: String, input: String, filename: String = "main.py", projectDir: String = "", overlaysPath:String=""): RunResult {
         if (!Python.isStarted()) Python.start(com.chaquo.python.android.AndroidPlatform(context.applicationContext))
         val result = JSONObject(
             Python.getInstance().getModule("runner")
-                .callAttr("run_code", code, input, filename, projectDir).toString()
+                .callAttr("run_code", code, input, filename, projectDir,overlaysPath).toString()
         )
-        return RunResult(
-            stdout = result.optString("stdout"),
-            stderr = result.optString("stderr"),
-            exitCode = result.optInt("exit_code", 1).toString(),
-            elapsedMs = result.optLong("elapsed_ms", 0),
-            errorLine = if (result.isNull("error_line")) null else result.optInt("error_line"),
-            engine = "Python 3.13 · 本地",
-            kind = when (result.optString("error_kind")) {
-                "success" -> RunKind.SUCCESS
-                "timeout" -> RunKind.TIMEOUT
-                "compile" -> RunKind.COMPILE
-                else -> RunKind.RUNTIME
-            },
-            errorFile = if (result.isNull("error_file")) null else result.optString("error_file")
-        )
+        return decode(result,"Python 3.13 · 本地")
     }
     fun runTerminal(context: android.content.Context, code: String, input: String, filename: String, projectDir: String,
-        interactive: Boolean, events: Any): RunResult {
+        interactive: Boolean, events: Any,overlaysPath:String=""): RunResult {
         if (!Python.isStarted()) Python.start(com.chaquo.python.android.AndroidPlatform(context.applicationContext))
         val data = JSONObject(Python.getInstance().getModule("runner").callAttr("run_terminal", code, input, filename,
-            projectDir, 0, 1, 2, interactive, events).toString())
-        return RunResult(data.optString("stdout"),data.optString("stderr"),data.optInt("exit_code",1).toString(),data.optLong("elapsed_ms",0),
-            if(data.isNull("error_line"))null else data.optInt("error_line"),"Python 3.13 · 终端 / 本地",
-            when(data.optString("error_kind")){"success"->RunKind.SUCCESS;"timeout"->RunKind.TIMEOUT;"compile"->RunKind.COMPILE;else->RunKind.RUNTIME},
-            if(data.isNull("error_file"))null else data.optString("error_file"))
+            projectDir, 0, 1, 2, interactive, events,overlaysPath).toString())
+        return decode(data,"Python 3.13 · 终端 / 本地")
     }
-
+    internal fun decode(data:JSONObject,engine:String)=RunResult(
+            data.optString("stdout"),data.optString("stderr"),data.optInt("exit_code",1).toString(),data.optLong("elapsed_ms",0),
+            if(data.isNull("error_line"))null else data.optInt("error_line"),engine,
+            when(data.optString("error_kind")){"success"->RunKind.SUCCESS;"timeout"->RunKind.TIMEOUT;"compile"->RunKind.COMPILE;else->RunKind.RUNTIME},
+            if(data.isNull("error_file"))null else data.optString("error_file"),
+            errorSourceHash=data.optString("error_source_hash").takeIf{it.matches(Regex("[0-9a-f]{64}"))})
 }
 
 object WandboxEngine {

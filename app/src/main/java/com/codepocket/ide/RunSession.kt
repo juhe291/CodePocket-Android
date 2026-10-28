@@ -44,6 +44,7 @@ object RunSession {
     private var localCppMode=false
     private var localCppRunning=false
     private var cppSnapshot:CppRunSnapshot?=null
+    private var pythonSnapshot:PythonRunSnapshot?=null
     private var cppScope=CppBuildScope.CURRENT
     private var localCppClient:LocalCppRunClient?=null
     private var deadline: Runnable? = null
@@ -65,11 +66,13 @@ object RunSession {
 
     internal fun start(app: Context, code: String, input: String, cpp: Boolean, sourcePath: String, projectRoot: String, identity: String,
         pythonEntry: String = sourcePath, entryKey: String? = null, terminal: ShellRuntime? = null,
-        interactive: Boolean = false, cppJob:CppRunSnapshot?=null, scope:CppBuildScope=CppBuildScope.CURRENT): Boolean {
+        interactive: Boolean = false, cppJob:CppRunSnapshot?=null, scope:CppBuildScope=CppBuildScope.CURRENT,pythonJob:PythonRunSnapshot?=null): Boolean {
         check(Looper.myLooper() == Looper.getMainLooper())
         require(cppJob==null || cpp && terminal!=null)
+        require(pythonJob==null||!cpp)
         val id = tickets.begin() ?: return false
         localCppMode=cppJob!=null;localCppRunning=false;cppSnapshot=cppJob;cppScope=scope;localCppClient=null
+        pythonSnapshot=pythonJob
         startupStage="准备本地终端";terminalOwner=terminal;interactiveInput=interactive;outputBytes=0;bindingRetries=0
         terminalClock=if(terminal!=null&&!cpp)TerminalRunClock(now())else null
         val displayFile=File(sourcePath).name
@@ -103,7 +106,7 @@ object RunSession {
         }
         terminalControl=control
         if(terminal!=null&&!terminal.beginForeground(control)) {
-            tickets.finish(id);terminalOwner=null;terminalControl=null;terminalClock=null;cppSnapshot=null;return false
+            tickets.finish(id);terminalOwner=null;terminalControl=null;terminalClock=null;cppSnapshot=null;pythonSnapshot=null;return false
         }
         running = true; result = null; application = app.applicationContext as android.app.Application
         began = System.nanoTime(); path = sourcePath; root = projectRoot; workspaceId = identity; cppRun = cpp
@@ -214,6 +217,7 @@ object RunSession {
                             this.data = Bundle().apply {
                                 putLong("id", id); putString("code", code); putString("stdin", input)
                                 putString("path", executionPath); putString("root", root)
+                                putString("pythonJob",pythonSnapshot?.directory?.path)
                                 terminalStreams?.let { streams ->
                                     putBoolean("terminal",true);putBoolean("interactive",interactiveInput)
                                     putParcelable("ttyIn",streams.input);putParcelable("ttyOut",streams.output);putParcelable("ttyErr",streams.error)
@@ -321,6 +325,7 @@ object RunSession {
             errorSourceHash=diagnosticHash?:response.errorSourceHash)
         localCppClient?.close();localCppClient=null
         cppSnapshot?.let{runCatching{it.close()}};cppSnapshot=null;localCppRunning=false
+        pythonSnapshot?.let{runCatching{it.close()}};pythonSnapshot=null
         running = false
         listener?.invoke()
     }

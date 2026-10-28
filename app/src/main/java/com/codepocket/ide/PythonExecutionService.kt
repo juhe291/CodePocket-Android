@@ -9,6 +9,7 @@ import android.os.Looper
 import android.os.Message
 import android.os.Messenger
 import android.os.Process
+import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
 /** Own Android process. Parent can terminate native-blocked CPython without killing the editor. */
@@ -33,6 +34,12 @@ class PythonExecutionService : Service() {
             @Suppress("DEPRECATION")
             val error = args.getParcelable<android.os.ParcelFileDescriptor>("ttyErr")
             val result = try {
+                val snapshot=args.getString("pythonJob")?.let{job->
+                    val root=File(args.getString("root")!!)
+                    require(root==File(filesDir.canonicalFile,"workspace")||root==File(job,"workspace")){"Python 运行目录不属于当前任务"}
+                    PythonRunSnapshot.open(File(cacheDir.canonicalFile,"python-runs"),File(job),root,File(args.getString("path")!!))
+                }
+                val overlays=snapshot?.manifest?.path.orEmpty()
                 if (args.getBoolean("terminal")) {
                     require(input != null && output != null && error != null) { "Missing real terminal descriptors" }
                     // Only this private :python process is changed. Native modules/subprocesses inherit real PTY stdio too.
@@ -42,9 +49,9 @@ class PythonExecutionService : Service() {
                     android.system.Os.dup2(error.fileDescriptor,2)
                     val events = TerminalEvents(id, reply)
                     PythonEngine.runTerminal(applicationContext,args.getString("code")!!,args.getString("stdin")!!,
-                        args.getString("path")!!,args.getString("root")!!,args.getBoolean("interactive",true),events)
+                        args.getString("path")!!,args.getString("root")!!,args.getBoolean("interactive",true),events,overlays)
                 } else PythonEngine.run(applicationContext, args.getString("code")!!, args.getString("stdin")!!,
-                    args.getString("path")!!, args.getString("root")!!)
+                    args.getString("path")!!, args.getString("root")!!,overlays)
             } catch (e: Exception) {
                 RunResult("", "Python 执行失败：${e.message}", "—", 0, engine = "Python · 独立进程", kind = RunKind.RUNTIME)
             } finally {

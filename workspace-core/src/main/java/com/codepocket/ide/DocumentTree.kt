@@ -30,20 +30,42 @@ class DocumentTree(private val gateway: DocumentGateway, private val recovery: F
     fun pythonSources(): Map<String, String> = PythonSources.provider(gateway)
     fun cppSources(): Map<String, String> = PythonSources.provider(gateway, CppSources::isSource)
     fun copyForRun(destination: File) {
-        require(destination.mkdirs()) { "无法创建独立运行快照" }
+        val root=destination.absoluteFile
+        require(root.canonicalFile==root && root.mkdirs()) { "无法创建独立运行快照" }
         var total = 0
-        nodes.forEach { (path, entry) ->
-            if (path.isNotEmpty()) {
-                val file = File(destination, path)
-                if (entry.directory) require(file.isDirectory || file.mkdirs())
-                else {
-                    val bytes = gateway.readBytes(entry.id)
-                    total += bytes.size
-                    require(bytes.size <= 1_000_000 && total <= 8_000_000) { "运行快照最多 8 MB，单个资源最多 1 MB，请选择更小的项目" }
-                    require(file.parentFile!!.isDirectory || file.parentFile!!.mkdirs())
-                    file.writeBytes(bytes)
+        var count=0
+        val visited=mutableSetOf(gateway.root.id)
+        val deadline=System.nanoTime()+5_000_000_000L
+        fun check(){
+            if(Thread.currentThread().isInterrupted)throw InterruptedException()
+            require(System.nanoTime()<=deadline){"运行快照读取超时"}
+        }
+        fun visit(id:String,folder:File,depth:Int){
+            check();require(depth<=20){"运行目录超过 20 层"}
+            val names=mutableSetOf<String>()
+            gateway.children(id).sortedBy{it.name}.forEach{entry->
+                check();require(++count<=1000){"运行项目超过 1000 项"}
+                Workspace.validateName(entry.name)
+                require(names.add(entry.name)&&visited.add(entry.id)){"运行目录存在重名、重复文档或循环目录"}
+                val file=File(folder,entry.name)
+                require(file.canonicalFile==file && file.path.startsWith(root.path+File.separator))
+                if(entry.directory){require(file.mkdir());visit(entry.id,file,depth+1)}else{
+                    val bytes=gateway.readBytes(entry.id);check()
+                    require(bytes.size<=1_000_000 && bytes.size<=8_000_000-total){"运行快照最多 8 MB，单个资源最多 1 MB，请选择更小的项目"}
+                    total+=bytes.size;require(file.createNewFile());file.writeBytes(bytes)
                 }
             }
+        }
+        try { visit(gateway.root.id,root,0) }
+        catch(failure:Throwable){
+            // root was created by this call. Never clean a pre-existing destination or follow links.
+            fun remove(file:File){
+                require(file==root || file.path.startsWith(root.path+File.separator))
+                if(file.isDirectory&&file.canonicalFile==file)file.listFiles()?.forEach(::remove)
+                require(file.delete()||!file.exists())
+            }
+            runCatching{remove(root)}.exceptionOrNull()?.let(failure::addSuppressed)
+            throw failure
         }
     }
     fun scan(mirror: File) {

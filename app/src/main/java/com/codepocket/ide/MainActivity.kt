@@ -340,7 +340,10 @@ class MainActivity : Activity() {
         WorkspaceIo.executor.execute {
             val value = runCatching(work)
             runOnUiThread {
-                if (isDestroyed) return@runOnUiThread
+                if (isDestroyed) {
+                    (value.getOrNull() as? java.io.Closeable)?.let{owned->WorkspaceIo.executor.execute{runCatching{owned.close()}}}
+                    return@runOnUiThread
+                }
                 workspaceBusy = false
                 value.onSuccess(done).onFailure { error ->
                     documentTransitions.cancel(); preservePendingDocumentEdits()
@@ -2840,9 +2843,9 @@ class MainActivity : Activity() {
         shellPane?.ensureSession()
         val owner = terminalRegistry.catalog.selected()!!.value.runtime
         val interactive = true
-        fun launch(entry: String, root: String, key: String?, job:CppRunSnapshot?=null) {
+        fun launch(entry: String, root: String, key: String?, job:CppRunSnapshot?=null,pythonJob:PythonRunSnapshot?=null) {
             if (!RunSession.start(applicationContext,code,stdin,cpp,runningFile,root,workspace.identity,
-                entry,key,owner,interactive,job,scope)) {job?.close();alert("当前终端正在执行命令。请先停止它或新建终端后运行。")}
+                entry,key,owner,interactive,job,scope,pythonJob)) {job?.close();pythonJob?.close();alert("当前终端正在执行命令。请先停止它或新建终端后运行。")}
         }
         // A remembered-open panel can still be temporarily GONE under the editor IME.
         // Explicit Run must reveal it too; hiding the IME does not focus/show the terminal keyboard.
@@ -2857,15 +2860,13 @@ class MainActivity : Activity() {
                 if(workspace!==target || activePath!=path || editor.text.toString()!=code){snapshot.close();status.text="源码已变化，请重新运行"}
                 else launch(runningFile,projectRoot,key,snapshot)
             }
-        } else if (!cpp && workspace.external) {
-            val path = activePath
-            ioAction("正在同步 Python 源码与运行资源…", {
-                val snapshot = workspace.preparePythonRun()
-                val entry = File(snapshot, path)
-                entry.writeText(code)
-                snapshot to entry
-            }) { (snapshot, entry) ->
-                launch(entry.absolutePath,snapshot.absolutePath,sessions.key(path))
+        } else if (!cpp) {
+            val target=workspace;val path=activePath;val keys=sessions.analysisKeys();val key=sessions.key(path)
+            ioAction("正在准备 Python 项目与恢复草稿…", {
+                PythonRunSnapshot.capture(File(cacheDir.canonicalFile,"python-runs"),target,drafts,keys,path,code)
+            }) { snapshot ->
+                if(isFinishing||workspace!==target||activePath!=path||editor.text.toString()!=code){snapshot.close();status.text="源码已变化，请重新运行"}
+                else launch(snapshot.entry.path,snapshot.root.path,key,pythonJob=snapshot)
             }
         } else launch(runningFile,projectRoot,sessions.key(activePath))
     }

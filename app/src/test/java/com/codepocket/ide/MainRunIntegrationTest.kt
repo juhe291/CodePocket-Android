@@ -46,7 +46,7 @@ class MainRunIntegrationTest {
         view.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(dm.heightPixels,View.MeasureSpec.EXACTLY));view.layout(0,0,view.measuredWidth,view.measuredHeight);view.viewTreeObserver.dispatchOnGlobalLayout()
         editor.requestFocus();ready()
     }
-    @After fun close(){RunSession.stop();if(::main.isInitialized){main.finish();controller.pause().stop().destroy();drain()};ReflectionHelpers.setStaticField(RunSession::class.java,"result",null)}
+    @After fun close(){RunSession.stop();if(::main.isInitialized){if(!main.isDestroyed){main.finish();controller.pause().stop().destroy()};drain()};ReflectionHelpers.setStaticField(RunSession::class.java,"result",null)}
     private fun bridgeFailureFor(code:String):RunResult {
         val response=RunSession.result!!
         assertEquals(RunKind.SERVICE,response.kind);assertTrue(response.stderr.contains("app_process"));assertEquals("",response.stdout)
@@ -100,6 +100,58 @@ class MainRunIntegrationTest {
         assertFalse(main.getSharedPreferences("codepocket_v2",0).getBoolean("wandboxConsent",false));assertFalse(RunSession.running)
         assertEquals("constexpr int value=1;\n",workspace.read(header));assertEquals("constexpr int value=2;\n",drafts.analysisTexts(mapOf("local-value.hpp" to draftKey))["local-value.hpp"])
         assertTrue(File(main.cacheDir,"cpp-runs").listFiles().isNullOrEmpty())
+    }
+    @Test fun pythonF5PreservesOtherDraftsAndCleansOnlyItsOwnedJobWhenTheHostBridgeCannotStart(){
+        val helper=workspace.create(workspace.root,"helper.py",false);workspace.write(helper,"value=1\n")
+        val key=field<EditorSessions>("sessions").key("helper.py");val drafts=field<DraftStore>("drafts")
+        drafts.put(key,"helper.py","value=42\n",DocumentTree.digest("value=1\n"))
+        val code="from helper import value\nprint(value)\n";edit(code);val content=editor.text
+        key(KeyEvent.KEYCODE_F5);drain();bridgeFailureFor(code)
+        assertSame(content,editor.text);assertEquals("value=1\n",workspace.read(helper))
+        assertEquals("value=42\n",drafts.read(key)!!.text);assertEquals(workspace.root.path,RunSession.result!!.projectRoot)
+        assertTrue(File(main.cacheDir.canonicalFile,"python-runs").listFiles().isNullOrEmpty())
+    }
+    @Test fun destroyedActivityDiscardsItsPreparedPythonJobWithoutStartingAProgram(){
+        val code=editor.text.toString();val entered=CountDownLatch(1);val release=CountDownLatch(1)
+        WorkspaceIo.executor.execute{entered.countDown();check(release.await(10,TimeUnit.SECONDS))};assertTrue(entered.await(10,TimeUnit.SECONDS))
+        try{key(KeyEvent.KEYCODE_F5);assertTrue(field("workspaceBusy"));controller.pause().stop().destroy();assertTrue(main.isDestroyed)}finally{release.countDown()}
+        drain();assertFalse(RunSession.running);assertNull(RunSession.result)
+        assertTrue("Destroyed activity must release the newly prepared job",File(main.cacheDir.canonicalFile,"python-runs").listFiles().isNullOrEmpty())
+        assertEquals(code,workspace.read(workspace.resolve("main.py")))
+    }
+    @Test @Config(qualifiers="w840dp-h1050dp") fun actualHostPythonDraftErrorPassesThroughTheProductionDecoderAndLocatesTheRealSoraHelper(){
+        val saved="def fail():\n    return 1\n";val source="def fail():\n    raise ValueError('草稿')\n"
+        val helper=workspace.create(workspace.root,"helper_error.py",false);workspace.write(helper,saved)
+        val sessions=field<EditorSessions>("sessions");val drafts=field<DraftStore>("drafts")
+        drafts.put(sessions.key("helper_error.py"),"helper_error.py",source,DocumentTree.digest(saved))
+        val entry=workspace.resolve("main.py");val code="import helper_error\nhelper_error.fail()\n"
+        edit(code);key(KeyEvent.KEYCODE_S,KeyEvent.META_CTRL_ON);drain()
+        val raw=PythonRunSnapshot.capture(File(main.cacheDir.canonicalFile,"python-runs"),workspace,drafts,sessions.analysisKeys(),"main.py",code).use{job->
+            val root=CppFixtures.root
+            val bundled=File(root,".tools/python313-full/tools/python.exe")
+            val python=System.getProperty("codepocket.hostPython")?:if(bundled.isFile)bundled.path else "python3"
+            val process=ProcessBuilder(python,"-B",File(root,"verification/python-project-run-2026-10-28/main-helper-fixture.py").path,job.entry.path,job.root.path,job.manifest.path)
+                .redirectErrorStream(true).apply{environment()["PYTHONIOENCODING"]="utf-8";environment()["TEMP"]=File(root,".tools/semantics-tmp").path;environment()["TMP"]=File(root,".tools/semantics-tmp").path}.start()
+            try{assertTrue(process.waitFor(20,TimeUnit.SECONDS));val text=process.inputStream.bufferedReader(Charsets.UTF_8).readText();assertEquals(text,0,process.exitValue());text}
+            finally{if(process.isAlive)process.destroyForcibly()}
+        }
+        val decoded=PythonEngine.decode(org.json.JSONObject(raw),"Python · actual host fixture")
+        assertEquals(RunKind.RUNTIME,decoded.kind);assertEquals(helper.path,decoded.errorFile);assertEquals(2,decoded.errorLine)
+        assertEquals(DocumentTree.digest(source),decoded.errorSourceHash)
+        val response=runResultFromBundle(decoded.toBundle(91)).copy(sourcePath=entry.path,projectRoot=workspace.root.path,
+            workspaceId=workspace.identity,sourceKey=sessions.key("main.py"),sourceHash=DocumentTree.digest(code))
+        ReflectionHelpers.setField(main,"result",response)
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"gotoError");drain();ready()
+        assertEquals("helper_error.py",field<String>("activePath"));assertEquals(source,editor.text.toString());assertEquals(source.indexOf("    raise"),editor.selectionStart)
+        val view=main.findViewById<View>(android.R.id.content)
+        view.measure(View.MeasureSpec.makeMeasureSpec(main.resources.displayMetrics.widthPixels,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(main.resources.displayMetrics.heightPixels,View.MeasureSpec.EXACTLY));view.layout(0,0,view.measuredWidth,view.measuredHeight);idle()
+        val bitmap=Bitmap.createBitmap(view.width,view.height,Bitmap.Config.ARGB_8888);view.draw(Canvas(bitmap))
+        val image=File(CppFixtures.root,"verification/python-project-run-2026-10-28/previews/tablet-actual-draft-diagnostic.png")
+        image.parentFile!!.mkdirs();image.outputStream().use{assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG,100,it))};bitmap.recycle()
+        edit(source.replace("草稿","更新"));editor.setSelection(0)
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"gotoError");drain();ready()
+        assertEquals(0,editor.selectionStart);assertEquals(main.getString(R.string.editor_diagnostic_changed),field<android.widget.TextView>("status").text.toString())
+        assertEquals(saved,workspace.read(helper))
     }
     @Test fun localCppStartupFailureShowsItsExactReasonAndDoesNotKeepStealingTheChosenOutputTab(){
         switch("main.cpp");val settings=field<AppSettings>("settings")

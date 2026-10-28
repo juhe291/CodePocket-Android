@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkbenchWindowIntegrationTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-28T06:32:07" hostname="JUHE" time="2.138">
+  <properties/>
+  <testcase name="shortWideWindowKeepsUsableEditorAndTerminal" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.095"/>
+  <testcase name="phoneLargeFontLongFilenameAndLastFolderStillCollapseAndReopen" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.222"/>
+  <testcase name="terminalShortcutOpensAndFocusesWithoutTogglingClosingOrRequestingIme" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.109"/>
+  <testcase name="configurationRecreationKeepsTheChosenPanelFileAndCaret" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.279"/>
+  <testcase name="phoneApi28LargeSettingsRetainsBodyAndAnchoredButtons" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.695"/>
+  <testcase name="width599LaunchesThePhoneWorkbench" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.067"/>
+  <testcase name="tabletLightLargeFontSettingsAndTerminalStatusAreReadable" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.262"/>
+  <testcase name="width840UsesFixedColumnsAndStartupPanel" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.097"/>
+  <testcase name="height479DoesNotTriggerTabletStartup" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.086"/>
+  <testcase name="net600By480StartsThePanelWithoutFixedColumns" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.11"/>
+  <testcase name="width839UsesMediumSidebarAndStartupPanel" classname="com.codepocket.ide.WorkbenchWindowIntegrationTest" time="0.116"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -64,8 +64,12 @@ def main():
     assert test_terminal_runner.runner is bundled_runner
     import test_diagnostics
     assert test_diagnostics.diagnostics is bundled_diagnostics
+    import test_project_run
+    assert test_project_run.run_code is bundled_runner.run_code
+    assert test_project_run.run_terminal is bundled_runner.run_terminal
     runner_suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromModule(test_runner),
-        unittest.defaultTestLoader.loadTestsFromModule(test_terminal_runner)])
+        unittest.defaultTestLoader.loadTestsFromModule(test_terminal_runner),
+        unittest.defaultTestLoader.loadTestsFromModule(test_project_run)])
     runner_count = runner_suite.countTestCases()
     suite = unittest.TestSuite([runner_suite, unittest.defaultTestLoader.loadTestsFromModule(test_diagnostics)])
     result = unittest.TextTestRunner(verbosity=2).run(suite)
@@ -79,6 +83,7 @@ def main():
         "python_archives_checked": checked_archives,
         "bundled_runner": runner_entry,
         "bundled_runner_tests": runner_count,
+        "bundled_project_tests": unittest.defaultTestLoader.loadTestsFromModule(test_project_run).countTestCases(),
         "bundled_diagnostics_tests": result.testsRun - runner_count,
         "bundled_total_tests": result.testsRun,
         "test_failures": len(result.failures),

@@ -1,0 +1,65 @@
+{
+  "apk": "dist/CodePocket-python-project-run-candidate-2026-10-28-debug.apk",
+  "bytes": 115421743,
+  "sha256": "911b923dad60bb750dc9fea5ac28a135cd98603fb5b0ea0303c785c5a0edca7a",
+  "size_delta_bytes": 0,
+  "artifact_role": "candidate_with_retained_host_only_failure",
+  "full_build_exit_success": false,
+  "junit": {
+    "tests": 896,
+    "passed": 894,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 1
+  },
+  "targeted": {
+    "tests": 61,
+    "passed": 61,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "previous_cases_preserved": 884,
+  "previously_failing_provider_cases_fixed": [
+    "com.codepocket.ide.PythonRunProviderTest.aProviderCycleAddedAfterOpeningIsRejectedAndOnlyTheOwnedJobIsRemoved",
+    "com.codepocket.ide.PythonRunProviderTest.deletedProviderFilesAreNotReadFromTheStaleMirror",
+    "com.codepocket.ide.PythonRunProviderTest.newModulesAndBinaryResourcesAppearWithoutReplacingTheEditorMirror",
+    "com.codepocket.ide.PythonRunProviderTest.providerFailureRemovesThePartialJobWithoutTouchingTheMirror"
+  ],
+  "new_cases": 12,
+  "new_skips": false,
+  "retained_host_failure": "com.codepocket.ide.CppRuntimePreparationTest.trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs",
+  "terminal": {
+    "tests": 146,
+    "passed": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": {
+    "app": {
+      "Warning": 21
+    },
+    "editor-sora": {
+      "Warning": 1
+    }
+  },
+  "python_source_tests": 75,
+  "packaged_python_tests": 48,
+  "packaged_semantic_tests": 22,
+  "shell_cases": 4,
+  "snippet_cases": 14,
+  "native_files_unchanged": 25,
+  "runtime_assets_unchanged": 46,
+  "approved_python_module_changes": [
+    "runner.pyc"
+  ],
+  "python_timestamp_only_updates": 2,
+  "chaquopy_build_metadata_hash_verified": true,
+  "artifact_guard_tests": 4,
+  "old_apks_preserved": 94,
+  "previews_viewed": 1,
+  "android_device_execution": false,
+  "cpp_device_failure_root_cause_confirmed": false,
+  "full_goal_complete": false
+}

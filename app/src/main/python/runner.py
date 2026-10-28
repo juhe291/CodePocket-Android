@@ -9,16 +9,58 @@ import importlib
 import importlib.abc
 import importlib.machinery
 import json
+import hashlib
+import linecache
 import os
 import sys
 import time
 import traceback
 import threading
+import types
 from contextlib import redirect_stderr, redirect_stdout
 
 MAX_OUTPUT_CHARS = 50000
 TIME_LIMIT_SECONDS = 6.0
 _RUN_LOCK = threading.Lock()
+_MAX_OVERLAY_BYTES = 8_000_000
+
+
+def _load_overlays(path, root):
+    if not path:
+        return {}
+    if not root:
+        raise ValueError("恢复草稿运行缺少项目目录")
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("恢复草稿清单包含重复键")
+            result[key] = value
+        return result
+    with open(path, "rb") as stream:
+        data = stream.read(_MAX_OVERLAY_BYTES + 1)
+    if len(data) > _MAX_OVERLAY_BYTES:
+        raise ValueError("恢复草稿清单过大")
+    manifest = json.loads(data.decode("utf-8"), object_pairs_hook=unique)
+    if (not isinstance(manifest, dict) or set(manifest) != {"version", "files"}
+            or type(manifest["version"]) is not int or manifest["version"] != 1
+            or not isinstance(manifest["files"], dict) or len(manifest["files"]) > 128):
+        raise ValueError("恢复草稿清单格式无效")
+    result, units = {}, 0
+    for name, source in manifest["files"].items():
+        if (not isinstance(name, str) or not name.endswith((".py", ".pyi"))
+                or any(part in ("", ".", "..") for part in name.split("/"))
+                or "\\" in name or ":" in name or any(ord(c) < 32 or ord(c) == 127 for c in name)
+                or not isinstance(source, str) or "\0" in source):
+            raise ValueError("恢复草稿源码或相对路径无效")
+        size = len(source.encode("utf-16-le")) // 2
+        units += size
+        target = os.path.abspath(os.path.join(root, *name.split("/")))
+        if (size > 200_000 or units > 1_000_000 or not _within(target, root)
+                or os.path.realpath(target) != target or not os.path.isfile(target)):
+            raise ValueError("恢复草稿源码已移除、路径不规范或超过限制")
+        result[target] = source
+    return result
 
 
 def _within(path, root):
@@ -30,19 +72,32 @@ def _within(path, root):
 
 class FreshSourceLoader(importlib.machinery.SourceFileLoader):
     """Workspace edits must be visible even within one filesystem clock tick."""
+    def __init__(self, fullname, path, source=None, compile_source=None):
+        super().__init__(fullname, path)
+        self.source = source
+        self.compile_source = compile_source
+
     def get_code(self, fullname):
-        return self.source_to_code(self.get_data(self.path), self.path)
+        source = self.source if self.source is not None else self.get_data(self.path)
+        return (self.compile_source(source, self.path) if self.compile_source
+                else self.source_to_code(source, self.path))
+
+    def get_source(self, fullname):
+        return self.source if self.source is not None else super().get_source(fullname)
 
 
 class WorkspaceFinder(importlib.abc.MetaPathFinder):
-    def __init__(self, root):
+    def __init__(self, root, overlays=None, compile_source=None):
         self.root = root
+        self.overlays = overlays or {}
+        self.compile_source = compile_source
 
     def find_spec(self, fullname, path=None, target=None):
         spec = importlib.machinery.PathFinder.find_spec(fullname, path)
         if (spec and isinstance(spec.loader, importlib.machinery.SourceFileLoader)
                 and _within(spec.origin, self.root)):
-            spec.loader = FreshSourceLoader(fullname, spec.origin)
+            spec.loader = FreshSourceLoader(fullname, spec.origin,
+                                           self.overlays.get(os.path.abspath(spec.origin)), self.compile_source)
             return spec
         return None
 
@@ -54,13 +109,15 @@ class CappedOutput(io.StringIO):
         return super().write(value)
 
 
-def run_code(source, stdin_text, filename="main.py", project_dir=""):
+def run_code(source, stdin_text, filename="main.py", project_dir="", overlays_path=""):
     # CPython streams, cwd and module caches are process-wide.
     with _RUN_LOCK:
-        return _run_code(source, stdin_text, filename, project_dir)
+        return _run_code(source, stdin_text, filename, project_dir, overlays_path=overlays_path)
 
 
-def _run_code(source, stdin_text, filename, project_dir, terminal=None):
+def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays_path=""):
+    root = os.path.realpath(project_dir) if project_dir else None
+    overlays = _load_overlays(overlays_path, root)
     stdout = terminal.stdout if terminal else CappedOutput()
     stderr = terminal.stderr if terminal else CappedOutput()
     old_stdin = sys.stdin
@@ -69,7 +126,6 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None):
     old_argv = sys.argv
     old_cwd = os.getcwd()
     old_meta_path = list(sys.meta_path)
-    root = os.path.realpath(project_dir) if project_dir else None
     original_modules = {
         name: module for name, module in list(sys.modules.items())
         if root and _within(getattr(module, "__file__", None), root)
@@ -82,9 +138,39 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None):
         budget.begin(begin)
     error_line = None
     error_file = None
+    error_source_hash = None
     diagnostic = ""
     error_kind = "success"
     exit_code = 0
+    compiled_sources, syntax_sources, cached_lines = {}, {}, {}
+    missing = object()
+
+    def compile_source(text, path):
+        # Keep code objects alive and compare identity: a user-supplied co_filename is not proof.
+        try:
+            decoded = text.decode("utf-8-sig") if isinstance(text, bytes) else text
+            digest = hashlib.sha256(decoded.encode("utf-8")).hexdigest()
+        except UnicodeError:
+            decoded, digest = None, None
+        if decoded is not None:
+            if path not in cached_lines:
+                cached_lines[path] = linecache.cache.get(path, missing)
+            lines = decoded.splitlines(keepends=True)
+            if lines and not lines[-1].endswith("\n"):
+                lines[-1] += "\n"
+            linecache.cache[path] = (len(decoded), None, lines, path)
+        try:
+            code = compile(text, path, "exec")
+        except SyntaxError as exc:
+            syntax_sources[id(exc)] = (exc, digest)
+            raise
+        def register(item):
+            compiled_sources[id(item)] = (item, digest)
+            for value in item.co_consts:
+                if isinstance(value, types.CodeType):
+                    register(value)
+        register(code)
+        return code
 
     def watchdog(frame, event, arg):
         if (budget.active_seconds() if budget else time.monotonic() - begin) > TIME_LIMIT_SECONDS:
@@ -100,12 +186,12 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None):
             sys.path.insert(0, parent)
             sys.path.insert(1, os.path.abspath(project_dir))
             os.chdir(root)
-            sys.meta_path.insert(0, WorkspaceFinder(root))
+            sys.meta_path.insert(0, WorkspaceFinder(root, overlays, compile_source))
             importlib.invalidate_caches()
         with redirect_stdout(stdout), redirect_stderr(stderr):
             try:
                 sys.settrace(watchdog)
-                compiled = compile(source, filename, "exec")
+                compiled = compile_source(source, filename)
                 exec(compiled, {"__name__": "__main__", "__file__": filename})
             except BaseException as exc:
                 sys.settrace(None)
@@ -123,12 +209,18 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None):
                 if isinstance(exc, SyntaxError):
                     error_line = exc.lineno
                     error_file = exc.filename
+                    registered = syntax_sources.get(id(exc))
+                    if registered and registered[0] is exc:
+                        error_source_hash = registered[1]
                 else:
-                    frames = traceback.extract_tb(exc.__traceback__)
-                    user_frames = [f for f in frames if f.filename == filename or (root and _within(f.filename, root))]
-                    if user_frames:
-                        error_line = user_frames[-1].lineno
-                        error_file = user_frames[-1].filename
+                    frame = exc.__traceback__
+                    while frame is not None:
+                        code = frame.tb_frame.f_code
+                        if code.co_filename == filename or (root and _within(code.co_filename, root)):
+                            error_line, error_file = frame.tb_lineno, code.co_filename
+                            registered = compiled_sources.get(id(code))
+                            error_source_hash = registered[1] if registered and registered[0] is code else None
+                        frame = frame.tb_next
     finally:
         sys.settrace(old_trace)
         sys.stdin = old_stdin
@@ -140,6 +232,11 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None):
             if root and _within(getattr(module, "__file__", None), root):
                 sys.modules.pop(name, None)
         sys.modules.update(original_modules)
+        for path, value in cached_lines.items():
+            if value is missing:
+                linecache.cache.pop(path, None)
+            else:
+                linecache.cache[path] = value
 
     if terminal and diagnostic:
         # A full stderr capture must not hide the traceback on the actual terminal.
@@ -151,6 +248,7 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None):
     if exit_code == 0:
         error_line = None
         error_file = None
+        error_source_hash = None
 
     return json.dumps({
         "stdout": stdout.getvalue(),
@@ -159,6 +257,7 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None):
         "exit_code": exit_code,
         "error_line": error_line,
         "error_file": error_file,
+        "error_source_hash": error_source_hash,
         "error_kind": error_kind,
         "elapsed_ms": int((time.monotonic() - begin) * 1000),
     }, ensure_ascii=False)
@@ -305,11 +404,11 @@ class TerminalStreams:
 
 
 def run_terminal(source, stdin_text, filename, project_dir, stdin_fd, stdout_fd, stderr_fd,
-                 interactive=True, events=None):
+                 interactive=True, events=None, overlays_path=""):
     """Execute real Python against inherited terminal descriptors; never manufactures output or input."""
     with _RUN_LOCK:
         streams = TerminalStreams(stdin_fd, stdout_fd, stderr_fd, interactive, events)
         try:
-            return _run_code(source, stdin_text, filename, project_dir, streams)
+            return _run_code(source, stdin_text, filename, project_dir, streams, overlays_path)
         finally:
             streams.close()

@@ -1,0 +1,138 @@
+{
+  "totals": {
+    "tests": 32,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.recoveryDoesNotAdoptAnExternalProvidersVersionForDifferentText",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.pythonModuleReadFailureAbortsInsteadOfRunningAnEmptyPlaceholder",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.traversalNamesCollisionsAndRecursiveMovesAreRejected",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.matchingRecoveryCheckpointUsesCurrentProviderVersion",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.partialProviderWritePreservesOriginalAndRevocationDoesNotWrite",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.runSnapshotContainsActualDataAndBinaryResourcesNotEditorPlaceholders",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.externalChangesAndRestoredDraftBaseCannotBeOverwritten",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.cyclicProviderTreeIsRejectedBeforeCreatingAnyChild",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.DocumentTreeTest.editsWriteToRealProviderAndNestedCrudKeepsOpaqueIds",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.liveAnalysisCannotResetTheExpectedProviderConflictBase",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.sourceFileAndAggregateLimitsDoNotReturnPartialProjects",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.changesToDiskOrOtherDraftInvalidateAnAlreadyAnalyzedSnapshot",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.missingActiveWrongDraftIdentityAndInterruptedScanAreRejected",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.localReadIncludesPackagesAndStubsButNoNonSourceOrVcsData",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.identicalContentReusesCacheAndChangedVersionsAreBoundedAndImmutable",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.tamperedCacheCannotPublishAndIsRebuiltBeforeReuse",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.deletedFilesAreNotResurrectedByOldSessionDrafts",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.snapshotsOverlaySeveralUnsavedFilesAndNeverWriteOriginalsOrDrafts",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.invalidProviderPathsDuplicateNamesAndCyclesFailClosed",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonProjectContextTest.liveProviderReadsAdditionsRemovalAndReplacedOpaqueIdsWithoutChangingMirrorOrSaveBase",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonRunProviderTest.newModulesAndBinaryResourcesAppearWithoutReplacingTheEditorMirror",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonRunProviderTest.deletedProviderFilesAreNotReadFromTheStaleMirror",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonRunProviderTest.aProviderCycleAddedAfterOpeningIsRejectedAndOnlyTheOwnedJobIsRemoved",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonRunProviderTest.providerFailureRemovesThePartialJobWithoutTouchingTheMirror",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.PythonRunProviderTest.anExistingDestinationIsNeverOverwrittenOrDeleted",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkspaceTest.rejectsBadNamesConflictsAndRecursiveMove",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkspaceTest.rejectsLinksDuringRecursiveDeletion",
+      "status": "skipped"
+    },
+    {
+      "id": "com.codepocket.ide.WorkspaceTest.failedReplacementKeepsOldContentAndCleansTemporary",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkspaceTest.rejectsTraversalAbsoluteAndSiblingPaths",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkspaceTest.invalidUtf8AndBinaryAreRejectedAndBomIsAccepted",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkspaceTest.oversizedReadAndWritePreserveOriginal",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkspaceTest.nestedCreateRenameMoveAndReadWrite",
+      "status": "passed"
+    }
+  ]
+}
