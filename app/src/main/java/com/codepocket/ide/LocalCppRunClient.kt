@@ -9,7 +9,7 @@ internal class LocalCppRunClient(private val app: Context, private val id: Long,
     private val snapshot: CppRunSnapshot, private val scope: CppBuildScope, private val input: String,
     private val root: String, private val streams: TerminalBridgeBroker.Streams,
     private val current: () -> Boolean, private val stage: (String) -> Unit,
-    private val done: (RunResult) -> Unit) : java.io.Closeable {
+    private val done: (RunResult) -> Unit,private val fixedInput:Boolean=false) : java.io.Closeable {
     var released=false;private set
     private var bound=false;private var sent=false;private var remote:Messenger?=null
     private var pending:RunResult?=null
@@ -29,6 +29,7 @@ internal class LocalCppRunClient(private val app: Context, private val id: Long,
                 replyTo=reply;data=Bundle().apply {
                     putLong("id",id);putString("job",snapshot.directory.path);putString("entry",snapshot.entry)
                     putString("projectRoot",root);putString("stdin",input);putString("scope",scope.name)
+                    putBoolean("fixedInput",fixedInput)
                     putParcelable("ttyIn",streams.input);putParcelable("ttyOut",streams.output);putParcelable("ttyErr",streams.error)
                 }
             }) }.onSuccess{sent=true;streams.close()}.onFailure{complete(failure("无法启动本地 C++：${it.message}"))}

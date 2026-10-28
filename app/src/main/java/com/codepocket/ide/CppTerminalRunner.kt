@@ -39,7 +39,7 @@ internal class NativeTerminalEndpoint(input: Int, output: Int) : CppTerminalEndp
 internal class CppTerminalRunner(private val launch: (IntArray) -> TerminalExecutionProcess,
     private val endpoint: CppTerminalEndpoint, private val cancelled: () -> Boolean,
     private val own: (ExecutionProcess?) -> Unit, private val limit: Int = 220000, private val timeoutMs: Long = 300000) {
-    fun run(prefill: String, running: () -> Unit): CppCommandResult {
+    fun run(prefill: String, interactive:Boolean=true, running: () -> Unit): CppCommandResult {
         require(prefill.length <= 20000 && limit > 0 && timeoutMs > 0)
         if (cancelled()) throw CancellationException()
         val process = launch(endpoint.dimensions())
@@ -77,6 +77,7 @@ internal class CppTerminalRunner(private val launch: (IntArray) -> TerminalExecu
             }
             val input = relay.submit {
                 try {
+                    if(!interactive)return@submit // Fixed cases read their finite file; never drain the outer terminal.
                     if (!send(prefill.toByteArray(Charsets.UTF_8))) return@submit
                     while (!stop()) {
                         val bytes = endpoint.read()
@@ -112,7 +113,8 @@ internal class CppTerminalRunner(private val launch: (IntArray) -> TerminalExecu
                     return CppCommandResult(exit,text,"",fault.get(1000,TimeUnit.MILLISECONDS))
                 }
                 failure.get()?.let { throw IOException("C++ 终端转发失败",it) }
-                if (TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-began) >= timeoutMs) throw TimeoutException("C++ 终端会话超过5分钟")
+                if (TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-began) >= timeoutMs) throw TimeoutException(
+                    if(timeoutMs==300000L)"C++ 终端会话超过5分钟" else "本地 C++ 执行超过 $timeoutMs 毫秒")
                 val size = endpoint.dimensions()
                 if (!size.contentEquals(lastSize)) { process.resize(size[0],size[1]); lastSize=size }
                 Thread.sleep(25)

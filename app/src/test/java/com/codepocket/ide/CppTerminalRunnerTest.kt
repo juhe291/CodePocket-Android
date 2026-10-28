@@ -58,6 +58,12 @@ class CppTerminalRunnerTest {
         assertEquals("done\n",endpoint.visible.toString("UTF-8"));assertEquals(1,child.closed.get())
         val bytes=child.bytes();Thread.sleep(30);assertArrayEquals(bytes,child.bytes())
     }
+    @Test fun fixedCaseNeverConsumesKeyboardInputOrSendsTerminalEofToTheProgram(){
+        val endpoint=Endpoint().apply{onRead={fail("Fixed input must never drain the outer terminal")}}
+        val child=Child("runner diagnostic\n"){ExecutionExit(0,null)}
+        val result=CppTerminalRunner({child},endpoint,{false},{},timeoutMs=1000).run("unused",interactive=false){}
+        assertEquals("runner diagnostic\n",result.stdout);assertArrayEquals(ByteArray(0),child.bytes());assertEquals(0,child.eofCount.get());assertEquals(1,child.closed.get())
+    }
     @Test fun realTerminalEofAndSizeChangesAreForwardedWithoutClosingTheOuterTerminal() {
         val endpoint=Endpoint(mutableListOf(null)).apply{resized=true};lateinit var child:Child
         child=Child(""){if(child.eofCount.get()==1 && child.resized.get()>0 && child.bytes().contentEquals(byteArrayOf(4)))ExecutionExit(0,null)else null}

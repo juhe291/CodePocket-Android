@@ -45,6 +45,8 @@ object RunSession {
     private var localCppRunning=false
     private var cppSnapshot:CppRunSnapshot?=null
     private var pythonSnapshot:PythonRunSnapshot?=null
+    private var fixedInput=false
+    private var completion:((RunResult)->Unit)?=null
     private var cppScope=CppBuildScope.CURRENT
     private var localCppClient:LocalCppRunClient?=null
     private var deadline: Runnable? = null
@@ -66,13 +68,15 @@ object RunSession {
 
     internal fun start(app: Context, code: String, input: String, cpp: Boolean, sourcePath: String, projectRoot: String, identity: String,
         pythonEntry: String = sourcePath, entryKey: String? = null, terminal: ShellRuntime? = null,
-        interactive: Boolean = false, cppJob:CppRunSnapshot?=null, scope:CppBuildScope=CppBuildScope.CURRENT,pythonJob:PythonRunSnapshot?=null): Boolean {
+        interactive: Boolean = false, cppJob:CppRunSnapshot?=null, scope:CppBuildScope=CppBuildScope.CURRENT,pythonJob:PythonRunSnapshot?=null,
+        caseMode:Boolean=false,onComplete:((RunResult)->Unit)?=null): Boolean {
         check(Looper.myLooper() == Looper.getMainLooper())
         require(cppJob==null || cpp && terminal!=null)
         require(pythonJob==null||!cpp)
         val id = tickets.begin() ?: return false
         localCppMode=cppJob!=null;localCppRunning=false;cppSnapshot=cppJob;cppScope=scope;localCppClient=null
         pythonSnapshot=pythonJob
+        fixedInput=caseMode;completion=null
         startupStage="准备本地终端";terminalOwner=terminal;interactiveInput=interactive;outputBytes=0;bindingRetries=0
         terminalClock=if(terminal!=null&&!cpp)TerminalRunClock(now())else null
         val displayFile=File(sourcePath).name
@@ -109,6 +113,7 @@ object RunSession {
             tickets.finish(id);terminalOwner=null;terminalControl=null;terminalClock=null;cppSnapshot=null;pythonSnapshot=null;return false
         }
         running = true; result = null; application = app.applicationContext as android.app.Application
+        completion=onComplete
         began = System.nanoTime(); path = sourcePath; root = projectRoot; workspaceId = identity; cppRun = cpp
         executionPath = pythonEntry; sourceKey = entryKey; sourceHash = DocumentTree.digest(code)
         listener?.invoke()
@@ -141,11 +146,12 @@ object RunSession {
             if(tickets.accepts(id)) {
                 if(stage=="running") {
                     localCppRunning=true;startup("运行中")
-                    scheduleLocalCppDeadline(id,305000,"本地 C++ 终端会话超过5分钟，已停止")
+                    scheduleLocalCppDeadline(id,if(fixedInput)15000 else 305000,
+                        if(fixedInput)"本地 C++ 用例运行超时，已停止" else "本地 C++ 终端会话超过5分钟，已停止")
                 } else startup(stage)
                 listener?.invoke()
             }
-        },{response->finish(id,response)})
+        },{response->finish(id,response)},fixedInput=fixedInput)
         localCppClient=client;client.start()
     }
 
@@ -302,7 +308,7 @@ object RunSession {
             owner.clearForeground(control)
             if(localCppMode) {
                 owner.appendExternal("\r\n[本地 C++ · ${response.kind.label}]\r\n"+
-                    (if(response.kind==RunKind.COMPILE)response.stdout else "")+response.stderr+
+                    (if(response.kind==RunKind.COMPILE||fixedInput)response.stdout else "")+response.stderr+
                     "\r\n[退出码 ${response.exitCode} · ${response.elapsedMs}ms]\r\n")
             } else if(cppRun) {
                 owner.appendExternal("\r\n[Wandbox · 云端预填输入 · ${response.kind.label}]\r\n"+response.stdout+
@@ -326,7 +332,10 @@ object RunSession {
         localCppClient?.close();localCppClient=null
         cppSnapshot?.let{runCatching{it.close()}};cppSnapshot=null;localCppRunning=false
         pythonSnapshot?.let{runCatching{it.close()}};pythonSnapshot=null
+        val done=completion;completion=null
+        val completed=result!!
         running = false
         listener?.invoke()
+        if(done!=null)main.post{done(completed)}
     }
 }
