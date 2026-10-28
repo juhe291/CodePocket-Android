@@ -7,7 +7,14 @@ import java.util.concurrent.TimeoutException
 
 internal data class CppBuildError(val file: String, val line: Int, val hash: String)
 internal data class CppBuildResult(val program: File?, val stdout: String, val stderr: String,
-    val exit: ExecutionExit, val error: CppBuildError?)
+    val exit: ExecutionExit, val error: CppBuildError?){
+    val failureKind get()=when{
+        exit.memoryExceeded->RunKind.SERVICE
+        exit.signal==24->RunKind.TIMEOUT
+        exit.signal!=null||exit.code in listOf(126,127)->RunKind.SERVICE
+        else->RunKind.COMPILE
+    }
+}
 
 /** Fixed commands, one total compile deadline, bounded logs, and an explicit valid main entry. */
 internal class CppLocalBuilder(private val start: (CppBuildStep, File) -> ExecutionProcess,
@@ -27,7 +34,15 @@ internal class CppLocalBuilder(private val start: (CppBuildStep, File) -> Execut
             out.append(result.stdout); error.append(result.stderr)
             remaining -= (result.stdout + result.stderr).toByteArray(Charsets.UTF_8).size
             require(remaining > 0) { "C++ 构建输出达到220000字节限制" }
-            if (!result.exit.successful) return CppBuildResult(null, out.toString(), error.toString(), result.exit, diagnostic(snapshot, result.stderr))
+            if (!result.exit.successful) {
+                val phase=step.source?.let{"编译 $it"}?:"链接程序"
+                val exit=result.exit
+                if(exit.memoryExceeded)error.append("\n本地 C++ 在“$phase”阶段超过实际驻留内存预算，已停止该工具进程组。")
+                else if(exit.signal!=null)error.append("\n本地 C++ 工具在“$phase”阶段异常终止：signal ${exit.signal}"+
+                    if(exit.signal==6)"（SIGABRT）。这不是已定位到源码行的语法错误。" else "。")
+                else if(result.stderr.isBlank())error.append("\n本地 C++ 在“$phase”阶段退出，退出码 ${exit.code}；工具没有返回标准错误详情。")
+                return CppBuildResult(null, out.toString(), error.toString(), exit, diagnostic(snapshot, result.stderr))
+            }
         }
         CppSharedProgram.validate(plan.program)
         require(snapshot.isCurrent()) { "项目或恢复草稿在构建期间发生变化，请重新运行" }

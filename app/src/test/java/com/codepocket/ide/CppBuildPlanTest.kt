@@ -74,6 +74,20 @@ class CppBuildPlanTest {
             override fun close(){if(process.isAlive){process.destroyForcibly();process.waitFor(5,TimeUnit.SECONDS)};stdout.close();stderr.close();process.outputStream.close()}
         }
     }
+    @Test fun compilerAbortStillPreservesItsStageAndSignalWhenStderrIsEmpty(){
+        val root=project();val workspace=Workspace(root){a,b->a.renameTo(b);Unit};val store=DraftStore(temporary.newFolder()){a,b->a.renameTo(b);Unit}
+        val closed=java.util.concurrent.atomic.AtomicBoolean()
+        CppRunSnapshot.capture(temporary.newFolder(),workspace,store,emptyMap(),"main.cpp",File(root,"main.cpp").readText()).use{snapshot->
+            val builder=CppLocalBuilder({_,_->object:ExecutionProcess{
+                override val stdout=java.io.ByteArrayInputStream(ByteArray(0));override val stderr=java.io.ByteArrayInputStream(ByteArray(0))
+                override fun poll()=ExecutionExit(null,6);override fun close(){closed.set(true)}
+            }},{},{false})
+            val result=builder.build(snapshot,CppBuildScope.CURRENT,paths()){}
+            assertNull(result.program);assertTrue(closed.get());assertEquals(6,result.exit.signal)
+            assertTrue("Compiler abort must not collapse to an empty generic execution failure",result.stderr.contains("signal 6"))
+            assertTrue(result.stderr.contains("main.cpp"));assertTrue(result.stderr.contains("SIGABRT"))
+        }
+    }
     @Test fun actualBuilderRetainsCompilerLineAndMissingHelperLinkFailureThenBuildsTheWholeProject(){
         val root=project()
         val workspace=Workspace(root){a,b->java.nio.file.Files.move(a.toPath(),b.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING);Unit}

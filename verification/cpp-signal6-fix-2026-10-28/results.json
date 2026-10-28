@@ -1,0 +1,68 @@
+{
+  "apk": "dist/CodePocket-cpp-signal6-fix-2026-10-28-debug.apk",
+  "sha256": "7e8959a94c8a5cff06a76abdf217c9ce95e4e5dbf1ca08566de38d7b2ca48503",
+  "bytes": 115421743,
+  "size_delta_bytes": 0,
+  "artifact_role": "signal6_fix_candidate_with_retained_host_failure",
+  "full_build_exit_success": false,
+  "junit": {
+    "tests": 911,
+    "passed": 909,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 1
+  },
+  "targeted": {
+    "tests": 46,
+    "passed": 46,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "abort_baseline": {
+    "tests": 1,
+    "passed": 0,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "previous_cases_preserved": 896,
+  "new_cases": 15,
+  "new_skips": false,
+  "retained_host_failure": "CppRuntimePreparationTest: Windows filesystem case collision",
+  "terminal": {
+    "tests": 146,
+    "passed": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": {
+    "app": {
+      "Warning": 21
+    },
+    "editor-sora": {
+      "Warning": 1
+    }
+  },
+  "changed_native": [
+    "lib/arm64-v8a/libcodepocket_cpp_runner.so",
+    "lib/arm64-v8a/libcodepocket_execute.so"
+  ],
+  "runtime_assets_unchanged": 48,
+  "other_native_unchanged": 23,
+  "packaged_python_tests": 48,
+  "spawned_binary_setrlimit_resources": [
+    0,
+    1,
+    4
+  ],
+  "pre_exec_rlimit_as_present": false,
+  "production_rss_parser_host_verified": true,
+  "old_apks_preserved": 95,
+  "previews_viewed": 1,
+  "android_device_execution": false,
+  "device_root_cause_confirmed": false,
+  "case_batch_ui_complete": false,
+  "full_goal_complete": false
+}

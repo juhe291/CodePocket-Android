@@ -4,13 +4,14 @@ import java.io.Closeable
 import java.io.InputStream
 import java.util.concurrent.atomic.AtomicBoolean
 
-internal data class ExecutionExit(val code: Int?, val signal: Int?) {
-    val successful get() = code == 0 && signal == null
+internal data class ExecutionExit(val code: Int?, val signal: Int?,val memoryExceeded:Boolean=false) {
+    val successful get() = code == 0 && signal == null && !memoryExceeded
     companion object {
         fun decode(status: Int): ExecutionExit? = when {
             status == -1 -> null
             status in 0..255 -> ExecutionExit(status, null)
             status in 257..511 -> ExecutionExit(null, status - 256)
+            status == 512 -> ExecutionExit(null,9,memoryExceeded=true)
             else -> throw java.io.IOException("C++ exit status unavailable")
         }
     }

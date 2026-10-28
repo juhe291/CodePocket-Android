@@ -117,17 +117,21 @@ class CppExecutionService : Service() {
             if(build.program==null) {
                 val diagnostic=build.error
                 return@use RunResult(build.stdout,build.stderr,build.exit.code?.toString()?:"signal ${build.exit.signal}",0,
-                    errorLine=diagnostic?.line,engine=ENGINE,kind=if(build.exit.signal==24)RunKind.TIMEOUT else RunKind.COMPILE,
+                    errorLine=diagnostic?.line,engine=ENGINE,kind=build.failureKind,
                     errorFile=diagnostic?.let{File(requireNotNull(args.getString("projectRoot")),it.file).path},errorSourceHash=diagnostic?.hash)
             }
             if(cancelled())throw CancellationException()
             android.system.Os.chmod(build.program.path,292) // 0444 before dlopen by the installed runner.
+            val fixedInput=args.getBoolean("fixedInput")
+            val caseFiles=if(fixedInput)CppCaseFiles.create(snapshot.build,input)else null
             val program=NativeTerminalEndpoint(tty[0].fd,tty[1].fd).use { endpoint ->
-                CppTerminalRunner({size->NativeExecutionProcess(listOf(runtime.installedRunner().path,build.program.path),
-                    snapshot.source.path,environment,terminal=size,cpu=10,memoryMb=256)},endpoint,cancelled,own).run(input){stage("running")}
+                CppTerminalRunner({size->NativeExecutionProcess(caseFiles?.arguments(runtime.installedRunner(),build.program)?:listOf(runtime.installedRunner().path,build.program.path),
+                    snapshot.source.path,environment,terminal=size,cpu=if(fixedInput)6 else 10,memoryMb=256)},endpoint,cancelled,own,
+                    timeoutMs=if(fixedInput)10000 else 300000).run(if(fixedInput)"" else input,interactive=!fixedInput){stage("running")}
             }
+            val caseOutput=caseFiles?.read()
             // SIGKILL alone does not prove a CPU timeout (it can also be OOM or user code).
-            val kind=when { program.exit.successful->RunKind.SUCCESS;program.exit.signal==24->RunKind.TIMEOUT;else->RunKind.RUNTIME }
+            val kind=when { program.exit.memoryExceeded||caseOutput?.limited==true->RunKind.RUNTIME;program.exit.successful->RunKind.SUCCESS;program.exit.signal==24->RunKind.TIMEOUT;else->RunKind.RUNTIME }
             var diagnostic: CppBuildError?=null
             val fault=program.fault
             if(fault!=null && fault.signal==program.exit.signal) {
@@ -142,11 +146,13 @@ class CppExecutionService : Service() {
                 } catch(error:CancellationException) {throw error}
                 catch (_:Exception) {if(cancelled())throw CancellationException()}
             }
-            val message=program.exit.signal?.let {
+            val message=if(program.exit.memoryExceeded)"本地 C++ 实际驻留内存超过预算，已停止该程序进程组" else program.exit.signal?.let {
                 val text=if(kind==RunKind.TIMEOUT) "本地 C++ 超过 CPU 时间限制" else "本地 C++ 因信号 $it 结束"
                 diagnostic?.let{"${it.file}:${it.line}: $text"}?:"$text（未能定位到项目源码）"
             }.orEmpty()
-            RunResult(program.stdout,build.stderr+message,program.exit.code?.toString()?:"signal ${program.exit.signal}",0,
+            val caseLimit=if(caseOutput?.limited==true)"\n用例输出超过 50000 字符，只保留前 50000 字符" else ""
+            RunResult(caseOutput?.stdout?:program.stdout,build.stderr+(caseOutput?.stderr.orEmpty())+
+                (if(fixedInput)program.stdout else "")+message+caseLimit,program.exit.code?.toString()?:"signal ${program.exit.signal}",0,
                 errorLine=diagnostic?.line,engine=ENGINE,kind=kind,
                 errorFile=diagnostic?.let{File(requireNotNull(args.getString("projectRoot")),it.file).path},errorSourceHash=diagnostic?.hash)
         }

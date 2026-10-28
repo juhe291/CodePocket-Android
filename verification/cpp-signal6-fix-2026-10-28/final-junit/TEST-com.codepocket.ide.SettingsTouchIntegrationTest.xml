@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.SettingsTouchIntegrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T08:30:19" hostname="JUHE" time="0.461">
+  <properties/>
+  <testcase name="completionCandidateRowsAlsoLeaveTouchSelectionToTheOwningList" classname="com.codepocket.ide.SettingsTouchIntegrationTest" time="0.101"/>
+  <testcase name="phoneSettingsThemeCanBeChosenByTouchAndRemainsDraftUntilApply" classname="com.codepocket.ide.SettingsTouchIntegrationTest" time="0.143"/>
+  <testcase name="tabletChoiceRowsKeepClickAndCancelDraftBehaviorWithAnimationsEnabled" classname="com.codepocket.ide.SettingsTouchIntegrationTest" time="0.122"/>
+  <testcase name="sharedSecondaryMenuDispatchesTheSelectedSnapshotIndexOnTouch" classname="com.codepocket.ide.SettingsTouchIntegrationTest" time="0.053"/>
+  <testcase name="plainNativeListControlProvesThePhysicalTouchFixtureCanSelectARow" classname="com.codepocket.ide.SettingsTouchIntegrationTest" time="0.042"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

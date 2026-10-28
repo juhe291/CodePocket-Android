@@ -46,4 +46,12 @@ class CppCommandExecutorTest {
         assertEquals(ExecutionExit(null, 11), ExecutionExit.decode(267))
         assertThrows(IOException::class.java) { ExecutionExit.decode(1024) }
     }
+    @Test fun memoryEventsAreExplicitAndCompilerCrashesAreNotSyntaxErrors(){
+        val memory=ExecutionExit.decode(512)!!;assertTrue(memory.memoryExceeded);assertFalse(memory.successful)
+        assertFalse(ExecutionExit.decode(265)!!.memoryExceeded)
+        fun kind(exit:ExecutionExit)=CppBuildResult(null,"","",exit,null).failureKind
+        assertEquals(RunKind.SERVICE,kind(ExecutionExit(null,6)));assertEquals(RunKind.SERVICE,kind(memory))
+        assertEquals(RunKind.TIMEOUT,kind(ExecutionExit(null,24)));assertEquals(RunKind.COMPILE,kind(ExecutionExit(1,null)))
+        assertEquals(RunKind.SERVICE,kind(ExecutionExit(127,null)))
+    }
 }

@@ -171,6 +171,23 @@ class MainRunIntegrationTest {
         ReflectionHelpers.callInstanceMethod<Unit>(main,"renderRunState");idle()
         assertEquals(3,field<Int>("selectedOutput"));assertEquals(code,editor.text.toString())
     }
+    @Test fun compilerAbortClassificationShowsTheFullSignalReasonInTheActualPhoneWorkbench(){
+        switch("main.cpp");ReflectionHelpers.setField(main,"settings",field<AppSettings>("settings").copy(cppBackend=CppBackend.LOCAL))
+        edit("int main(){return 0;}\n");key(KeyEvent.KEYCODE_F5);drain()
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"showOutput",ClassParameter.from(Int::class.javaPrimitiveType,3))
+        val text="本地 C++ 工具在“编译 main.cpp”阶段异常终止：signal 6（SIGABRT）。这不是已定位到源码行的语法错误。"
+        val failed=CppBuildResult(null,"",text,ExecutionExit(null,6),null)
+        val response=RunResult("",text,"signal 6",130,engine=CppExecutionService.ENGINE,kind=failed.failureKind)
+        ReflectionHelpers.setStaticField(RunSession::class.java,"result",response)
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"renderRunState");idle()
+        assertEquals(RunKind.SERVICE,response.kind);assertEquals(1,field<Int>("selectedOutput"))
+        assertEquals(text,field<android.widget.TextView>("consoleText").text.toString())
+        val view=main.findViewById<View>(android.R.id.content)
+        view.measure(View.MeasureSpec.makeMeasureSpec(main.resources.displayMetrics.widthPixels,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(main.resources.displayMetrics.heightPixels,View.MeasureSpec.EXACTLY));view.layout(0,0,view.measuredWidth,view.measuredHeight);idle()
+        val bitmap=Bitmap.createBitmap(view.width,view.height,Bitmap.Config.ARGB_8888);view.draw(Canvas(bitmap))
+        val image=File(CppFixtures.root,"verification/cpp-signal6-fix-2026-10-28/previews/phone-compiler-sigabrt.png")
+        image.parentFile!!.mkdirs();image.outputStream().use{assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG,100,it))};bitmap.recycle()
+    }
     @Test fun localCppHelperDiagnosticChecksTheExecutedHelperHashBeforeMovingTheRealSoraCaret() {
         val helper=workspace.create(workspace.root,"fault.cpp",false)
         val source="int helper(){\n return 7;\n}\n";workspace.write(helper,source)

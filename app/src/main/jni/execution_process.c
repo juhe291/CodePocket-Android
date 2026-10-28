@@ -16,6 +16,7 @@
 #include <termios.h>
 #include <stdio.h>
 #include <time.h>
+#include "execution_memory.h"
 
 /* Loaded only by :cpp_run. One generation owns its PID and pipes until explicit release. */
 static pthread_mutex_t execution_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -24,6 +25,12 @@ static pid_t owned_child = 0;
 static int channels[3] = {-1, -1, -1};
 static int exited = 0, exit_value = 0;
 static int private_terminal = 0;
+static uint64_t resident_limit = 0, last_memory_check = 0;
+static int memory_exceeded = 0;
+static uint64_t monotonic_nanos(void) {
+    struct timespec now; if (clock_gettime(CLOCK_MONOTONIC,&now) != 0) return 0;
+    return (uint64_t)now.tv_sec*1000000000ULL+(uint64_t)now.tv_nsec;
+}
 
 static void fail(JNIEnv *env, const char *message) {
     jclass type = (*env)->FindClass(env, "java/io/IOException");
@@ -110,7 +117,6 @@ JNIEXPORT jlong JNICALL Java_com_codepocket_ide_NativeExecutionBridge_spawn(
         }
     }
     struct rlimit cpu = {.rlim_cur=(rlim_t)cpu_seconds, .rlim_max=(rlim_t)cpu_seconds+1};
-    struct rlimit memory = {.rlim_cur=(rlim_t)memory_mb*1024*1024, .rlim_max=(rlim_t)memory_mb*1024*1024};
     struct rlimit files = {.rlim_cur=64*1024*1024, .rlim_max=64*1024*1024};
     struct rlimit core = {.rlim_cur=0, .rlim_max=0};
     pid_t parent = getpid();
@@ -123,7 +129,7 @@ JNIEXPORT jlong JNICALL Java_com_codepocket_ide_NativeExecutionBridge_spawn(
         else if (setpgid(0,0) != 0) _exit(126);
         if (dup2(fds[0],0) < 0 || dup2(fds[1],1) < 0 || dup2(fds[2],2) < 0) _exit(126);
         if (pty && dup2(fault_pipe[1],3) < 0) _exit(126);
-        if (setrlimit(RLIMIT_CPU,&cpu) != 0 || setrlimit(RLIMIT_AS,&memory) != 0 ||
+        if (setrlimit(RLIMIT_CPU,&cpu) != 0 ||
                 setrlimit(RLIMIT_FSIZE,&files) != 0 || setrlimit(RLIMIT_CORE,&core) != 0 || chdir(cwd) != 0) {
             static const char error[] = "CodePocket: cannot configure C++ process limits or directory\n";
             (void)write(2,error,sizeof(error)-1); _exit(126);
@@ -142,6 +148,7 @@ JNIEXPORT jlong JNICALL Java_com_codepocket_ide_NativeExecutionBridge_spawn(
     }
     channels[2] = fault_pipe[0];
     owned_child = pid; exited = 0; exit_value = 0; private_terminal = pty; generation = ++sequence;
+    resident_limit=(uint64_t)memory_mb*1024*1024;memory_exceeded=0;last_memory_check=monotonic_nanos();
     jlong handle = generation;
     pthread_mutex_unlock(&execution_lock); release_list(argv); release_list(envp); free(cwd); return handle;
 failed:
@@ -171,9 +178,20 @@ JNIEXPORT jint JNICALL Java_com_codepocket_ide_NativeExecutionBridge_status(JNIE
             exited = 1;
             exit_value = info.si_code == CLD_EXITED ? info.si_status :
                 (info.si_code == CLD_KILLED || info.si_code == CLD_DUMPED) ? 256+info.si_status : 1024;
+            if (memory_exceeded) exit_value=512; /* Explicit parent-observed RSS event, never inferred from SIGKILL. */
         } else if (observed < 0 && errno != EINTR) {
             /* If ownership was unexpectedly lost, never use the potentially reused PID. */
             owned_child = 0; exited = 1; exit_value = 1024;
+        }
+        if (!exited && owned_child>0 && !memory_exceeded) {
+            uint64_t now=monotonic_nanos();
+            if (now>=last_memory_check && now-last_memory_check>=100000000ULL) {
+                last_memory_check=now;uint64_t resident=0;long page_size=sysconf(_SC_PAGESIZE);
+                if (page_size>0 && cpp_group_resident_bytes("/proc",(long)owned_child,(uint64_t)page_size,&resident) && resident>resident_limit) {
+                    (void)kill(-owned_child,SIGKILL);
+                    if (kill(owned_child,SIGKILL)==0) memory_exceeded=1;
+                }
+            }
         }
     }
     int result = exited ? exit_value : -1;
@@ -203,6 +221,7 @@ JNIEXPORT void JNICALL Java_com_codepocket_ide_NativeExecutionBridge_stop(JNIEnv
     pthread_mutex_lock(&execution_lock);
     if (!generation || handle != generation) { pthread_mutex_unlock(&execution_lock); return; }
     pid_t pid = owned_child; owned_child = 0; generation = 0;
+    resident_limit=0;memory_exceeded=0;last_memory_check=0;
     int fds[3]; for (int i = 0; i < 3; ++i) { fds[i] = channels[i]; channels[i] = -1; }
     pthread_mutex_unlock(&execution_lock);
     if (pid > 0) {
