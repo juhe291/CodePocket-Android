@@ -30,14 +30,15 @@ enum class CaseVerdict(val label:String){
     PASSED("通过"),WRONG_ANSWER("答案错误"),COMPILE_ERROR("编译错误"),RUNTIME_ERROR("运行错误"),TIMEOUT("超时"),
     SERVICE_ERROR("服务错误"),NETWORK_ERROR("网络错误"),CANCELLED("已中止"),OUTPUT_LIMIT("输出超限")
 }
-data class CaseRecord(val id:String,val case:ProgramCase,val contextHash:String,val time:Long,val verdict:CaseVerdict,val result:RunResult){
+data class CaseRecord(val id:String,val case:ProgramCase,val contextHash:String,val time:Long,val verdict:CaseVerdict,val result:RunResult,
+    val outputTruncated:Boolean=false){
     val units get()=case.name.length+case.input.length+case.expected.length+result.stdout.length+result.stderr.length
     fun matches(current:ProgramCase)=case.fingerprint()==current.fingerprint()
     fun validate(){
         case.validate();require(id.matches(Regex("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}")))
         require(contextHash.matches(Regex("[0-9a-f]{64}"))&&time>=0&&result.elapsedMs>=0&&result.stdout.length<=50000&&result.stderr.length<=50000)
     }
-    internal fun json()=JSONObject().put("id",id).put("case",case.json()).put("context",contextHash).put("time",time).put("verdict",verdict.name)
+    internal fun json()=JSONObject().put("id",id).put("case",case.json()).put("context",contextHash).put("time",time).put("verdict",verdict.name).put("truncated",outputTruncated)
         .put("result",JSONObject().put("stdout",result.stdout).put("stderr",result.stderr).put("exit",result.exitCode)
             .put("elapsed",result.elapsedMs).put("kind",result.kind.name).put("engine",result.engine).put("line",result.errorLine)
             .put("file",result.errorFile).put("sourcePath",result.sourcePath).put("projectRoot",result.projectRoot)
@@ -60,7 +61,7 @@ data class CaseRecord(val id:String,val case:ProgramCase,val contextHash:String,
                 }
             }
             return CaseRecord(UUID.randomUUID().toString(),case,contextHash,time,verdict,
-                result.copy(stdout=result.stdout.take(50000),stderr=result.stderr.take(50000)))
+                result.copy(stdout=result.stdout.take(50000),stderr=result.stderr.take(50000)),result.stdout.length>50000||result.stderr.length>50000)
         }
         internal fun read(data:JSONObject):CaseRecord{
             val r=data.getJSONObject("result")
@@ -68,7 +69,7 @@ data class CaseRecord(val id:String,val case:ProgramCase,val contextHash:String,
             val result=RunResult(r.getString("stdout"),r.getString("stderr"),r.getString("exit"),r.getLong("elapsed"),
                 if(r.isNull("line"))null else r.getInt("line"),r.getString("engine"),RunKind.valueOf(r.getString("kind")),
                 text("file"),text("sourcePath"),text("projectRoot"),text("workspaceId"),text("sourceKey"),text("sourceHash"),text("errorHash"))
-            val record=CaseRecord(data.getString("id"),ProgramCase.read(data.getJSONObject("case")),data.getString("context"),data.getLong("time"),CaseVerdict.valueOf(data.getString("verdict")),result)
+            val record=CaseRecord(data.getString("id"),ProgramCase.read(data.getJSONObject("case")),data.getString("context"),data.getLong("time"),CaseVerdict.valueOf(data.getString("verdict")),result,data.optBoolean("truncated",false))
             record.validate()
             return record
         }

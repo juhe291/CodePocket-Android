@@ -29,6 +29,19 @@ class CppExecutionServiceTest {
         repeat(400){Shadows.shadowOf(Looper.getMainLooper()).idle();if(check())return;Thread.sleep(5)}
         fail("C++ execution worker did not settle")
     }
+    @Test fun executionElapsedIsNotReplacedByCompilationCleanupOrMainThreadDeliveryTime(){
+        val controller=Robolectric.buildService(CppExecutionService::class.java).create();val service=controller.get()
+        try {
+            val results=CopyOnWriteArrayList<Bundle>()
+            val backend:(Bundle,()->Boolean,(ExecutionProcess?)->Unit,(String)->Unit)->RunResult={_,_,_,stage->
+                stage("准备本地工具链");Thread.sleep(90);stage("running");RunResult("42\n","","0",17,engine=CppExecutionService.ENGINE)
+            }
+            ReflectionHelpers.setField(service,"executeRun",backend)
+            val reply=Messenger(Handler(Looper.getMainLooper()){m->if(m.what==CppExecutionService.RESULT)results.add(m.data);true})
+            Messenger(service.onBind(Intent())).send(Message.obtain(null,CppExecutionService.RUN).apply{replyTo=reply;data=Bundle().apply{putLong("id",81)}})
+            waitUntil{results.size==1};assertEquals(17L,runResultFromBundle(results.single()).elapsedMs)
+        }finally{controller.destroy()}
+    }
     @Test fun startupFailurePreservesTheLastStageAndConcreteCauseAfterOwnedCleanup(){
         val controller=Robolectric.buildService(CppExecutionService::class.java).create();val service=controller.get()
         try {

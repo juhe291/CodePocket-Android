@@ -16,6 +16,11 @@ class ProgramCasesTest {
     private fun sample(name:String="样例",expected:String="42\n")=ProgramCase(name=name,input="6 7\n",expected=expected)
     private fun result(output:String="42\n",kind:RunKind=RunKind.SUCCESS)=RunResult(output,"",if(kind==RunKind.SUCCESS)"0" else "1",17,engine="test protocol",kind=kind)
     private fun store(directory:File=temp.newFolder())=CaseStore(directory){a,b->Files.move(a.toPath(),b.toPath(),REPLACE_EXISTING);Unit}
+    @Test fun truncatedFailureOutputRetainsItsWarningAfterAtomicHistoryRoundTrip(){
+        val storage=store();val case=sample();val record=CaseRecord.create(case,hash,result(kind=RunKind.RUNTIME).copy(stderr="x".repeat(50001)))
+        assertTrue(record.outputTruncated);assertEquals(CaseVerdict.RUNTIME_ERROR,record.verdict);storage.record("p:f",record)
+        assertEquals(record,storage.load("p:f").history.single());assertTrue(storage.load("p:f").history.single().outputTruncated)
+    }
     @Test fun comparisonRulesDoNotDiscardSpacesOrChangeInternalLineEndings(){
         assertTrue(OutputComparison.EXACT.matches("42\n","42\n"));assertFalse(OutputComparison.EXACT.matches("42","42\n"))
         val ignore=OutputComparison.IGNORE_FINAL_NEWLINES

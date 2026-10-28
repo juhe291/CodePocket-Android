@@ -60,6 +60,8 @@ class CppExecutionService : Service() {
         catch (_: RemoteException) { active=null;closeDescriptors(request.args);return }
         worker.execute {
             var failureStage="校验终端与运行副本"
+            var programBegan:Long?=null
+            fun elapsed()=(System.nanoTime()-(programBegan?:began))/1000000
             fun reason(error:Throwable)=error.javaClass.simpleName+": "+(error.message?.takeIf{it.isNotBlank()}?:"未提供异常说明")
             val result=try {
                 executeRun(request.args,{destroyed||request.cancelled.get()}, { process ->
@@ -71,14 +73,15 @@ class CppExecutionService : Service() {
                     }
                 }, { stage ->
                     failureStage=stage
+                    if(stage=="running"&&programBegan==null)programBegan=System.nanoTime()
                     if(!destroyed&&!request.cancelled.get())runCatching { request.reply.send(Message.obtain(null,STATE).apply {
                         data=Bundle().apply{putLong("id",request.id);putString("stage",stage)}
                     }) }
                 })
-            } catch (_: CancellationException) { RunResult("","已停止本地 C++ 运行","130",0,engine=ENGINE,kind=RunKind.CANCELLED) }
-            catch (error: TimeoutException) { RunResult("",error.message.orEmpty(),"124",0,engine=ENGINE,kind=RunKind.TIMEOUT) }
-            catch (error: Exception) { RunResult("","本地 C++ 在“$failureStage”阶段执行失败：${reason(error)}","—",0,engine=ENGINE,kind=RunKind.SERVICE) }
-            catch (error: LinkageError) { RunResult("","本地 C++ 在“$failureStage”阶段原生运行器不可用：${reason(error)}","—",0,engine=ENGINE,kind=RunKind.SERVICE) }
+            } catch (_: CancellationException) { RunResult("","已停止本地 C++ 运行","130",elapsed(),engine=ENGINE,kind=RunKind.CANCELLED) }
+            catch (error: TimeoutException) { RunResult("",error.message.orEmpty(),"124",elapsed(),engine=ENGINE,kind=RunKind.TIMEOUT) }
+            catch (error: Exception) { RunResult("","本地 C++ 在“$failureStage”阶段执行失败：${reason(error)}","—",elapsed(),engine=ENGINE,kind=RunKind.SERVICE) }
+            catch (error: LinkageError) { RunResult("","本地 C++ 在“$failureStage”阶段原生运行器不可用：${reason(error)}","—",elapsed(),engine=ENGINE,kind=RunKind.SERVICE) }
             finally {
                 synchronized(ownership) {
                     if(processOwner===request){ownedProcess?.close();ownedProcess=null;processOwner=null}
@@ -90,12 +93,14 @@ class CppExecutionService : Service() {
             handler.post {
                 if(active===request) {
                     active=null
-                    response(request,completed.copy(elapsedMs=(System.nanoTime()-began)/1000000))
+                    response(request,completed)
                 }
             }
         }
     }
     private fun executeNative(args: Bundle, cancelled: () -> Boolean, own: (ExecutionProcess?) -> Unit, stage: (String) -> Unit): RunResult {
+        val preparationBegan=System.nanoTime()
+        fun preparationMs()=(System.nanoTime()-preparationBegan)/1000000
         stage("校验运行副本")
         val directory=File(requireNotNull(args.getString("job"))).absoluteFile
         val snapshot=CppRunSnapshot.open(File(cacheDir,"cpp-runs").canonicalFile,directory,requireNotNull(args.getString("entry")))
@@ -111,12 +116,12 @@ class CppExecutionService : Service() {
             val builder=CppLocalBuilder({step,root->NativeExecutionProcess(step.arguments,root.path,environment)},own,cancelled)
             val build=try { builder.build(snapshot,CppBuildScope.valueOf(args.getString("scope",CppBuildScope.CURRENT.name)),runtime.toolchain(),stage) }
             catch(error:IllegalArgumentException) {
-                if(error.message.orEmpty().contains("main"))return@use RunResult("",error.message.orEmpty(),"1",0,engine=ENGINE,kind=RunKind.COMPILE)
+                if(error.message.orEmpty().contains("main"))return@use RunResult("",error.message.orEmpty(),"1",preparationMs(),engine=ENGINE,kind=RunKind.COMPILE)
                 throw error
             }
             if(build.program==null) {
                 val diagnostic=build.error
-                return@use RunResult(build.stdout,build.stderr,build.exit.code?.toString()?:"signal ${build.exit.signal}",0,
+                return@use RunResult(build.stdout,build.stderr,build.exit.code?.toString()?:"signal ${build.exit.signal}",preparationMs(),
                     errorLine=diagnostic?.line,engine=ENGINE,kind=build.failureKind,
                     errorFile=diagnostic?.let{File(requireNotNull(args.getString("projectRoot")),it.file).path},errorSourceHash=diagnostic?.hash)
             }
@@ -152,7 +157,7 @@ class CppExecutionService : Service() {
             }.orEmpty()
             val caseLimit=if(caseOutput?.limited==true)"\n用例输出超过 50000 字符，只保留前 50000 字符" else ""
             RunResult(caseOutput?.stdout?:program.stdout,build.stderr+(caseOutput?.stderr.orEmpty())+
-                (if(fixedInput)program.stdout else "")+message+caseLimit,program.exit.code?.toString()?:"signal ${program.exit.signal}",0,
+                (if(fixedInput)program.stdout else "")+message+caseLimit,program.exit.code?.toString()?:"signal ${program.exit.signal}",program.elapsedMs,
                 errorLine=diagnostic?.line,engine=ENGINE,kind=kind,
                 errorFile=diagnostic?.let{File(requireNotNull(args.getString("projectRoot")),it.file).path},errorSourceHash=diagnostic?.hash)
         }

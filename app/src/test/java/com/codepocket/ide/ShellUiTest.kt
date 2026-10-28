@@ -75,7 +75,7 @@ class ShellUiTest {
             IdeCommand.SIGNATURE, IdeCommand.SNIPPET)
         val surfaces = listOf(IdeCommands.settingsMenuItems, IdeCommands.editorToolbarItems, IdeCommands.editorMenuItems,
             IdeCommands.explorerToolbarItems, IdeCommands.explorerMenuItems, IdeCommands.terminalToolbarItems,
-            IdeCommands.terminalMenuItems, IdeCommands.symbolBarItems,
+            IdeCommands.terminalMenuItems, IdeCommands.symbolBarItems, IdeCommands.runMenuItems,
             IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(0), false))
         assertEquals(IdeCommand.entries.toSet(), surfaces.flatten().toSet())
         assertTrue(legacy.all { it in surfaces.flatten() })

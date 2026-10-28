@@ -235,7 +235,9 @@ object SettingsDialog {
                         if(draft.category==4&&title=="终端显示")terminalPreview()
                     }
                     if(draft.category==0){
-                        val samplePalette=DesignTokens.palette(draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20))
+                        val uiDark=draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20)
+                        val codeDark=draft.value.syntaxIsDark(uiDark)
+                        val samplePalette=DesignTokens.palette(codeDark)
                         val example=LinearLayout(activity).apply{
                             orientation=LinearLayout.VERTICAL;setPadding(dp(16),dp(12),dp(16),dp(16))
                             background=WorkbenchStyle.shape(activity,samplePalette.editor,samplePalette.border,4)
@@ -246,14 +248,9 @@ object SettingsDialog {
                             setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(activity,IdeIcon.CPP,samplePalette.accentText,dp(18)),null,null,null)
                             compoundDrawablePadding=dp(8);setPadding(0,0,0,dp(12))
                         })
-                        listOf("#include <iostream>" to samplePalette.muted,
-                            "int main() {" to samplePalette.accentText,
-                            "    std::cout << \"Hello\";" to samplePalette.foreground,
-                            "}" to samplePalette.foreground).forEach{(code,color)->
-                            example.addView(TextView(activity).apply{text=code;textSize=13f;typeface=Typeface.MONOSPACE;setTextColor(color);setPadding(0,dp(2),0,dp(2))})
-                        }
+                        example.addView(com.codepocket.editorlab.SyntaxThemePreview.create(activity,codeDark,draft.value.fontSize))
                         details.addView(example,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(20)})
-                        details.addView(TextView(activity).apply{text="主题预览 · 应用后生效";textSize=11f;setTextColor(p.muted);setPadding(0,dp(8),0,0)})
+                        details.addView(TextView(activity).apply{text="主题预览 · ${if(codeDark)"Dark+" else "Light+"} · 应用后生效";textSize=11f;setTextColor(p.muted);setPadding(0,dp(8),0,0)})
                     }
                     if(draft.category==3)heading("文件安全",activity.getString(R.string.settings_save_help))
                     if(draft.category==2)details.addView(WorkbenchStyle.menuRow(activity,"补全按键说明").apply{

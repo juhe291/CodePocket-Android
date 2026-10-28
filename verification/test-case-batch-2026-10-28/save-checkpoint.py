@@ -19,10 +19,11 @@ assert cases and len(cases)==len({case['id'] for case in cases})
 totals=dict(tests=len(cases),failures=sum(c['status']=='failure' for c in cases),errors=sum(c['status']=='error' for c in cases),skipped=sum(c['status']=='skipped' for c in cases))
 (PHASE/(name+'-identities.json')).write_text(json.dumps(dict(totals=totals,cases=cases),indent=2)+'\n')
 hashes={}
-for base in ['app/src/main','app/src/test/java','editor-assist/src/main','editor-assist/src/test','workspace-core/src/main','tests']:
+for base in ['app/src/main','app/src/test/java','editor-sora/src/main','editor-assist/src/main','editor-assist/src/test','workspace-core/src/main','tests']:
     for file in sorted((ROOT/base).rglob('*')):
         if file.is_file() and '__pycache__' not in file.parts:hashes[file.relative_to(ROOT).as_posix()]=hashlib.sha256(file.read_bytes()).hexdigest()
 for file in [ROOT/'app/build.gradle.kts',ROOT/'app/cpp-runtime-lock.json',ROOT/'scripts/verify_apk.py',ROOT/'scripts/verify_cpp_apk.py']:
     hashes[file.relative_to(ROOT).as_posix()]=hashlib.sha256(file.read_bytes()).hexdigest()
 (PHASE/(name+'-source-hashes.json')).write_text(json.dumps(hashes,indent=2)+'\n')
 print(json.dumps(totals))
+

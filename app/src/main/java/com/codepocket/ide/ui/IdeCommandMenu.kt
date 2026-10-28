@@ -42,7 +42,7 @@ object IdeCommandMenu {
         IdeCommand.REPLACE,IdeCommand.RELOAD,IdeCommand.RECOVER->IdeIcon.REFRESH
         IdeCommand.GOTO_LINE->IdeIcon.LOCATE
         IdeCommand.SAVE->IdeIcon.SAVE
-        IdeCommand.COMPLETE,IdeCommand.SNIPPET,IdeCommand.SEMICOLON,IdeCommand.EQUALS,IdeCommand.COLON->IdeIcon.CODE
+        IdeCommand.COMPLETE,IdeCommand.SNIPPET,IdeCommand.SEMICOLON,IdeCommand.EQUALS,IdeCommand.COLON,IdeCommand.TEST_CASES->IdeIcon.CODE
         IdeCommand.SIGNATURE,IdeCommand.BRACES,IdeCommand.BRACKETS,IdeCommand.PARENS->IdeIcon.BRACKETS
         IdeCommand.TAB,IdeCommand.RIGHT->IdeIcon.NEXT
         IdeCommand.UNINDENT,IdeCommand.LEFT->IdeIcon.BACK

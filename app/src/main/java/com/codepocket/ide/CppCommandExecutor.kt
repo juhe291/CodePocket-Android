@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 internal data class CppCommandResult(val exit: ExecutionExit, val stdout: String, val stderr: String,
-    val fault: CppRuntimeFault? = null)
+    val fault: CppRuntimeFault? = null, val elapsedMs:Long = 0)
 
 /** One owned native generation per command. Both pipes drain concurrently and share a budget. */
 internal class CppCommandExecutor(private val launch: () -> ExecutionProcess,

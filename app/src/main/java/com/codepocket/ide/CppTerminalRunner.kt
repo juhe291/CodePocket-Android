@@ -38,13 +38,16 @@ internal class NativeTerminalEndpoint(input: Int, output: Int) : CppTerminalEndp
 /** Private PTY input never enters the Shell's input queue. Completes both relays before return. */
 internal class CppTerminalRunner(private val launch: (IntArray) -> TerminalExecutionProcess,
     private val endpoint: CppTerminalEndpoint, private val cancelled: () -> Boolean,
-    private val own: (ExecutionProcess?) -> Unit, private val limit: Int = 220000, private val timeoutMs: Long = 300000) {
+    private val own: (ExecutionProcess?) -> Unit, private val limit: Int = 220000, private val timeoutMs: Long = 300000,
+    private val nanoTime:()->Long = System::nanoTime) {
     fun run(prefill: String, interactive:Boolean=true, running: () -> Unit): CppCommandResult {
         require(prefill.length <= 20000 && limit > 0 && timeoutMs > 0)
         if (cancelled()) throw CancellationException()
-        val process = launch(endpoint.dimensions())
+        val dimensions=endpoint.dimensions()
+        val began=nanoTime()
+        val process = launch(dimensions)
         val relay = Executors.newFixedThreadPool(3); val stopping = AtomicBoolean()
-        val failure = AtomicReference<Throwable?>(); val began = System.nanoTime()
+        val failure = AtomicReference<Throwable?>()
         fun stop() = stopping.get() || cancelled() || Thread.currentThread().isInterrupted
         fun send(bytes: ByteArray): Boolean {
             var offset = 0
@@ -108,12 +111,14 @@ internal class CppTerminalRunner(private val launch: (IntArray) -> TerminalExecu
                 if (cancelled() || Thread.currentThread().isInterrupted) throw CancellationException()
                 val exit = process.poll()
                 if (exit != null) {
+                    // Freeze before draining output/fault pipes or cleaning up relays.
+                    val elapsedMs=TimeUnit.NANOSECONDS.toMillis(nanoTime()-began).coerceAtLeast(0)
                     val text = output.get(1500,TimeUnit.MILLISECONDS)
                     stopping.set(true); input.get(1000,TimeUnit.MILLISECONDS)
-                    return CppCommandResult(exit,text,"",fault.get(1000,TimeUnit.MILLISECONDS))
+                    return CppCommandResult(exit,text,"",fault.get(1000,TimeUnit.MILLISECONDS),elapsedMs)
                 }
                 failure.get()?.let { throw IOException("C++ 终端转发失败",it) }
-                if (TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-began) >= timeoutMs) throw TimeoutException(
+                if (TimeUnit.NANOSECONDS.toMillis(nanoTime()-began) >= timeoutMs) throw TimeoutException(
                     if(timeoutMs==300000L)"C++ 终端会话超过5分钟" else "本地 C++ 执行超过 $timeoutMs 毫秒")
                 val size = endpoint.dimensions()
                 if (!size.contentEquals(lastSize)) { process.resize(size[0],size[1]); lastSize=size }

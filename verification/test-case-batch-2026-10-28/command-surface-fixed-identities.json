@@ -1,0 +1,106 @@
+{
+  "totals": {
+    "tests": 24,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.cloudCasesRequireTheExistingUploadConsentAndCancelDoesNotStartTheQueue",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.finishingDuringPreparationStopsTheBatchAndCleansItsLateSnapshotWithoutAnExecutedRecord",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.activityRecreationRestoresTheOpenCaseEditorAndExactWhitespace",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.sourceSaveConflictPreventsBatchStartAndKeepsTheRecoverableEditorBytes",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.cloudInputMenuCanCollapseItsOwnInputWithoutDeletingTheText",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.rotatingDuringAnAtomicSaveKeepsTheSameCaseIdInsteadOfAddingADuplicate",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.cloudInputCloseButtonRespondsToTouchAndRemainsClosedAfterRecreation",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.localCppNeverDisplaysTheCloudPresetInputEvenWhenItsExpandedStateWasRemembered",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MainCaseIntegrationTest.batchSavesActualSoraCodeAndPersistsTheRealMissingBridgeFailureWithoutRunningTheNextCase",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.normalPhoneHasTouchSizedExplorerRunMenuAndElasticSingleLineTitleBudget",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.busyWorkspaceBlocksCommandsButCannotBlockStoppingARun",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.compositionBlocksEditingCommandsAndNativeHistory",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.activeStdinGetsCompactInputWithoutConsumingHeaderAndOutputTwice",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.shellTextColorsMeetNormalTextContrastInBothThemes",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.presetIsCollapsedByDefaultAndEditorFocusDoesNotReopenIt",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.panelToolbarNeverOverflowsAndKeepsHiddenActionsInItsMenu",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.everyNarrowToolbarHasAReachableMenuWithinBudget",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.resizeDegradesControlsToMenuWithoutDependingOnOrientationOrFontWidth",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.editorOnlyCommandsCannotStealStdinFocusOrModifySource",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.unloadedBufferCannotRunExportOrMutateFiles",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.snippetHintOccupiesSpaceOnlyForAnActiveSessionWithRoom",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.savingOrRunningKeepsDestructiveWorkspaceSwitchesOutOfMenu",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.allLegacyActionsAndNewCommandsHaveRealTouchSurfaces",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.ShellUiTest.savedStdinFocusRevealsItsInputOnlyWhenPanelIsOpen",
+      "status": "passed"
+    }
+  ]
+}

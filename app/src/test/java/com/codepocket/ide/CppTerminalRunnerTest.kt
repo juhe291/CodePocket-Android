@@ -10,6 +10,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class CppTerminalRunnerTest {
+    @Test fun programDurationIsFrozenAtObservedExitBeforeOutputDrainAndRelayCleanup(){
+        val calls=AtomicInteger()
+        val clock:()->Long={when(calls.getAndIncrement()){0->1_000_000_000L;1->1_017_000_000L;else->99_000_000_000L}}
+        val child=Child("42\n"){ExecutionExit(0,null)}
+        val result=CppTerminalRunner({child},Endpoint(),{false},{},nanoTime=clock).run("",interactive=false){}
+        assertEquals(17L,result.elapsedMs);assertEquals(2,calls.get());assertEquals("42\n",result.stdout);assertEquals(1,child.closed.get())
+    }
     private class Child(output: String, private val status: () -> ExecutionExit?) : TerminalExecutionProcess {
         var faultBytes=ByteArrayInputStream(ByteArray(0));var resumes=AtomicInteger()
         override val faults get()=faultBytes

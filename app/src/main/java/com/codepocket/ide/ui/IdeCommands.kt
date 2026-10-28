@@ -13,15 +13,16 @@ enum class IdeCommand(val title: String, val editorOnly: Boolean = false) {
     SEMICOLON("插入 ;", true), EQUALS("插入 =", true), COLON("插入 :", true), LEFT("光标左移", true), RIGHT("光标右移", true),
     PANEL("显示运行输出"), PANEL_SIZE("调整面板尺寸"), CLEAR_TERMINAL("清空输出显示"),
     MAXIMIZE_TERMINAL("最大化 / 还原面板"), CLOSE_TERMINAL("收起运行面板"),
-    PRESET_INPUT("编辑预设输入"), CLEAR_INPUT("清空当前文件预设输入"), HIDE_KEYBOARD("收起虚拟键盘"),
+    PRESET_INPUT("展开 / 收起云端输入"), CLEAR_INPUT("清空当前文件预设输入"), HIDE_KEYBOARD("收起虚拟键盘"),
     THEME("切换深浅主题"), SETTINGS("设置"), SHORTCUTS("快捷键说明"), HELP("使用说明"),
-    FONT_SIZE("代码字号  Ctrl++ / Ctrl+-")
+    FONT_SIZE("代码字号  Ctrl++ / Ctrl+-"), TEST_CASES("测试用例")
 }
 data class CommandContext(val busy: Boolean, val loaded: Boolean, val editorFocused: Boolean,
     val inputFocused: Boolean, val composing: Boolean, val running: Boolean, val saving: Boolean)
 
 /** These collections are consumed by the actual native toolbars/menus, not a parallel test-only catalogue. */
 object IdeCommands {
+    val runMenuItems = listOf(IdeCommand.RUN_STOP, IdeCommand.TEST_CASES)
     val settingsMenuItems = listOf(IdeCommand.THEME, IdeCommand.SETTINGS, IdeCommand.SHORTCUTS, IdeCommand.HELP)
     val editorToolbarItems = listOf(IdeCommand.SAVE, IdeCommand.UNDO, IdeCommand.REDO, IdeCommand.FIND)
     val editorMenuItems = listOf(IdeCommand.FONT_SIZE, IdeCommand.REPLACE, IdeCommand.GOTO_LINE, IdeCommand.COMPLETE,

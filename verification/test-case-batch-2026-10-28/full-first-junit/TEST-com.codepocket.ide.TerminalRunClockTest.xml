@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.TerminalRunClockTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T15:26:03" hostname="JUHE" time="0.007">
+  <properties/>
+  <testcase name="replayCannotResetInputDeadline" classname="com.codepocket.ide.TerminalRunClockTest" time="0.006"/>
+  <testcase name="startupHasIndependentBound" classname="com.codepocket.ide.TerminalRunClockTest" time="0.0"/>
+  <testcase name="removedPythonModeDoesNotDiscardOtherLegacySettings" classname="com.codepocket.ide.TerminalRunClockTest" time="0.001"/>
+  <testcase name="waitingDoesNotSpendExecutionTime" classname="com.codepocket.ide.TerminalRunClockTest" time="0.0"/>
+  <testcase name="executionBudgetAccumulatesAcrossMultipleInputs" classname="com.codepocket.ide.TerminalRunClockTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

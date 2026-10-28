@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainRunIntegrationTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-28T15:25:27" hostname="JUHE" time="2.246">
+  <properties/>
+  <testcase name="actualHostPythonDraftErrorPassesThroughTheProductionDecoderAndLocatesTheRealSoraHelper" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.425"/>
+  <testcase name="localCppF5SavesSoraCapturesTheProjectAndNeverRequestsCloudConsentOnHostBridgeFailure" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.19"/>
+  <testcase name="saveConflictBlocksF5WithoutStartingOrDiscardingRecoverableCode" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.148"/>
+  <testcase name="pythonF5PreservesOtherDraftsAndCleansOnlyItsOwnedJobWhenTheHostBridgeCannotStart" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.146"/>
+  <testcase name="f5SavesActualSoraBytesAndReportsMissingHostBridgeTruthfully" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.18"/>
+  <testcase name="localCppStartupFailureShowsItsExactReasonAndDoesNotKeepStealingTheChosenOutputTab" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.224"/>
+  <testcase name="localCppHelperDiagnosticChecksTheExecutedHelperHashBeforeMovingTheRealSoraCaret" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.164"/>
+  <testcase name="cppCtrlEnterRequiresThirdPartyConsentAndCancelNeverStartsTheNetwork" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.145"/>
+  <testcase name="editDuringPendingSaveRunsOnlyTheNewestSavedRevision" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.161"/>
+  <testcase name="emptyCodeIsRejectedBeforeAnyRunSessionIsStarted" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.111"/>
+  <testcase name="compilerAbortClassificationShowsTheFullSignalReasonInTheActualPhoneWorkbench" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.211"/>
+  <testcase name="destroyedActivityDiscardsItsPreparedPythonJobWithoutStartingAProgram" classname="com.codepocket.ide.MainRunIntegrationTest" time="0.141"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

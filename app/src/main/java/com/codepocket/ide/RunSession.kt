@@ -43,6 +43,7 @@ object RunSession {
     private var cppRun = false
     private var localCppMode=false
     private var localCppRunning=false
+    private var localProgramBegan=0L
     private var cppSnapshot:CppRunSnapshot?=null
     private var pythonSnapshot:PythonRunSnapshot?=null
     private var fixedInput=false
@@ -74,7 +75,7 @@ object RunSession {
         require(cppJob==null || cpp && terminal!=null)
         require(pythonJob==null||!cpp)
         val id = tickets.begin() ?: return false
-        localCppMode=cppJob!=null;localCppRunning=false;cppSnapshot=cppJob;cppScope=scope;localCppClient=null
+        localCppMode=cppJob!=null;localCppRunning=false;localProgramBegan=0;cppSnapshot=cppJob;cppScope=scope;localCppClient=null
         pythonSnapshot=pythonJob
         fixedInput=caseMode;completion=null
         startupStage="准备本地终端";terminalOwner=terminal;interactiveInput=interactive;outputBytes=0;bindingRetries=0
@@ -145,6 +146,7 @@ object RunSession {
         val client=LocalCppRunClient(app,id,snapshot,cppScope,input,root,streams,{tickets.accepts(id)},{stage->
             if(tickets.accepts(id)) {
                 if(stage=="running") {
+                    if(localProgramBegan==0L)localProgramBegan=System.nanoTime()
                     localCppRunning=true;startup("运行中")
                     scheduleLocalCppDeadline(id,if(fixedInput)15000 else 305000,
                         if(fixedInput)"本地 C++ 用例运行超时，已停止" else "本地 C++ 终端会话超过5分钟，已停止")
@@ -281,7 +283,7 @@ object RunSession {
         finish(id, terminal(RunKind.CANCELLED, if(localCppMode)"已停止本地 C++ 运行。" else if (cppRun)
             "已取消本地等待；Wandbox 服务端任务可能继续执行。" else "已停止 Python 运行。"))
     }
-    private fun elapsed() = (System.nanoTime() - began) / 1000000
+    private fun elapsed() = (System.nanoTime() - if(localCppMode&&localProgramBegan!=0L)localProgramBegan else began) / 1000000
     private fun terminal(kind: RunKind, message: String) = RunResult("", message, "—", elapsed(),
         engine = if(localCppMode)CppExecutionService.ENGINE else if (cppRun) "Wandbox" else "Python · 独立进程", kind = kind)
     private fun finish(id: Long, response: RunResult) {
@@ -309,7 +311,7 @@ object RunSession {
             if(localCppMode) {
                 owner.appendExternal("\r\n[本地 C++ · ${response.kind.label}]\r\n"+
                     (if(response.kind==RunKind.COMPILE||fixedInput)response.stdout else "")+response.stderr+
-                    "\r\n[退出码 ${response.exitCode} · ${response.elapsedMs}ms]\r\n")
+                    "\r\n[退出码 ${response.exitCode} · ${if(localProgramBegan!=0L)"执行 " else ""}${response.elapsedMs}ms]\r\n")
             } else if(cppRun) {
                 owner.appendExternal("\r\n[Wandbox · 云端预填输入 · ${response.kind.label}]\r\n"+response.stdout+
                     (if(response.stderr.isNotEmpty())"\r\n"+response.stderr else "")+"\r\n[退出码 ${response.exitCode} · ${response.elapsedMs}ms]\r\n")

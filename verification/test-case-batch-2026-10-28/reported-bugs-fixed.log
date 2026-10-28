@@ -1,0 +1,178 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+WARNING: The option setting 'android.overridePathCheck=true' is experimental.
+The current default is 'false'.
+
+> Task :editor-assist:checkKotlinGradlePluginConfigurationErrors
+> Task :editor-surface:compileJava UP-TO-DATE
+> Task :editor-assist:compileKotlin UP-TO-DATE
+> Task :editor-assist:compileJava NO-SOURCE
+> Task :editor-assist:processResources NO-SOURCE
+> Task :editor-assist:classes UP-TO-DATE
+> Task :editor-assist:jar UP-TO-DATE
+> Task :editor-surface:processResources NO-SOURCE
+> Task :editor-surface:classes UP-TO-DATE
+> Task :editor-surface:jar UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors
+> Task :app:checkCppRuntime
+> Task :app:prepareCppRunner UP-TO-DATE
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :editor-sora:preBuild UP-TO-DATE
+> Task :editor-sora:preDebugBuild UP-TO-DATE
+> Task :editor-sora:writeDebugAarMetadata UP-TO-DATE
+> Task :terminal-emulator:preBuild UP-TO-DATE
+> Task :terminal-emulator:preDebugBuild UP-TO-DATE
+> Task :terminal-emulator:writeDebugAarMetadata UP-TO-DATE
+> Task :terminal-view:preBuild UP-TO-DATE
+> Task :terminal-view:preDebugBuild UP-TO-DATE
+> Task :terminal-view:writeDebugAarMetadata UP-TO-DATE
+> Task :workspace-core:preBuild UP-TO-DATE
+> Task :workspace-core:preDebugBuild UP-TO-DATE
+> Task :workspace-core:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :editor-sora:generateDebugResValues UP-TO-DATE
+> Task :editor-sora:generateDebugResources UP-TO-DATE
+> Task :editor-sora:packageDebugResources UP-TO-DATE
+> Task :terminal-emulator:generateDebugResValues UP-TO-DATE
+> Task :terminal-emulator:generateDebugResources UP-TO-DATE
+> Task :terminal-emulator:packageDebugResources UP-TO-DATE
+> Task :terminal-view:generateDebugResValues UP-TO-DATE
+> Task :terminal-view:generateDebugResources UP-TO-DATE
+> Task :terminal-view:packageDebugResources UP-TO-DATE
+> Task :workspace-core:generateDebugResValues UP-TO-DATE
+> Task :workspace-core:generateDebugResources UP-TO-DATE
+> Task :workspace-core:packageDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :editor-sora:extractDeepLinksDebug UP-TO-DATE
+> Task :editor-sora:processDebugManifest UP-TO-DATE
+> Task :terminal-emulator:extractDeepLinksDebug UP-TO-DATE
+> Task :terminal-emulator:processDebugManifest UP-TO-DATE
+> Task :terminal-view:extractDeepLinksDebug UP-TO-DATE
+> Task :terminal-view:processDebugManifest UP-TO-DATE
+> Task :workspace-core:extractDeepLinksDebug UP-TO-DATE
+> Task :workspace-core:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :editor-sora:compileDebugLibraryResources UP-TO-DATE
+> Task :editor-sora:parseDebugLocalResources UP-TO-DATE
+> Task :editor-sora:generateDebugRFile UP-TO-DATE
+> Task :terminal-emulator:compileDebugLibraryResources UP-TO-DATE
+> Task :terminal-emulator:parseDebugLocalResources UP-TO-DATE
+> Task :terminal-emulator:generateDebugRFile UP-TO-DATE
+> Task :terminal-view:compileDebugLibraryResources UP-TO-DATE
+> Task :terminal-view:parseDebugLocalResources UP-TO-DATE
+> Task :terminal-view:generateDebugRFile UP-TO-DATE
+> Task :workspace-core:compileDebugLibraryResources UP-TO-DATE
+> Task :workspace-core:parseDebugLocalResources UP-TO-DATE
+> Task :workspace-core:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :editor-sora:javaPreCompileDebug UP-TO-DATE
+> Task :editor-sora:compileDebugJavaWithJavac
+> Task :terminal-emulator:javaPreCompileDebug UP-TO-DATE
+> Task :terminal-emulator:compileDebugJavaWithJavac UP-TO-DATE
+> Task :terminal-emulator:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :terminal-view:javaPreCompileDebug UP-TO-DATE
+> Task :terminal-view:compileDebugJavaWithJavac UP-TO-DATE
+> Task :terminal-view:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :workspace-core:checkKotlinGradlePluginConfigurationErrors
+> Task :editor-sora:bundleLibCompileToJarDebug
+> Task :workspace-core:compileDebugKotlin UP-TO-DATE
+> Task :workspace-core:javaPreCompileDebug UP-TO-DATE
+> Task :workspace-core:compileDebugJavaWithJavac NO-SOURCE
+> Task :workspace-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:findDebugPythonCommand
+> Task :app:extractDebugPythonBuildPackages UP-TO-DATE
+> Task :app:installDebugPythonRequirements UP-TO-DATE
+> Task :app:mergeDebugPythonSources UP-TO-DATE
+> Task :app:generateDebugPythonProxies UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:generateDebugPythonMiscAssets UP-TO-DATE
+> Task :app:generateDebugPythonRequirementsAssets UP-TO-DATE
+> Task :app:generateDebugPythonSourceAssets UP-TO-DATE
+> Task :app:generateDebugPythonBuildAssets UP-TO-DATE
+> Task :editor-sora:mergeDebugShaders UP-TO-DATE
+> Task :editor-sora:compileDebugShaders NO-SOURCE
+> Task :editor-sora:generateDebugAssets UP-TO-DATE
+> Task :editor-sora:packageDebugAssets UP-TO-DATE
+> Task :terminal-emulator:mergeDebugShaders UP-TO-DATE
+> Task :terminal-emulator:compileDebugShaders NO-SOURCE
+> Task :terminal-emulator:generateDebugAssets UP-TO-DATE
+> Task :terminal-emulator:packageDebugAssets UP-TO-DATE
+> Task :terminal-view:mergeDebugShaders UP-TO-DATE
+> Task :terminal-view:compileDebugShaders NO-SOURCE
+> Task :terminal-view:generateDebugAssets UP-TO-DATE
+> Task :terminal-view:packageDebugAssets UP-TO-DATE
+> Task :workspace-core:mergeDebugShaders UP-TO-DATE
+> Task :workspace-core:compileDebugShaders NO-SOURCE
+> Task :workspace-core:generateDebugAssets UP-TO-DATE
+> Task :workspace-core:packageDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :editor-sora:processDebugJavaRes NO-SOURCE
+> Task :terminal-emulator:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :terminal-emulator:processDebugJavaRes NO-SOURCE
+> Task :terminal-view:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :terminal-view:processDebugJavaRes NO-SOURCE
+> Task :editor-sora:bundleLibRuntimeToJarDebug
+> Task :workspace-core:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :workspace-core:processDebugJavaRes UP-TO-DATE
+> Task :app:compileDebugKotlin
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/MainActivity.kt:239:60 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/MainActivity.kt:501:16 'setter for statusBarColor: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/MainActivity.kt:502:16 'setter for navigationBarColor: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/MainActivity.kt:504:18 'SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/MainActivity.kt:614:66 'getter for stableInsetTop: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/MainActivity.kt:614:86 'getter for stableInsetBottom: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/MainActivity.kt:1413:76 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/MainActivity.kt:2506:46 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/SearchDialog.kt:166:57 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/SettingsDialog.kt:87:148 Unchecked cast: Any? to () -> String
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/SettingsDialog.kt:315:68 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/TestCasesDialog.kt:74:68 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/ui/EditorToolbar.kt:12:5 Parameter 'onMenu' is never used
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/ui/MainToolbar.kt:49:27 Parameter 'present' is never used
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/main/java/com/codepocket/ide/ui/WorkbenchStyle.kt:75:231 'scaledDensity: Float' is deprecated. Deprecated in Java
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:compileDebugUnitTestKotlin
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/AnalysisDiskCacheTest.kt:15:32 Type mismatch: inferred type is File? but File was expected
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/AuxiliarySurfaceIntegrationTest.kt:134:63 'scaledDensity: Float' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/CompletionInteractionTest.kt:212:76 'scaledDensity: Float' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/CppBuildPlanTest.kt:15:21 Unsafe use of a nullable receiver of type String?
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/CppSemanticProtocolTest.kt:89:34 The corresponding parameter in the supertype 'SemanticTransport' is named 'payload'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/EditorDiagnosticsTest.kt:107:62 Unsafe use of a nullable receiver of type File?
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/ProjectReadExecutorTest.kt:29:82 The expression is unused
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/RealCaseBatchTest.kt:17:31 Unsafe use of a nullable receiver of type String?
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/SemanticProtocolTest.kt:14:98 Type mismatch: inferred type is File? but File was expected
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/SemanticProtocolTest.kt:68:69 The corresponding parameter in the supertype 'SemanticTransport' is named 'payload'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/WorkspaceStartupIntegrationTest.kt:65:50 'getter for statusBarColor: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/WorkspaceStartupIntegrationTest.kt:65:105 'getter for navigationBarColor: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/WorkspaceStartupIntegrationTest.kt:71:50 'getter for statusBarColor: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/app/src/test/java/com/codepocket/ide/WorkspaceStartupIntegrationTest.kt:71:105 'getter for navigationBarColor: Int' is deprecated. Deprecated in Java
+
+> Task :app:compileDebugUnitTestJavaWithJavac UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+
+BUILD SUCCESSFUL in 2m 2s
+107 actionable tasks: 13 executed, 94 up-to-date

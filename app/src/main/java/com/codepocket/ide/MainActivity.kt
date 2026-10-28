@@ -78,6 +78,8 @@ class MainActivity : Activity() {
     private var settings = AppSettings()
     private var toolDialog: AlertDialog? = null
     private var pendingSettingsState: String? = null
+    private var casesDialog: TestCasesDialog? = null
+    private var pendingCasesState: String? = null
     private var settingsApplyFailure: (() -> Unit)? = null
     private val syntaxDark get() = settings.syntaxIsDark(dark)
     private val codeBackground get() = Color.parseColor(if (syntaxDark) "#1E242E" else "#FFFFFF")
@@ -88,7 +90,7 @@ class MainActivity : Activity() {
     private var pathBreadcrumb: TextView? = null
     private val expanded = mutableSetOf("")
     private val opened = mutableListOf<String>()
-    private val running get() = RunSession.running
+    private val running get() = RunSession.running || CaseRunSession.running
     private var result: RunResult? = null
     private var selectedOutput = 3
     private var completionPopup: CompletionPopup? = null
@@ -229,6 +231,7 @@ class MainActivity : Activity() {
         setTheme(if (dark) R.style.Theme_CodePocket else R.style.Theme_CodePocket_Light)
         super.onCreate(savedInstanceState)
         pendingSettingsState = savedInstanceState?.getString("settingsDraft")
+        pendingCasesState = savedInstanceState?.getString("casesDraft")
         themeSnapshot = lastNonConfigurationInstance as? SurfaceMotion.Snapshot
         startupPanelPending = savedInstanceState?.getBoolean("panelStartupPending", true) ?: true
         selectedOutput = savedInstanceState?.getInt("outputChannel", 3)?.coerceIn(0, 3) ?: 3
@@ -308,6 +311,7 @@ class MainActivity : Activity() {
                         if (tree != null) rememberWorkspace(tree, workspace.title)
                         renderRunState()
                         if (pendingSettingsState != null) handler.post { if (!isDestroyed) showSettings() }
+                        if (pendingCasesState != null) handler.post { if (!isDestroyed) showTestCases() }
                         themeSnapshot?.let { snapshot ->
                             themeSnapshot = null
                             if (motionAllowed()) SurfaceMotion.play(root, snapshot,
@@ -358,13 +362,15 @@ class MainActivity : Activity() {
         super.onStart()
         if (motionObserver == null) motionObserver = MotionEnvironment(this, ::refreshMotionPolicy)
         motionObserver?.start()
-        RunSession.listener = { renderRunState() }
+        RunSession.listener = { renderRunState(); casesDialog?.refresh() }
+        CaseRunSession.listener = { renderRunState(); casesDialog?.refresh() }
         renderRunState()
     }
 
     override fun onStop() {
         motionObserver?.stop()
         RunSession.listener = null
+        CaseRunSession.listener = null
         super.onStop()
     }
 
@@ -375,6 +381,7 @@ class MainActivity : Activity() {
         outState.putInt("outputChannel", selectedOutput)
         saveExplorerViewport(outState)
         SettingsDialog.checkpoint(toolDialog)?.let { outState.putString("settingsDraft", it) }
+        casesDialog?.checkpoint()?.let { outState.putString("casesDraft", it) }
         outState.putBoolean("panelVisible", panelVisible)
         outState.putBoolean("panelStartupPending", startupPanelPending)
         outState.putString("panelState", panelState.toJson())
@@ -452,7 +459,7 @@ class MainActivity : Activity() {
         diagnosticPopup?.dismiss(); diagnosticPopup = null
         super.onDestroy()
         shellPane?.dispose(); shellPane = null
-        if (isFinishing) ShellSessionRegistry.finishAll()
+        if (isFinishing) { CaseRunSession.stop(); ShellSessionRegistry.finishAll() }
         if (::panelResize.isInitialized) panelResize.cancelGesture()
         panelDragViewport = null
         documentTransitions.close()
@@ -755,7 +762,7 @@ class MainActivity : Activity() {
             WorkbenchMenuGroup.EDIT->listOf(IdeCommand.UNDO,IdeCommand.REDO,IdeCommand.FIND,IdeCommand.REPLACE,
                 IdeCommand.GOTO_LINE,IdeCommand.FONT_SIZE,IdeCommand.COMPLETE,IdeCommand.SIGNATURE,IdeCommand.SNIPPET)
             WorkbenchMenuGroup.VIEW->listOf(IdeCommand.EXPLORER,IdeCommand.SEARCH,IdeCommand.PANEL,IdeCommand.THEME,IdeCommand.HIDE_KEYBOARD)
-            WorkbenchMenuGroup.RUN->listOf(IdeCommand.RUN_STOP)
+            WorkbenchMenuGroup.RUN->IdeCommands.runMenuItems
             WorkbenchMenuGroup.TERMINAL->listOf(IdeCommand.PANEL,IdeCommand.MAXIMIZE_TERMINAL,IdeCommand.CLOSE_TERMINAL,IdeCommand.CLEAR_TERMINAL,IdeCommand.PANEL_SIZE)
             WorkbenchMenuGroup.HELP->IdeCommands.settingsMenuItems.filter { it!=IdeCommand.THEME }
         }
@@ -767,13 +774,14 @@ class MainActivity : Activity() {
 
     private fun showContextCommands(anchor: View, commands: List<IdeCommand>, title:String?, back:(()->Unit)?) {
         commandMenu?.dismiss()
-        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands.filter { isCpp() || it !in listOf(IdeCommand.PRESET_INPUT,IdeCommand.CLEAR_INPUT) }, ::dispatchCommand, motionAllowed(),title,back)
+        commandMenu = IdeCommandMenu.show(anchor, commandContext(), commands.filter { usesCloudInput() || it !in listOf(IdeCommand.PRESET_INPUT,IdeCommand.CLEAR_INPUT) }, ::dispatchCommand, motionAllowed(),title,back)
     }
 
     private fun dispatchCommand(command: IdeCommand) {
         if (isDestroyed || !IdeCommands.enabled(command, commandContext())) return
         when (command) {
-            IdeCommand.RUN_STOP -> if (running) RunSession.stop() else runCode()
+            IdeCommand.RUN_STOP -> if (CaseRunSession.running) CaseRunSession.stop() else if (running) RunSession.stop() else runCode()
+            IdeCommand.TEST_CASES -> showTestCases()
             IdeCommand.EXPLORER -> showExplorer()
             IdeCommand.SEARCH -> showProjectSearch()
             IdeCommand.FIND -> showSearch(false)
@@ -819,7 +827,7 @@ class MainActivity : Activity() {
             }
             IdeCommand.MAXIMIZE_TERMINAL -> setPanelMaximized(!panelState.maximized)
             IdeCommand.CLOSE_TERMINAL -> closePanel()
-            IdeCommand.PRESET_INPUT -> setPresetInputExpanded(true)
+            IdeCommand.PRESET_INPUT -> setPresetInputExpanded(!presetInputExpanded)
             IdeCommand.CLEAR_INPUT -> input.setText("")
             IdeCommand.PANEL_SIZE -> showPanelSizeMenu(if (panelToolbar.isShown) panelToolbar.menuAnchor else mainToolbar.menuAnchor)
             IdeCommand.HIDE_KEYBOARD -> hideKeyboard()
@@ -979,7 +987,7 @@ class MainActivity : Activity() {
     }
 
     private fun setPresetInputExpanded(expanded: Boolean) {
-        if (workspaceBusy || !::input.isInitialized || !isCpp()) return
+        if (workspaceBusy || !::input.isInitialized || !usesCloudInput()) return
         val stamp = capturePanelViewport(); hideCompletion()
         presetInputExpanded = expanded
         if (expanded) {
@@ -1036,10 +1044,10 @@ class MainActivity : Activity() {
         panelResize.isEnabled = spec.resizable && !workspaceBusy
         val panelHeight = if (side || full) height else spec.extent
         val preset = WorkspaceLayoutPolicy.preset(presetInputExpanded, imeVisible, input.hasFocus(), panelHeight)
-        panelInputHeading.visibility = if (preset.showCaption && selectedOutput == 3 && isCpp()) View.VISIBLE else View.GONE
+        panelInputHeading.visibility = if (preset.showInput && selectedOutput == 3 && usesCloudInput()) View.VISIBLE else View.GONE
         panelOutputScroll.visibility = View.VISIBLE
         panelToolbar.setCompact(terminalCompact)
-        input.visibility = if (preset.showInput && selectedOutput == 3 && isCpp()) View.VISIBLE else View.GONE
+        input.visibility = if (preset.showInput && selectedOutput == 3 && usesCloudInput()) View.VISIBLE else View.GONE
         input.layoutParams?.let { old ->
             val target = dp(preset.inputHeight)
             if (old.height != target) input.layoutParams = old.apply { this.height = target }
@@ -1082,13 +1090,13 @@ class MainActivity : Activity() {
         }
         input.setSelection(view.inputStart, view.inputEnd)
         lastFocus = view.focus
-        presetInputExpanded = isCpp() && WorkspaceLayoutPolicy.restorePreset(presetInputExpanded, view.focus, panelVisible)
-        input.visibility = if (presetInputExpanded && isCpp()) View.VISIBLE else View.GONE
+        presetInputExpanded = usesCloudInput() && WorkspaceLayoutPolicy.restorePreset(presetInputExpanded, view.focus, panelVisible)
+        input.visibility = if (presetInputExpanded && usesCloudInput()) View.VISIBLE else View.GONE
         if (view.focus == "terminal" && panelVisible && selectedOutput == 3 &&
             ::terminalRegistry.isInitialized && terminalRegistry.catalog.selected() != null) {
             ensureShellPane()
             if (shellPane?.restoreTerminalFocus() != true) outputRegion.requestFocus()
-        } else if (view.focus == "stdin" && panelVisible && isCpp()) input.requestFocus()
+        } else if (view.focus == "stdin" && panelVisible && usesCloudInput()) input.requestFocus()
         else if (panelState.maximized && panelVisible) outputRegion.requestFocus()
         else editor.requestFocus()
         updateImeLayout()
@@ -1163,6 +1171,7 @@ class MainActivity : Activity() {
         editor.setChanges { start, removed, inserted, history ->
             diagnosticPopup?.dismiss()
             if (!quietEdit) {
+                if (::workspace.isInitialized) CaseRunSession.sourceChanged(workspace.identity, activePath)
                 snippetTextChanging = true
                 if (history) clearSnippet() else trackSnippetEdit(start, removed, inserted)
                 editorAnalysis?.cancel(); (editorPort as? SoraEditorPort)?.clearDiagnostics(); hideCompletion()
@@ -1216,10 +1225,11 @@ class MainActivity : Activity() {
         terminalSessionStrip = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         panelToolbar.bindNavigation(panelOutputScroll, terminalSessionStrip!!)
         panelToolbar.setCloseSessionAction(::closeCurrentShell)
-        val stdinCaption = label("C++ 云端标准输入 · 随请求一起发送", 11f, muted).apply { setPadding(dp(10), dp(3), 0, dp(3)) }
+        val stdinCaption = label("C++ 云端输入", 11f, muted).apply { setPadding(dp(10), dp(3), 0, dp(3)) }
         val inputHeading = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         inputHeading.addView(stdinCaption, LinearLayout.LayoutParams(0, -2, 1f))
         inputHeading.addView(button("清空输入") { input.setText("") })
+        inputHeading.addView(TerminalChrome.action(this,palette,IdeIcon.CLOSE,"收起云端预设输入",Runnable {setPresetInputExpanded(false)}),LinearLayout.LayoutParams(dp(48),dp(48)))
         panelInputHeading = inputHeading
         outputRegion.addView(inputHeading)
         input = EditText(this).apply {
@@ -1244,7 +1254,7 @@ class MainActivity : Activity() {
                 handler.removeCallbacks(saveSession); handler.postDelayed(saveSession, 200)
             }
         })
-        input.visibility = if (presetInputExpanded && isCpp()) View.VISIBLE else View.GONE
+        input.visibility = if (presetInputExpanded && usesCloudInput()) View.VISIBLE else View.GONE
         panelInputHeading.visibility = input.visibility
         outputRegion.addView(input, LinearLayout.LayoutParams(-1, dp(64)))
         val scroll = ScrollView(this)
@@ -1875,6 +1885,7 @@ class MainActivity : Activity() {
     }
 
     private fun isCpp() = !activePath.lowercase().endsWith(".py")
+    private fun usesCloudInput() = isCpp() && settings.cppBackend == CppBackend.CLOUD
     private fun updateNumbers() {
         // Sora renders its own wrapped-line gutter. The old TextView remains hidden for layout compatibility.
         if (::numbers.isInitialized) numbers.visibility = View.GONE
@@ -2644,7 +2655,7 @@ class MainActivity : Activity() {
                 KeyEvent.KEYCODE_ENTER -> { runCode(); return true }
             }
         }
-        if (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_F5) { runCode(); return true }
+        if (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_F5) { dispatchCommand(IdeCommand.RUN_STOP); return true }
         return super.dispatchKeyEvent(event)
     }
 
@@ -2812,6 +2823,47 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun showTestCases() {
+        if (workspaceBusy || !::workspace.isInitialized || loadedPath != activePath) return
+        toolDialog?.dismiss(); hideCompletion(true); clearSnippet()
+        val path = activePath; val target = workspace; val key = sessions.key(path)
+        val restored = pendingCasesState; pendingCasesState = null
+        casesDialog = TestCasesDialog(this, key, path, CaseRunSession.store(applicationContext), motionAllowed(), restored,
+            { cases ->
+                if (workspace === target && activePath == path && sessions.key(path) == key) runCases(cases)
+                else alert("当前文件已变化，请重新打开测试用例")
+            }, { record -> result = record; gotoError() }).show()
+        toolDialog = casesDialog!!.dialog
+    }
+
+    private fun runCases(cases: List<ProgramCase>, consented: Boolean = false) {
+        if (running || workspaceBusy) return
+        if (dirty || saving) { saveActive { runCases(cases, consented) }; return }
+        if (loadedPath != activePath || cases.isEmpty()) return
+        val code = editor.text.toString()
+        if (code.isBlank() || code.length > 100000) { alert("请先输入代码，最多 10 万字符"); return }
+        val cpp = isCpp(); val local = cpp && settings.cppBackend == CppBackend.LOCAL
+        if (local && !CppBuildPlan.translationUnit(activePath)) { alert("请选择 C/C++ 源文件作为入口"); return }
+        if (cpp && !local && !consented && !prefs.getBoolean("wandboxConsent", false)) {
+            AlertDialog.Builder(this).setTitle("C++ 云端用例运行")
+                .setMessage("当前 C++ 源码和所选用例的标准输入将发送至第三方 Wandbox 服务。请勿提交密码或私人资料。")
+                .setNegativeButton("取消", null).setPositiveButton("同意并运行") { _, _ ->
+                    prefs.edit().putBoolean("wandboxConsent", true).apply(); runCases(cases, true)
+                }.showAnimated()
+            return
+        }
+        startupPanelPending = false
+        if (terminalRegistry.catalog.selected() == null) {
+            try { terminalRegistry.create(if (workspace.external) null else workspace.root) }
+            catch (failure: IllegalStateException) { alert(failure.message ?: "无法创建终端"); return }
+        }
+        showOutput(3); shellPane?.ensureSession(); hideKeyboard()
+        if (panelLayout?.showPanel != true) togglePanel() else updateImeLayout()
+        val request = CaseRunSession.Request(workspace, drafts, sessions.analysisKeys().toMap(), activePath, sessions.key(activePath),
+            code, cpp, local, settings.cppBuildScope, terminalRegistry.catalog.selected()!!.value.runtime)
+        if (!CaseRunSession.start(applicationContext, request, cases.toList())) alert("已有程序正在执行，请先停止")
+    }
+
     private fun runCode(consented: Boolean = false) {
         if (running || workspaceBusy) return
         if (dirty || saving) { saveActive { runCode(consented) }; return }
@@ -2819,8 +2871,9 @@ class MainActivity : Activity() {
         val code = editor.text.toString()
         if (code.isBlank()) { alert("请先输入代码"); return }
         if (code.length > 100000 || input.length() > 20000) { alert("代码最多 10 万字符；输入最多 2 万字符"); return }
-        val cpp = isCpp(); val stdin = input.text.toString()
+        val cpp = isCpp()
         val localCpp=cpp && settings.cppBackend==CppBackend.LOCAL
+        val stdin=if(localCpp) "" else input.text.toString()
         val scope=settings.cppBuildScope
         if(localCpp && !CppBuildPlan.translationUnit(activePath)){alert("请选择 C/C++ 源文件作为入口");return}
         if (cpp && !localCpp && !consented && !prefs.getBoolean("wandboxConsent", false)) {
@@ -2880,7 +2933,8 @@ class MainActivity : Activity() {
         if (!running && result?.kind == RunKind.SERVICE && result !== previous) selectedOutput = 1
         editorAnalysis?.request()
         showOutput(selectedOutput)
-        if (running) status.text = if (RunSession.waitingForInput) "等待终端输入 · Enter 提交 / Ctrl+D 结束输入" else "正在执行，请稍候…"
+        if (CaseRunSession.running) status.text = CaseRunSession.batch?.message
+        else if (running) status.text = if (RunSession.waitingForInput) "等待终端输入 · Enter 提交 / Ctrl+D 结束输入" else "正在执行，请稍候…"
         else result?.let { response ->
             status.text = "${if (response.successful) "✓" else "✕"} ${response.kind.label} (${response.elapsedMs}ms)"
         }
@@ -2921,8 +2975,8 @@ class MainActivity : Activity() {
         shellPane?.visibility = if (shell) View.VISIBLE else View.GONE
         shellPane?.hostActive(shell)
         panelToolbar.setShellMode(shell)
-        panelToolbar.setInputAvailable(isCpp())
-        input.visibility = if (target == 3 && presetInputExpanded && isCpp()) View.VISIBLE else View.GONE
+        panelToolbar.setInputAvailable(usesCloudInput())
+        input.visibility = if (target == 3 && presetInputExpanded && usesCloudInput()) View.VISIBLE else View.GONE
         panelInputHeading.visibility = input.visibility
         outputTabs.removeAllViews()
         outputTabs.addView(TerminalChrome.channel(this,palette,"终端",IdeIcon.TERMINAL,target!=1) {
