@@ -4,7 +4,12 @@
 
 > 2026-10-27：[本地 C++ 接入](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md)已完成代码/主机/APK验证，Android执行验收仍后置。头文件 Tab 补全也已完成代码/主机/APK验证，原后续 P2/P3 范围继续。
 
-**2026-10-27：C++ 头文件 Tab 补全接入。**
+**2026-10-28：修复设置二级菜单触摸无响应。**
+
+- [最新修复 APK](dist/CodePocket-settings-touch-fix-2026-10-28-debug.apk)（110.07 MiB，原签名，arm64-v8a）。移除被动选项行抢走触摸的提示行为，原说明、设置草稿及补全保留。
+- [结果与限制](docs/FIX_SETTINGS_TOUCH_2026-10-28.md)：完整触摸基线 4 失败/1 通过，修复后定向 109 全通过；完整 874 项中 873 通过/1 旧跳过，Lint 零错误。设备验收仍后置。
+
+**历史：2026-10-27 C++ 头文件 Tab 补全接入。**
 
 - [最新 Debug APK](dist/CodePocket-header-tab-2026-10-27-debug.apk)（110.07 MiB，原签名，arm64-v8a）。系统/项目头文件、目录继续、路径替换和 Tab/撤销沿用同一主编辑器。
 - [结果与限制](docs/P2_CPP_HEADER_COMPLETION_2026-10-27.md) · [3 张原生图](docs/cpp-header-preview/README.md)：869 项中 868 通过、1 旧跳过，定向 90/终端 146 全通过，Lint 零错误。实际 APK 与旧运行内容、原签名核验通过；Android 设备验收仍后置。

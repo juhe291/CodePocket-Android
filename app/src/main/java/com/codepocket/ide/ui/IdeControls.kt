@@ -14,9 +14,10 @@ object IdeControls {
     fun feedback(context: Context, palette: IdePalette) = RippleDrawable(
         ColorStateList.valueOf((palette.foreground and 0x00FFFFFF) or 0x28000000), null,
         GradientDrawable().apply { setColor(-1); cornerRadius = dp(context, 4).toFloat() })
-    fun describe(view: android.view.View, text: String) {
+    fun describe(view: android.view.View, text: String, tooltip: Boolean = true) {
         view.contentDescription = text
-        if (Build.VERSION.SDK_INT >= 26) view.tooltipText = text
+        // Native tooltips consume touch on otherwise passive rows. AdapterView owns those clicks.
+        if (Build.VERSION.SDK_INT >= 26) view.tooltipText = if (tooltip) text else null
     }
     fun icon(context: Context, palette: IdePalette, icon: IdeIcon, description: String, action: () -> Unit) =
         ImageButton(context).apply {

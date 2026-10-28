@@ -40,6 +40,6 @@ class CompletionCandidateRow(context:Context,private val labelColor:Int,private 
         val color=when(item.kind){CompletionKind.TYPE->IdeIconDrawable.color(IdeIcon.HEADER,p);CompletionKind.KEYWORD->p.accentText;else->muted}
         glyph.setImageDrawable(IdeIconDrawable(context,icon,color,dp(18)))
         isSelected=selected;setBackgroundColor(if(selected)p.selection else base)
-        IdeControls.describe(this,context.getString(R.string.completion_accessibility,item.label,item.kind.title))
+        IdeControls.describe(this,context.getString(R.string.completion_accessibility,item.label,item.kind.title),tooltip=false)
     }
 }

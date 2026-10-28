@@ -58,7 +58,7 @@ class WorkbenchChoiceAdapter(private val context:Context,choices:List<WorkbenchC
             line.background=if(choice.checked)WorkbenchStyle.shape(context,p.selection,0,4)else IdeControls.feedback(context,p)
             setTag(R.id.workbench_key,"choice:${choice.key}")
             val description=choice.description ?: (choice.title+(if(choice.detail.isBlank())"" else "，${choice.detail}"))
-            IdeControls.describe(this,description+(if(choice.checked)"，已选择" else ""))
+            IdeControls.describe(this,description+(if(choice.checked)"，已选择" else ""),tooltip=false)
         }
     }
 }
