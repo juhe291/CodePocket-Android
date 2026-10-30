@@ -40,6 +40,7 @@ class WorkspaceStartupIntegrationTest {
             .putString("activeFile","main.py")
         if(unavailable)prefs.putString("selectedTree","content://com.codepocket.unavailable.documents/tree/root")
         prefs.commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         val controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible()
         this.controller=controller;main=controller.get()
     }

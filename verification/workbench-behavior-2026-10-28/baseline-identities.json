@@ -1,0 +1,42 @@
+{
+  "totals": {
+    "tests": 8,
+    "failures": 7,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.drawerWindowAnimationNeverSlidesItsWholeSurfaceOverTheFixedActivityBar",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.tabletSearchLivesInTheSidebarAndLeavesTheEditorBufferUntouched",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.phoneSearchOpensInTheSameDrawerGeometryAsExplorer",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStartupBehaviorTest.recreatingTheWelcomeScreenDoesNotTurnItIntoAnImplicitSampleProject",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStartupBehaviorTest.firstLaunchOffersNewAndOpenWithNoSeededCodeOrDemoFiles",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStartupBehaviorTest.cancellingNewFileLeavesTheWelcomeAreaAndDoesNotCreateAnUnrequestedDemo",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStartupBehaviorTest.existingFileAndSavedProjectStillRestoreTheirExactBytes",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStartupBehaviorTest.cancellingTheSystemOpenProjectPickerKeepsTheWelcomeState",
+      "status": "failure"
+    }
+  ]
+}

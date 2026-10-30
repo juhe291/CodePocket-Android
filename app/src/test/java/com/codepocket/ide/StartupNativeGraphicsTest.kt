@@ -54,6 +54,7 @@ class StartupNativeGraphicsTest {
         val context = RuntimeEnvironment.getApplication()
         context.getSharedPreferences("codepocket_v2", 0).edit().clear()
             .putString("settings", AppSettings(theme = theme, animations = false).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         val controller = Robolectric.buildActivity(MainActivity::class.java)
         val main = controller.get()
         try {

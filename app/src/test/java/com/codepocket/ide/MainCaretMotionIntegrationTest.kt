@@ -51,6 +51,7 @@ class MainCaretMotionIntegrationTest {
         Settings.Global.putFloat(RuntimeEnvironment.getApplication().contentResolver,Settings.Global.ANIMATOR_DURATION_SCALE,1f)
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear().putString("activeFile","main.py")
             .putString("settings",AppSettings(theme=if(name.methodName.contains("Light"))UiTheme.LIGHT else UiTheme.DARK,autoSave=false,autoCompletion=false,signatureHelp=false).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get();settle();controller.windowFocusChanged(true);layout();editor.requestFocus();ready();frame()
     }
     @After fun close(){

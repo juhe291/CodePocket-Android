@@ -37,6 +37,7 @@ class MainFileSettingsIntegrationTest {
     @Before fun launch() {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("activeFile","main.py").putString("settings",AppSettings(autoSave=false,animations=false).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get()
         drain();controller.windowFocusChanged(true);layout();editor.requestFocus();ready()
     }
@@ -125,11 +126,13 @@ class MainFileSettingsIntegrationTest {
         assertTrue(editor.history(false));assertEquals("x",editor.text.toString())
     }
     @Test fun deletingTheLastFileCreatesARealFallbackAndInvalidatesTheOldConnection(){
+        // Historical test identity retained. The new contract uses welcome, never creates replacement sample code.
         workspace.delete(workspace.resolve("main.cpp"));val old=editor.onCreateInputConnection(android.view.inputmethod.EditorInfo())
         invokeFile("askDelete",workspace.resolve("main.py"));latest().getButton(AlertDialog.BUTTON_POSITIVE).performClick();drain();ready()
-        assertEquals("main.cpp",field<String>("activePath"));assertEquals(Workspace.CPP_SAMPLE,workspace.resolve("main.cpp").readText())
-        assertEquals(Workspace.CPP_SAMPLE,editor.text.toString());assertFalse(old.commitText("stale",1))
-        assertFalse(workspace.resolve("main.py").exists());assertEquals("main.cpp",field<String>("loadedPath"))
+        assertEquals("",field<String>("activePath"));assertFalse(workspace.resolve("main.cpp").exists())
+        assertEquals("",editor.text.toString());assertFalse(old.commitText("stale",1))
+        assertFalse(workspace.resolve("main.py").exists());assertNull(field<String?>("loadedPath"))
+        assertTrue(workspace.children(workspace.root).isEmpty());assertNotNull(main.findViewById<View>(android.R.id.content).findViewWithTag<View>("workbench-welcome"))
     }
     @Test fun cancellingSettingsDiscardsOnlySettingsAndRetainsDirtyEditorAndPanel(){
         edit("print('keep')");editor.setSelection(2);val source=port.snapshot();val original=field<AppSettings>("settings");val panel=field<PanelState>("panelState")

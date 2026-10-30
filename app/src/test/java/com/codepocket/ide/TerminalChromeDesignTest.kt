@@ -85,6 +85,7 @@ class TerminalChromeDesignTest {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("settings",AppSettings(animations=false,autoSave=false).toJson()).commit()
         ShellSessionRegistry.finishAll()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         val c=Robolectric.buildActivity(MainActivity::class.java).setup().visible()
         val main=c.get()
         try {

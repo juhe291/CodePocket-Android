@@ -21,7 +21,8 @@ class Workspace private constructor(directory: File, seedSamples: Boolean, priva
         tree.copyForRun(destination)
         return destination
     }
-    constructor(context: Context) : this(File(context.filesDir, "workspace"), true, { source, target ->
+    constructor(context: Context) : this(context, true)
+    constructor(context: Context, seedSamples: Boolean) : this(File(context.filesDir, "workspace"), seedSamples, { source, target ->
         // POSIX rename atomically replaces the target on all supported Android versions (API 21+).
         android.system.Os.rename(source.path, target.path)
     })

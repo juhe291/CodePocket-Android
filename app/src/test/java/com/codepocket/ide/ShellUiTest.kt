@@ -75,7 +75,7 @@ class ShellUiTest {
             IdeCommand.SIGNATURE, IdeCommand.SNIPPET)
         val surfaces = listOf(IdeCommands.settingsMenuItems, IdeCommands.editorToolbarItems, IdeCommands.editorMenuItems,
             IdeCommands.explorerToolbarItems, IdeCommands.explorerMenuItems, IdeCommands.terminalToolbarItems,
-            IdeCommands.terminalMenuItems, IdeCommands.symbolBarItems, IdeCommands.runMenuItems,
+            IdeCommands.terminalMenuItems, IdeCommands.symbolBarItems, IdeCommands.runMenuItems, IdeCommands.fileMenuItems,
             IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(0), false))
         assertEquals(IdeCommand.entries.toSet(), surfaces.flatten().toSet())
         assertTrue(legacy.all { it in surfaces.flatten() })
@@ -93,7 +93,15 @@ class ShellUiTest {
 
     @Test fun unloadedBufferCannotRunExportOrMutateFiles() {
         val unloaded = editing.copy(loaded = false)
-        assertEquals(setOf(IdeCommand.THEME, IdeCommand.SETTINGS, IdeCommand.SHORTCUTS, IdeCommand.HELP), IdeCommand.entries.filter { IdeCommands.enabled(it, unloaded) }.toSet())
+        val allowed = setOf(IdeCommand.THEME, IdeCommand.SETTINGS, IdeCommand.SHORTCUTS, IdeCommand.HELP,
+            IdeCommand.NEW_FILE, IdeCommand.NEW_FOLDER, IdeCommand.IMPORT_COPY, IdeCommand.WORKSPACE,
+            IdeCommand.CLOSE_WORKSPACE, IdeCommand.EXPLORER, IdeCommand.SEARCH, IdeCommand.RECOVER,
+            IdeCommand.PANEL, IdeCommand.PANEL_SIZE, IdeCommand.MAXIMIZE_TERMINAL, IdeCommand.CLOSE_TERMINAL,
+            IdeCommand.CLEAR_TERMINAL, IdeCommand.HIDE_KEYBOARD)
+        assertEquals(allowed, IdeCommand.entries.filter { IdeCommands.enabled(it, unloaded) }.toSet())
+        assertFalse(IdeCommands.enabled(IdeCommand.CLOSE_WORKSPACE, unloaded.copy(projectOpen=false)))
+        assertTrue(listOf(IdeCommand.RUN_STOP,IdeCommand.SAVE,IdeCommand.EXPORT,IdeCommand.RENAME,IdeCommand.DELETE)
+            .none{IdeCommands.enabled(it,unloaded)})
     }
 
     @Test fun editorOnlyCommandsCannotStealStdinFocusOrModifySource() {

@@ -32,6 +32,7 @@ class SoraWorkbenchIntegrationTest {
     @Before fun launch() {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("activeFile","main.py").putString("settings",AppSettings(theme=if(testName.methodName.contains("Light"))UiTheme.LIGHT else UiTheme.DARK,autoSave=false,animations=false).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get()
         settleIo(); controller.windowFocusChanged(true);editor=field("editor");layout();editor.requestFocus();awaitEditor()
     }

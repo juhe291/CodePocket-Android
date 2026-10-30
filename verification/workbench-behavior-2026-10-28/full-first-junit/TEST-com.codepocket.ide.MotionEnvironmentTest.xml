@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MotionEnvironmentTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T18:13:23" hostname="JUHE" time="0.141">
+  <properties/>
+  <testcase name="stoppingUnregistersAndCanBeRepeated" classname="com.codepocket.ide.MotionEnvironmentTest" time="0.029"/>
+  <testcase name="cursorSettingsAreIndependentAndPersistWithoutChangingOtherPreferences" classname="com.codepocket.ide.MotionEnvironmentTest" time="0.021"/>
+  <testcase name="eachSystemAnimationSwitchCanDisableAllAppMotion" classname="com.codepocket.ide.MotionEnvironmentTest" time="0.03"/>
+  <testcase name="observerStartsOnceAndReceivesActualSettingsChanges" classname="com.codepocket.ide.MotionEnvironmentTest" time="0.033"/>
+  <testcase name="powerSavingSuppressesMotionAndBroadcastNotifiesTheOwner" classname="com.codepocket.ide.MotionEnvironmentTest" time="0.028"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Intent = Intent { act=android.os.action.POWER_SAVE_MODE_CHANGED }; Matching wrappers: [Wrapper[receiver=[com.codepocket.ide.animation.MotionEnvironment$receiver$1@203fbf5f], context=[android.app.ContextImpl@49c2fbff], intentFilter=[android.content.IntentFilter@454b2e22]]]
+]]></system-err>
+</testsuite>

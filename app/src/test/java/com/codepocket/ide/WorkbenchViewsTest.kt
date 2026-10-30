@@ -99,6 +99,8 @@ class WorkbenchViewsTest {
         val directory=File(main.filesDir,"motion-"+java.util.UUID.randomUUID())
         val ws=Workspace(directory) {source,target->java.nio.file.Files.move(source.toPath(),target.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING);Unit}
         ReflectionHelpers.setField(main,"workspace",ws)
+        ReflectionHelpers.setField(main,"workspaceOpen",true)
+        ReflectionHelpers.setField(main,"activePath","main.cpp")
         ReflectionHelpers.setField(main,"sessions",EditorSessions(ws.identity,"[]"))
         ReflectionHelpers.setField(main,"settings",AppSettings(animations=false))
         ReflectionHelpers.setField(main,"status",TextView(main))

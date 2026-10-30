@@ -15,14 +15,17 @@ enum class IdeCommand(val title: String, val editorOnly: Boolean = false) {
     MAXIMIZE_TERMINAL("最大化 / 还原面板"), CLOSE_TERMINAL("收起运行面板"),
     PRESET_INPUT("展开 / 收起云端输入"), CLEAR_INPUT("清空当前文件预设输入"), HIDE_KEYBOARD("收起虚拟键盘"),
     THEME("切换深浅主题"), SETTINGS("设置"), SHORTCUTS("快捷键说明"), HELP("使用说明"),
-    FONT_SIZE("代码字号  Ctrl++ / Ctrl+-"), TEST_CASES("测试用例")
+    FONT_SIZE("代码字号  Ctrl++ / Ctrl+-"), TEST_CASES("测试用例"), CLOSE_WORKSPACE("关闭项目")
 }
 data class CommandContext(val busy: Boolean, val loaded: Boolean, val editorFocused: Boolean,
-    val inputFocused: Boolean, val composing: Boolean, val running: Boolean, val saving: Boolean)
+    val inputFocused: Boolean, val composing: Boolean, val running: Boolean, val saving: Boolean,
+    val projectOpen: Boolean = true)
 
 /** These collections are consumed by the actual native toolbars/menus, not a parallel test-only catalogue. */
 object IdeCommands {
     val runMenuItems = listOf(IdeCommand.RUN_STOP, IdeCommand.TEST_CASES)
+    val fileMenuItems = listOf(IdeCommand.WORKSPACE, IdeCommand.CLOSE_WORKSPACE, IdeCommand.NEW_FILE,
+        IdeCommand.NEW_FOLDER, IdeCommand.SAVE, IdeCommand.IMPORT_COPY, IdeCommand.EXPORT, IdeCommand.RELOAD, IdeCommand.RECOVER)
     val settingsMenuItems = listOf(IdeCommand.THEME, IdeCommand.SETTINGS, IdeCommand.SHORTCUTS, IdeCommand.HELP)
     val editorToolbarItems = listOf(IdeCommand.SAVE, IdeCommand.UNDO, IdeCommand.REDO, IdeCommand.FIND)
     val editorMenuItems = listOf(IdeCommand.FONT_SIZE, IdeCommand.REPLACE, IdeCommand.GOTO_LINE, IdeCommand.COMPLETE,
@@ -47,7 +50,13 @@ object IdeCommands {
         if (command == IdeCommand.RUN_STOP && state.running) return true
         if (state.busy) return false
         if (command in settingsMenuItems) return true
-        if (!state.loaded) return false
+        if (command in setOf(IdeCommand.NEW_FILE, IdeCommand.NEW_FOLDER, IdeCommand.IMPORT_COPY,
+                IdeCommand.WORKSPACE, IdeCommand.CLOSE_WORKSPACE) && (state.running || state.saving)) return false
+        if (command == IdeCommand.CLOSE_WORKSPACE) return state.projectOpen
+        if (!state.loaded) return command in setOf(IdeCommand.NEW_FILE, IdeCommand.NEW_FOLDER,
+            IdeCommand.IMPORT_COPY, IdeCommand.WORKSPACE, IdeCommand.EXPLORER, IdeCommand.SEARCH,
+            IdeCommand.RECOVER, IdeCommand.PANEL, IdeCommand.PANEL_SIZE, IdeCommand.MAXIMIZE_TERMINAL,
+            IdeCommand.CLOSE_TERMINAL, IdeCommand.CLEAR_TERMINAL, IdeCommand.HIDE_KEYBOARD)
         if (command == IdeCommand.FONT_SIZE) return !state.composing
         if (command.editorOnly && (!state.editorFocused || state.composing)) return false
         if (command in setOf(IdeCommand.UNDO, IdeCommand.REDO) &&

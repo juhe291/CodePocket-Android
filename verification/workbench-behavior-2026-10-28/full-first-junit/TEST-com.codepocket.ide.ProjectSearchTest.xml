@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.ProjectSearchTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-29T18:13:25" hostname="JUHE" time="0.136">
+  <properties/>
+  <testcase name="caseSensitivityAndFileFilteringAreExplicit" classname="com.codepocket.ide.ProjectSearchTest" time="0.043"/>
+  <testcase name="resultLimitStopsInsideAFileAndZeroDoesNotSearch" classname="com.codepocket.ide.ProjectSearchTest" time="0.019"/>
+  <testcase name="nestedFilesAndCrLfHaveRealSourcePositions" classname="com.codepocket.ide.ProjectSearchTest" time="0.034"/>
+  <testcase name="unsavedCurrentBufferIsSearchedWithoutWritingToDisk" classname="com.codepocket.ide.ProjectSearchTest" time="0.015"/>
+  <testcase name="cancellationBeforeQueuedWorkIsNotReset" classname="com.codepocket.ide.ProjectSearchTest" time="0.005"/>
+  <testcase name="failedReadIsCountedWhileOtherResultsSurvive" classname="com.codepocket.ide.ProjectSearchTest" time="0.02"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

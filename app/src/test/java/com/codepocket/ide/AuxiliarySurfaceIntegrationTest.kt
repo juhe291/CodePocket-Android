@@ -43,6 +43,7 @@ class AuxiliarySurfaceIntegrationTest {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("activeFile","main.cpp").putString("settings",AppSettings(theme=if(name.methodName.contains("Light"))UiTheme.LIGHT else UiTheme.DARK,
                 animations=false,autoSave=false,panelPreferSide=true).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get();drain();controller.windowFocusChanged(true);layout();editor.requestFocus()
         repeat(200){idle();if(editor.isLayoutReady){awaitSyntax();return};Thread.sleep(5)};fail("Main Sora layout unavailable")
     }
@@ -98,10 +99,11 @@ class AuxiliarySurfaceIntegrationTest {
         assertFalse(top.any{it.contentDescription?.toString()?.contains("项目搜索")==true})
         assertEquals(3,top.filterIsInstance<android.widget.ImageView>().size)
         views(field<View>("activityBar")).single{it.contentDescription=="项目搜索"}.performClick();drain()
-        val project=field<android.app.AlertDialog>("toolDialog")
-        assertTrue(views(project.window!!.decorView).filterIsInstance<android.widget.TextView>().any{it.text.toString()=="项目搜索"})
-        assertEquals(1,views(project.window!!.decorView).filterIsInstance<android.widget.EditText>().size)
-        capture("tablet-project-search-from-rail",project.window!!.decorView);project.dismiss();idle();editor.requestFocus()
+        layout();val project=field<View>("sidebarSearchView")
+        assertTrue(project.isShown);assertTrue(field<android.app.AlertDialog?>("toolDialog")?.isShowing!=true)
+        assertTrue(views(project).filterIsInstance<android.widget.TextView>().any{it.text.toString()=="项目搜索"})
+        assertEquals(1,views(project).filterIsInstance<android.widget.EditText>().size)
+        capture("tablet-project-search-from-rail",project);views(project).single{it.contentDescription=="关闭项目搜索"}.performClick();idle();editor.requestFocus()
         views(field<View>("editorToolbar")).single{it.contentDescription==IdeCommand.FIND.title}.performClick();idle()
         val current=field<android.app.AlertDialog>("toolDialog")
         assertTrue(views(current.window!!.decorView).any{it.contentDescription=="查找文本"})

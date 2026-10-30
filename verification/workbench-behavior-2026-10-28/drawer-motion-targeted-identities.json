@@ -1,0 +1,106 @@
+{
+  "totals": {
+    "tests": 24,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.configurationCheckpointKeepsTheExpandedTreeAndItsViewport",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.tabSelectionIndicatorMovesWithoutMovingTabsOrLosingTheirFocus",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeCrossfadeRetainsFocusSelectionAndHasNoExtraViewOrTouchTarget",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.explorerRestoreRejectsNegativeScrollAndBoundsItsConfigurationPayload",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeHandoverTransfersOnlyTheBitmapAndDoesNotKeepTheOldActivity",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.nativeContextMenuStillUsesTheRealMenuAndItsCommandCallback",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.repeatedSnapshotsAndDetachReleaseThePreviousBitmap",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.highResolutionTabletSnapshotsHaveABoundedPixelBudget",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.reopeningCancelsTheOldClosingSnapshot",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.settingsCancelDiscardsCursorChangesAndApplyPersistsThem",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.treeCollapseCompletesAndCancellationClearsPendingPlatformTransitions",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.followingSystemThemeCapturesABoundedConfigurationTransitionWithoutKeepingAView",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.dialogWindowAnimationHonorsAppDisable",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.largeTreesSkipNativeReflowInsteadOfSchedulingHundredsOfAnimations",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.phoneAndNarrowTabletDrawersUseALeftTransitionAndRespectAppOff",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.panelCloseUsesANonInteractiveOverlayAndHidesTheRealPaneImmediately",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeSnapshotIsDiscardedWhenTabletWindowChangesSize",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.panelBoundsTransitionDoesNotRelayoutItsContentOnEveryAnimationFrame",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsTouchIntegrationTest.completionCandidateRowsAlsoLeaveTouchSelectionToTheOwningList",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsTouchIntegrationTest.phoneSettingsThemeCanBeChosenByTouchAndRemainsDraftUntilApply",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsTouchIntegrationTest.tabletChoiceRowsKeepClickAndCancelDraftBehaviorWithAnimationsEnabled",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsTouchIntegrationTest.sharedSecondaryMenuDispatchesTheSelectedSnapshotIndexOnTouch",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsTouchIntegrationTest.plainNativeListControlProvesThePhysicalTouchFixtureCanSelectARow",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.drawerWindowAnimationNeverSlidesItsWholeSurfaceOverTheFixedActivityBar",
+      "status": "passed"
+    }
+  ]
+}

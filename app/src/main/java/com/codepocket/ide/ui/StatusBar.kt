@@ -40,12 +40,18 @@ class StatusBar(context:Context,private val palette:IdePalette):LinearLayout(con
     fun setStatus(layout:StatusBarLayout) {
         if(state==layout)return
         state=layout
+        details.visibility=VISIBLE
         val message=summary(layout.state)
         if(statusText.text.toString()!=message)statusText.text=message
         statusText.setTextColor(if(message.startsWith("保存失败")||message.startsWith("✕")||message.startsWith("文件冲突"))palette.error else ink)
         IdeControls.describe(this,layout.format());IdeControls.describe(statusText,layout.state)
         details.text="${layout.language}  ·  Ln ${layout.line}, Col ${layout.column}"
         IdeControls.describe(details,"Ln ${layout.line}, Col ${layout.column} · ${layout.indent} · ${layout.encoding} · ${layout.language}")
+    }
+    fun setWelcome(message:String) {
+        state=null; details.visibility=GONE
+        statusText.text=message;statusText.setTextColor(ink)
+        IdeControls.describe(this,message);IdeControls.describe(statusText,message)
     }
     fun setText(text:String){statusText.text=text}
     override fun onMeasure(widthMeasureSpec:Int,heightMeasureSpec:Int) {

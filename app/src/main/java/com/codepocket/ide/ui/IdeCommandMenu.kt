@@ -35,6 +35,7 @@ object IdeCommandMenu {
         IdeCommand.RENAME->IdeIcon.RENAME
         IdeCommand.DELETE->IdeIcon.DELETE
         IdeCommand.WORKSPACE->IdeIcon.FOLDER_OPEN
+        IdeCommand.CLOSE_WORKSPACE->IdeIcon.CLOSE
         IdeCommand.IMPORT_COPY->IdeIcon.IMPORT
         IdeCommand.EXPORT->IdeIcon.EXPORT
         IdeCommand.UNDO->IdeIcon.UNDO
@@ -58,7 +59,7 @@ object IdeCommandMenu {
         IdeCommand.FONT_SIZE->IdeIcon.CASE
     }
     internal fun section(command:IdeCommand):Int=when(command){
-        IdeCommand.WORKSPACE,IdeCommand.IMPORT_COPY->1
+        IdeCommand.WORKSPACE,IdeCommand.CLOSE_WORKSPACE,IdeCommand.IMPORT_COPY->1
         IdeCommand.NEW_FILE,IdeCommand.NEW_FOLDER->2
         IdeCommand.SAVE,IdeCommand.EXPORT->3
         IdeCommand.RELOAD,IdeCommand.RECOVER->4

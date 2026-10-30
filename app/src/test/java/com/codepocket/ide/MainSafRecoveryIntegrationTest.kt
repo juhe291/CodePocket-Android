@@ -43,6 +43,7 @@ class MainSafRecoveryIntegrationTest {
         ReflectionHelpers.setStaticField(RunSession::class.java,"result",null)
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("activeFile","main.py").putString("settings",AppSettings(autoSave=false,animations=false).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get()
         settle();controller.windowFocusChanged(true);layout();ready()
     }
@@ -157,17 +158,29 @@ class MainSafRecoveryIntegrationTest {
         assertEquals("print('active source')\n",workspace.resolve("main.py").readText());assertEquals(main.getString(R.string.editor_diagnostic_verified),field<TextView>("status").text.toString())
     }
 
+    @Test fun openingAnEmptyProviderDirectoryShowsWelcomeWithoutCreatingOrWritingFiles(){
+        val p=provider();p.empty=true
+        ReflectionHelpers.callInstanceMethod<Unit>(main,"requestWorkspace",ClassParameter.from(String::class.java,p.tree.toString()));settle();layout()
+        assertTrue(workspace.external);assertTrue(field("workspaceOpen"));assertEquals("",field<String>("activePath"));assertNull(field<String?>("loadedPath"))
+        assertEquals("",editor.text.toString());assertTrue(workspace.children(workspace.root).isEmpty());assertFalse(p.written)
+        val welcome=main.findViewById<View>(android.R.id.content).findViewWithTag<View>("workbench-welcome")
+        assertNotNull(welcome);assertTrue(welcome.isShown)
+        val identity=workspace.identity;controller.recreate();main=controller.get();settle();layout()
+        assertEquals(identity,workspace.identity);assertTrue(workspace.external);assertTrue(field("workspaceOpen"));assertEquals("",editor.text.toString());assertTrue(workspace.children(workspace.root).isEmpty());assertFalse(p.written)
+        assertEquals("print('provider original')\n",p.source.readText());assertEquals("answer = 42\n",p.helper.readText())
+    }
+
     class Provider(val source:File,val helper:File):ContentProvider(){
         companion object {const val AUTHORITY="com.codepocket.ide.test.documents"}
         val tree:Uri get()=DocumentsContract.buildTreeDocumentUri(AUTHORITY,"root")
-        var writable=true;var revoked=false;var mismatch=false;var written=false;var unreadable:String?=null
+        var writable=true;var revoked=false;var mismatch=false;var written=false;var unreadable:String?=null;var empty=false
         private fun permission(){if(revoked)throw SecurityException("Provider permission revoked")}
         override fun onCreate()=true
         override fun getType(uri:Uri)="text/plain"
         override fun query(uri:Uri,projection:Array<out String>?,selection:String?,args:Array<out String>?,order:String?):android.database.Cursor {
             permission();val columns=projection!!;val cursor=MatrixCursor(columns)
             val children=uri.lastPathSegment=="children";val id=if(children)"root" else DocumentsContract.getDocumentId(uri)
-            for(doc in if(children)listOf("opaque:file:1","opaque:file:2") else listOf(id))cursor.addRow(columns.map{column->when(column){
+            for(doc in if(children){if(empty)emptyList()else listOf("opaque:file:1","opaque:file:2")} else listOf(id))cursor.addRow(columns.map{column->when(column){
                 Document.COLUMN_DOCUMENT_ID->doc
                 Document.COLUMN_DISPLAY_NAME->when(doc){"root"->"授权测试项目";"opaque:file:1"->"external.py";else->"helper.py"}
                 Document.COLUMN_MIME_TYPE->if(doc=="root")Document.MIME_TYPE_DIR else "text/x-python"

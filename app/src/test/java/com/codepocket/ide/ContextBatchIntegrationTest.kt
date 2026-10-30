@@ -56,6 +56,7 @@ class ContextBatchIntegrationTest {
         RuntimeEnvironment.setFontScale(if(name.methodName.contains("Large"))2f else 1f)
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear().putString("activeFile","main.py")
             .putString("settings",AppSettings(theme=if(name.methodName.contains("Light"))UiTheme.LIGHT else UiTheme.DARK,autoSave=false,animations=false).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get();drain();controller.windowFocusChanged(true);layout();editor.requestFocus();ready()
     }
     @After fun close(){if(::main.isInitialized){Shadows.shadowOf(RuntimeEnvironment.getApplication()).latestPopupWindow?.dismiss();ShadowAlertDialog.getLatestAlertDialog()?.takeIf{it.isShowing}?.dismiss();field<AlertDialog?>("explorerDialog")?.dismiss();main.finish();controller.pause().stop().destroy();drain()};RuntimeEnvironment.setFontScale(1f)}
@@ -100,13 +101,14 @@ class ContextBatchIntegrationTest {
         assertEquals("Narrow large-font controls must stack",LinearLayout.VERTICAL,(query.parent as LinearLayout).orientation)
         assertTrue(query.width>search.width);assertTrue(query.height>=query.lineHeight+query.compoundPaddingTop+query.compoundPaddingBottom)
         query.setText("batch_search_token");search.performClick();drain();val list=all.filterIsInstance<ListView>().single();assertEquals(1,list.adapter.count);capture("phone-light-large-project-search",d.window!!.decorView)
-        assertTrue(d.getButton(AlertDialog.BUTTON_NEGATIVE).height>=48);list.performItemClick(list.adapter.getView(0,null,list),0,0);drain();ready();layout()
+        assertTrue(all.single{it.contentDescription=="关闭项目搜索"}.height>=48);list.performItemClick(list.adapter.getView(0,null,list),0,0);drain();ready();layout()
         assertFalse(d.isShowing);assertSame(buffer,editor.text);assertEquals(text,buffer.toString());assertTrue(field("dirty"));assertEquals("main.py",field<String>("activePath"))
     }
     @Test @Config(qualifiers="w1280dp-h800dp") fun tabletProjectSearchEmptyStateDoesNotReserveABlankResultsPanel(){
-        val buffer=editor.text;invoke("showProjectSearch");val d=field<AlertDialog>("toolDialog");val all=views(d.window!!.decorView)
+        val buffer=editor.text;invoke("showProjectSearch");layout();val pane=field<View>("sidebarSearchView");val all=views(pane)
+        assertTrue(pane.isShown);assertTrue(field<AlertDialog?>("toolDialog")?.isShowing!=true)
         all.filterIsInstance<EditText>().single().setText("no_such_batch_token_927");all.filterIsInstance<Button>().single{it.text.toString()=="搜索"}.performClick();drain()
         val list=all.filterIsInstance<ListView>().single();assertEquals(0,list.adapter.count);assertEquals("Empty results should not occupy a blank fixed-height panel",View.GONE,list.visibility)
-        capture("tablet-project-search-empty",d.window!!.decorView);d.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();idle();assertSame(buffer,editor.text)
+        capture("tablet-project-search-empty",pane);all.single{it.contentDescription=="关闭项目搜索"}.performClick();idle();assertSame(buffer,editor.text)
     }
 }

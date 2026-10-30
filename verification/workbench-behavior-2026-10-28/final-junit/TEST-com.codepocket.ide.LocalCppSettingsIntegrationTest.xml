@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.LocalCppSettingsIntegrationTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-30T02:18:26" hostname="JUHE" time="0.379">
+  <properties/>
+  <testcase name="tabletDarkKeepsBackendScopeAndDraftUntilApply" classname="com.codepocket.ide.LocalCppSettingsIntegrationTest" time="0.22"/>
+  <testcase name="phoneLightLargeKeepsBackendScopeAndDraftUntilApply" classname="com.codepocket.ide.LocalCppSettingsIntegrationTest" time="0.159"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -42,6 +42,7 @@ class FormSurfaceIntegrationTest {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("activeFile","main.cpp").putString("settings",AppSettings(theme=if(name.methodName.contains("Light"))UiTheme.LIGHT else UiTheme.DARK,
                 animations=false,autoSave=false,panelPreferSide=true).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get();drain();controller.windowFocusChanged(true);layout();editor.requestFocus()
         repeat(200){idle();if(editor.isLayoutReady)return;Thread.sleep(5)};fail("Main Sora layout unavailable")
     }
@@ -92,13 +93,14 @@ class FormSurfaceIntegrationTest {
         capture("phone-delete",d.window!!.decorView);d.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).performClick();assertEquals(before,ws.resolve("main.cpp").readText())
     }
     @Test @Config(qualifiers="w1280dp-h800dp") fun projectSearchRendersActualUnsavedResultsInTwoLevels(){
-        editor.setText("ui_unique_match\n");idle();invoke("showProjectSearch");val d=field<android.app.AlertDialog>("toolDialog")
-        capture("tablet-project-search-idle",d.window!!.decorView)
-        views(d.window!!.decorView).filterIsInstance<android.widget.EditText>().single().setText("ui_unique_match")
-        views(d.window!!.decorView).filterIsInstance<android.widget.Button>().single{it.text.toString()=="搜索"}.performClick();drain();idle()
-        val list=views(d.window!!.decorView).filterIsInstance<android.widget.ListView>().single();assertEquals(1,list.adapter.count)
+        editor.setText("ui_unique_match\n");idle();invoke("showProjectSearch");layout();val pane=field<View>("sidebarSearchView")
+        assertTrue(pane.isShown);assertTrue(field<android.app.AlertDialog?>("toolDialog")?.isShowing!=true)
+        capture("tablet-project-search-idle",pane)
+        views(pane).filterIsInstance<android.widget.EditText>().single().setText("ui_unique_match")
+        views(pane).filterIsInstance<android.widget.Button>().single{it.text.toString()=="搜索"}.performClick();drain();idle()
+        val list=views(pane).filterIsInstance<android.widget.ListView>().single();assertEquals(1,list.adapter.count)
         val row=list.adapter.getView(0,null,list);val labels=views(row).filterIsInstance<android.widget.TextView>().map{it.text.toString()}
-        assertTrue(labels.contains("main.cpp:1"));assertTrue(labels.contains("ui_unique_match"));capture("tablet-project-search",d.window!!.decorView);d.dismiss()
+        assertTrue(labels.contains("main.cpp:1"));assertTrue(labels.contains("ui_unique_match"));capture("tablet-project-search",pane);invoke("closeSidebarSearch")
         assertTrue(field<Boolean>("dirty"))
     }
 }

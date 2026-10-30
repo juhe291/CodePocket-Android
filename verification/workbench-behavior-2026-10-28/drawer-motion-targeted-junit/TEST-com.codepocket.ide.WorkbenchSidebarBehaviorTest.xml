@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkbenchSidebarBehaviorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-28T15:58:52" hostname="JUHE" time="7.945">
+  <properties/>
+  <testcase name="drawerWindowAnimationNeverSlidesItsWholeSurfaceOverTheFixedActivityBar" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="7.945"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

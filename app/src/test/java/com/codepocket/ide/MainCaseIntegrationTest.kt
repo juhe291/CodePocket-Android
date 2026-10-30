@@ -44,6 +44,7 @@ class MainCaseIntegrationTest {
         ReflectionHelpers.setStaticField(CaseRunSession::class.java,"batch",null);ReflectionHelpers.setStaticField(RunSession::class.java,"result",null)
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear().putString("activeFile","main.py")
             .putString("settings",AppSettings(autoSave=false,animations=false,autoCompletion=false,signatureHelp=false).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get();drain();controller.windowFocusChanged(true);layout()
     }
     @After fun close(){CaseRunSession.stop();RunSession.stop();if(::main.isInitialized&&!main.isDestroyed){main.finish();controller.pause().stop().destroy()};drain();ReflectionHelpers.setStaticField(RunSession::class.java,"result",null);ReflectionHelpers.setStaticField(CaseRunSession::class.java,"batch",null)}

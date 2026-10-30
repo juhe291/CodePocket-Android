@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.TerminalStatusPresentationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T18:13:57" hostname="JUHE" time="0.529">
+  <properties/>
+  <testcase name="retryUsesOneExistingRuntimeAndPreparingStatePreventsDuplicateLaunch" classname="com.codepocket.ide.TerminalStatusPresentationTest" time="0.139"/>
+  <testcase name="detailsAreScrollableSelectableAndCopyTheCompleteSavedRecord" classname="com.codepocket.ide.TerminalStatusPresentationTest" time="0.089"/>
+  <testcase name="shortLargeFontCardScrollsRatherThanClippingTheActionTargets" classname="com.codepocket.ide.TerminalStatusPresentationTest" time="0.08"/>
+  <testcase name="embeddedFailureShowsFriendlyActionsAndKeepsTheFullPrivateLog" classname="com.codepocket.ide.TerminalStatusPresentationTest" time="0.142"/>
+  <testcase name="backgroundFailureDoesNotStealTheCodeInputFocus" classname="com.codepocket.ide.TerminalStatusPresentationTest" time="0.078"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

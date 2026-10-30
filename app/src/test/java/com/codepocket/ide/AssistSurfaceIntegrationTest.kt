@@ -53,6 +53,7 @@ class AssistSurfaceIntegrationTest {
     @Before fun launch(){RuntimeEnvironment.setFontScale(if(name.methodName.contains("Large"))2f else 1f)
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear().putString("activeFile","main.py")
             .putString("settings",AppSettings(theme=if(name.methodName.contains("Light"))UiTheme.LIGHT else UiTheme.DARK,autoSave=false,animations=false,autoCompletion=false,signatureHelp=false).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get();drain();controller.windowFocusChanged(true);layout();assertTrue(editor.requestFocus());ready()}
     @After fun close(){if(::main.isInitialized){Shadows.shadowOf(RuntimeEnvironment.getApplication()).latestPopupWindow?.dismiss();ShadowAlertDialog.getLatestAlertDialog()?.takeIf{it.isShowing}?.dismiss();main.finish();controller.pause().stop().destroy();drain()};RuntimeEnvironment.setFontScale(1f)}
 

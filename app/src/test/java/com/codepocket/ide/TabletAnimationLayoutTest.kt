@@ -13,7 +13,11 @@ import org.robolectric.util.ReflectionHelpers.ClassParameter
 /** Window dimensions, not orientation flags, select a fixed tablet workbench. */
 @RunWith(RobolectricTestRunner::class) @Config(sdk=[34])
 class TabletAnimationLayoutTest {
-    private fun startup(main:MainActivity,w:Int,h:Int)=ReflectionHelpers.callInstanceMethod<Any?>(main,"resolvePanelStartup",ClassParameter.from(Int::class.javaPrimitiveType!!,w),ClassParameter.from(Int::class.javaPrimitiveType!!,h))
+    private fun startup(main:MainActivity,w:Int,h:Int):Any? {
+        // These layout-only fixtures represent an existing project; the welcome path is exercised through Main.setup.
+        ReflectionHelpers.setField(main,"workspaceOpen",true)
+        return ReflectionHelpers.callInstanceMethod<Any?>(main,"resolvePanelStartup",ClassParameter.from(Int::class.javaPrimitiveType!!,w),ClassParameter.from(Int::class.javaPrimitiveType!!,h))
+    }
     @Test fun launchBoundariesUseNet600By480WindowAndTabletStartsAt35Percent(){
         for((w,h,visible) in listOf(Triple(599,800,false),Triple(600,479,false),Triple(600,480,true),Triple(840,480,true),Triple(1280,800,true))){
             val main=Robolectric.buildActivity(MainActivity::class.java).get();startup(main,w,h)

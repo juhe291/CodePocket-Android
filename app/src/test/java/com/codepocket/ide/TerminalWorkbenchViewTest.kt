@@ -160,6 +160,7 @@ class TerminalWorkbenchViewTest {
         assertTrue(editor.hasFocus());assertFalse(ReflectionHelpers.getField<ShellTerminalPane>(activity,"shellPane").hasTerminalFocus())
     }
     @Test fun firstOutputRefreshDoesNotConsumeTheTabletLaunchDecision() {
+        ReflectionHelpers.setField(activity,"workspaceOpen",true) // Existing project launch, separate from welcome.
         ReflectionHelpers.setField(activity,"startupPanelPending",true)
         show(3)
         assertTrue(ReflectionHelpers.getField<Boolean>(activity,"startupPanelPending"))

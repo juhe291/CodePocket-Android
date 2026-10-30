@@ -17,6 +17,7 @@ class ActivityBar(context: Context, private val palette: IdePalette,
     onRun: (() -> Unit)? = null, onTerminal: (() -> Unit)? = null,
     private val onExplorer: () -> Unit) : LinearLayout(context) {
     private val explorerButton: ImageView
+    private var searchButton: ImageView? = null
     private val pen=Paint().apply { color=palette.accentText }
     private val indicator=Rect()
     init {
@@ -29,7 +30,7 @@ class ActivityBar(context: Context, private val palette: IdePalette,
                 actions.addView(this,LayoutParams(dp(48),dp(52)))
             }
         explorerButton=action(IdeIcon.EXPLORER,"资源管理器 · Ctrl+B",onExplorer)
-        onSearch?.let { action(IdeIcon.SEARCH,"项目搜索",it) }
+        onSearch?.let { searchButton=action(IdeIcon.SEARCH,"项目搜索",it) }
         onRun?.let { action(IdeIcon.RUN,"运行 / 停止 · F5",it) }
         onTerminal?.let { action(IdeIcon.TERMINAL,"打开终端",it) }
         addView(ScrollView(context).apply { isVerticalScrollBarEnabled=false;addView(actions) },LayoutParams(dp(48),0,1f))
@@ -41,10 +42,18 @@ class ActivityBar(context: Context, private val palette: IdePalette,
         explorerButton.setImageDrawable(IdeIconDrawable(context,IdeIcon.EXPLORER,if(active)palette.foreground else palette.muted,dp(22)))
         invalidate()
     }
+    fun setSearchActive(active:Boolean) {
+        searchButton?.apply {
+            isSelected=active
+            setImageDrawable(IdeIconDrawable(context,IdeIcon.SEARCH,if(active)palette.foreground else palette.muted,dp(22)))
+        }
+        invalidate()
+    }
     override fun dispatchDraw(canvas:Canvas) {
         super.dispatchDraw(canvas)
-        if(explorerButton.isSelected && explorerButton.isShown) {
-            explorerButton.getDrawingRect(indicator);offsetDescendantRectToMyCoords(explorerButton,indicator)
+        val selected=listOfNotNull(explorerButton,searchButton).firstOrNull{it.isSelected&&it.isShown}
+        if(selected!=null) {
+            selected.getDrawingRect(indicator);offsetDescendantRectToMyCoords(selected,indicator)
             canvas.drawRect(0f,indicator.top.coerceAtLeast(0).toFloat(),dp(2).toFloat(),indicator.bottom.coerceAtMost(height-dp(52)).toFloat(),pen)
         }
         pen.color=palette.border;canvas.drawRect(width-dp(1).toFloat(),0f,width.toFloat(),height.toFloat(),pen);pen.color=palette.accentText

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.PythonRunSnapshotTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-29T18:13:26" hostname="JUHE" time="0.385">
+  <properties/>
+  <testcase name="changedDiskOrOtherDraftInvalidatesPreparationWithoutChangingTheCapturedManifest" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.047"/>
+  <testcase name="privateServiceRejectsForeignJobsTraversalAndAnotherJobsExecutionRoot" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.031"/>
+  <testcase name="externalJobUsesFreshModulesAndBinaryResourcesAndNeverChangesTheEditorMirror" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.024"/>
+  <testcase name="deletedModulesAreNotResurrectedAndWrongDraftIdentityCleansOnlyTheNewJob" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.034"/>
+  <testcase name="staleActiveBytesAndAnExistingParentFileAreNotSilentlyAccepted" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.015"/>
+  <testcase name="internalDraftManifestKeepsTheRealRootAndCloseNeverDeletesProgramOutputs" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.042"/>
+  <testcase name="oversizedCombinedDraftsDoNotLeavePartialMetadataOrOverwriteOriginalFiles" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.192"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

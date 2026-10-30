@@ -37,6 +37,7 @@ class CompletionInteractionTest {
             // Seed an actual v8 install, whose always-serialized EXPLICIT was the old default.
             .putString("settings",org.json.JSONObject(AppSettings(autoSave=false,animations=false).toJson())
                 .put("version",8).put("completionArrows","EXPLICIT").toString()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible()
         main=controller.get()
         WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS)

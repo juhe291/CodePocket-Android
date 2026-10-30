@@ -42,6 +42,7 @@ class WorkbenchStructureIntegrationTest {
         RuntimeEnvironment.getApplication().getSharedPreferences("codepocket_v2",0).edit().clear()
             .putString("activeFile","main.cpp").putString("settings",AppSettings(theme=if(name.methodName.contains("Light"))UiTheme.LIGHT else UiTheme.DARK,
                 animations=false,autoSave=false,panelPreferSide=true).toJson()).commit()
+        Workspace(RuntimeEnvironment.getApplication()) // Explicit existing-project fixture; app startup no longer seeds files.
         controller=Robolectric.buildActivity(MainActivity::class.java).setup().visible();main=controller.get();drain();controller.windowFocusChanged(true);layout();editor.requestFocus()
         repeat(200){idle();if(editor.isLayoutReady)return;Thread.sleep(5)};fail("Main Sora layout unavailable")
     }
