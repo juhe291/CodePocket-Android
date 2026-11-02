@@ -33,3 +33,11 @@ verification/git-preflight-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at
 verification/git-preflight-2026-11-02/licenses/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 app/src/main/assets/git-licenses/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 verification/git-workspace-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-remote-preflight-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-remote-preflight-2026-11-02/*.bin -text
+verification/web-sidebar-research-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-remote-workspace-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-remote-journal-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-remote-service-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+# JUnit comparison failures can contain literal CRLF inside otherwise LF XML.
+verification/git-remote-*/**/*.xml -text whitespace=cr-at-eol

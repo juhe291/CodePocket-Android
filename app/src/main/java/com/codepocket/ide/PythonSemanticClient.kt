@@ -88,7 +88,9 @@ object SemanticProtocol {
 }
 
 /** One lazy binding shared by completion/signature workers; no work or waiting on the UI thread. */
-internal class AndroidSemanticTransport(context:Context, private val service:Class<out android.app.Service> = PythonAnalysisService::class.java):SemanticTransport {
+internal class AndroidSemanticTransport(context:Context, private val service:Class<out android.app.Service> = PythonAnalysisService::class.java,
+    private val waitSeconds:Long=35):SemanticTransport {
+    init{require(waitSeconds in 1..130)}
     private val app=context.applicationContext
     private val lock=Any()
     private var connection:Connection?=null
@@ -129,7 +131,7 @@ internal class AndroidSemanticTransport(context:Context, private val service:Cla
             remote.send(Message.obtain(null,PythonAnalysisService.ANALYZE).apply{
                 replyTo=reply;data=Bundle().apply{putLong("id",id);putString("payload",payload)}
             })
-            return if(call.done.await(35,TimeUnit.SECONDS))call.result else {reset(current);null}
+            return if(call.done.await(waitSeconds,TimeUnit.SECONDS))call.result else {reset(current);null}
         }finally{
             calls.remove(id)
             runCatching{remote.send(Message.obtain(null,PythonAnalysisService.CANCEL).apply{data=Bundle().apply{putLong("id",id)}})}

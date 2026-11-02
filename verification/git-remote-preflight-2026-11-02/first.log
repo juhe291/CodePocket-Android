@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\git-remote-preflight-2026-11-02\probe_https.py", line 27, in <module>
+    from dulwich.errors import HTTPUnauthorized, GitProtocolError
+ImportError: cannot import name 'HTTPUnauthorized' from 'dulwich.errors' (C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\errors.py)

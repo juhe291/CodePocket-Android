@@ -2,6 +2,18 @@
 
 **后续执行节奏（2026-10-26用户补充）**：通常合并3–5项相关修改，单项做定向测试/视觉检查，批次结束统一全量回归、Lint及APK构建。纯文档不打包；不再每个小修改都生成安装包。详见[批次规则](DEVELOPMENT_BATCH_POLICY.md)。当前批次的实际代码/产物见下文。
 
+## 正在进行：P3-B 服务/凭据/推送回执，待接工作台（2026-11-02）
+
+- 用户复核：网页侧边栏尚未实现，Main仍只有隐藏auxiliarySlot；前述“剩3包”漏列这一原工作台要求，已补[P3-E计划](P3_WEB_AUXILIARY_BATCH_2026-11-02.md)，当前顺序B→E→C→D。先按用户要求找GitHub现成方案：AgentWeb/AdvancedWebView/WebKit/Markwon源码与许可已核对，优先系统WebView+WebKit1.18.0，实际缓存AAR静态元数据24/33/7.2符合现有24/35/8.7.3，无原生库。官方下载DNS失败及既有镜像检查证据在verification/web-sidebar-research-2026-11-02；未加生产依赖、未编译/运行或打新APK，不宣称已兼容或网页已可用。
+
+- 从5b13a7b接 [P3-B四组计划](P3_GITHUB_SYNC_BATCH_2026-11-02.md)，固定Dulwich1.2.20/urllib3 2.8.0不升级。git_https.py传输12项通过；git_remote.py真实私有快照配置/克隆/fetch/安全快进/单分支非强制push及原工作区事务已加入。后续服务/凭据代码已加入，当前仍未实际工作台/网络表单接入，不能称App同步可用。
+- [远端引擎/发布校验证据](../verification/git-remote-workspace-2026-11-02/README.md)：17项缺失基线、首次检出验证顺序失败与修复、SSH改HTTPS边界失败与修复、沙箱timeout及Gradle守护进程连接失败均保留。result.plan固定写在work外，逐项清单/HEAD/操作范围校验和完整正文/空目录备份已加入；原本地metadata发布范围没有放宽。原生最终40项通过（新增18、原22保持），包括真实TLS引擎4份跨语言结果；对应源码、JUnit及checkpoint.json已归档，不以手写清单冒充完整接入。跨语言首轮40项中1项因测试预期漏算新建空文件失败，已补齐存在性比较，保留完整集合断言和失败JUnit。
+- [原工作区正文事务证据](../verification/git-remote-journal-2026-11-02/README.md)：GitWorktreeTransaction/version2独立日志、原version1分发、已知回滚/删除重建、未知部分/身份/未确认删除保留备份与导出，以及远端refs/packed-refs标准锁已加入。62项定向及92项相关扩大检查全部通过（本阶段新22、原本地工作台52及清单18身份保持），真实TLS4种结果同时用于内部/不透明提供方及真实SAF文件流。首轮57项的3个CRLF预期失败保留，改为与夹具原始字节精确比较。broad-results.json及checkpoint.json归档实际源码/结果，不当作整批回归。
+- [服务/凭据/回执证据](../verification/git-remote-service-2026-11-02/README.md)：非导出:git_remote服务与独立作业租约、120秒截止/125秒客户端等待、忙碌拒绝不替换推送、AtomicBoolean取消入口，AES/GCM+AndroidKeyStore凭据代码（默认对象内临时）、跨进程文件锁的持久推送意图/回执均已加入。最终120项相关检查通过（旧92保持、新22及旧默认IPC6），全Python155项通过（旧151保持）。主机真实独立JVM验证锁，实际主机RPC运行固定Python配置；不声称设备Keystore或Android Chaquopy桥已运行。
+- 服务阶段保留首轮36通过、测试变量java遮蔽包名的编译失败、37项中1项未知推送返回backend而非push_unknown的失败。另2项推送报告回归在保存的旧生产模块上真实失败；现服务端明确报告在本地status/清理异常时保持，未取得报告仍unknown，JSON转义的令牌回显也拒绝。旧断言保持，无新跳过。当前阶段的checkpoint.json、归档JUnit及源摘要是依据，旧151/153结果不是本次155结果。
+- [当前证据](../verification/git-remote-preflight-2026-11-02/README.md)：真实回环TLS/Git前置8项通过，标准Git fsck、单分支非强制上传和陈旧拒绝均只操作自有临时仓库。原有APK内真实CA包严格TLS读取公共GitHub引用HTTP200，无凭据/上传。保留初次导入错误、连接池阻塞线程栈及已确认终止的自有PID、清理错误和沙箱DNS失败；不是未观察到就重启进程。当前相关测试均已结束。
+- 本批新生产模块尚未整批主App回归/Lint/构建，最新已验证APK仍为下方P3-A包26ac0bec…；无新APK，不重建Debug密钥。下一步GitRemoteWorkbench接服务/事务/WorkspaceIo、新内部/SAF克隆目标选择及未保存/恢复草稿保护、凭据会话/表单/清除与共享原生UI，再集中收尾。内部POSIX检出模式仍须接入核对，不能拿SAF索引模式测试代替。P3-E网页、P3-C设置搜索/主题、P3-D更多语言真实分析均保留，整体目标未完成；不推送真实项目、发布、触发远端CI或创建自动任务，设备后置。
+
 ## 最近完成：P3-A 本地 Git 候选（2026-11-02）
 
 - 从f1c4328按[P3四组计划](P3_IMPLEMENTATION_PLAN_2026-11-02.md)接入固定Dulwich1.2.20/urllib3 2.8.0、独立非导出:git服务、内部/真实SAF二进制快照/元数据事务、与树/搜索共享的原生源代码管理侧栏，以及真实状态/差异/暂存/取消暂存/身份提交/完整历史。非仓库可初始化，无项目给打开入口；不要求设备预装Git，没有GitHub假入口。

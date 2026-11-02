@@ -1,0 +1,175 @@
+test_accepted_push_followed_by_transport_failure_reports_unknown_remote_outcome (test_git_remote.GitRemoteTests.test_accepted_push_followed_by_transport_failure_reports_unknown_remote_outcome) ... FAIL
+test_authentication_failure_is_sanitized_and_cancel_precedes_clone (test_git_remote.GitRemoteTests.test_authentication_failure_is_sanitized_and_cancel_precedes_clone) ... FAIL
+test_clone_nonempty_or_stale_snapshot_is_rejected_before_network (test_git_remote.GitRemoteTests.test_clone_nonempty_or_stale_snapshot_is_rejected_before_network) ... FAIL
+test_clone_transfers_real_tree_index_refs_and_standard_git_reads_everything (test_git_remote.GitRemoteTests.test_clone_transfers_real_tree_index_refs_and_standard_git_reads_everything) ... FAIL
+test_configure_preserves_other_config_and_never_connects_or_writes_credentials (test_git_remote.GitRemoteTests.test_configure_preserves_other_config_and_never_connects_or_writes_credentials) ... FAIL
+test_empty_remote_clones_as_an_unborn_branch (test_git_remote.GitRemoteTests.test_empty_remote_clones_as_an_unborn_branch) ... FAIL
+test_fast_forward_refuses_dirty_worktree_without_changing_metadata (test_git_remote.GitRemoteTests.test_fast_forward_refuses_dirty_worktree_without_changing_metadata) ... FAIL
+test_fast_forward_refuses_divergence_without_reset_or_merge (test_git_remote.GitRemoteTests.test_fast_forward_refuses_divergence_without_reset_or_merge) ... FAIL
+test_fast_forward_refuses_staged_changes_without_consuming_them (test_git_remote.GitRemoteTests.test_fast_forward_refuses_staged_changes_without_consuming_them) ... FAIL
+test_fast_forward_updates_add_modify_delete_and_preserves_unrelated_binary (test_git_remote.GitRemoteTests.test_fast_forward_updates_add_modify_delete_and_preserves_unrelated_binary) ... FAIL
+test_fetch_only_updates_objects_and_tracking_ref_not_source_head_or_index (test_git_remote.GitRemoteTests.test_fetch_only_updates_objects_and_tracking_ref_not_source_head_or_index) ... FAIL
+test_provider_mode_checkout_preserves_executable_git_index_mode (test_git_remote.GitRemoteTests.test_provider_mode_checkout_preserves_executable_git_index_mode) ... FAIL
+test_push_is_a_single_non_force_update_and_leaves_local_bytes_unchanged (test_git_remote.GitRemoteTests.test_push_is_a_single_non_force_update_and_leaves_local_bytes_unchanged) ... FAIL
+test_push_missing_remote_history_and_divergence_never_force (test_git_remote.GitRemoteTests.test_push_missing_remote_history_and_divergence_never_force) ... FAIL
+test_push_refuses_stale_remote_before_uploading_any_pack (test_git_remote.GitRemoteTests.test_push_refuses_stale_remote_before_uploading_any_pack) ... FAIL
+test_unsafe_symlink_and_git_metadata_alias_never_reach_checkout (test_git_remote.GitRemoteTests.test_unsafe_symlink_and_git_metadata_alias_never_reach_checkout) ... FAIL
+test_untracked_incoming_collision_is_preserved (test_git_remote.GitRemoteTests.test_untracked_incoming_collision_is_preserved) ... FAIL
+
+======================================================================
+FAIL: test_accepted_push_followed_by_transport_failure_reports_unknown_remote_outcome (test_git_remote.GitRemoteTests.test_accepted_push_followed_by_transport_failure_reports_unknown_remote_outcome)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_authentication_failure_is_sanitized_and_cancel_precedes_clone (test_git_remote.GitRemoteTests.test_authentication_failure_is_sanitized_and_cancel_precedes_clone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_clone_nonempty_or_stale_snapshot_is_rejected_before_network (test_git_remote.GitRemoteTests.test_clone_nonempty_or_stale_snapshot_is_rejected_before_network)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_clone_transfers_real_tree_index_refs_and_standard_git_reads_everything (test_git_remote.GitRemoteTests.test_clone_transfers_real_tree_index_refs_and_standard_git_reads_everything)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_configure_preserves_other_config_and_never_connects_or_writes_credentials (test_git_remote.GitRemoteTests.test_configure_preserves_other_config_and_never_connects_or_writes_credentials)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_empty_remote_clones_as_an_unborn_branch (test_git_remote.GitRemoteTests.test_empty_remote_clones_as_an_unborn_branch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_fast_forward_refuses_dirty_worktree_without_changing_metadata (test_git_remote.GitRemoteTests.test_fast_forward_refuses_dirty_worktree_without_changing_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_fast_forward_refuses_divergence_without_reset_or_merge (test_git_remote.GitRemoteTests.test_fast_forward_refuses_divergence_without_reset_or_merge)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_fast_forward_refuses_staged_changes_without_consuming_them (test_git_remote.GitRemoteTests.test_fast_forward_refuses_staged_changes_without_consuming_them)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_fast_forward_updates_add_modify_delete_and_preserves_unrelated_binary (test_git_remote.GitRemoteTests.test_fast_forward_updates_add_modify_delete_and_preserves_unrelated_binary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_fetch_only_updates_objects_and_tracking_ref_not_source_head_or_index (test_git_remote.GitRemoteTests.test_fetch_only_updates_objects_and_tracking_ref_not_source_head_or_index)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_provider_mode_checkout_preserves_executable_git_index_mode (test_git_remote.GitRemoteTests.test_provider_mode_checkout_preserves_executable_git_index_mode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_push_is_a_single_non_force_update_and_leaves_local_bytes_unchanged (test_git_remote.GitRemoteTests.test_push_is_a_single_non_force_update_and_leaves_local_bytes_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_push_missing_remote_history_and_divergence_never_force (test_git_remote.GitRemoteTests.test_push_missing_remote_history_and_divergence_never_force)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_push_refuses_stale_remote_before_uploading_any_pack (test_git_remote.GitRemoteTests.test_push_refuses_stale_remote_before_uploading_any_pack)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_unsafe_symlink_and_git_metadata_alias_never_reach_checkout (test_git_remote.GitRemoteTests.test_unsafe_symlink_and_git_metadata_alias_never_reach_checkout)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+======================================================================
+FAIL: test_untracked_incoming_collision_is_preserved (test_git_remote.GitRemoteTests.test_untracked_incoming_collision_is_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 27, in setUp
+    self.assertIsNotNone(git_remote,'Production remote Git operations are missing')
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Production remote Git operations are missing
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.005s
+
+FAILED (failures=17)

@@ -4,7 +4,7 @@
 
 > 2026-10-27：[本地 C++ 接入](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md)已完成代码/主机/APK验证，Android执行验收仍后置。头文件 Tab 补全也已完成代码/主机/APK验证，原后续 P2/P3 范围继续。
 
-> 2026-11-02：按[P3完整计划](docs/P3_IMPLEMENTATION_PLAN_2026-11-02.md)完成本地 Git 的代码/主机/APK验证。GitHub 同步、设置搜索/主题扩展、更多语言分析继续推进；Android 执行后置，整个目标未完成。
+> 2026-11-02：按[P3完整计划](docs/P3_IMPLEMENTATION_PLAN_2026-11-02.md)完成本地 Git 的代码/主机/APK验证。当前GitHub同步基础进行中；原[网页辅助栏](docs/P3_WEB_AUXILIARY_BATCH_2026-11-02.md)补回总表并先核对GitHub现成组件，之后继续设置搜索/主题与更多语言分析。Android执行后置，整个目标未完成。
 
 **当前：P3-A 本地 Git 候选版（2026-11-02）。**
 

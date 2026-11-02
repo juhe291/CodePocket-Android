@@ -1,0 +1,49 @@
+test_failed_remote_operation_never_creates_a_publication_plan (test_git_remote.GitRemoteTests.test_failed_remote_operation_never_creates_a_publication_plan) ... ERROR
+test_publication_plan_cannot_overwrite_an_existing_result_or_an_outside_file (test_git_remote.GitRemoteTests.test_publication_plan_cannot_overwrite_an_existing_result_or_an_outside_file) ... ERROR
+test_publication_plan_is_outside_snapshot_and_lists_every_binary_file_and_directory (test_git_remote.GitRemoteTests.test_publication_plan_is_outside_snapshot_and_lists_every_binary_file_and_directory) ... ERROR
+
+======================================================================
+ERROR: test_failed_remote_operation_never_creates_a_publication_plan (test_git_remote.GitRemoteTests.test_failed_remote_operation_never_creates_a_publication_plan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 222, in test_failed_remote_operation_never_creates_a_publication_plan
+    root=self.folder();(root/'keep.txt').write_text('keep');result=self.planned(root,'clone')
+                                                                   ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 199, in planned
+    return json.loads(git_remote.run(str(root),json.dumps(fields),plan_output=str(plan or root.parent/'result.plan'),
+                      ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        transport_factory=self.transport))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: run() got an unexpected keyword argument 'plan_output'
+
+======================================================================
+ERROR: test_publication_plan_cannot_overwrite_an_existing_result_or_an_outside_file (test_git_remote.GitRemoteTests.test_publication_plan_cannot_overwrite_an_existing_result_or_an_outside_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 216, in test_publication_plan_cannot_overwrite_an_existing_result_or_an_outside_file
+    result=self.planned(root,'configure');self.assertEqual('plan_path',result['error'])
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 199, in planned
+    return json.loads(git_remote.run(str(root),json.dumps(fields),plan_output=str(plan or root.parent/'result.plan'),
+                      ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        transport_factory=self.transport))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: run() got an unexpected keyword argument 'plan_output'
+
+======================================================================
+ERROR: test_publication_plan_is_outside_snapshot_and_lists_every_binary_file_and_directory (test_git_remote.GitRemoteTests.test_publication_plan_is_outside_snapshot_and_lists_every_binary_file_and_directory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 202, in test_publication_plan_is_outside_snapshot_and_lists_every_binary_file_and_directory
+    root=self.folder();before=self.state(root,False)['snapshot'];result=self.planned(root,'clone')
+                                                                        ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_git_remote.py", line 199, in planned
+    return json.loads(git_remote.run(str(root),json.dumps(fields),plan_output=str(plan or root.parent/'result.plan'),
+                      ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        transport_factory=self.transport))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: run() got an unexpected keyword argument 'plan_output'
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.987s
+
+FAILED (errors=3)

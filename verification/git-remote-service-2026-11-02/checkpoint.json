@@ -1,0 +1,33 @@
+{
+  "stage": "P3-B private service, credential vault and durable push receipts; App UI not connected",
+  "baseline_commit": "5b13a7b",
+  "related_tests": 120,
+  "new_service_security_tests": 22,
+  "previous_related_identities_retained": 92,
+  "old_ipc_tests_retained": 6,
+  "first_targeted_tests": 36,
+  "cross_targeted_tests": 37,
+  "cross_first_failures": 1,
+  "cross_process_filesystem_lock": true,
+  "python_source_tests": 155,
+  "old_python_identities_retained": 151,
+  "report_regression_baseline_failures": 2,
+  "manifest_private_service": true,
+  "host_rpc": true,
+  "host_aes_gcm": true,
+  "device_keystore_execution": false,
+  "android_chaquopy_execution": false,
+  "network_ui": false,
+  "full_app_regression_run": false,
+  "lint_run": false,
+  "new_apk_built": false,
+  "current_apk": "dist/CodePocket-local-git-2026-11-02-debug.apk",
+  "current_apk_sha256": "26ac0bec36f7a0a89108727452d1f96a8576086e5f9ee19d889987a568961075",
+  "goal_complete": false,
+  "remaining": [
+    "P3-B remote workbench, clone destination and unsaved protection, credential/UI integration and batch delivery",
+    "P3-E web auxiliary panel",
+    "P3-C settings and themes",
+    "P3-D more language analysis"
+  ]
+}

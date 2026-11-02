@@ -46,6 +46,7 @@ class SafGitBinaryIntegrationTest {
         companion object {const val AUTHORITY="com.codepocket.ide.test.gitbinary";const val ROOT="opaque:root"}
         val nodes=linkedMapOf(ROOT to Node(ROOT,null,"项目",Document.MIME_TYPE_DIR,disk))
         var writable=true;var writeCalls=0;var lastMime:String?=null;private var counter=0
+        var beforeOpenWrite:((Node)->Unit)?=null
         val tree:Uri get()=DocumentsContract.buildTreeDocumentUri(AUTHORITY,ROOT)
         override fun onCreate()=true
         override fun queryRoots(projection:Array<out String>?):Cursor=MatrixCursor(projection?:arrayOf("root_id"))
@@ -69,7 +70,7 @@ class SafGitBinaryIntegrationTest {
             return false
         }
         override fun openDocument(documentId:String,mode:String,signal:CancellationSignal?):ParcelFileDescriptor {
-            if('w' in mode){check(writable);writeCalls++}
+            if('w' in mode){check(writable);writeCalls++;beforeOpenWrite?.invoke(nodes.getValue(documentId))}
             return ParcelFileDescriptor.open(nodes.getValue(documentId).file,ParcelFileDescriptor.parseMode(mode))
         }
         override fun createDocument(parentDocumentId:String,mimeType:String,displayName:String):String {

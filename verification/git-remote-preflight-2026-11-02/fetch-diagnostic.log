@@ -1,0 +1,31 @@
+test_01_fetches_real_pack_and_symbolic_head_over_verified_tls (probe_https.HttpsProbe.test_01_fetches_real_pack_and_symbolic_head_over_verified_tls) ... Timeout (0:00:10)!
+Thread 0x00007c8c (most recent call first):
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\selectors.py", line 305 in _select
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\selectors.py", line 314 in select
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\socketserver.py", line 235 in serve_forever
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\threading.py", line 994 in run
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\threading.py", line 1043 in _bootstrap_inner
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\threading.py", line 1014 in _bootstrap
+
+Thread 0x00008efc (most recent call first):
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\threading.py", line 359 in wait
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\queue.py", line 199 in get
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\urllib3\connectionpool.py", line 280 in _get_conn
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\urllib3\connectionpool.py", line 773 in urlopen
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\urllib3\poolmanager.py", line 459 in urlopen
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\urllib3\_request_methods.py", line 278 in request_encode_body
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\urllib3\_request_methods.py", line 143 in request
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\verification\git-remote-preflight-2026-11-02\probe_https.py", line 134 in request
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\dulwich\client.py", line 5484 in _http_request
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\dulwich\client.py", line 4881 in _smart_request
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\dulwich\client.py", line 5160 in fetch_pack
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\git-probe\site\dulwich\client.py", line 1742 in fetch
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\verification\git-remote-preflight-2026-11-02\probe_https.py", line 170 in fetch
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\verification\git-remote-preflight-2026-11-02\probe_https.py", line 172 in test_01_fetches_real_pack_and_symbolic_head_over_verified_tls
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\unittest\case.py", line 606 in _callTestMethod
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\unittest\case.py", line 651 in run
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\unittest\case.py", line 707 in __call__
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\unittest\suite.py", line 122 in run
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\unittest\suite.py", line 84 in __call__
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\.tools\python313-full\tools\Lib\unittest\runner.py", line 240 in run
+  File "C:\Users\q1684\Desktop\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\CodePocket-Android\verification\git-remote-preflight-2026-11-02\diagnose-fetch.py", line 6 in <module>

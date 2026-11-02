@@ -16,6 +16,7 @@ interface DocumentGateway {
     fun writeBytes(id: String, bytes: ByteArray) { throw java.io.IOException("提供方不支持二进制写入") }
     fun createBinary(parent: String, name: String): DocumentNode = create(parent, name, false)
     fun executable(id: String): Boolean? = null
+    fun setExecutable(id:String,value:Boolean) { throw java.io.IOException("提供方不支持执行权限写入") }
     fun write(id: String, text: String)
     fun create(parent: String, name: String, directory: Boolean): DocumentNode
     fun rename(id: String, name: String): DocumentNode

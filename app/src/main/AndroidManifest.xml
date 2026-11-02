@@ -14,6 +14,7 @@
         <service android:name=".CppAnalysisService" android:exported="false" android:process=":cpp_analysis" />
         <service android:name=".CodeFormattingService" android:exported="false" android:process=":formatting" />
         <service android:name=".GitOperationService" android:exported="false" android:process=":git" />
+        <service android:name=".GitRemoteService" android:exported="false" android:process=":git_remote" />
         <service android:name=".CppExecutionService" android:exported="false" android:process=":cpp_run" />
         <activity
             android:name=".MainActivity"

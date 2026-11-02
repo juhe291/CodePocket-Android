@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitRemotePlanTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-11-02T13:28:37" hostname="JUHE" time="2.958">
+  <properties/>
+  <testcase name="unsafeManifestPathsAndMalformedVersionLengthsAreRejected" classname="com.codepocket.ide.GitRemotePlanTest" time="0.211"/>
+  <testcase name="manifestScopeAndRequestResponseTokensAreStrict" classname="com.codepocket.ide.GitRemotePlanTest" time="0.084"/>
+  <testcase name="configureChangesOnlyOriginConfigurationAndRetainsTheOriginalBody" classname="com.codepocket.ide.GitRemotePlanTest" time="0.109"/>
+  <testcase name="orphanPackAndChangedExistingObjectAreRejected" classname="com.codepocket.ide.GitRemotePlanTest" time="0.126"/>
+  <testcase name="fastForwardApprovesAddedModifiedDeletedBinaryAndFileDirectoryTransitions" classname="com.codepocket.ide.GitRemotePlanTest" time="0.154"/>
+  <testcase name="fetchAllowsPairedNewPackAndSelectedRemoteRefWithoutChangingHeadOrIndex" classname="com.codepocket.ide.GitRemotePlanTest" time="0.081"/>
+  <testcase name="foreignStoreCannotApproveAnotherWorkspacesSnapshot" classname="com.codepocket.ide.GitRemotePlanTest" time="0.093"/>
+  <testcase name="irrelevantMetadataDirectoriesAndRemovedMetadataAreRejected" classname="com.codepocket.ide.GitRemotePlanTest" time="0.091"/>
+  <testcase name="cloneRequiresAnOriginallyEmptyTargetAndTheConfirmedBranch" classname="com.codepocket.ide.GitRemotePlanTest" time="0.089"/>
+  <testcase name="manifestsCannotSpoofHeadResolutionIncludingPackedRefsOrDetachedState" classname="com.codepocket.ide.GitRemotePlanTest" time="0.164"/>
+  <testcase name="completeBackupIncludesBinaryBodiesAndEmptyDirectoriesWhileLocalDefaultKeepsItsScope" classname="com.codepocket.ide.GitRemotePlanTest" time="0.122"/>
+  <testcase name="resultMustMatchAllManifestHashesLengthsAndDirectories" classname="com.codepocket.ide.GitRemotePlanTest" time="0.089"/>
+  <testcase name="bodyUpdateWithoutCompleteBackupOrWithCorruptBackupIsRejected" classname="com.codepocket.ide.GitRemotePlanTest" time="0.113"/>
+  <testcase name="fastForwardCannotChangeAnotherLocalBranchOrRemoteConfiguration" classname="com.codepocket.ide.GitRemotePlanTest" time="0.266"/>
+  <testcase name="fetchCannotChangeSourceIndexHeadConfigurationOrUnselectedRemote" classname="com.codepocket.ide.GitRemotePlanTest" time="0.865"/>
+  <testcase name="originalMetadataPublisherStillRejectsBodyChangesEvenWithACompleteBackup" classname="com.codepocket.ide.GitRemotePlanTest" time="0.152"/>
+  <testcase name="snapshotMutationAfterReadingTheManifestCannotBePublished" classname="com.codepocket.ide.GitRemotePlanTest" time="0.145"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
