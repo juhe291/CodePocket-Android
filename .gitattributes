@@ -28,3 +28,6 @@ verification/formatting-2026-10-30/*.log -text whitespace=cr-at-eol,-blank-at-eo
 verification/formatting-2026-10-30/snippet-fixtures/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 verification/formatting-2026-10-30/CodeFormattingTest-before-portability.kt -text
 verification/formatting-2026-10-30/verify_formatting_apk-before-loader-fix.py -text
+
+verification/git-preflight-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-preflight-2026-11-02/licenses/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

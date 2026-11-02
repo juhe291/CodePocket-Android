@@ -2,6 +2,13 @@
 
 **后续执行节奏（2026-10-26用户补充）**：通常合并3–5项相关修改，单项做定向测试/视觉检查，批次结束统一全量回归、Lint及APK构建。纯文档不打包；不再每个小修改都生成安装包。详见[批次规则](DEVELOPMENT_BATCH_POLICY.md)。当前批次的实际代码/产物见下文。
 
+## 正在进行：P3-A 本地Git，前置可行、尚未生产接入（2026-11-02）
+
+- [P3完整计划](P3_IMPLEMENTATION_PLAN_2026-11-02.md)保留Git/GitHub、设置搜索细化、主题扩展、更多语言分析；[Git前置报告](P3_GIT_PREFLIGHT_2026-11-02.md)保存Dulwich1.2.20/urllib3 2.8.0官方纯Pythonwheel、摘要和许可。独立缓存10项真实Git操作/标准Git交叉检查全部通过，含pack/refs、索引锁、Unicode/CRLF/二进制及钩子/过滤器边界。不是Android执行或生产Git功能。
+- 当前生产仍为fbb9d60及下方格式化候选59e13ca5…；没有修改App依赖、服务或界面，没有P3新APK。仓库实际API为WorkTree.commit，no_verify仍会执行post-commit；默认配置会读全局/include，生产必须明确隔离。ProbeRepo是固定SHA-1能力夹具，不能当完整生产验证器。
+- 下一步按P3-A四组接入：受控Git后端/配置与路径边界，独立服务及内部/SAF新鲜二进制事务，同一树/搜索宿主的原生源码管理侧栏，真实暂存/取消暂存/提交身份与历史。DocumentGateway目前仅有文本write，不能把旧镜像或文本写入冒充SAF Git对象支持。外部过滤器/LFS等不应静默失真。
+- 本轮原始记录在verification/git-preflight-2026-11-02；只有元数据首次沙箱DNS失败，主机网络重试成功，未修改系统配置。初次API探查错误与两轮10通过均保留。没有推送、上传源码或触发工作流；P3其他工作、设备后置和整体目标保持。
+
 ## 最近完成：P2 代码格式化候选（2026-10-30建批，2026-11-02收尾）
 
 - 从50c1288按[四组计划](P2_FORMATTING_BATCH_2026-10-30.md)继续：已接入固定autopep8/pycodestyle及独立格式化服务、复用clangd内嵌格式化、正式Sora事务、编辑分类/Shift+Alt+F和默认关闭的保存时格式化。原侧栏与欢迎区成果保留，不重新打磨UI。

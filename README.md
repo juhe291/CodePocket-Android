@@ -4,6 +4,8 @@
 
 > 2026-10-27：[本地 C++ 接入](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md)已完成代码/主机/APK验证，Android执行验收仍后置。头文件 Tab 补全也已完成代码/主机/APK验证，原后续 P2/P3 范围继续。
 
+> 2026-11-02：接着[P3完整计划](docs/P3_IMPLEMENTATION_PLAN_2026-11-02.md)推进。[Git引擎前置](docs/P3_GIT_PREFLIGHT_2026-11-02.md)的10项主机检查通过，尚未生产接入或打包，当前候选仍为下方格式化包；Android执行后置，整个目标继续。
+
 **当前：P2格式化候选版（2026-10-30建批，11-02收尾）。**
 
 - [当前候选APK](dist/CodePocket-formatting-2026-10-30-debug.apk)：真实离线Python/C++格式化、编辑菜单/Shift+Alt+F及默认关闭的保存时格式化。未保存正文参与，可一次撤销；失败继续原保存和草稿保护。
