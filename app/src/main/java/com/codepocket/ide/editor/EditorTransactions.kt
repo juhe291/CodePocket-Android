@@ -5,7 +5,8 @@ import com.codepocket.ide.TextChange
 import com.codepocket.editor.surface.TextEdits
 
 /** All positions are UTF-16. A background action must retain the snapshot it was computed from. */
-data class EditorTransaction(val source: EditorSnapshot, val change: TextChange, val matchSelection: Boolean = true)
+data class EditorTransaction(val source: EditorSnapshot, val change: TextChange, val matchSelection: Boolean = true,
+    val preserveFocus: Boolean = false)
 
 enum class EditResult(val accepted: Boolean = false, val changesText: Boolean = false) {
     APPLIED(true, true), SELECTION_ONLY(true), UNCHANGED(true),

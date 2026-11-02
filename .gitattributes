@@ -21,3 +21,10 @@ verification/cpp-local-integration-2026-10-27/snippet-fixtures/** -text whitespa
 verification/cpp-header-completion-2026-10-27/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 verification/cpp-header-completion-2026-10-27/snippet-fixtures/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 verification/settings-touch-fix-2026-10-28/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+
+# Pinned formatting licenses and host evidence retain their recorded bytes.
+app/src/main/assets/format-licenses/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/formatting-2026-10-30/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/formatting-2026-10-30/snippet-fixtures/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/formatting-2026-10-30/CodeFormattingTest-before-portability.kt -text
+verification/formatting-2026-10-30/verify_formatting_apk-before-loader-fix.py -text

@@ -100,7 +100,7 @@ chaquopy {
     defaultConfig {
         version = "3.13"
         // Jedi reads its bundled stubs and Python sources by filesystem path.
-        extractPackages("jedi", "parso")
+        extractPackages("jedi", "parso", "autopep8", "pycodestyle")
         providers.gradleProperty("codepocket.buildPython").orNull?.let { buildPython(it) }
         pip {
             install("-r", "requirements.txt")

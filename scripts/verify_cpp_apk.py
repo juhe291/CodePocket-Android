@@ -59,6 +59,8 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--allow-runner-update', action='store_true',
                         help='Allow only runner.pyc code to change; other shipped modules may change their pyc mtime only. All runtime assets must match.')
+    parser.add_argument('--allow-formatting-update', action='store_true',
+                        help='Verify only the pinned formatting additions against the workbench candidate; all original runtime payloads stay unchanged.')
     args = parser.parse_args()
     lock = json.loads((ROOT / 'app/cpp-runtime-lock.json').read_text())
     with zipfile.ZipFile(args.apk) as apk, zipfile.ZipFile(args.baseline) as baseline:
@@ -139,6 +141,13 @@ def main():
         original_python = [name for name in baseline.namelist() if name.startswith('assets/chaquopy/')]
         changed_python = []
         metadata_updates=[]
+        formatting_update = None
+        if args.allow_formatting_update:
+            assert not args.allow_runner_update
+            from verify_formatting_apk import verify_delta
+            formatting_update = verify_delta(apk, baseline)
+            original_native = formatting_update['original_native_unchanged']
+            original_python = formatting_update['original_python_assets_unchanged']
         for name in original_native + original_python:
             if args.allow_runner_update and name == 'assets/chaquopy/app.imy':
                 changed_python.append(dict(asset=name,**verify_runner_update(apk.read(name),baseline.read(name))))
@@ -148,14 +157,15 @@ def main():
                     apk.read('assets/chaquopy/app.imy'),baseline.read('assets/chaquopy/app.imy')))
                 continue
             assert digest(apk.read(name)) == digest(baseline.read(name)), 'Original runtime changed: ' + name
-        assert len(original_native) == 10 and len(original_python) == 20
+        if not args.allow_formatting_update:
+            assert len(original_native) == 10 and len(original_python) == 20
     report = dict(apk_sha256=digest(args.apk.read_bytes()), apk_bytes=args.apk.stat().st_size,
         baseline_sha256=digest(args.baseline.read_bytes()), baseline_bytes=args.baseline.stat().st_size,
         native_libraries=natives, native_bytes=sum(item['bytes'] for item in natives), bridge_bytes=len(bridge),
         headers=spec, build_support=support, execution_images=execution_images, corresponding_source=source, notices=notices,
         original_native_unchanged=original_native,
         original_python_assets_unchanged=[name for name in original_python if name not in {item['asset'] for item in changed_python+metadata_updates}],
-        approved_python_changes=changed_python,build_metadata_updates=metadata_updates,
+        approved_python_changes=changed_python,build_metadata_updates=metadata_updates,formatting_update=formatting_update,
         abi='arm64-v8a', target_api=24, zip_crc=True, real_android_execution=False)
     args.output.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print('Actual APK C++ closure, headers, notices, source and original runtimes verified; approved Python module changes recorded; Android execution not tested')

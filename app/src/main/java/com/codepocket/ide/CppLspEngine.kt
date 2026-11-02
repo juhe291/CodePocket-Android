@@ -6,11 +6,12 @@ import java.io.Closeable
 import java.io.File
 
 /** One trusted root/generation and one active document. No project commands, plugins or code execution. */
-internal class CppLspEngine(process: AnalysisProcess, private val root: File, flags: List<String>) : Closeable {
-    private val connection = CppLspConnection(process)
+internal class CppLspEngine(process: AnalysisProcess, private val root: File, flags: List<String>, private val formattingOnly: Boolean = false) : Closeable {
+    private val connection = CppLspConnection(process, if (formattingOnly) 8_000_000 else 2_000_000)
     private var activeUri: String? = null
     private var preamble = ""
     private var version = 0
+    private var formattingSupported = false
     init {
         try {
             val result = connection.request("initialize", JSONObject().put("processId", JSONObject.NULL).put("rootUri", root.toURI().toASCIIString())
@@ -23,11 +24,33 @@ internal class CppLspEngine(process: AnalysisProcess, private val root: File, fl
             require(result.getJSONObject("serverInfo").getString("version").startsWith("clangd version 21.1.8"))
             val capabilities = result.getJSONObject("capabilities")
             require(capabilities.optString("positionEncoding", "utf-16") == "utf-16")
+            formattingSupported = capabilities.optBoolean("documentFormattingProvider", false)
             connection.notify("initialized", JSONObject())
         } catch (error: Exception) { connection.close(); throw error }
     }
     fun analyze(code: String, caret: Int, path: String, mode: String, cancelled: () -> Boolean): String {
+        require(!formattingOnly)
         require(code.length <= 45000 && CppSources.isSource(path) && mode in setOf("complete", "signature"))
+        val uri = synchronize(code, path)
+        // A current parser may still use a stale preamble immediately after didChange. Wait for
+        // this document version's completed parse, including changes to #include directives.
+        connection.awaitParsed(uri, version, cancelled)
+        val reply = connection.request(if (mode == "complete") "textDocument/completion" else "textDocument/signatureHelp",
+            JSONObject().put("textDocument", JSONObject().put("uri", uri)).put("position", CppSemanticProtocol.position(code, caret)), cancelled = cancelled)
+        val compact = compact(reply, mode)
+        return JSONObject().put("engine", CppSemanticProtocol.ENGINE).put("available", true).put("response", compact).toString().also { require(it.length <= 128000) }
+    }
+    /** clangd formats its draft text without a parsed AST or project include inputs. */
+    fun format(code: String, path: String, cancelled: () -> Boolean): JSONArray {
+        require(formattingOnly && formattingSupported && code.length <= Workspace.MAX_CHARS && CppSources.isSource(path))
+        val uri = synchronize(code, path)
+        val reply = connection.request("textDocument/formatting", JSONObject()
+            .put("textDocument", JSONObject().put("uri", uri))
+            .put("options", JSONObject().put("tabSize", 4).put("insertSpaces", true)), cancelled = cancelled)
+        require(!reply.has("error")) { "C++ formatting backend failed" }
+        return reply.getJSONArray("result")
+    }
+    private fun synchronize(code: String, path: String): String {
         require(!path.startsWith('/') && !path.contains('\\') && path.split('/').none { it.isEmpty() || it == "." || it == ".." })
         val file = File(root, path).canonicalFile; require(file.path.startsWith(root.path + File.separator) && file.isFile)
         val uri = file.toURI().toASCIIString(); require(version < Int.MAX_VALUE)
@@ -40,13 +63,7 @@ internal class CppLspEngine(process: AnalysisProcess, private val root: File, fl
             version++
             connection.notify("textDocument/didChange", JSONObject().put("textDocument", JSONObject().put("uri", uri).put("version", version)).put("wantDiagnostics", true).put("contentChanges", JSONArray().put(JSONObject().put("text", code))))
         }
-        // A current parser may still use a stale preamble immediately after didChange. Wait for
-        // this document version's completed parse, including changes to #include directives.
-        connection.awaitParsed(uri, version, cancelled)
-        val reply = connection.request(if (mode == "complete") "textDocument/completion" else "textDocument/signatureHelp",
-            JSONObject().put("textDocument", JSONObject().put("uri", uri)).put("position", CppSemanticProtocol.position(code, caret)), cancelled = cancelled)
-        val compact = compact(reply, mode)
-        return JSONObject().put("engine", CppSemanticProtocol.ENGINE).put("available", true).put("response", compact).toString().also { require(it.length <= 128000) }
+        return uri
     }
     private fun compact(reply: JSONObject, mode: String): JSONObject {
         if (reply.has("error")) return reply

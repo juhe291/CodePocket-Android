@@ -57,6 +57,7 @@ object IdeCommandMenu {
         IdeCommand.SETTINGS->IdeIcon.SETTINGS
         IdeCommand.HELP->IdeIcon.HELP
         IdeCommand.FONT_SIZE->IdeIcon.CASE
+        IdeCommand.FORMAT_DOCUMENT->IdeIcon.CODE
     }
     internal fun section(command:IdeCommand):Int=when(command){
         IdeCommand.WORKSPACE,IdeCommand.CLOSE_WORKSPACE,IdeCommand.IMPORT_COPY->1
@@ -67,7 +68,7 @@ object IdeCommandMenu {
         IdeCommand.DELETE->6
         IdeCommand.UNDO,IdeCommand.REDO->7
         IdeCommand.FIND,IdeCommand.REPLACE,IdeCommand.GOTO_LINE->8
-        IdeCommand.FONT_SIZE->9
+        IdeCommand.FONT_SIZE,IdeCommand.FORMAT_DOCUMENT->9
         IdeCommand.COMPLETE,IdeCommand.SIGNATURE,IdeCommand.SNIPPET->10
         IdeCommand.EXPLORER,IdeCommand.SEARCH->11
         IdeCommand.PANEL,IdeCommand.PANEL_SIZE,IdeCommand.MAXIMIZE_TERMINAL,IdeCommand.CLOSE_TERMINAL->12

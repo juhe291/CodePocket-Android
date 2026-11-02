@@ -43,6 +43,7 @@ object SettingsDialog {
         toggle("lineNumbers",1,"显示行号","与源码逻辑行保持一致",{it.lineNumbers},{s,v->s.copy(lineNumbers=v)})
         toggle("wordWrap",1,"自动换行","按编辑区可用宽度折行",{it.wordWrap},{s,v->s.copy(wordWrap=v)})
         toggle("autoIndent",1,"自动缩进","换行后继承适当缩进",{it.autoIndent},{s,v->s.copy(autoIndent=v)})
+        toggle("formatOnSave",1,"保存时格式化","Python / C++；失败时保存原正文，可撤销格式化",{it.formatOnSave},{s,v->s.copy(formatOnSave=v)})
         toggle("autoPairs",1,"补齐括号和引号","保留已有组合输入和撤销行为",{it.autoPairs},{s,v->s.copy(autoPairs=v)})
         toggle("autoCompletion",2,"基础词法补全","提供关键词、缓冲区符号及内置候选",{it.autoCompletion},{s,v->s.copy(autoCompletion=v)})
         toggle("signatureHelp",2,activity.getString(R.string.signature_setting),"显示支持的函数参数与简短说明",{it.signatureHelp},{s,v->s.copy(signatureHelp=v)})
@@ -65,7 +66,7 @@ object SettingsDialog {
     // Property identities stay stable across translated labels and search rendering.
     private fun section(key:String):String?=when(key){
         "syntax","fontSize","lineNumbers","wordWrap"->"显示与配色"
-        "tabWidth","useSpaces","autoIndent","autoPairs"->"缩进与输入"
+        "tabWidth","useSpaces","autoIndent","autoPairs","formatOnSave"->"缩进与输入"
         "autoCompletion","signatureHelp"->"候选与参考"
         "completionTab","completionEnter","completionArrows"->"补全按键"
         "symbolBar"->"触屏输入"
@@ -272,6 +273,7 @@ object SettingsDialog {
                             "Sora 编辑器与语法许可" to activity.assets.open("SORA-NOTICE.txt").bufferedReader().use{it.readText()},
                             "GNU LGPL 2.1" to activity.assets.open("LGPL-2.1.txt").bufferedReader().use{it.readText()},
                             "Python 语义分析许可" to listOf("semantic-licenses/JEDI-LICENSE.txt","semantic-licenses/PARSO-LICENSE.txt","semantic-licenses/TYPESHED-LICENSE.txt","semantic-licenses/DJANGO-STUBS-LICENSE.txt").joinToString("\n\n"){path->path+"\n"+activity.assets.open(path).bufferedReader().use{it.readText()}},
+                            "代码格式化许可" to listOf("format-licenses/AUTOPEP8-LICENSE.txt","format-licenses/PYCODESTYLE-LICENSE.txt").joinToString("\n\n"){path->path+"\n"+activity.assets.open(path).bufferedReader().use{it.readText()}},
                             "语法与依赖许可证" to listOf("textmate/VSCODE-LICENSE.txt", "textmate/VSCODE-ThirdPartyNotices.txt", "textmate/licenses/APACHE-2.0.txt", "textmate/licenses/EPL-2.0.txt", "textmate/licenses/JONI-MIT.txt", "textmate/licenses/JCODINGS-MIT.txt", "textmate/licenses/DESUGAR-GPL2.txt", "textmate/licenses/DESUGAR-ASSEMBLY-EXCEPTION.txt").joinToString("\n\n") { path -> path + "\n" + activity.assets.open(path).bufferedReader().use { it.readText() } }).forEach{(title,text)->
                             details.addView(WorkbenchStyle.menuRow(activity,title).apply{setOnClickListener{if(!busy)
                                 ReadOnlyDetails.show(activity,title,categories[6],text,IdeIcon.HELP,false,current.animations,null,null,null)}})

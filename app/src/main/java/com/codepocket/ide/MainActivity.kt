@@ -108,6 +108,13 @@ class MainActivity : Activity() {
     private var completionTask: java.util.concurrent.Future<*>? = null
     private var semanticClient: PythonSemanticClient? = null
     private var cppSemanticClient: CppSemanticClient? = null
+    private var formattingClient: CodeFormattingClient? = null
+    private val formattingExecutor = java.util.concurrent.ThreadPoolExecutor(1,1,0,java.util.concurrent.TimeUnit.MILLISECONDS,
+        java.util.concurrent.ArrayBlockingQueue<Runnable>(1),java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy())
+    private var formattingTask: java.util.concurrent.Future<*>? = null
+    private var formattingGeneration = 0L
+    private var bypassSaveFormatting = false
+    private var formatSaveWarning: String? = null
     private val semanticContext by lazy { PythonProjectContext(File(cacheDir, "python-project-context")) }
     private val cppSemanticContext by lazy { CppProjectContext(File(cacheDir, "cpp-project-context")) }
     private val semanticExecutor = java.util.concurrent.ThreadPoolExecutor(1,1,0,java.util.concurrent.TimeUnit.MILLISECONDS,
@@ -499,6 +506,7 @@ class MainActivity : Activity() {
         toolDialog?.dismiss(); commandMenu?.dismiss(); commandMenu = null
         hideCompletion(); completionExecutor.shutdownNow(); signatureExecutor.shutdownNow(); completionConsumedKeys.clear()
         semanticClient?.close(); semanticClient=null; cppSemanticClient?.close(); cppSemanticClient=null; semanticExecutor.shutdownNow()
+        formattingGeneration++; formattingTask?.cancel(true); formattingClient?.close(); formattingClient=null; formattingExecutor.shutdownNow()
         cancelWorkbenchMotion()
         explorerDialog?.dismiss()
     }
@@ -752,7 +760,7 @@ class MainActivity : Activity() {
         }
         return CommandContext(workspaceBusy, ::editor.isInitialized && loadedPath == activePath,
             ::editor.isInitialized && editor.hasFocus(), ::input.isInitialized && input.hasFocus(),
-            composing, running, saving, workspaceOpen)
+            composing, running, saving, workspaceOpen, CodeFormatting.supported(activePath))
     }
 
     private fun updateMainToolbarState() {
@@ -803,8 +811,7 @@ class MainActivity : Activity() {
     private fun showWorkbenchMenu(anchor: View,group:WorkbenchMenuGroup,returnToCategories:Boolean) {
         val commands=when(group) {
             WorkbenchMenuGroup.FILE->IdeCommands.fileMenuItems
-            WorkbenchMenuGroup.EDIT->listOf(IdeCommand.UNDO,IdeCommand.REDO,IdeCommand.FIND,IdeCommand.REPLACE,
-                IdeCommand.GOTO_LINE,IdeCommand.FONT_SIZE,IdeCommand.COMPLETE,IdeCommand.SIGNATURE,IdeCommand.SNIPPET)
+            WorkbenchMenuGroup.EDIT->IdeCommands.editMenuItems
             WorkbenchMenuGroup.VIEW->listOf(IdeCommand.EXPLORER,IdeCommand.SEARCH,IdeCommand.PANEL,IdeCommand.THEME,IdeCommand.HIDE_KEYBOARD)
             WorkbenchMenuGroup.RUN->IdeCommands.runMenuItems
             WorkbenchMenuGroup.TERMINAL->listOf(IdeCommand.PANEL,IdeCommand.MAXIMIZE_TERMINAL,IdeCommand.CLOSE_TERMINAL,IdeCommand.CLEAR_TERMINAL,IdeCommand.PANEL_SIZE)
@@ -837,12 +844,13 @@ class MainActivity : Activity() {
             IdeCommand.CLOSE_WORKSPACE -> closeWorkspace()
             IdeCommand.IMPORT_COPY -> importFile()
             IdeCommand.EXPORT -> exportFile()
-            IdeCommand.SAVE -> saveActive { status.text = "✓ 已保存 $activePath" }
+            IdeCommand.SAVE -> saveActive { status.text = "✓ 已保存 $activePath" + (formatSaveWarning?.let { " · $it" } ?: "") }
             IdeCommand.RELOAD -> reloadActive()
             IdeCommand.RECOVER -> recoverDrafts()
             IdeCommand.REPLACE -> showSearch(true)
             IdeCommand.GOTO_LINE -> showGoToLine()
             IdeCommand.FONT_SIZE -> showCodeFontSize()
+            IdeCommand.FORMAT_DOCUMENT -> formatDocument()
             IdeCommand.UNDO, IdeCommand.REDO -> {
                 clearSnippet(); hideCompletion()
                 val action = if (command == IdeCommand.UNDO) HistoryAction.UNDO else HistoryAction.REDO
@@ -1979,6 +1987,55 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun formatDocument(afterSaveFormat: (() -> Unit)? = null) {
+        val frame = editorPort?.captureDocument()
+        if (frame == null || frame.composing || !CodeFormatting.supported(activePath) || workspaceBusy) {
+            if (afterSaveFormat == null) status.text = "当前文档暂时无法格式化"
+            afterSaveFormat?.invoke(); return
+        }
+        val source = frame.buffer; val python = activePath.endsWith(".py", true)
+        val options = FormatOptions(settings.tabWidth, settings.useSpaces)
+        val client = formattingClient ?: CodeFormattingClient(AndroidSemanticTransport(this, CodeFormattingService::class.java))
+            .also { formattingClient = it }
+        formattingTask?.cancel(true); formattingExecutor.queue.clear()
+        val generation = ++formattingGeneration
+        hideCompletion(true); hideSignatureHelp(true); clearSnippet()
+        if (afterSaveFormat != null) formatSaveWarning = null
+        status.text = "正在格式化…"
+        formattingTask = formattingExecutor.submit {
+            val formatted = try { client.format(source, python, options) }
+            catch (_: InterruptedException) { return@submit }
+            runOnUiThread {
+                if (isDestroyed || generation != formattingGeneration) return@runOnUiThread
+                formattingTask = null
+                val current = editorPort?.captureDocument()
+                val fresh = current != null && !current.composing && source.sameBuffer(current.buffer) &&
+                    source.start == current.buffer.start && source.end == current.buffer.end &&
+                    options == FormatOptions(settings.tabWidth, settings.useSpaces) && !workspaceBusy
+                val applied = if (fresh && formatted.available && formatted.text != source.text)
+                    editorPort?.applyEdit(EditorTransaction(source, TextChange(0, source.text.length,
+                        formatted.text!!, formatted.start, formatted.end), preserveFocus = true))?.accepted == true
+                    else fresh && formatted.available
+                val message = when {
+                    !fresh -> "格式化已取消：代码或选区已变化"
+                    !formatted.available -> when (formatted.error) {
+                        "syntax" -> "格式化未完成：请先修复语法错误"
+                        "unsafe_result" -> "格式化结果未通过正文保护检查"
+                        "output_limit", "input_limit" -> "格式化内容超过处理上限"
+                        "timeout" -> "格式化超时，正文保持"
+                        else -> "格式化服务不可用，正文保持"
+                    }
+                    !applied -> "格式化已取消：文档正在变化"
+                    formatted.text == source.text -> "代码已符合格式"
+                    else -> "✓ 已格式化，可撤销"
+                }
+                status.text = message
+                if (afterSaveFormat != null && !applied) formatSaveWarning = message
+                afterSaveFormat?.invoke()
+            }
+        }
+    }
+
     private fun saveActive(onSaved: (() -> Unit)? = null): Boolean {
         if (!::editor.isInitialized) return false
         if (workspaceBusy) { status.text = "正在处理文件，请稍候"; return false }
@@ -1989,6 +2046,18 @@ class MainActivity : Activity() {
         if (loadedPath != activePath) { status.text = "保存已阻止：文件身份与缓冲区不匹配"; return false }
         if (saving) { if (onSaved != null) afterSave = onSaved; return false }
         if (!dirty) { onSaved?.invoke(); return true }
+        if (!bypassSaveFormatting && settings.formatOnSave && CodeFormatting.supported(activePath) && !editor.isComposing) {
+            saving = true; afterSave = onSaved
+            captureSession(); persistSessions(); queueDraft()
+            formatDocument {
+                saving = false; val next = afterSave; afterSave = null
+                // Exactly one best-effort format attempt per save. A stale/failed result never blocks raw saving.
+                bypassSaveFormatting = true
+                try { saveActive(next) } finally { bypassSaveFormatting = false }
+            }
+            return false
+        }
+        if (!bypassSaveFormatting) formatSaveWarning = null
         saving = true; afterSave = onSaved
         val path = activePath; val key = sessions.key(path); val text = editor.text.toString(); val revision = editRevision
         val base = loadedVersion
@@ -2009,7 +2078,8 @@ class MainActivity : Activity() {
                 saved.onSuccess {
                     loadedVersion = DocumentTree.digest(text)
                     if (loadedPath == path && revision == editRevision && editor.text.toString() == text) dirty = false
-                    status.text = if (dirty) "已保存上一版，正在保留新编辑" else "✓ 已保存 $path"
+                    status.text = (if (dirty) "已保存上一版，正在保留新编辑" else "✓ 已保存 $path") +
+                        (formatSaveWarning?.let { " · $it" } ?: "")
                     refreshTabs()
                     if (next != null) saveActive(next)
                 }.onFailure { error ->
@@ -2765,6 +2835,11 @@ class MainActivity : Activity() {
             return super.dispatchKeyEvent(event)
         if (event.action == KeyEvent.ACTION_UP && completionConsumedKeys.remove(event.keyCode)) return true
         if (event.action == KeyEvent.ACTION_DOWN && editor.hasFocus()) {
+            if (event.keyCode == KeyEvent.KEYCODE_F && event.isShiftPressed && event.isAltPressed &&
+                !event.isCtrlPressed && !event.isMetaPressed && event.flags and KeyEvent.FLAG_SOFT_KEYBOARD == 0 && !editor.isComposing) {
+                if (event.repeatCount == 0) dispatchCommand(IdeCommand.FORMAT_DOCUMENT)
+                completionConsumedKeys.add(event.keyCode); return true
+            }
             val zoom = EditorFontKeys.delta(event.keyCode, event.isCtrlPressed, event.isAltPressed,
                 event.isMetaPressed, event.flags and KeyEvent.FLAG_SOFT_KEYBOARD != 0)
             if (zoom != null) {

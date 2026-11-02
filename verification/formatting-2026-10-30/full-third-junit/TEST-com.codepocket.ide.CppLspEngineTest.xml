@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppLspEngineTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-30T14:03:41" hostname="JUHE" time="2.212">
+  <properties/>
+  <testcase name="frameLengthIsUtf8BytesAndMalformedFramesFailClosed" classname="com.codepocket.ide.CppLspEngineTest" time="0.002"/>
+  <testcase name="productionEngineCommunicatesWithRealPinnedHostClangdAndAndroidHeaders" classname="com.codepocket.ide.CppLspEngineTest" time="2.21"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

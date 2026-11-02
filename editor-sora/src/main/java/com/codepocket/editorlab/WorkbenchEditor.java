@@ -134,6 +134,9 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     public String edit(int start, int end, String text, int selectionStart, int selectionEnd) {
         return adapter.apply(adapter.snapshot(), start, end, text, selectionStart, selectionEnd).name();
     }
+    public String editWithoutFocus(int start, int end, String text, int selectionStart, int selectionEnd) {
+        return editor.withoutFocusRequests(() -> edit(start, end, text, selectionStart, selectionEnd));
+    }
     public boolean history(boolean redo) { return adapter.history(adapter.snapshot(), redo); }
     public boolean onTextContextMenuItem(int id) {
         if (id == android.R.id.undo || id == android.R.id.redo) return history(id == android.R.id.redo);

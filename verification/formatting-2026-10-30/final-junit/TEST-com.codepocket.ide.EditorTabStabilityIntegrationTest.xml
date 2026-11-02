@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorTabStabilityIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-02T04:47:22" hostname="JUHE" time="0.736">
+  <properties/>
+  <testcase name="explicitIndentKeepsTabAndCloseCoordinates" classname="com.codepocket.ide.EditorTabStabilityIntegrationTest" time="0.196"/>
+  <testcase name="phoneTypingAndSavingKeepTabCoordinates" classname="com.codepocket.ide.EditorTabStabilityIntegrationTest" time="0.231"/>
+  <testcase name="tabletLightLargeLongNameKeepsCloseTargetAndFullPath" classname="com.codepocket.ide.EditorTabStabilityIntegrationTest" time="0.309"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

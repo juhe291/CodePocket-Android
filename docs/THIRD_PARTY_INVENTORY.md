@@ -1,5 +1,11 @@
 # 第三方依赖与许可证初步清单
 
+## 2026-10-30 格式化依赖增补
+
+新增autopep8 2.3.2和pycodestyle 2.14.0，均为固定wheel中的MIT声明；精确SHA256见app/requirements.txt。离线构建沿用.tools/semantic-wheels，两个模块随主APK打包并配置extractPackages。原始LICENSE字节位于app/src/main/assets/format-licenses，设置→帮助与许可→Python格式化许可可读；包检查逐字节比对固定wheel、打包源码/字节码和这两份通知。
+
+C++格式化复用现有clangd 21.1.8内嵌实现，不新增另一份Clang工具或改变原生库。Python格式化在独立:formatting进程调用，禁止读取项目配置，未执行用户程序；依赖与进程路径见[批次计划](P2_FORMATTING_BATCH_2026-10-30.md)。本条仅说明新增依赖，原项目整体发布通知与许可证未决项继续保留。
+
 ## 2026-10-27 C++语义实际接入增补
 
 [本批报告](P2_CPP_SEMANTICS_2026-10-27.md)及实际APK检查确认固定九文件原生闭包、Android头文件、17份许可/说明、四份NDK r30通知，以及原始libiconv1.19完整对应源码归档和构建/修补材料已随包交付。设置→帮助与许可→C++语义分析许可与源码可逐项查看。独立共享库名称/NEEDED/SONAME/RUNPATH修改有锁文件与重链接说明，未统一归入项目许可、未静态链接LGPL库。

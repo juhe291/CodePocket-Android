@@ -15,7 +15,7 @@ import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
 
 /** UTF-8 Content-Length framing. Reader threads never call the UI and retain no diagnostic history. */
-internal class CppLspConnection(private val process: AnalysisProcess) : Closeable {
+internal class CppLspConnection(private val process: AnalysisProcess, private val frameLimit: Int = 2_000_000) : Closeable {
     private val closed = AtomicBoolean()
     private val failure = AtomicReference<Throwable?>()
     private val replies = ArrayBlockingQueue<JSONObject>(8)
@@ -26,7 +26,7 @@ internal class CppLspConnection(private val process: AnalysisProcess) : Closeabl
         try {
             val input = BufferedInputStream(process.input, 65536)
             while (!closed.get()) {
-                val message = readFrame(input)
+                val message = readFrame(input, frameLimit)
                 if (message.optString("method") == "textDocument/publishDiagnostics") {
                     val params = message.getJSONObject("params")
                     val version = params.optInt("version", -1)
@@ -89,7 +89,8 @@ internal class CppLspConnection(private val process: AnalysisProcess) : Closeabl
         }
     }
     companion object {
-        internal fun readFrame(input: java.io.InputStream): JSONObject {
+        internal fun readFrame(input: java.io.InputStream, frameLimit: Int = 2_000_000): JSONObject {
+            require(frameLimit in 1..8_000_000)
             var total = 0; var length: Int? = null
             while (true) {
                 val line = ByteArrayOutputStream()
@@ -106,7 +107,7 @@ internal class CppLspConnection(private val process: AnalysisProcess) : Closeabl
                 require(value.contains(':'))
                 if (key.equals("Content-Length", true)) { require(length == null); length = value.substringAfter(':').trim().toInt() }
             }
-            val size = length ?: error("Missing LSP length"); require(size in 1..2_000_000)
+            val size = length ?: error("Missing LSP length"); require(size in 1..frameLimit)
             val body = ByteArray(size); var at = 0
             while (at < size) { val count = input.read(body, at, size - at); if (count < 0) throw EOFException(); if (count > 0) at += count }
             val decoder = Charsets.UTF_8.newDecoder().onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)

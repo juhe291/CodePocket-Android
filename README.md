@@ -4,7 +4,13 @@
 
 > 2026-10-27：[本地 C++ 接入](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md)已完成代码/主机/APK验证，Android执行验收仍后置。头文件 Tab 补全也已完成代码/主机/APK验证，原后续 P2/P3 范围继续。
 
-**2026-10-30：工作台侧栏与欢迎区候选版。**
+**当前：P2格式化候选版（2026-10-30建批，11-02收尾）。**
+
+- [当前候选APK](dist/CodePocket-formatting-2026-10-30-debug.apk)：真实离线Python/C++格式化、编辑菜单/Shift+Alt+F及默认关闭的保存时格式化。未保存正文参与，可一次撤销；失败继续原保存和草稿保护。
+- [交付记录](docs/P2_FORMATTING_DELIVERY_2026-10-30.md)：995项中993通过/1既有Windows失败/1旧跳过，新增27全通过，Lint零错误。实际包内Python48/语义22/格式化20、签名与C++闭包通过，原25原生库及98旧APK保持。121359886字节，SHA256 `59e13ca581f0806ba25df937772228e3802c5ee1896aebb091cf80e174756668`。
+- 保留前批工作台、头文件Tab、真实运行和PTY。Android实机后置；原P3继续，整个目标未完成。完整命令真实退出1，不称整批全绿。
+
+**历史：2026-10-30工作台侧栏与欢迎区候选版。**
 
 - [当前候选 APK](dist/CodePocket-workbench-behavior-2026-10-30-debug.apk)：搜索与文件树共享手机抽屉/平板侧栏；窗口和逆向快照保持活动栏固定。首次启动及无文件显示新建/打开欢迎区，关闭项目保留原文件、草稿和恢复会话。
 - [完整记录](docs/WORKBENCH_BEHAVIOR_DELIVERY_2026-10-30.md)：968项中966通过/1既有Windows头文件失败/1旧跳过，Lint零错误；定向144/108/35通过，最终包内Python48/语义22及签名、C++闭包通过，97旧APK保持。完整命令退出1，Android验收后置。
@@ -235,6 +241,8 @@ C++完整即时语义诊断、未定义变量/类型分析仍属后续LSP工作�
 
 9. 编辑器工具栏提供保存、撤销/重做、文件内查找；更多提供替换/跳行/补全/片段。顶部搜索图标或Ctrl+Shift+F打开项目搜索，支持当前未保存缓冲与结果定位。
 
+10. 主菜单→编辑→格式化文档，或实体键盘Shift+Alt+F，整理当前未保存的Python/C++正文。一次格式化可撤销，本身不会保存文件。设置→编辑器→保存时格式化默认关闭；启用后每次保存尝试一次，失败或结果过期仍按原保存保护流程保存当前正文。Python语法错误或超过20万UTF-16单位的文本会保留原文并提示。
+
 ## 当前能力
 
 - 根目录和子目录均可整行展开/收起，按工作区恢复选择、展开和滚动；新建明确显示目标目录，移动采用分层选择器。
@@ -269,6 +277,7 @@ C++完整即时语义诊断、未定义变量/类型分析仍属后续LSP工作�
 | Ctrl+Shift+Space | 主动显示内置函数参数参考（非语义分析） |
 | Enter / Esc | 默认换行（设置可接受明确选中的候选）/ 关闭候选或结束片段导航 |
 | Ctrl+F / Ctrl+H / Ctrl+G | 查找 / 替换 / 跳转行 |
+| Shift+Alt+F | 格式化当前Python/C++文档，可撤销 |
 | Ctrl+S / Ctrl+N / Ctrl+O | 保存 / 新建 / 系统文件导入副本 |
 | Ctrl+B | 切换文件管理器 |
 | F5 / Ctrl+Enter | 运行；停止使用运行位置的“停止”按钮 |
@@ -293,6 +302,7 @@ Python 运行外部项目时，会同步源码与实际数据资源到私有完�
 | editor-sora（主程序Java Android库） | Sora真实控件/事务/导航/离线TextMate与许可资源；公开API隔离Kotlin版本，主工作台使用 |
 | editor-lab（显式启用） | 内部Sora/原生和文件/SAF回归工具，复用生产适配库；不作为第二个产品交付 |
 | ui/MainToolbar / IdeCommandMenu / IdeCommands / WorkspaceLayoutPolicy | 实测宽度的单排主栏、原生命令入口与焦点/状态策略 |
+| CodeFormatting / CodeFormattingService / code_formatting.py | 当前未保存快照、独立私有:formatting服务与子进程、固定autopep8/clangd引擎；通过正式Sora事务应用，保存仍走原版本/草稿保护 |
 | ui/EditorToolbar / InteractionState | 上下文编辑入口、返回/状态/只清显示规则 |
 | search/ProjectSearch | 有界、可取消的后台项目文字搜索 |
 | terminal/AnsiParser / TerminalView | 问题页的诊断文字样式与原生文字选择；不再作为程序终端 |

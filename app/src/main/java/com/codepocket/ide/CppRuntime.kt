@@ -64,9 +64,21 @@ internal class CppRuntime(private val context: Context) {
     }
     fun create(root: File, cancelled: () -> Boolean, own: (AnalysisProcess) -> Unit): CppLspEngine {
         checkLibraries()
-        val executable = File(native, manifest.getString("executable")); require(executable.canExecute())
         val trustedHeaders = headers
         require(File(trustedHeaders, "sysroot/include/c++/v1/vector").isFile && File(trustedHeaders, "clang/include/stddef.h").isFile)
+        val flags = listOf("-xc++", "-std=c++17", "--target=aarch64-linux-android24", "--sysroot=${File(trustedHeaders, "sysroot").path}",
+            "-resource-dir=${File(trustedHeaders, "clang").path}", "-isystem", File(trustedHeaders, "sysroot/include/c++/v1").path,
+            "-isystem", File(trustedHeaders, "sysroot/include").path, "-isystem", File(trustedHeaders, "sysroot/include/aarch64-linux-android").path,
+            "-I${root.path}")
+        return launch(root, flags, false, cancelled, own)
+    }
+    fun createFormatter(root: File, cancelled: () -> Boolean, own: (AnalysisProcess) -> Unit): CppLspEngine {
+        checkLibraries()
+        return launch(root, listOf("-xc++", "-std=c++17", "-nostdinc", "-nostdinc++"), true, cancelled, own)
+    }
+    private fun launch(root: File, flags: List<String>, formatting: Boolean, cancelled: () -> Boolean,
+        own: (AnalysisProcess) -> Unit): CppLspEngine {
+        val executable = File(native, manifest.getString("executable")); require(executable.canExecute())
         val commands = File(files, "cpp-empty-commands").apply { require(isDirectory || mkdirs()) }
         require(commands.listFiles()?.isEmpty() == true)
         val arguments = listOf(executable.path, "--enable-config=false", "--background-index=false", "--clang-tidy=false",
@@ -74,14 +86,10 @@ internal class CppRuntime(private val context: Context) {
             "--all-scopes-completion=false", "--use-dirty-headers", "-j=2", "--limit-results=30", "--pch-storage=memory", "--log=error", "--compile-commands-dir=${commands.path}")
         val environment = listOf("PATH=/system/bin", "LD_LIBRARY_PATH=${native.path}", "HOME=${files.path}",
             "TMPDIR=${context.cacheDir.path}", "LANG=C.UTF-8")
-        val flags = listOf("-xc++", "-std=c++17", "--target=aarch64-linux-android24", "--sysroot=${File(trustedHeaders, "sysroot").path}",
-            "-resource-dir=${File(trustedHeaders, "clang").path}", "-isystem", File(trustedHeaders, "sysroot/include/c++/v1").path,
-            "-isystem", File(trustedHeaders, "sysroot/include").path, "-isystem", File(trustedHeaders, "sysroot/include/aarch64-linux-android").path,
-            "-I${root.path}")
         if (cancelled()) throw java.util.concurrent.CancellationException()
         val process = NativeCppProcess(arguments, root.path, environment)
         own(process)
         if (cancelled()) { process.close(); throw java.util.concurrent.CancellationException() }
-        return CppLspEngine(process, root, flags)
+        return CppLspEngine(process, root, flags, formatting)
     }
 }

@@ -27,10 +27,11 @@ class SharedAssistContractTest {
         assertEquals(CompletionAction.PASS, action(CompletionKey.ENTER, AssistOptions()))
     }
     @Test fun appPersistenceRemainsVersionNineAndKeepsNonEditorPreferences() {
-        // Preserve the historical test identity; local-run choices extend the schema to v10.
+        // Preserve the historical test identity; the default-off format policy extends the schema to v11.
         val settings = AppSettings(terminalTheme = TerminalTheme.NORD, theme = UiTheme.LIGHT, autoSave = false, tabWidth = 8)
         val json=org.json.JSONObject(settings.toJson())
-        assertEquals(10,json.getInt("version"))
+        assertEquals(11,json.getInt("version"))
+        assertFalse(json.getBoolean("formatOnSave"))
         assertEquals(CppBackend.CLOUD.name,json.getString("cppBackend"))
         assertEquals(CppBuildScope.CURRENT.name,json.getString("cppBuildScope"))
         assertEquals(settings, AppSettings.fromJson(settings.toJson()))

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppBuildPlanTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-02T04:46:58" hostname="JUHE" time="6.304">
+  <properties/>
+  <testcase name="actualMultiFileCommandsBuildAnAndroidSharedProgramWithThePinnedRuntime" classname="com.codepocket.ide.CppBuildPlanTest" time="3.781"/>
+  <testcase name="compilerAbortStillPreservesItsStageAndSignalWhenStderrIsEmpty" classname="com.codepocket.ide.CppBuildPlanTest" time="0.055"/>
+  <testcase name="successfulLinkWithoutMainIsRejectedBeforeRunningAndStaleSourcesNeverLaunch" classname="com.codepocket.ide.CppBuildPlanTest" time="0.21"/>
+  <testcase name="leadingDashFilenameIsAnInputAfterTheOptionTerminator" classname="com.codepocket.ide.CppBuildPlanTest" time="0.078"/>
+  <testcase name="actualBuilderRetainsCompilerLineAndMissingHelperLinkFailureThenBuildsTheWholeProject" classname="com.codepocket.ide.CppBuildPlanTest" time="2.162"/>
+  <testcase name="traversalDuplicateEntriesHeaderEntryAndSourceOutputMixingAreRejected" classname="com.codepocket.ide.CppBuildPlanTest" time="0.011"/>
+  <testcase name="currentFileAndProjectScopesKeepSeparateProgramsUsable" classname="com.codepocket.ide.CppBuildPlanTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

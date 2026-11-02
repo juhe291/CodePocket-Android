@@ -38,6 +38,8 @@ class SoraEditorPort(
         val checked = EditorTransactions.check(snapshot(), transaction, Workspace.MAX_CHARS)
         if (checked != EditResult.APPLIED && checked != EditResult.SELECTION_ONLY) return checked
         val change = transaction.change
+        if (transaction.preserveFocus) return EditResult.valueOf(editor.editWithoutFocus(change.start, change.end,
+            change.text, change.selectionStart, change.selectionEnd))
         return EditResult.valueOf(editor.edit(change.start, change.end, change.text, change.selectionStart, change.selectionEnd))
     }
     override fun performHistory(source: EditorSnapshot, action: HistoryAction): Boolean =

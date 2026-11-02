@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppProjectContextTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-30T14:03:43" hostname="JUHE" time="0.221">
+  <properties/>
+  <testcase name="activeTypingUsesStableUriAndNeverWritesItsSourceSnapshotOrOriginal" classname="com.codepocket.ide.CppProjectContextTest" time="0.033"/>
+  <testcase name="additionsDeletionAndUnsafeConfigurationCannotBecomeStaleContext" classname="com.codepocket.ide.CppProjectContextTest" time="0.043"/>
+  <testcase name="snapshotCacheRemainsBoundedAcrossHeaderVersionsAndRejectsTampering" classname="com.codepocket.ide.CppProjectContextTest" time="0.094"/>
+  <testcase name="unsavedHeaderVersionsAndTheirRemovalChangeGenerationWithoutOverwritingFiles" classname="com.codepocket.ide.CppProjectContextTest" time="0.051"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
