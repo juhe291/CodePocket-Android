@@ -18,7 +18,7 @@ internal class SourceControlPanel(context:Context,private val palette:IdePalette
     private val refresh:()->Unit,private val initialize:()->Unit,private val inspect:(GitChange)->Unit,
     private val change:(GitChange)->Unit,private val commit:()->Unit,private val history:()->Unit,
     private val close:()->Unit,private val open:()->Unit,private val details:()->Unit,
-    private val recovery:()->Unit,private val exportRecovery:()->Unit):LinearLayout(context) {
+    private val recovery:()->Unit,private val exportRecovery:()->Unit,private val remote:((View)->Unit)?=null):LinearLayout(context) {
     private val content=LinearLayout(context).apply{orientation=VERTICAL}
     private val scroll=ScrollView(context).apply{isFillViewport=false;addView(content)}
     private val scope=text("",12f,palette.muted)
@@ -31,6 +31,9 @@ internal class SourceControlPanel(context:Context,private val palette:IdePalette
         val heading=LinearLayout(context).apply{gravity=Gravity.CENTER_VERTICAL;setPadding(dp(8),0,0,0)}
         heading.addView(text("源代码管理",12f,palette.muted).apply{setSingleLine();ellipsize=TextUtils.TruncateAt.END},LayoutParams(0,dp(48),1f))
         heading.addView(refreshButton,LayoutParams(dp(48),dp(48)));heading.addView(historyButton,LayoutParams(dp(48),dp(48)))
+        if(remote!=null)heading.addView(IdeControls.icon(context,palette,IdeIcon.MORE,"远端 Git",{}).apply{
+            tag="git-remote-menu";setOnClickListener{remote.invoke(it)}
+        },LayoutParams(dp(48),dp(48)))
         heading.addView(IdeControls.icon(context,palette,IdeIcon.CLOSE,"关闭源代码管理",close),LayoutParams(dp(48),dp(48)))
         addView(heading,LayoutParams(-1,-2));scope.setPadding(dp(12),0,dp(12),dp(10));scope.maxLines=2;scope.ellipsize=TextUtils.TruncateAt.MIDDLE
         addView(scope,LayoutParams(-1,-2));addView(dirtyHint,LayoutParams(-1,-2));addView(scroll,LayoutParams(-1,0,1f))

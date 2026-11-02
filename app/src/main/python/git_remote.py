@@ -22,7 +22,7 @@ from dulwich.refs import check_ref_format
 import git_workspace as local
 from git_https import GitHttps, NetworkBudget, RemoteFailure, canonical_url, require
 
-OPERATIONS={'remote_info','remote_refs','configure','clone','fetch','fast_forward','push'}
+OPERATIONS={'snapshot','remote_info','remote_refs','configure','clone','fetch','fast_forward','push'}
 WRITES={'configure','clone','fetch','fast_forward','push'}
 FIELDS={'action','expected','url','branch','expected_head','expected_remote','username','token','modeAvailable'}
 IDENTITY=b'CodePocket <local@codepocket.invalid>'
@@ -162,11 +162,20 @@ def set_ref(repo,reference,old,new,message):
 def default_transport(url,username,token,budget):return GitHttps(url,username,token,_budget=budget)
 
 
+def prepare_clone_filemode(root,available,platform=None):
+    # Android/private POSIX worktrees can preserve executable bits; SAF cannot.
+    # The platform override is a host-test seam, never a request JSON field.
+    config=raw_config(root)
+    config.set((b'core',),b'filemode',b'true' if available and (platform or os.name)=='posix' else b'false')
+    config.write_to_path(str(root/'.git/config'))
+
+
 def operate(root,request,cancelled,transport_factory):
     action=request.get('action');require(action in OPERATIONS and set(request)<=FIELDS,'input')
     mode=request.get('modeAvailable',True);require(isinstance(mode,bool),'input')
     budget=NetworkBudget(cancelled=cancelled);budget.check()
     before=state(root,mode)
+    if action=='snapshot':return before|dict(remote=dict(url=None))
     if action in WRITES:
         require(isinstance(request.get('expected'),str) and re.fullmatch('[a-f0-9]{64}',request['expected']),'precondition')
         require(request['expected']==before['snapshot'],'stale')
@@ -176,6 +185,7 @@ def operate(root,request,cancelled,transport_factory):
         require(not list(root.iterdir()),'target_not_empty');require(url,'url_invalid')
         budget.check();initialized=json.loads(local.run(str(root),json.dumps(dict(action='init',expected=before['snapshot'],modeAvailable=mode))))
         require(initialized.get('ok'),initialized.get('error','repository'))
+        prepare_clone_filemode(root,mode)
     else:require(before['repository'] or action=='remote_refs','not_repository')
     if action=='remote_refs':
         require(url,'url_invalid')

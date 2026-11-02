@@ -31,4 +31,4 @@ GitHub检索/源码读取优先使用已连接GitHub工具；短暂传输失败�
 
 WebKit AAR SHA256：`f15a0bd7d51f4bb8dffdd3a2cf5829f9a7de9ad4ba2682fa85d619032050581f`。WebKit官方[发布记录](https://developer.android.com/jetpack/androidx/releases/webkit)与[源构建文件](https://github.com/androidx/androidx/blob/androidx-main/webkit/webkit/build.gradle)另行核对。
 
-本包未实现、未构建新APK。当前可安装候选仍为P3-A本地Git包26ac0bec…，不含HTTPS同步或网页辅助栏；设备仍后置，不推送/发布/创建自动任务。
+本包未实现、未构建网页侧栏APK。2026-11-03当前可安装候选为[P3-B HTTPS同步包](P3_GITHUB_SYNC_DELIVERY_2026-11-03.md)c63e8df1…，尚不含网页辅助栏；接下来执行本包，设备仍后置，不推送/发布/创建自动任务。

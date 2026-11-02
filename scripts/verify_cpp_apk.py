@@ -63,8 +63,10 @@ def main():
                         help='Verify only the pinned formatting additions against the workbench candidate; all original runtime payloads stay unchanged.')
     parser.add_argument('--allow-git-update', action='store_true',
                         help='Verify only pinned local Git additions against the formatting candidate; preserve original runtimes.')
+    parser.add_argument('--allow-git-remote-update', action='store_true',
+                        help='Verify only the remote Git Python additions against the fixed local Git candidate.')
     args = parser.parse_args()
-    assert sum((args.allow_runner_update,args.allow_formatting_update,args.allow_git_update))<=1
+    assert sum((args.allow_runner_update,args.allow_formatting_update,args.allow_git_update,args.allow_git_remote_update))<=1
     lock = json.loads((ROOT / 'app/cpp-runtime-lock.json').read_text())
     with zipfile.ZipFile(args.apk) as apk, zipfile.ZipFile(args.baseline) as baseline:
         assert apk.testzip() is None and len(apk.namelist()) == len(set(apk.namelist()))
@@ -158,6 +160,12 @@ def main():
             git_update = verify_delta(apk, baseline)
             original_native = git_update['original_native_unchanged']
             original_python = git_update['original_python_assets_unchanged']
+        if args.allow_git_remote_update:
+            from verify_git_remote_apk import verify_delta, BASELINE
+            assert digest(args.baseline.read_bytes())==BASELINE
+            git_update=verify_delta(apk,baseline)
+            original_native=git_update['original_native_unchanged']
+            original_python=git_update['original_python_assets_unchanged']
         for name in original_native + original_python:
             if args.allow_runner_update and name == 'assets/chaquopy/app.imy':
                 changed_python.append(dict(asset=name,**verify_runner_update(apk.read(name),baseline.read(name))))
@@ -167,7 +175,7 @@ def main():
                     apk.read('assets/chaquopy/app.imy'),baseline.read('assets/chaquopy/app.imy')))
                 continue
             assert digest(apk.read(name)) == digest(baseline.read(name)), 'Original runtime changed: ' + name
-        if not args.allow_formatting_update and not args.allow_git_update:
+        if not args.allow_formatting_update and not args.allow_git_update and not args.allow_git_remote_update:
             assert len(original_native) == 10 and len(original_python) == 20
     report = dict(apk_sha256=digest(args.apk.read_bytes()), apk_bytes=args.apk.stat().st_size,
         baseline_sha256=digest(args.baseline.read_bytes()), baseline_bytes=args.baseline.stat().st_size,

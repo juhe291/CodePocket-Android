@@ -12,7 +12,7 @@ internal data class GitRemoteReply(val state:GitState?=null,val remote:GitRemote
     val plan:String?=null,val pushHead:String?=null,val outcome:String?=null) {val ok get()=state!=null && error==null}
 internal object GitRemoteProtocol {
     val publications=setOf("configure","clone","fetch","fast_forward")
-    val operations=publications+setOf("remote_info","remote_refs","push")
+    val operations=publications+setOf("snapshot","remote_info","remote_refs","push")
     val errors=setOf("input","input_limit","output_limit","invalid_response","snapshot_path","precondition","stale","branch","branch_not_found",
         "url_invalid","url_scope","remote_changed","remote_not_configured","remote_not_found","remote_rejected","remote_http","redirect","credentials",
         "authentication","tls","tls_policy","network","timeout","cancelled","busy","backend","protocol","repository","not_repository","repository_layout",

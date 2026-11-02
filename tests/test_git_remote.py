@@ -241,6 +241,26 @@ class GitRemoteTests(unittest.TestCase):
         result=json.loads(git_remote.run_android(str(root),json.dumps(request),Cancellation(),str(root.parent/'result.plan')))
         self.assertTrue(result.get('ok'),result);self.assertEqual('result.plan',result['plan'])
         self.assertEqual('configure',json.loads((root.parent/'result.plan').read_text())['action']);self.assertEqual([],self.server.requests)
+    def test_snapshot_reads_non_repository_and_ssh_origin_without_network_or_mutation(self):
+        empty=self.folder('empty-snapshot')
+        repo=self.folder('ssh-snapshot');fixture.commit(repo,'print(1)\n')
+        config=repo/'.git/config';config.write_bytes(config.read_bytes()+b'\n[remote "origin"]\n\turl = git@example.invalid:owner/project.git\n')
+        for root in (empty,repo):
+            before=self.files(root)
+            def forbidden(*args):raise AssertionError('A local snapshot opened a transport')
+            result=json.loads(git_remote.run(str(root),json.dumps(dict(action='snapshot',modeAvailable=False)),transport_factory=forbidden))
+            self.assertTrue(result.get('ok'),result);self.assertEqual(root==repo,result['repository'])
+            self.assertEqual(self.state(root,False)['snapshot'],result['snapshot'])
+            self.assertEqual(dict(url=None),result['remote']);self.assertEqual(before,self.files(root))
+        self.assertEqual([],self.server.requests)
+    def test_clone_filemode_uses_private_posix_capability_and_cannot_be_spoofed_by_request(self):
+        root=self.folder();fixture.commit(root,'print(1)\n')
+        for available,platform,wanted in ((True,'posix',True),(False,'posix',False),(True,'nt',False),(False,'nt',False)):
+            git_remote.prepare_clone_filemode(root,available,platform)
+            self.assertEqual(wanted,git_remote.raw_config(root).get_boolean((b'core',),b'filemode'))
+        before=self.files(root)
+        result=self.call(root,'snapshot',platform='posix')
+        self.assertEqual('input',result['error']);self.assertEqual(before,self.files(root));self.assertEqual([],self.server.requests)
     def test_confirmed_push_does_not_depend_on_a_second_local_status_read(self):
         root,_=self.clone();old=self.server.head;new=fixture.commit(root,'print(2)\n');read=git_remote.state;calls=[]
         def once(*args):

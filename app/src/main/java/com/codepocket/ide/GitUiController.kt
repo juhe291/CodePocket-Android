@@ -46,7 +46,7 @@ internal interface GitUiHost {
 
 /** Owns source-control drafts/requests; Main retains the shared sidebar host and editor transactions. */
 internal class GitUiController(private val activity:Activity,private val host:GitUiHost,
-    private val factory:()->GitWorkbench):Closeable {
+    private val factory:()->GitWorkbench,private val remote:((View)->Unit)?=null):Closeable {
     private val prefs=activity.getSharedPreferences("codepocket_v2",Context.MODE_PRIVATE)
     private val handler=Handler(Looper.getMainLooper())
     private val executor=Executors.newSingleThreadExecutor()
@@ -85,7 +85,7 @@ internal class GitUiController(private val activity:Activity,private val host:Gi
     }
     fun view(palette:IdePalette):View = panel?:SourceControlPanel(activity,palette,::refresh,
         {response?.state?.let{launch("init",expected=it.snapshot)}},::inspect,::change,::showCommit,::history,
-        host::closePanel,host::openProject,::errorDetails,::recoveryDetails,host::exportRecovery).also{panel=it;it.restore(scroll);render()}
+        host::closePanel,host::openProject,::errorDetails,::recoveryDetails,host::exportRecovery,remote).also{panel=it;it.restore(scroll);render()}
     fun inputChanged(){panel?.setUnsaved(host.projectOpen&&host.dirty)}
     private fun render(){panel?.render(host.workspace.title,host.projectOpen,response,busy,host.dirty)}
     fun refresh(){if(host.projectOpen)launch("status") else render()}

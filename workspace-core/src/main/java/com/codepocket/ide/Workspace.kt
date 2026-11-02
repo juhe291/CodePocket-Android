@@ -164,6 +164,8 @@ class Workspace private constructor(directory: File, seedSamples: Boolean, priva
                 stream.write(content.toByteArray(Charsets.UTF_8))
                 stream.fd.sync()
             }
+            val executable=item.canExecute()
+            check(temporary.setExecutable(executable,false) || temporary.canExecute()==executable)
             replaceFile(temporary, item)
         } finally {
             temporary.delete()
@@ -171,6 +173,12 @@ class Workspace private constructor(directory: File, seedSamples: Boolean, priva
     }
 
     companion object {
+        /** A managed clone has its own root and identity; never seeds/overwrites the default project. */
+        fun fromPrivateProject(directory:File,identity:String,title:String):Workspace {
+            require(identity.startsWith("internal-git:") && Regex("[a-f0-9-]{36}").matches(identity.removePrefix("internal-git:")))
+            require(directory.absoluteFile==directory.canonicalFile && directory.isDirectory)
+            return Workspace(directory,false){a,b->android.system.Os.rename(a.path,b.path)}.also{it.identity=identity;it.title=title}
+        }
         fun validateName(name: String) {
             require(name.isNotBlank() && name == name.trim() && name != "." && name != ".." &&
                 name.length <= 120 && !name.contains('/') && !name.contains('\\') &&

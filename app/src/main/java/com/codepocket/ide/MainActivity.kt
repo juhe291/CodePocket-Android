@@ -164,6 +164,11 @@ class MainActivity : Activity() {
     private var sidebarGitDialog:AlertDialog?=null
     private var gitReader:AlertDialog?=null
     private var gitUi:GitUiController?=null
+    private var remoteUi:GitRemoteUiController?=null
+    private var pendingRemoteUiState:String?=null
+    private var pendingGitCloneUri:String?=null
+    private val remoteGuardEpoch=java.util.concurrent.atomic.AtomicLong()
+    private var remoteFactory:(android.content.Context)->GitRemoteWorkbench={GitRemoteWorkbench(it)}
     private var pendingGitUiState:String?=null
     private var pendingGitExportIdentity:String?=null
     private var pendingGitExportUri:String?=null
@@ -264,6 +269,8 @@ class MainActivity : Activity() {
         sidebarSearchCase = savedInstanceState?.getBoolean("sidebarSearchCase",false) ?: false
         sidebarGitActive=savedInstanceState?.getBoolean("sidebarGitActive",false)?:false
         pendingGitUiState=savedInstanceState?.getString("gitUiState")
+        pendingRemoteUiState=savedInstanceState?.getString("remoteUiState")
+        pendingGitCloneUri=savedInstanceState?.getString("gitCloneUri")
         pendingGitExportIdentity=savedInstanceState?.getString("gitExportIdentity")
         pendingGitExportUri=savedInstanceState?.getString("gitExportUri")
         themeSnapshot = lastNonConfigurationInstance as? SurfaceMotion.Snapshot
@@ -282,7 +289,7 @@ class MainActivity : Activity() {
         val requestedOpen = requestedWorkspaceOpen
         requestedWorkspaceOpen = null
         pendingGitUiState=gitUi?.checkpoint()?:pendingGitUiState
-        gitUi?.detach();releaseGitSurface()
+        remoteUi?.detach();gitUi?.detach();releaseGitSurface()
         if(::workspace.isInitialized && (tree!=selectedTree || requestedOpen==false))sidebarGitActive=false
         explorerDialog?.dismiss(); explorerDialog = null
         workspaceBusy = true
@@ -293,11 +300,13 @@ class MainActivity : Activity() {
                 saved?.getString("draft")?.let { text -> saved.getString("draftKey")?.let { key ->
                     drafts.put(key, saved.getString("draftPath").orEmpty(), text, saved.getString("draftBase"))
                 } }
-                val ws = if (tree == null) Workspace(this, seedSamples = false) else Workspace.fromTree(this, Uri.parse(tree))
+                val cloneTargets=GitCloneTargets(this)
+                val ws = if (tree == null) Workspace(this, seedSamples = false)
+                    else if(cloneTargets.managed(tree))cloneTargets.open(tree) else Workspace.fromTree(this, Uri.parse(tree))
                 val projectOpen = requestedOpen ?: if (prefs.contains("workspaceOpen")) prefs.getBoolean("workspaceOpen", false)
                     else tree != null || ws.children(ws.root).isNotEmpty()
                 fun get(name: String, legacy: String) = prefs.getString("$name:${ws.identity}",
-                    if (!ws.external) prefs.getString(name, legacy) else legacy) ?: legacy
+                    if (ws.identity=="internal") prefs.getString(name, legacy) else legacy) ?: legacy
                 val paths = mutableListOf<String>()
                 if (projectOpen) runCatching { JSONArray(get("opened", "[]")) }.getOrNull()?.let { a ->
                     for (i in 0 until a.length()) {
@@ -309,14 +318,14 @@ class MainActivity : Activity() {
                 if (projectOpen && !runCatching { ws.resolve(active).isFile }.getOrDefault(false)) {
                     // An explicitly empty active file means the last tab was closed. Keep that state.
                     active = paths.lastOrNull() ?: if (active.isNotEmpty() ||
-                        !prefs.contains("activeFile:${ws.identity}") && (ws.external || !prefs.contains("activeFile"))) {
+                        !prefs.contains("activeFile:${ws.identity}") && (ws.identity!="internal" || !prefs.contains("activeFile"))) {
                         ws.folders().asSequence().flatMap { ws.children(it).asSequence() }
                             .firstOrNull { it.isFile && it.extension.lowercase() in setOf("py", "cpp", "h", "hpp") }?.let(ws::path).orEmpty()
                     } else ""
                 }
                 if (active.isNotEmpty() && active !in paths) paths.add(active)
                 val state = EditorSessions(ws.identity, prefs.getString("sessions:${ws.identity}", "[]") ?: "[]")
-                if (active.isNotEmpty() && !ws.external && !prefs.contains("sessions:internal")) {
+                if (active.isNotEmpty() && ws.identity=="internal" && !prefs.contains("sessions:internal")) {
                     state.file(active).stdin = prefs.getString("stdin", "3 5") ?: ""
                     state.file(active).view = EditorViewState(prefs.getInt("caret", 0), prefs.getInt("caret", 0))
                 }
@@ -359,6 +368,8 @@ class MainActivity : Activity() {
                         if (pendingSettingsState != null) handler.post { if (!isDestroyed) showSettings() }
                         if (pendingCasesState != null) handler.post { if (!isDestroyed) showTestCases() }
                         gitUi?.bind(workspace,pendingGitUiState)
+                        if(pendingRemoteUiState!=null)handler.post{if(!isDestroyed){remoteController().restoreForm();pendingRemoteUiState=null}}
+                        pendingGitCloneUri?.let{value->pendingGitCloneUri=null;handler.post{if(!isDestroyed)remoteController().cloneTo(Uri.parse(value))}}
                         if (sidebarGitActive) handler.post { if (!isDestroyed) showSourceControl() }
                         else if (sidebarSearchActive) handler.post { if (!isDestroyed) showProjectSearch() }
                         pendingGitExportUri?.let{value->pendingGitExportUri=null;handler.post{if(!isDestroyed)writeGitRecovery(Uri.parse(value))}}
@@ -437,6 +448,8 @@ class MainActivity : Activity() {
         outState.putBoolean("sidebarSearchCase",sidebarSearchCase)
         outState.putBoolean("sidebarGitActive",sidebarGitActive)
         outState.putString("gitUiState",gitUi?.checkpoint()?:pendingGitUiState)
+        outState.putString("remoteUiState",remoteUi?.checkpoint()?:pendingRemoteUiState)
+        outState.putString("gitCloneUri",pendingGitCloneUri)
         outState.putString("gitExportIdentity",pendingGitExportIdentity)
         outState.putString("gitExportUri",pendingGitExportUri)
         outState.putBoolean("panelVisible", panelVisible)
@@ -512,6 +525,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        remoteGuardEpoch.incrementAndGet();remoteUi?.close();remoteUi=null
         gitUi?.close();gitUi=null;releaseGitSurface()
         releaseSidebarSearch()
         motionObserver?.stop(); motionObserver = null
@@ -1260,6 +1274,7 @@ class MainActivity : Activity() {
             signaturePopup?.let { if (it.isShowing) it.reposition() }
         }
         editor.setChanges { start, removed, inserted, history ->
+            remoteGuardEpoch.incrementAndGet()
             diagnosticPopup?.dismiss()
             if (!quietEdit) {
                 if (::workspace.isInitialized) CaseRunSession.sourceChanged(workspace.identity, activePath)
@@ -1537,7 +1552,7 @@ class MainActivity : Activity() {
     private fun gitController():GitUiController = gitUi?:GitUiController(this,object:GitUiHost {
         override val workspace get()=this@MainActivity.workspace
         override val projectOpen get()=workspaceOpen
-        override val blocked get()=workspaceBusy||saving
+        override val blocked get()=workspaceBusy||saving||remoteUi?.busy==true
         override val currentPath get()=loadedPath
         override val currentText get()=editor.text.toString()
         override val dirty get()=this@MainActivity.dirty
@@ -1561,7 +1576,36 @@ class MainActivity : Activity() {
         override fun reader(title:String,scope:String,text:String){showGitReader(title,scope,text)}
         override fun size(dialog:AlertDialog,width:Int){sizeForm(dialog,width)}
         override fun exportRecovery(){chooseGitRecoveryExport()}
-    },{gitFactory(this)}).also{gitUi=it;it.bind(workspace,pendingGitUiState)}
+    },{gitFactory(this)},{remoteController().showMenu(it)}).also{gitUi=it;it.bind(workspace,pendingGitUiState)}
+
+    private fun remoteController():GitRemoteUiController = remoteUi?:GitRemoteUiController(this,object:GitRemoteUiHost {
+        override val workspace get()=this@MainActivity.workspace
+        override val projectOpen get()=workspaceOpen
+        override val blocked get()=workspaceBusy||saving||running||gitUi?.busy==true
+        override val dirty get()=this@MainActivity.dirty
+        override val motion get()=motionAllowed()
+        override fun save(next:()->Unit){saveActive(next)}
+        override fun guard():GitRemoteWriteGuard? {
+            if(dirty || blocked || editor.isComposing){status.text="请先完成编辑、保存或运行操作";return null}
+            val epoch=remoteGuardEpoch.get()
+            return GitRemoteWriteGuard.drafts(sessions.analysisKeys(),drafts){!isDestroyed && remoteGuardEpoch.get()==epoch}
+        }
+        override fun reload(guard:GitRemoteWriteGuard) {
+            if(guard.isCurrent()&&!dirty&&!editor.isComposing&&!running)requestWorkspace(selectedTree)
+            else status.text="磁盘已快进；当前编辑仍保留，请保存或重新打开前核对版本"
+        }
+        override fun changed(){renderExplorer();refreshTabs();if(sidebarGitActive)gitUi?.refresh()}
+        override fun status(message:String){if(this@MainActivity::status.isInitialized)this@MainActivity.status.text=message}
+        override fun reader(title:String,scope:String,text:String){showGitReader(title,scope,text)}
+        override fun size(dialog:AlertDialog,width:Int){sizeForm(dialog,width)}
+        override fun chooseCloneDirectory(){startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+        },205)}
+        override fun openClone(selector:String){requestWorkspace(selector)}
+        override fun busyChanged(){updateMainToolbarState()}
+        override fun exportRecovery(){chooseGitRecoveryExport()}
+    },{remoteFactory(this)},saved=pendingRemoteUiState).also{remoteUi=it}
 
     private fun showSourceControl() {
         if(workspaceBusy || !::workspace.isInitialized)return
@@ -1941,6 +1985,7 @@ class MainActivity : Activity() {
     }
 
     private fun beginDocumentTransition(): EditorDocumentRequest? {
+        remoteGuardEpoch.incrementAndGet()
         val frame = editorPort?.captureDocument()
         if (frame?.composing == true) {
             if (::status.isInitialized) status.setText(R.string.editor_edit_composing)
@@ -3124,13 +3169,18 @@ class MainActivity : Activity() {
         val recent = runCatching { JSONArray(prefs.getString("recentTrees", "[]")) }.getOrDefault(JSONArray())
         val choices=mutableListOf(
             WorkbenchChoice("select","选择手机目录…","通过 Android 系统选择项目文件夹",IdeIcon.FOLDER_OPEN),
-            WorkbenchChoice("internal","内部项目","保存在应用内，卸载会清除",IdeIcon.FOLDER,!workspace.external),
+            WorkbenchChoice("internal","内部项目","保存在应用内，卸载会清除",IdeIcon.FOLDER,workspace.identity=="internal"),
             WorkbenchChoice("reload","重新载入当前目录","",IdeIcon.REFRESH)
         )
-        for(i in 0 until recent.length()){
-            val entry=recent.getJSONObject(i)
-            choices.add(WorkbenchChoice(entry.optString("uri"),entry.optString("name").ifBlank{"未命名目录"},"最近的系统目录",IdeIcon.FOLDER_OPEN,
-                workspace.external&&entry.optString("uri")==selectedTree,startsGroup=i==0))
+        val managed=GitCloneTargets(this)
+        val destinations=managed.list().toMutableList()
+        for(i in 0 until recent.length()) {
+            val entry=recent.getJSONObject(i);val selector=entry.optString("uri")
+            if(!managed.managed(selector))destinations.add(selector to entry.optString("name").ifBlank{"未命名目录"})
+        }
+        destinations.forEachIndexed{i,(selector,title)->
+            choices.add(WorkbenchChoice(selector,title,if(managed.managed(selector))"应用内克隆项目" else "最近的系统目录",IdeIcon.FOLDER_OPEN,
+                selector==selectedTree,startsGroup=i==0))
         }
         val picker=AlertDialog.Builder(this).setCustomTitle(WorkbenchForms.header(this,"工作区",if(workspace.external)workspace.title else "内部项目",IdeIcon.FOLDER_OPEN))
             .setAdapter(WorkbenchChoiceAdapter(this,choices)) { _, which ->
@@ -3140,7 +3190,7 @@ class MainActivity : Activity() {
                         .setPositiveButton("选择目录") { _, _ -> selectDirectory() }.setNegativeButton("取消", null).showAnimated()
                     1 -> requestWorkspace(null)
                     2 -> requestWorkspace(selectedTree)
-                    else -> requestWorkspace(recent.getJSONObject(which - 3).getString("uri"))
+                    else -> requestWorkspace(destinations[which-3].first)
                 }
         }.setNegativeButton("取消",null).showAnimated()
         sizeForm(picker)
@@ -3193,9 +3243,16 @@ class MainActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==204 && resultCode!=RESULT_OK){pendingGitExportIdentity=null;pendingGitExportUri=null}
+        if(requestCode==205 && resultCode!=RESULT_OK)remoteController().pickerCancelled()
         if (resultCode != RESULT_OK) return
         val uri = data?.data ?: return
         when (requestCode) {
+            205 -> try {
+                val flags=data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                require(flags and Intent.FLAG_GRANT_READ_URI_PERMISSION!=0 && flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION!=0){"请选择可读写目录"}
+                contentResolver.takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                if(workspaceBusy || !::workspace.isInitialized)pendingGitCloneUri=uri.toString() else remoteController().cloneTo(uri)
+            }catch(e:Exception){remoteController().pickerCancelled();alert("克隆目录授权失败：${e.message}")}
             204 -> writeGitRecovery(uri)
             203 -> try {
                 val flags = data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
@@ -3331,6 +3388,7 @@ class MainActivity : Activity() {
     }
 
     private fun renderRunState() {
+        remoteGuardEpoch.incrementAndGet()
         if (!::mainToolbar.isInitialized) return
         updateMainToolbarState()
         val previous = result

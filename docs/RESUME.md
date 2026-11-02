@@ -2,7 +2,16 @@
 
 **后续执行节奏（2026-10-26用户补充）**：通常合并3–5项相关修改，单项做定向测试/视觉检查，批次结束统一全量回归、Lint及APK构建。纯文档不打包；不再每个小修改都生成安装包。详见[批次规则](DEVELOPMENT_BATCH_POLICY.md)。当前批次的实际代码/产物见下文。
 
-## 正在进行：P3-B 服务/凭据/推送回执，待接工作台（2026-11-02）
+## 最近完成：P3-B HTTPS同步候选，下一步P3-E网页（2026-11-03）
+
+- [交付记录](P3_GITHUB_SYNC_DELIVERY_2026-11-03.md)：已接GitRemoteWorkbench、独立内部/真实SAF克隆目标、原Main导航/保存/恢复草稿保护、统一原生远端菜单/表单、默认临时或Keystore加密凭据、提交确认/非强制推送及持久回执/清理。只在用户明确操作时联网，默认项目和设置草稿/真实运行/PTY保持。
+- 相关134通过、Python157通过；集中1109项1107通过/1既有Windows失败/1旧跳过，旧1033身份保持、新76全通过。Lint零错误（27/1/0警告），终端146有效UP-TO-DATE、editor-assist NO-SOURCE。完整流程实际退出1，7分36秒，只一次实际打包，不能称全绿。
+- 实际新包Python48/语义22/Git及格式化82、原签名/CRC/16KiB/Manifest/DEX/C++闭包通过，25原生库/46运行资产/100旧APK保持，Shell4/片段14按未变生成内容/源摘要复用。三张原生表单图逐张看过；未证明设备窗口/IME、Keystore、Android执行位或真实GitHub账号授权。
+- [候选APK](../dist/CodePocket-github-sync-2026-11-03-debug.apk)，123878915字节，SHA256 `c63e8df1d0f6b89df2f972fe2a58117c43a8fd7b0da982eb30c1e68571492c1c`。最终依据verification/git-remote-delivery-2026-11-03/results.json和冻结build-inputs.json，生产/测试源码自构建起保持；原本地日志/历史图变动未混入本批。
+- 首轮Git长路径、UI编译名称解析、旧导航条件导致新克隆不自动打开文件及凭据异步清理失败均保留；生产修复后原断言保持，无新跳过。汇总旧片段路径错误仅修汇总，没有重打APK。
+- 当前下一步[P3-E网页辅助栏](P3_WEB_AUXILIARY_BATCH_2026-11-02.md)，GitHub现成方案及WebKit1.18.0实际AAR已核对但尚未集成；之后C设置搜索/主题、D更多语言。整个目标活动，不因B交付标完成。设备验收继续后置，不推送、发布、远端CI或创建自动任务。
+
+## 历史检查点：P3-B服务/凭据/推送回执，待接工作台（2026-11-02）
 
 - 用户复核：网页侧边栏尚未实现，Main仍只有隐藏auxiliarySlot；前述“剩3包”漏列这一原工作台要求，已补[P3-E计划](P3_WEB_AUXILIARY_BATCH_2026-11-02.md)，当前顺序B→E→C→D。先按用户要求找GitHub现成方案：AgentWeb/AdvancedWebView/WebKit/Markwon源码与许可已核对，优先系统WebView+WebKit1.18.0，实际缓存AAR静态元数据24/33/7.2符合现有24/35/8.7.3，无原生库。官方下载DNS失败及既有镜像检查证据在verification/web-sidebar-research-2026-11-02；未加生产依赖、未编译/运行或打新APK，不宣称已兼容或网页已可用。
 
