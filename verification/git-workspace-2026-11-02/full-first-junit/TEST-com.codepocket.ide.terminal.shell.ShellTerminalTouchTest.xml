@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:35:37" hostname="JUHE" time="1.409">
+  <properties/>
+  <testcase name="disposedPaneRejectsLateImeAndExplicitControlShortcut" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.143"/>
+  <testcase name="runningAndWaitingTapUsesSameActualTerminal" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.095"/>
+  <testcase name="hiddenHostRejectsLateImeTextAndControlKeys" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.102"/>
+  <testcase name="newerConnectionInvalidatesPreviousBufferOnSameView" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.106"/>
+  <testcase name="focusLostBeforeCompositionFinishesDoesNotWriteToTerminal" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.104"/>
+  <testcase name="hiddenHostCannotStealImeEvenDuringRunning" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.072"/>
+  <testcase name="startupKeyboardButtonIsNotSilentlyIgnored" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.166"/>
+  <testcase name="replacementSessionCannotReceivePreviousInputConnection" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.114"/>
+  <testcase name="actualImeCompositionAndEnterReachOnlyTheReadySessionQueue" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.145"/>
+  <testcase name="startupTapRequestsKeyboardWithoutAllowingProcessInput" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.15"/>
+  <testcase name="closedConnectionDropsCompositionAndCannotCommitLater" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.115"/>
+  <testcase name="refocusingDoesNotReviveOldCompositionConnection" classname="com.codepocket.ide.terminal.shell.ShellTerminalTouchTest" time="0.097"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

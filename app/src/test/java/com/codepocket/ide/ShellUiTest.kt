@@ -76,7 +76,7 @@ class ShellUiTest {
         val surfaces = listOf(IdeCommands.settingsMenuItems, IdeCommands.editorToolbarItems, IdeCommands.editorMenuItems,
             IdeCommands.explorerToolbarItems, IdeCommands.explorerMenuItems, IdeCommands.terminalToolbarItems,
             IdeCommands.terminalMenuItems, IdeCommands.symbolBarItems, IdeCommands.runMenuItems, IdeCommands.fileMenuItems, IdeCommands.editMenuItems,
-            IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(0), false))
+            IdeCommands.viewMenuItems,IdeCommands.globalMenu(WorkspaceLayoutPolicy.toolbar(0), false))
         assertEquals(IdeCommand.entries.toSet(), surfaces.flatten().toSet())
         assertTrue(legacy.all { it in surfaces.flatten() })
         for (surface in surfaces) assertEquals(surface.size, surface.distinct().size)
@@ -95,7 +95,7 @@ class ShellUiTest {
         val unloaded = editing.copy(loaded = false)
         val allowed = setOf(IdeCommand.THEME, IdeCommand.SETTINGS, IdeCommand.SHORTCUTS, IdeCommand.HELP,
             IdeCommand.NEW_FILE, IdeCommand.NEW_FOLDER, IdeCommand.IMPORT_COPY, IdeCommand.WORKSPACE,
-            IdeCommand.CLOSE_WORKSPACE, IdeCommand.EXPLORER, IdeCommand.SEARCH, IdeCommand.RECOVER,
+            IdeCommand.CLOSE_WORKSPACE, IdeCommand.EXPLORER, IdeCommand.SEARCH, IdeCommand.SOURCE_CONTROL, IdeCommand.RECOVER,
             IdeCommand.PANEL, IdeCommand.PANEL_SIZE, IdeCommand.MAXIMIZE_TERMINAL, IdeCommand.CLOSE_TERMINAL,
             IdeCommand.CLEAR_TERMINAL, IdeCommand.HIDE_KEYBOARD)
         assertEquals(allowed, IdeCommand.entries.filter { IdeCommands.enabled(it, unloaded) }.toSet())

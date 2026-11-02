@@ -1,0 +1,87 @@
+{
+  "apk": "dist/CodePocket-local-git-2026-11-02-debug.apk",
+  "bytes": 123878915,
+  "sha256": "26ac0bec36f7a0a89108727452d1f96a8576086e5f9ee19d889987a568961075",
+  "size_delta_bytes": 2519029,
+  "full_build_exit": 1,
+  "junit": {
+    "tests": 1033,
+    "passed": 1031,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 1
+  },
+  "previous_test_identities_preserved": 995,
+  "new_tests": 38,
+  "new_skips": false,
+  "targeted": {
+    "tests": 52,
+    "passed": 52,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "layout_targeted": {
+    "tests": 85,
+    "passed": 85,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "terminal": {
+    "tests": 146,
+    "passed": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": {
+    "app": {
+      "Warning": 27
+    },
+    "editor-sora": {
+      "Warning": 1
+    },
+    "workspace-core": {}
+  },
+  "source_python_tests": 114,
+  "packaged_python_tests": 48,
+  "packaged_semantics_tests": 22,
+  "packaged_git_tests": 19,
+  "packaged_formatting_tests": 20,
+  "host_shell_tests_reused": 4,
+  "host_snippets_reused": 14,
+  "native_libraries_byte_identical": 25,
+  "original_runtime_assets_byte_identical": 45,
+  "approved_runtime_asset_updates": [
+    "assets/chaquopy/app.imy",
+    "assets/chaquopy/build.json",
+    "assets/chaquopy/requirements-common.imy"
+  ],
+  "old_apks_preserved": 99,
+  "actual_package_executions": 2,
+  "first_full": {
+    "tests": 1032,
+    "passed": 1029,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 1
+  },
+  "first_apk_delivered": false,
+  "layout_history_regression_fixed": true,
+  "previews": [
+    "phone-dark-staged.png",
+    "phone-dark-commit.png",
+    "tablet-light-untracked-diff.png",
+    "phone-dark-no-project.png",
+    "phone-light-large-commit.png"
+  ],
+  "android_device_execution": false,
+  "full_goal_complete": false,
+  "remaining_plan": [
+    "P3-B GitHub",
+    "P3-C settings and themes",
+    "P3-D more language analysis"
+  ],
+  "retained_failure": "com.codepocket.ide.CppRuntimePreparationTest.trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs"
+}

@@ -7,6 +7,7 @@ import android.provider.DocumentsContract.Document
 import java.io.IOException
 
 class SafGateway(private val resolver: ContentResolver, private val tree: Uri) : DocumentGateway {
+    override val identity:String get()=tree.toString()
     private fun uri(id: String) = DocumentsContract.buildDocumentUriUsingTree(tree, id)
     private fun info(id: String): DocumentNode = resolver.query(uri(id), PROJECTION, null, null, null)?.use { c ->
         require(c.moveToFirst()) { "目录或文件已不存在，请重新选择工作区" }
@@ -25,26 +26,35 @@ class SafGateway(private val resolver: ContentResolver, private val tree: Uri) :
         Workspace.utf8Reader(stream).use { Workspace.readLimited(it, Workspace.MAX_CHARS) }
     }?.also { require(!it.contains('\u0000')) { "仅支持 UTF-8 文本" } }?.removePrefix("\uFEFF")
         ?: throw IOException("无法读取文件")
-    override fun readBytes(id: String): ByteArray = resolver.openInputStream(uri(id))?.use { stream ->
+    override fun readBytes(id: String): ByteArray = readBinary(id,1_000_000)
+    override fun readBinary(id: String,limit:Int): ByteArray = resolver.openInputStream(uri(id))?.use { stream ->
+        require(limit in 1..16_000_000) { "二进制读取上限无效" }
         val out = java.io.ByteArrayOutputStream()
         val buffer = ByteArray(8192)
         while (true) {
             val count = stream.read(buffer)
             if (count < 0) break
-            require(out.size() + count <= 1_000_000) { "运行资源超过 1 MB" }
+            require(out.size() + count <= limit) { if(limit==1_000_000)"运行资源超过 1 MB" else "Git文件超过读取上限" }
             out.write(buffer, 0, count)
         }
         out.toByteArray()
     } ?: throw IOException("无法同步运行资源")
     override fun write(id: String, text: String) {
+        writeBytes(id,text.toByteArray(Charsets.UTF_8))
+    }
+    override fun writeBytes(id: String, bytes: ByteArray) {
         require(info(id).flags and Document.FLAG_SUPPORTS_WRITE != 0) { "提供方不允许写入此文件" }
-        resolver.openOutputStream(uri(id), "wt")?.use { out -> out.write(text.toByteArray(Charsets.UTF_8)); out.flush() }
+        resolver.openOutputStream(uri(id), "wt")?.use { out -> out.write(bytes); out.flush() }
             ?: throw IOException("无法打开文件进行保存")
     }
     override fun create(parent: String, name: String, directory: Boolean): DocumentNode {
+        return createNode(parent,name,if(directory)Document.MIME_TYPE_DIR else "text/plain")
+    }
+    override fun createBinary(parent:String,name:String):DocumentNode = createNode(parent,name,"application/octet-stream")
+    private fun createNode(parent:String,name:String,mime:String):DocumentNode {
         require(info(parent).flags and Document.FLAG_DIR_SUPPORTS_CREATE != 0) { "此目录不支持新建" }
         val created = DocumentsContract.createDocument(resolver, uri(parent),
-            if (directory) Document.MIME_TYPE_DIR else "text/plain", name) ?: throw IOException("提供方创建失败")
+            mime, name) ?: throw IOException("提供方创建失败")
         return info(DocumentsContract.getDocumentId(created))
     }
     override fun rename(id: String, name: String): DocumentNode {

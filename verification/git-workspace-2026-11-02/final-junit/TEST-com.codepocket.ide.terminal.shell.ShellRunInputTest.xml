@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.terminal.shell.ShellRunInputTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:49:22" hostname="JUHE" time="0.094">
+  <properties/>
+  <testcase name="returnedPromptNeedsDispatchedCommandAndKernelForegroundAndIsOnceOnly" classname="com.codepocket.ide.terminal.shell.ShellRunInputTest" time="0.021"/>
+  <testcase name="clearedOrReplacedRunCannotReceivePreviousPromptReturn" classname="com.codepocket.ide.terminal.shell.ShellRunInputTest" time="0.014"/>
+  <testcase name="interactiveInputAndEofReachRealTerminal" classname="com.codepocket.ide.terminal.shell.ShellRunInputTest" time="0.014"/>
+  <testcase name="actualStartAndPromptMarkersHandleEditingRedrawBeforeBridgeLaunch" classname="com.codepocket.ide.terminal.shell.ShellRunInputTest" time="0.018"/>
+  <testcase name="oldOwnerCannotClearNewRunAndConcurrentLaunchIsRefused" classname="com.codepocket.ide.terminal.shell.ShellRunInputTest" time="0.013"/>
+  <testcase name="startupAndCloudBlockInputButStillAcceptStop" classname="com.codepocket.ide.terminal.shell.ShellRunInputTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

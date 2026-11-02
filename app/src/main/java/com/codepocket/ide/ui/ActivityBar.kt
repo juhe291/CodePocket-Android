@@ -14,10 +14,11 @@ import android.widget.ScrollView
 @SuppressLint("ViewConstructor")
 class ActivityBar(context: Context, private val palette: IdePalette,
     onSearch: (() -> Unit)? = null, onSettings: (() -> Unit)? = null,
-    onRun: (() -> Unit)? = null, onTerminal: (() -> Unit)? = null,
+    onRun: (() -> Unit)? = null, onTerminal: (() -> Unit)? = null, onSourceControl:(()->Unit)?=null,
     private val onExplorer: () -> Unit) : LinearLayout(context) {
     private val explorerButton: ImageView
     private var searchButton: ImageView? = null
+    private var sourceButton:ImageView?=null
     private val pen=Paint().apply { color=palette.accentText }
     private val indicator=Rect()
     init {
@@ -31,6 +32,7 @@ class ActivityBar(context: Context, private val palette: IdePalette,
             }
         explorerButton=action(IdeIcon.EXPLORER,"资源管理器 · Ctrl+B",onExplorer)
         onSearch?.let { searchButton=action(IdeIcon.SEARCH,"项目搜索",it) }
+        onSourceControl?.let{sourceButton=action(IdeIcon.SOURCE_CONTROL,"源代码管理",it)}
         onRun?.let { action(IdeIcon.RUN,"运行 / 停止 · F5",it) }
         onTerminal?.let { action(IdeIcon.TERMINAL,"打开终端",it) }
         addView(ScrollView(context).apply { isVerticalScrollBarEnabled=false;addView(actions) },LayoutParams(dp(48),0,1f))
@@ -49,9 +51,13 @@ class ActivityBar(context: Context, private val palette: IdePalette,
         }
         invalidate()
     }
+    fun setSourceActive(active:Boolean) {
+        sourceButton?.apply{isSelected=active;setImageDrawable(IdeIconDrawable(context,IdeIcon.SOURCE_CONTROL,if(active)palette.foreground else palette.muted,dp(22)))}
+        invalidate()
+    }
     override fun dispatchDraw(canvas:Canvas) {
         super.dispatchDraw(canvas)
-        val selected=listOfNotNull(explorerButton,searchButton).firstOrNull{it.isSelected&&it.isShown}
+        val selected=listOfNotNull(explorerButton,searchButton,sourceButton).firstOrNull{it.isSelected&&it.isShown}
         if(selected!=null) {
             selected.getDrawingRect(indicator);offsetDescendantRectToMyCoords(selected,indicator)
             canvas.drawRect(0f,indicator.top.coerceAtLeast(0).toFloat(),dp(2).toFloat(),indicator.bottom.coerceAtMost(height-dp(52)).toFloat(),pen)

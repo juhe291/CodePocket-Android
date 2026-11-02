@@ -29,6 +29,7 @@ object IdeCommandMenu {
     internal fun icon(command:IdeCommand,running:Boolean):IdeIcon=when(command){
         IdeCommand.RUN_STOP->if(running)IdeIcon.STOP else IdeIcon.RUN
         IdeCommand.EXPLORER->IdeIcon.EXPLORER
+        IdeCommand.SOURCE_CONTROL->IdeIcon.SOURCE_CONTROL
         IdeCommand.SEARCH,IdeCommand.FIND->IdeIcon.SEARCH
         IdeCommand.NEW_FILE->IdeIcon.ADD_FILE
         IdeCommand.NEW_FOLDER->IdeIcon.ADD_FOLDER
@@ -70,7 +71,7 @@ object IdeCommandMenu {
         IdeCommand.FIND,IdeCommand.REPLACE,IdeCommand.GOTO_LINE->8
         IdeCommand.FONT_SIZE,IdeCommand.FORMAT_DOCUMENT->9
         IdeCommand.COMPLETE,IdeCommand.SIGNATURE,IdeCommand.SNIPPET->10
-        IdeCommand.EXPLORER,IdeCommand.SEARCH->11
+        IdeCommand.EXPLORER,IdeCommand.SEARCH,IdeCommand.SOURCE_CONTROL->11
         IdeCommand.PANEL,IdeCommand.PANEL_SIZE,IdeCommand.MAXIMIZE_TERMINAL,IdeCommand.CLOSE_TERMINAL->12
         IdeCommand.CLEAR_TERMINAL->13
         IdeCommand.PRESET_INPUT,IdeCommand.CLEAR_INPUT->14

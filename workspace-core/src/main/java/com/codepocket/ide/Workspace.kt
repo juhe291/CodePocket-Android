@@ -13,6 +13,7 @@ class Workspace private constructor(directory: File, seedSamples: Boolean, priva
     var title: String = "内部项目（卸载会清除，请导出备份）"
         private set
     val external get() = documents != null
+    fun gitStore():GitWorkspaceStore = documents?.gitStore() ?: GitWorkspaceStore(FileGitGateway(root),true)
     /** Fresh, read-only analysis input. Never updates the editor mirror or saved-base hashes. */
     fun pythonSources(): Map<String, String> = documents?.pythonSources() ?: PythonSources.local(root)
     fun cppSources(): Map<String, String> = documents?.cppSources() ?: PythonSources.local(root, CppSources::isSource)
@@ -65,7 +66,7 @@ class Workspace private constructor(directory: File, seedSamples: Boolean, priva
 
 
     fun children(dir: File): List<File> = safe(dir).listFiles()?.filter {
-        runCatching { safe(it) }.isSuccess && (documents == null || path(it) in documents!!.children(path(dir)))
+        !(dir==root && it.name==".git") && runCatching { safe(it) }.isSuccess && (documents == null || path(it) in documents!!.children(path(dir)))
     }?.sortedWith(
         compareBy<File>({ !it.isDirectory }, { it.name.lowercase() })
     ) ?: emptyList()

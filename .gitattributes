@@ -31,3 +31,5 @@ verification/formatting-2026-10-30/verify_formatting_apk-before-loader-fix.py -t
 
 verification/git-preflight-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 verification/git-preflight-2026-11-02/licenses/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+app/src/main/assets/git-licenses/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-workspace-2026-11-02/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

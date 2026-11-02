@@ -232,7 +232,23 @@ class CompletionInteractionTest {
         editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("d",1)
         assertEquals("abcd",editor.text.toString())
         key(KeyEvent.KEYCODE_PLUS,KeyEvent.META_CTRL_ON)
+        awaitEditor() // Zoom rebuilds native Sora layout asynchronously.
         assertTrue(editor.onTextContextMenuItem(android.R.id.undo));assertEquals("abc",editor.text.toString())
+    }
+    @Test fun historyWaitsForNativeLayoutWithoutConsumingItsUndoOrRedo() {
+        loadText("abc");editor.setSelection(3)
+        editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("d",1);awaitEditor()
+        val native=ReflectionHelpers.getField<Any>(editor,"editor")
+        fun busy(value:Boolean){ReflectionHelpers.callInstanceMethod<Unit>(native,"setLayoutBusy",
+            ReflectionHelpers.ClassParameter.from(java.lang.Boolean.TYPE,value))}
+        busy(true)
+        try {assertFalse(editor.onTextContextMenuItem(android.R.id.undo));assertEquals("abcd",editor.text.toString())}
+        finally {busy(false)}
+        awaitEditor();assertTrue(editor.onTextContextMenuItem(android.R.id.undo));assertEquals("abc",editor.text.toString())
+        busy(true)
+        try {assertFalse(editor.onTextContextMenuItem(android.R.id.redo));assertEquals("abc",editor.text.toString())}
+        finally {busy(false)}
+        awaitEditor();assertTrue(editor.onTextContextMenuItem(android.R.id.redo));assertEquals("abcd",editor.text.toString())
     }
     @Test fun fontZoomWaitsForCompositionAndIgnoresNonEditorFocus() {
         val original=ReflectionHelpers.getField<AppSettings>(main,"settings")

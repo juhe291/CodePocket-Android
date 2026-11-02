@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.RunControlTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:48:48" hostname="JUHE" time="0.007">
+  <properties/>
+  <testcase name="cancelledRequestCannotAttachOrStartAnotherNetworkOperation" classname="com.codepocket.ide.RunControlTest" time="0.0"/>
+  <testcase name="httpFailuresAreServiceErrorsAndOfflineIsNetworkError" classname="com.codepocket.ide.RunControlTest" time="0.001"/>
+  <testcase name="duplicateRunsAndLateResultsAfterStopAreRejected" classname="com.codepocket.ide.RunControlTest" time="0.0"/>
+  <testcase name="cancellingDisconnectsOnlyItsOwnActiveConnection" classname="com.codepocket.ide.RunControlTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

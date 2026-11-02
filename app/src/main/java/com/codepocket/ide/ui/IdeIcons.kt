@@ -58,7 +58,8 @@ enum class IdeIcon(val resource: Int) {
     FILTER(R.drawable.lucide_list_filter),
     CODE(R.drawable.lucide_file_code_2),
     BRACKETS(R.drawable.lucide_brackets),
-    CASE(R.drawable.lucide_case_sensitive)
+    CASE(R.drawable.lucide_case_sensitive),
+    SOURCE_CONTROL(R.drawable.ic_source_control)
 }
 class IdeIconDrawable(context: Context, private val icon: IdeIcon, color: Int, private val size: Int) : Drawable() {
     private val vector = context.getDrawable(icon.resource)!!.mutate().apply { setTint(color) }

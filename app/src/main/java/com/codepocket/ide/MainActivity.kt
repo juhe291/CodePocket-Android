@@ -159,6 +159,15 @@ class MainActivity : Activity() {
     private var sidebarSearchActive = false
     private var sidebarSearchQuery = ""
     private var sidebarSearchCase = false
+    private var sidebarGitActive=false
+    private var sidebarGitView:View?=null
+    private var sidebarGitDialog:AlertDialog?=null
+    private var gitReader:AlertDialog?=null
+    private var gitUi:GitUiController?=null
+    private var pendingGitUiState:String?=null
+    private var pendingGitExportIdentity:String?=null
+    private var pendingGitExportUri:String?=null
+    private var gitFactory:(android.content.Context)->GitWorkbench={GitWorkbench(it)}
     private var disposeSidebarSearch: (() -> Unit)? = null
     private lateinit var panelToolbar: PanelToolbar
     private var presetInputExpanded = false
@@ -253,6 +262,10 @@ class MainActivity : Activity() {
         sidebarSearchActive = savedInstanceState?.getBoolean("sidebarSearchActive",false) ?: false
         sidebarSearchQuery = savedInstanceState?.getString("sidebarSearchQuery").orEmpty()
         sidebarSearchCase = savedInstanceState?.getBoolean("sidebarSearchCase",false) ?: false
+        sidebarGitActive=savedInstanceState?.getBoolean("sidebarGitActive",false)?:false
+        pendingGitUiState=savedInstanceState?.getString("gitUiState")
+        pendingGitExportIdentity=savedInstanceState?.getString("gitExportIdentity")
+        pendingGitExportUri=savedInstanceState?.getString("gitExportUri")
         themeSnapshot = lastNonConfigurationInstance as? SurfaceMotion.Snapshot
         startupPanelPending = savedInstanceState?.getBoolean("panelStartupPending", true) ?: true
         selectedOutput = savedInstanceState?.getInt("outputChannel", 3)?.coerceIn(0, 3) ?: 3
@@ -268,6 +281,9 @@ class MainActivity : Activity() {
         val transition = beginDocumentTransition() ?: return
         val requestedOpen = requestedWorkspaceOpen
         requestedWorkspaceOpen = null
+        pendingGitUiState=gitUi?.checkpoint()?:pendingGitUiState
+        gitUi?.detach();releaseGitSurface()
+        if(::workspace.isInitialized && (tree!=selectedTree || requestedOpen==false))sidebarGitActive=false
         explorerDialog?.dismiss(); explorerDialog = null
         workspaceBusy = true
         if (::editor.isInitialized) { captureSession(); persistSessions(); persistNavigation() }
@@ -342,7 +358,10 @@ class MainActivity : Activity() {
                         renderRunState()
                         if (pendingSettingsState != null) handler.post { if (!isDestroyed) showSettings() }
                         if (pendingCasesState != null) handler.post { if (!isDestroyed) showTestCases() }
-                        if (sidebarSearchActive) handler.post { if (!isDestroyed) showProjectSearch() }
+                        gitUi?.bind(workspace,pendingGitUiState)
+                        if (sidebarGitActive) handler.post { if (!isDestroyed) showSourceControl() }
+                        else if (sidebarSearchActive) handler.post { if (!isDestroyed) showProjectSearch() }
+                        pendingGitExportUri?.let{value->pendingGitExportUri=null;handler.post{if(!isDestroyed)writeGitRecovery(Uri.parse(value))}}
                         themeSnapshot?.let { snapshot ->
                             themeSnapshot = null
                             if (motionAllowed()) SurfaceMotion.play(root, snapshot,
@@ -416,6 +435,10 @@ class MainActivity : Activity() {
         outState.putBoolean("sidebarSearchActive",sidebarSearchActive)
         outState.putString("sidebarSearchQuery",sidebarSearchQuery)
         outState.putBoolean("sidebarSearchCase",sidebarSearchCase)
+        outState.putBoolean("sidebarGitActive",sidebarGitActive)
+        outState.putString("gitUiState",gitUi?.checkpoint()?:pendingGitUiState)
+        outState.putString("gitExportIdentity",pendingGitExportIdentity)
+        outState.putString("gitExportUri",pendingGitExportUri)
         outState.putBoolean("panelVisible", panelVisible)
         outState.putBoolean("panelStartupPending", startupPanelPending)
         outState.putString("panelState", panelState.toJson())
@@ -489,6 +512,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        gitUi?.close();gitUi=null;releaseGitSurface()
         releaseSidebarSearch()
         motionObserver?.stop(); motionObserver = null
         settingsApplyFailure = null
@@ -546,6 +570,7 @@ class MainActivity : Activity() {
 
     private fun createUi() {
         releaseSidebarSearch()
+        releaseGitSurface()
         commandMenu?.dismiss(); commandMenu = null
         diagnosticPopup?.dismiss(); diagnosticPopup = null
         hideCompletion(); clearSnippet(); completionPopup = null; signaturePopup = null
@@ -590,7 +615,8 @@ class MainActivity : Activity() {
         contentHost = content
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
 
-        activityBar = ActivityBar(this, palette, { dispatchCommand(IdeCommand.SEARCH) }, ::showSettings) { dispatchCommand(IdeCommand.EXPLORER) }.also {
+        activityBar = ActivityBar(this, palette, { dispatchCommand(IdeCommand.SEARCH) }, ::showSettings,
+            onSourceControl={dispatchCommand(IdeCommand.SOURCE_CONTROL)}) { dispatchCommand(IdeCommand.EXPLORER) }.also {
             content.addView(it, LinearLayout.LayoutParams(dp(48), -1))
         }
         val work = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
@@ -688,9 +714,11 @@ class MainActivity : Activity() {
                 }
             }
             activityBar?.visibility = View.VISIBLE
-            activityBar?.setExplorerActive(explorerVisible&&!sidebarSearchActive)
+            activityBar?.setExplorerActive(explorerVisible&&!sidebarSearchActive&&!sidebarGitActive)
             activityBar?.setSearchActive(explorerVisible&&sidebarSearchActive)
-            if(sidebarSearchActive && sidebarSearchView!=null)attachSearchSidebar()
+            activityBar?.setSourceActive(explorerVisible&&sidebarGitActive)
+            if(sidebarGitActive && sidebarGitView!=null)attachGitSidebar()
+            else if(sidebarSearchActive && sidebarSearchView!=null)attachSearchSidebar()
             explorerPane?.let { pane ->
                 if (pane.layoutParams.width != dp(layout.width)) pane.layoutParams = LinearLayout.LayoutParams(dp(layout.width), -1)
                 Animations.cancel(pane); pane.visibility = if (explorerVisible) View.VISIBLE else View.GONE
@@ -704,8 +732,10 @@ class MainActivity : Activity() {
             listOfNotNull(explorerPane, explorerResizeHandle).forEach { Animations.cancel(it); it.visibility = View.GONE }
             activityBar?.setExplorerActive(explorerDialog?.isShowing == true)
             activityBar?.setSearchActive(sidebarSearchDialog?.isShowing==true)
+            activityBar?.setSourceActive(sidebarGitDialog?.isShowing==true)
             if(sidebarSearchActive && explorerVisible && sidebarSearchView!=null)attachSearchDrawer()
-            listOfNotNull(explorerDialog,sidebarSearchDialog).filter{it.isShowing}.forEach(::sizeSidebarDrawer)
+            if(sidebarGitActive && explorerVisible && sidebarGitView!=null)attachGitDrawer()
+            listOfNotNull(explorerDialog,sidebarSearchDialog,sidebarGitDialog).filter{it.isShowing}.forEach(::sizeSidebarDrawer)
         }
     }
 
@@ -764,6 +794,7 @@ class MainActivity : Activity() {
     }
 
     private fun updateMainToolbarState() {
+        gitUi?.inputChanged()
         if (::mainToolbar.isInitialized) mainToolbar.setRunState(running, IdeCommands.enabled(IdeCommand.RUN_STOP, commandContext()))
     }
 
@@ -812,7 +843,7 @@ class MainActivity : Activity() {
         val commands=when(group) {
             WorkbenchMenuGroup.FILE->IdeCommands.fileMenuItems
             WorkbenchMenuGroup.EDIT->IdeCommands.editMenuItems
-            WorkbenchMenuGroup.VIEW->listOf(IdeCommand.EXPLORER,IdeCommand.SEARCH,IdeCommand.PANEL,IdeCommand.THEME,IdeCommand.HIDE_KEYBOARD)
+            WorkbenchMenuGroup.VIEW->IdeCommands.viewMenuItems
             WorkbenchMenuGroup.RUN->IdeCommands.runMenuItems
             WorkbenchMenuGroup.TERMINAL->listOf(IdeCommand.PANEL,IdeCommand.MAXIMIZE_TERMINAL,IdeCommand.CLOSE_TERMINAL,IdeCommand.CLEAR_TERMINAL,IdeCommand.PANEL_SIZE)
             WorkbenchMenuGroup.HELP->IdeCommands.settingsMenuItems.filter { it!=IdeCommand.THEME }
@@ -834,6 +865,7 @@ class MainActivity : Activity() {
             IdeCommand.RUN_STOP -> if (CaseRunSession.running) CaseRunSession.stop() else if (running) RunSession.stop() else runCode()
             IdeCommand.TEST_CASES -> showTestCases()
             IdeCommand.EXPLORER -> showExplorer()
+            IdeCommand.SOURCE_CONTROL -> showSourceControl()
             IdeCommand.SEARCH -> showProjectSearch()
             IdeCommand.FIND -> showSearch(false)
             IdeCommand.NEW_FILE -> askCreate(false)
@@ -1440,7 +1472,10 @@ class MainActivity : Activity() {
 
     private fun showExplorer() {
         if (workspaceBusy) return
-        val switching=sidebarSearchActive
+        val switching=sidebarSearchActive || sidebarGitActive
+        sidebarGitActive=false;sidebarGitView?.visibility=View.GONE
+        val oldGit=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===oldGit)toolDialog=null;oldGit?.dismiss()
+        activityBar?.setSourceActive(false)
         sidebarSearchActive=false
         sidebarSearchView?.visibility=View.GONE;sidebarTreeView?.visibility=View.VISIBLE
         val oldSearch=sidebarSearchDialog;sidebarSearchDialog=null
@@ -1465,7 +1500,7 @@ class MainActivity : Activity() {
         val content = makeExplorerPane(false)
         explorerDialog = sidebarDrawer(content) { dialog ->
             overlayExplorerList = null; if (explorerDialog === dialog) explorerDialog = null
-            activityBar?.setExplorerActive(currentGeometry?.showExplorerSidebar==true && explorerVisible && !sidebarSearchActive)
+            activityBar?.setExplorerActive(currentGeometry?.showExplorerSidebar==true && explorerVisible && !sidebarSearchActive && !sidebarGitActive)
         }
         activityBar?.setExplorerActive(true)
     }
@@ -1499,6 +1534,107 @@ class MainActivity : Activity() {
         if(toolDialog===old)toolDialog=null
         old?.dismiss();sidebarSearchView=null
     }
+    private fun gitController():GitUiController = gitUi?:GitUiController(this,object:GitUiHost {
+        override val workspace get()=this@MainActivity.workspace
+        override val projectOpen get()=workspaceOpen
+        override val blocked get()=workspaceBusy||saving
+        override val currentPath get()=loadedPath
+        override val currentText get()=editor.text.toString()
+        override val dirty get()=this@MainActivity.dirty
+        override val visible get()=sidebarGitActive && (toolDialog?.isShowing!=true || toolDialog===sidebarGitDialog || toolDialog===gitReader)
+        override val motion get()=motionAllowed()
+        override fun save(next:()->Unit){saveActive(next)}
+        override fun retainDraft(next:()->Unit) {
+            val path=loadedPath
+            if(!dirty || path==null){next();return}
+            val key=sessions.key(path);val value=editor.text.toString();val base=loadedVersion
+            captureSession();persistSessions()
+            ioAction("正在保留恢复草稿…",{drafts.put(key,path,value,base)}){next()}
+        }
+        override fun open(path:String,next:()->Unit){switchFile(path,next)}
+        override fun draftKey(path:String)=sessions.analysisKeys()[path]
+        override fun readDraft(key:String)=drafts.read(key)
+        override fun status(message:String){status.text=message}
+        override fun changed(){renderExplorer();refreshTabs()}
+        override fun closePanel(){closeGitSidebar()}
+        override fun openProject(){dispatchCommand(IdeCommand.WORKSPACE)}
+        override fun reader(title:String,scope:String,text:String){showGitReader(title,scope,text)}
+        override fun size(dialog:AlertDialog,width:Int){sizeForm(dialog,width)}
+        override fun exportRecovery(){chooseGitRecoveryExport()}
+    },{gitFactory(this)}).also{gitUi=it;it.bind(workspace,pendingGitUiState)}
+
+    private fun showSourceControl() {
+        if(workspaceBusy || !::workspace.isInitialized)return
+        if(sidebarGitActive && sidebarGitView!=null &&
+            (sidebarGitDialog?.isShowing==true || currentGeometry?.showExplorerSidebar==true&&explorerVisible)) {
+            closeGitSidebar();return
+        }
+        sidebarSearchActive=false;sidebarSearchView?.visibility=View.GONE;projectSearch?.cancel()
+        val oldSearch=sidebarSearchDialog;sidebarSearchDialog=null;if(toolDialog===oldSearch)toolDialog=null;oldSearch?.dismiss()
+        activityBar?.setSearchActive(false)
+        sidebarGitActive=true;explorerVisible=true
+        if(panelState.maximized&&panelVisible)setPanelMaximized(false)
+        hideCompletion(true);hideSignatureHelp(true);clearSnippet()
+        val controller=gitController();sidebarGitView=controller.view(palette)
+        if(currentGeometry?.showExplorerSidebar==true)updateExplorerLayout(ExplorerLayout.resolve(currentGeometry!!,explorerWidth))
+        else attachGitDrawer()
+        controller.refresh()
+    }
+    private fun closeGitSidebar() {
+        sidebarGitActive=false;explorerVisible=false
+        val old=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===old)toolDialog=null;old?.dismiss()
+        if(currentGeometry?.showExplorerSidebar==true){explorerPane?.visibility=View.GONE;explorerResizeHandle?.visibility=View.GONE}
+        activityBar?.setSourceActive(false);if(::sessions.isInitialized)persistNavigation()
+    }
+    private fun releaseGitSurface() {
+        val reader=gitReader;gitReader=null;if(toolDialog===reader)toolDialog=null;reader?.dismiss()
+        val dialog=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===dialog)toolDialog=null;dialog?.dismiss()
+        sidebarGitView=null
+    }
+    private fun attachGitSidebar() {
+        val view=sidebarGitView?:return;val host=explorerPane as? FrameLayout?:return
+        val old=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===old)toolDialog=null;old?.dismiss()
+        if(view.parent!==host){(view.parent as? ViewGroup)?.removeView(view);host.addView(view,FrameLayout.LayoutParams(-1,-1))}
+        sidebarTreeView?.visibility=View.GONE;sidebarSearchView?.visibility=View.GONE;view.visibility=View.VISIBLE
+    }
+    private fun attachGitDrawer() {
+        if(sidebarGitDialog?.isShowing==true)return
+        val view=sidebarGitView?:return;explorerDialog?.dismiss();view.visibility=View.VISIBLE
+        sidebarGitDialog=sidebarDrawer(view){dialog->if(sidebarGitDialog===dialog){
+            sidebarGitDialog=null;if(toolDialog===dialog)toolDialog=null;sidebarGitActive=false;explorerVisible=false
+            activityBar?.setSourceActive(false);if(::sessions.isInitialized)persistNavigation()
+        }}
+        toolDialog=sidebarGitDialog;activityBar?.setExplorerActive(false);activityBar?.setSearchActive(false);activityBar?.setSourceActive(true)
+    }
+    private fun showGitReader(title:String,scope:String,text:String) {
+        // An arriving Git result must never dismiss a settings or file draft.
+        if(toolDialog?.isShowing==true && toolDialog!==sidebarGitDialog && toolDialog!==gitReader)return
+        gitReader?.dismiss()
+        val dialog=ReadOnlyDetails.show(this,title,scope,text,IdeIcon.SOURCE_CONTROL,true,motionAllowed(),null,"复制全文",Runnable{
+            runCatching{(getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager)
+                .setPrimaryClip(android.content.ClipData.newPlainText(title,text))}
+                .onFailure{status.text="复制失败，可选择部分文本或导出恢复包"}
+        })
+        gitReader=dialog;toolDialog=dialog
+        dialog.setOnDismissListener{if(gitReader===dialog)gitReader=null;if(toolDialog===dialog)toolDialog=sidebarGitDialog?.takeIf{it.isShowing}}
+    }
+    private fun chooseGitRecoveryExport() {
+        if(!::workspace.isInitialized || workspaceBusy || saving || gitUi?.busy==true)return
+        pendingGitExportIdentity=workspace.identity
+        startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply{
+            addCategory(Intent.CATEGORY_OPENABLE);type="application/zip";putExtra(Intent.EXTRA_TITLE,"CodePocket-git-recovery.zip")
+        },204)
+    }
+    private fun writeGitRecovery(uri:Uri) {
+        if(!::workspace.isInitialized){pendingGitExportUri=uri.toString();return}
+        val expected=pendingGitExportIdentity;pendingGitExportIdentity=null
+        if(expected==null || workspace.identity!=expected){alert("项目已切换，请从原项目重新发起 Git 恢复导出");return}
+        val target=workspace;val controller=gitController()
+        WorkspaceIo.executor.execute {
+            val result=runCatching{contentResolver.openOutputStream(uri,"wt")?.use{controller.export(target,it)}?:error("无法打开恢复包文件")}
+            runOnUiThread{if(!isDestroyed){result.onSuccess{status.text="Git 恢复包已导出"}.onFailure{alert("Git 恢复包导出失败：${it.message}")}}}
+        }
+    }
     private fun closeSidebarSearch() {
         sidebarSearchActive=false;explorerVisible=false;projectSearch?.cancel()
         val old=sidebarSearchDialog;sidebarSearchDialog=null
@@ -1516,7 +1652,7 @@ class MainActivity : Activity() {
         if(toolDialog===old)toolDialog=null
         old?.dismiss()
         if(view.parent!==host){(view.parent as? ViewGroup)?.removeView(view);host.addView(view,FrameLayout.LayoutParams(-1,-1))}
-        sidebarTreeView?.visibility=View.GONE;view.visibility=View.VISIBLE
+        sidebarTreeView?.visibility=View.GONE;sidebarGitView?.visibility=View.GONE;view.visibility=View.VISIBLE
     }
     private fun attachSearchDrawer() {
         if(sidebarSearchDialog?.isShowing==true)return
@@ -2646,6 +2782,8 @@ class MainActivity : Activity() {
 
     private fun showProjectSearch() {
         if (workspaceBusy || !::workspace.isInitialized) return
+        sidebarGitActive=false;sidebarGitView?.visibility=View.GONE
+        val oldGit=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===oldGit)toolDialog=null;oldGit?.dismiss();activityBar?.setSourceActive(false)
         if(sidebarSearchActive && sidebarSearchView!=null &&
             (sidebarSearchDialog?.isShowing==true || currentGeometry?.showExplorerSidebar==true&&explorerVisible)) {
             closeSidebarSearch();return
@@ -2756,7 +2894,7 @@ class MainActivity : Activity() {
         when (InteractionState.back(imeVisible, currentGeometry?.showExplorerSidebar == true && explorerVisible,
             panelState.maximized && panelVisible, panelLayout?.showPanel == true)) {
             BackAction.HIDE_IME -> hideKeyboard()
-            BackAction.CLOSE_EXPLORER -> if (sidebarSearchActive) closeSidebarSearch() else showExplorer()
+            BackAction.CLOSE_EXPLORER -> if(sidebarGitActive)closeGitSidebar() else if (sidebarSearchActive) closeSidebarSearch() else showExplorer()
             BackAction.RESTORE_PANEL -> setPanelMaximized(false)
             BackAction.CLOSE_PANEL -> closePanel()
             BackAction.EXIT -> {
@@ -3054,9 +3192,11 @@ class MainActivity : Activity() {
     @Deprecated("Compatible with Android API 24 without AndroidX dependencies")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode==204 && resultCode!=RESULT_OK){pendingGitExportIdentity=null;pendingGitExportUri=null}
         if (resultCode != RESULT_OK) return
         val uri = data?.data ?: return
         when (requestCode) {
+            204 -> writeGitRecovery(uri)
             203 -> try {
                 val flags = data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 require(flags and Intent.FLAG_GRANT_READ_URI_PERMISSION != 0 && flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION != 0) { "请选择可读写目录" }

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CompletionInteractionTest" tests="32" skipped="0" failures="1" errors="0" timestamp="2026-11-02T08:31:49" hostname="JUHE" time="13.344">
+  <properties/>
+  <testcase name="explicitSignatureWaitsForLayoutWhenAutomaticHelpIsOff" classname="com.codepocket.ide.CompletionInteractionTest" time="0.515"/>
+  <testcase name="shiftedPlusNumpadAndRepeatedZoomRespectFontLimits" classname="com.codepocket.ide.CompletionInteractionTest" time="0.592"/>
+  <testcase name="automaticCompletionAndSignatureResumeAfterLayout" classname="com.codepocket.ide.CompletionInteractionTest" time="0.388"/>
+  <testcase name="tabletHiddenZoomRetainsInputFocusAndRespectsComposition" classname="com.codepocket.ide.CompletionInteractionTest" time="0.837"/>
+  <testcase name="escapeCancelsTheWaitingRequestWithoutEditingOrReopening" classname="com.codepocket.ide.CompletionInteractionTest" time="0.417"/>
+  <testcase name="permanentlyBusyLayoutHasABoundedWaitAndCanBeRequestedAgain" classname="com.codepocket.ide.CompletionInteractionTest" time="0.463"/>
+  <testcase name="enterStillCreatesNewlineByDefaultEvenAfterCandidateNavigation" classname="com.codepocket.ide.CompletionInteractionTest" time="0.398"/>
+  <testcase name="automaticCandidatesAcceptPhysicalArrowsAndTabWithoutMovingCaret" classname="com.codepocket.ide.CompletionInteractionTest" time="0.391"/>
+  <testcase name="committedEnglishTypingAutomaticallyShowsRealCandidates" classname="com.codepocket.ide.CompletionInteractionTest" time="0.441"/>
+  <testcase name="cppAutomaticArrowsChoosePrivateInsteadOfTheFirstPrintfItem" classname="com.codepocket.ide.CompletionInteractionTest" time="0.579"/>
+  <testcase name="waitingRequestCannotStealInputFocusOrReopenAfterWindowFocusLoss" classname="com.codepocket.ide.CompletionInteractionTest" time="0.452"/>
+  <testcase name="ctrlEqualsAndMinusResizeOnlyCodeAndRememberTheSetting" classname="com.codepocket.ide.CompletionInteractionTest" time="0.365"/>
+  <testcase name="fontZoomDoesNotDestroyTheNativeUndoHistory" classname="com.codepocket.ide.CompletionInteractionTest" time="0.466">
+    <failure message="java.lang.ArrayIndexOutOfBoundsException: index = 0, length = 0" type="java.lang.ArrayIndexOutOfBoundsException">java.lang.ArrayIndexOutOfBoundsException: index = 0, length = 0
+	at io.github.rosemoe.sora.util.BlockIntList.get(BlockIntList.java:211)
+	at io.github.rosemoe.sora.widget.layout.LineBreakLayout.afterDelete(LineBreakLayout.java:164)
+	at io.github.rosemoe.sora.widget.CodeEditor.afterDelete(CodeEditor.java:5056)
+	at io.github.rosemoe.sora.text.Content.dispatchAfterDelete(Content.java:1038)
+	at io.github.rosemoe.sora.text.Content.deleteInternal(Content.java:544)
+	at io.github.rosemoe.sora.text.Content.delete(Content.java:468)
+	at io.github.rosemoe.sora.text.UndoManager$InsertAction.undo(UndoManager.java:446)
+	at io.github.rosemoe.sora.text.UndoManager.undo(UndoManager.java:140)
+	at io.github.rosemoe.sora.text.Content.undo(Content.java:608)
+	at io.github.rosemoe.sora.widget.CodeEditor.undo(CodeEditor.java:2527)
+	at com.codepocket.editorlab.SoraBuffer.history(SoraBuffer.java:97)
+	at com.codepocket.editorlab.SoraEditorAdapter.history(SoraEditorAdapter.java:77)
+	at com.codepocket.editorlab.WorkbenchEditor.history(WorkbenchEditor.java:140)
+	at com.codepocket.editorlab.WorkbenchEditor.onTextContextMenuItem(WorkbenchEditor.java:142)
+	at com.codepocket.ide.CompletionInteractionTest.fontZoomDoesNotDestroyTheNativeUndoHistory(CompletionInteractionTest.kt:235)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="unfinishedCompositionDoesNotRewriteOrOfferAStaleCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.446"/>
+  <testcase name="configuredEnterAcceptsTheArrowSelectedCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.351"/>
+  <testcase name="physicalTabAcceptsTheVisibleCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.415"/>
+  <testcase name="compactEditorStillShowsAtLeastOneUsableCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.345"/>
+  <testcase name="cppKeywordsAlsoAppearAndAcceptTab" classname="com.codepocket.ide.CompletionInteractionTest" time="0.449"/>
+  <testcase name="touchingOutsideTheCandidateAndTabStillDismissesIt" classname="com.codepocket.ide.CompletionInteractionTest" time="0.377"/>
+  <testcase name="replacingTheBufferOrChangingSelectionInvalidatesTheWaitingRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.356"/>
+  <testcase name="tabletAutomaticCandidatesAlsoRetainPhysicalArrows" classname="com.codepocket.ide.CompletionInteractionTest" time="0.377"/>
+  <testcase name="layoutStartingAfterCandidateCalculationAlsoKeepsTheExplicitRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.36"/>
+  <testcase name="explicitCompletionWaitsForLayoutWhenAutomaticCompletionIsOff" classname="com.codepocket.ide.CompletionInteractionTest" time="0.331"/>
+  <testcase name="automaticRefreshCannotReplaceTheWaitingExplicitModeAndLatestShortcutWins" classname="com.codepocket.ide.CompletionInteractionTest" time="0.371"/>
+  <testcase name="layoutStartingAfterSignatureCalculationAlsoKeepsTheExplicitRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.362"/>
+  <testcase name="explicitAndOffModesRemainAvailableAfterTheDefaultChanges" classname="com.codepocket.ide.CompletionInteractionTest" time="0.369"/>
+  <testcase name="tabletRealWordwrapReflowRetainsPhysicalCompletionAndSnippetFields" classname="com.codepocket.ide.CompletionInteractionTest" time="0.455"/>
+  <testcase name="holdingArrowClampsAtListEdgesAndEscReturnsToCodeNavigation" classname="com.codepocket.ide.CompletionInteractionTest" time="0.353"/>
+  <testcase name="fontZoomWaitsForCompositionAndIgnoresNonEditorFocus" classname="com.codepocket.ide.CompletionInteractionTest" time="0.28"/>
+  <testcase name="toolbarTabRetainsCandidatesUntilItsClickIsAccepted" classname="com.codepocket.ide.CompletionInteractionTest" time="0.367"/>
+  <testcase name="toolbarTabDoesNotModifyChineseComposition" classname="com.codepocket.ide.CompletionInteractionTest" time="0.241"/>
+  <testcase name="phoneHiddenMenuZoomsCodeAndPreservesNativeHistoryAndSelection" classname="com.codepocket.ide.CompletionInteractionTest" time="0.434"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+status None
+init None
+status None
+stage None
+status None
+commit None
+status None
+stage None
+{'text': 'diff --git a/main.py b/main.py\nindex b917a72..d0e0fd6 100644\n--- a/main.py\n+++ b/main.py\n@@ -1 +1 @@\n-print(1)\n+print(2)\n', 'binary': False}
+CHANGED ['.git/objects/79/8598003edaad6cb60c50613d6dd7d36537bbc7']

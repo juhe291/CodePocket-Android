@@ -8,9 +8,14 @@ data class DocumentNode(val id: String, val name: String, val directory: Boolean
 /** Provider-independent operations. IDs are opaque, never interpreted as filesystem paths. */
 interface DocumentGateway {
     val root: DocumentNode
+    val identity:String get()=root.id
     fun children(id: String): List<DocumentNode>
     fun read(id: String): String
     fun readBytes(id: String): ByteArray = read(id).toByteArray(Charsets.UTF_8)
+    fun readBinary(id: String, limit: Int): ByteArray = readBytes(id).also { require(it.size <= limit) { "二进制文件超过读取上限" } }
+    fun writeBytes(id: String, bytes: ByteArray) { throw java.io.IOException("提供方不支持二进制写入") }
+    fun createBinary(parent: String, name: String): DocumentNode = create(parent, name, false)
+    fun executable(id: String): Boolean? = null
     fun write(id: String, text: String)
     fun create(parent: String, name: String, directory: Boolean): DocumentNode
     fun rename(id: String, name: String): DocumentNode
@@ -20,6 +25,7 @@ interface DocumentGateway {
 
 /** Private mirror for the existing File-based editor and Python imports; all UI mutations write through. */
 class DocumentTree(private val gateway: DocumentGateway, private val recovery: File) {
+    fun gitStore()=GitWorkspaceStore(gateway)
     private val nodes = linkedMapOf("" to gateway.root)
     private val versions = mutableMapOf<String, String>()
     var warning: String = ""
@@ -44,6 +50,7 @@ class DocumentTree(private val gateway: DocumentGateway, private val recovery: F
             check();require(depth<=20){"运行目录超过 20 层"}
             val names=mutableSetOf<String>()
             gateway.children(id).sortedBy{it.name}.forEach{entry->
+                if(depth==0 && entry.name==".git")return@forEach
                 check();require(++count<=1000){"运行项目超过 1000 项"}
                 Workspace.validateName(entry.name)
                 require(names.add(entry.name)&&visited.add(entry.id)){"运行目录存在重名、重复文档或循环目录"}
@@ -77,6 +84,7 @@ class DocumentTree(private val gateway: DocumentGateway, private val recovery: F
             require(depth <= 20) { "目录超过 20 层，请选择更小的项目目录" }
             val siblings = mutableSetOf<String>()
             gateway.children(found.getValue(parent).id).forEach { child ->
+                if(parent.isEmpty() && child.name==".git")return@forEach
                 require(++count <= 1000) { "工作区超过 1000 项，请选择更小的项目目录" }
                 require(visited.add(child.id)) { "提供方返回重复文档或循环目录，已停止同步" }
                 Workspace.validateName(child.name)

@@ -74,7 +74,9 @@ final class SoraEditorAdapter implements EditorSurface, AutoCloseable {
     }
     boolean history(SoraBuffer.Snapshot source, boolean redo) {
         cancelNavigation();
-        return available() && editor.hasFocus() && buffer.history(source, editor.hasComposingText(), redo, redo ? editor::redo : editor::undo);
+        // Font/line-wrap reflow temporarily owns the layout's line-width table.
+        // Native undo/redo mutates it synchronously and must respect that gate.
+        return available() && !layoutBusy() && editor.hasFocus() && buffer.history(source, editor.hasComposingText(), redo, redo ? editor::redo : editor::undo);
     }
     private void select(int start, int end, boolean reveal) {
         CharPosition a = editor.getText().getIndexer().getCharPosition(Math.min(start, end));

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorNavigationTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:47:20" hostname="JUHE" time="0.063">
+  <properties/>
+  <testcase name="restorationActuallyWaitsUntilTheScheduledLayoutCallback" classname="com.codepocket.ide.EditorNavigationTest" time="0.027"/>
+  <testcase name="savedSelectionClampsAndExpandsSurrogatesWithoutReversingDirection" classname="com.codepocket.ide.EditorNavigationTest" time="0.015"/>
+  <testcase name="editsAndSelectionChangesInvalidateDelayedScrolls" classname="com.codepocket.ide.EditorNavigationTest" time="0.006"/>
+  <testcase name="aRejectedLayoutCallbackCannotReplayAfterTheViewBecomesVisible" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="nativeLayoutScrollClampingDoesNotInvalidateTheSavedViewport" classname="com.codepocket.ide.EditorNavigationTest" time="0.001"/>
+  <testcase name="literalFindProducesAValidSelectionButCannotOverrideANewCaret" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="corruptNegativeCoordinatesAndStaleRequestsAreRejectedBeforeScheduling" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="selectionChecksDocumentRevisionTextAndOriginalSelection" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="userInteractionInvalidatesEvenWhenTheCaretReturnsToTheSamePosition" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="aHiddenCaptureCanBeRestoredAfterTheEditorBecomesVisible" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="aLaterCursorRevealWinsOverAnEarlierSessionRestore" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="selectionRejectsSplitEmojiCrlfAndOutOfBoundsWithoutClamping" classname="com.codepocket.ide.EditorNavigationTest" time="0.001"/>
+  <testcase name="selectionDoesNotInterruptCompositionOrAnUnavailableDocument" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="invalidLaterRequestDoesNotCancelAnAlreadyAcceptedRestore" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="compositionHiddenEditorAndDisposalDoNotReceiveDelayedScrolls" classname="com.codepocket.ide.EditorNavigationTest" time="0.008"/>
+  <testcase name="aLateRestoreCannotAffectAnotherFileOrWorkspace" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="reentrantRevealSurvivesAndAnOldCallbackCannotConsumeIt" classname="com.codepocket.ide.EditorNavigationTest" time="0.003"/>
+  <testcase name="savedSelectionRespectsCompleteCrlf" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="aRepeatedLayoutCallbackCommitsAtMostOnce" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <testcase name="cancellationAndClosingInvalidateQueuedCallbacks" classname="com.codepocket.ide.EditorNavigationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
