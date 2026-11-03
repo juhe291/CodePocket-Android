@@ -1,0 +1,106 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Python for Chaquopy
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install pinned Python analysis dependencies
+        run: python -m pip install --require-hashes -r app/requirements.txt
+
+      - name: Run Python executor and static analysis tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+
+      - name: Install SDK 35
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
+
+      - name: Prepare pinned local C++ analysis runtime and host comparison tool
+        run: python scripts/prepare_cpp_runtime.py --fetch --fetch-host
+
+      - name: Run Kotlin regression tests and Android lint
+        run: bash ./gradlew :terminal-emulator:testDebugUnitTest :app:testDebugUnitTest :app:lintDebug :editor-sora:lintDebug --stacktrace --no-daemon
+
+      - name: Verify actual generated Shell startup on the host
+        run: python scripts/verify_shell_startup.py --junit app/build/test-results/testDebugUnitTest --shell /bin/sh --output verification/shell-startup-inspection.json
+
+      - name: Verify generated snippets on the host
+        run: |
+          if ! command -v g++ > /dev/null; then
+            sudo apt-get update
+            sudo apt-get install --yes g++
+          fi
+          python scripts/verify_snippets.py --junit app/build/test-results/testDebugUnitTest --output verification/snippet-inspection.json --cpp-compiler g++
+
+      - name: Build debug APK
+        run: bash ./gradlew :app:assembleDebug --stacktrace --no-daemon
+
+      - name: Verify APK archive and signature
+        run: |
+          unzip -t app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Verify bundled Python bytecode
+        run: python scripts/verify_apk.py app/build/outputs/apk/debug/app-debug.apk --output verification/apk-inspection.json
+
+      - name: Verify bundled semantic backend and dependencies
+        run: python scripts/verify_semantics_apk.py app/build/outputs/apk/debug/app-debug.apk --output verification/semantic-apk-inspection.json
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodePocket-v0.2-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      - name: Upload test and lint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodePocket-verification-reports
+          path: |
+            app/build/reports/tests/
+            third-party/termux/terminal-emulator/build/reports/tests/
+            app/build/reports/lint-results-debug.*
+            editor-sora/build/reports/lint-results-debug.*
+            verification/apk-inspection.json
+            verification/semantic-apk-inspection.json
+            verification/snippet-inspection.json
+            verification/shell-startup-inspection.json
+            verification/snippet-fixtures/*.cpp
+            verification/snippet-fixtures/*.py
+          if-no-files-found: warn

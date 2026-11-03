@@ -4,6 +4,7 @@
 
 ## 最新优先级：检查更新与GitHub首次推送、POSIX Git修复（2026-11-03）
 
+- **当前接续：[固定C++下载源修复](FIX_CPP_DOWNLOAD_SOURCE_2026-11-03.md)**。4678f2c已推送且SHA核对；CI41586681306的Python159/SDK/SDK35成功，随后原CDN依赖下载403。现准备脚本加明确官方源参数，原工作流同一步骤选择官方主源，12个锁定依赖实际完整下载/原SHA256匹配。主机Python168全通过，9新测试和旧159身份保持；离线重准备21份运行输入字节不变，原36c76a0b…APK未重建。下一步正常提交/推送并核对既有CI，再继续C/D；不要改版本/摘要或上传.tools/密钥/新APK。最新真实远端状态读verification/cpp-download-sources-2026-11-03/push-results.json。
 - **最新远端状态**：45facf9已推送且SHA核对；Linux CI41586306486的159项Python全通过，Git目录转换bug闭环到主机Linux。CI随后失败在原setup-android@v3默认请求找不到的tools包。按[SDK准备修复](FIX_GITHUB_SDK_SETUP_2026-11-03.md)仅添加packages: platform-tools两行，保留后续SDK/NDK、触发/权限/产物行为。生产和最新本地36c76a0b…APK不变，无新本机构建。下一步正常追加推送/核对既有CI，不把远端未构建说成已通过。
 - 检查更新已随1948720推送到公开仓库https://github.com/juhe291/CodePocket-Android ，master/远端SHA核对。设置 → 帮助与许可 → 检查更新，当前0.2.1/3，手动访问固定正式Release；未发布/限流有真实提示，关闭取消且保留草稿，无自动联网/安装。原头文件Tab、Sora、保存、真实运行/PTY和网页保持。
 - 首次CI暴露缓存父目录和filemode=false夹具问题，9933915仅修夹具后推送；真实Linux再次157项1失败，暴露Dulwich1.2.20索引子路径的ENOTDIR生产问题。[最新修复](FIX_GIT_DIRECTORY_STATUS_2026-11-03.md)已完成：21项20通过/1失败→21通过，源码159全通过（旧157保留、新2），实际包内Python48/语义22/Git与格式化84通过。两个真实CI失败日志和旧断言保留，无新跳过。

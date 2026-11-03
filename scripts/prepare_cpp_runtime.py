@@ -14,6 +14,14 @@ from cpp_runtime_elf import ar_members, elf, patch_dynamic
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / '.tools/cpp-runtime'
+PACKAGE_REPOSITORIES = ('https://packages-cf.termux.dev/apt/termux-main',
+                        'https://packages.termux.dev/apt/termux-main')
+
+
+def package_url(lock, filename, repository=None):
+    if repository is not None and repository not in PACKAGE_REPOSITORIES:
+        raise ValueError('Choose a supported official Termux package repository')
+    return (repository or lock['repository']) + '/' + filename
 
 
 def sha(file):
@@ -62,7 +70,7 @@ def prepare(args):
     headers = {}; header_links = []; originals = {}; support = {}
     for package, meta in lock['packages'].items():
         filename = PurePosixPath(meta['Filename']).name
-        archive = obtain(filename, meta['SHA256'], lock['repository'] + '/' + meta['Filename'], args.fetch,
+        archive = obtain(filename, meta['SHA256'], package_url(lock, meta['Filename'], getattr(args, 'package_repository', None)), args.fetch,
                          [ROOT / '.tools/cpp-semantic-probe/debs' / filename, ROOT / '.tools/cpp-local-probe/debs' / filename])
         needed = {item['member']: item for item in lock['libraries'] if item['package'] == package}
         build_inputs = {item['member']: item for item in lock.get('build_support', []) if item['package'] == package}
@@ -176,6 +184,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--fetch', action='store_true', help='Explicitly allow pinned public downloads')
     parser.add_argument('--fetch-host', action='store_true', help='Prepare the pinned host comparison tool too')
+    parser.add_argument('--package-repository', choices=PACKAGE_REPOSITORIES,
+                        help='Explicit official package source override; locked versions and hashes stay unchanged')
     parser.add_argument('--iconv-library', type=Path, help='User relink: replacement API24/16KiB libiconv.so')
     parser.add_argument('--iconv-source', type=Path, help='User relink: complete corresponding modified source archive')
     args = parser.parse_args()
