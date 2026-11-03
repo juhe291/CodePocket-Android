@@ -50,7 +50,7 @@ def main():
             assert ('L'+name+';').encode() in dex,'Production class missing: '+name
         for name in ('WebAuxiliaryIntegrationTest','WebPanelBehaviorTest','BrowserPolicyTest','HostRemoteGit','GitPrivatePathRegressionTest','GitAliasedApplication'):
             assert name.encode() not in dex,'Host test packaged: '+name
-        source=json.loads((ROOT/'verification/git-remote-delivery-2026-11-03/build-inputs.json').read_text(encoding='utf-8-sig'))
+        source=json.loads((ROOT/'scripts/baselines/git-remote-delivery-2026-11-03/build-inputs.json').read_text(encoding='utf-8-sig'))
         unchanged_sources={}
         for name,sha in source.items():
             if name.startswith(('app/src/main/python/','tests/')) or name in ('app/requirements.txt','scripts/shell_startup_fixture.py','scripts/snippet_fixture.py'):
@@ -61,7 +61,7 @@ def main():
         report=dict(apk_sha256=digest(args.apk.read_bytes()),baseline_sha256=BASELINE,zip_crc=True,
                     original_natives_byte_identical=sorted(natives),original_runtime_assets_byte_identical=sorted(runtime),
                     web_license_assets=licenses,production_classes=classes,unchanged_runtime_source_hashes=unchanged_sources,
-                    runtime_regressions_reused_from='verification/git-remote-delivery-2026-11-03/results.json',
+                    runtime_regressions_reused_from='scripts/baselines/git-remote-delivery-2026-11-03/results.json',
                     reused_packaged_python_tests=48,reused_packaged_semantics_tests=22,reused_packaged_git_formatting_tests=82,
                     android_chromium_execution=False,device_execution=False)
     args.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')

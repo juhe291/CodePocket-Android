@@ -162,8 +162,8 @@ def prepare(args):
     assert stale.resolve().is_relative_to(CACHE.resolve()) and stale.name == 'libiconv-1.19.tar.gz'
     if stale.is_file(): stale.unlink()  # Only this script's obsolete generated asset, not the download.
     for input_file in [ROOT / 'scripts/cpp_runtime_elf.py', ROOT / 'app/cpp-runtime-lock.json',
-                       ROOT / 'verification/cpp-semantic-probe-2026-10-27/upstream/libiconv-build.sh',
-                       ROOT / 'verification/cpp-semantic-probe-2026-10-27/upstream/properties.sh']:
+                       ROOT / 'scripts/cpp-runtime/libiconv-build.sh',
+                       ROOT / 'scripts/cpp-runtime/properties.sh']:
         shutil.copy2(input_file, source_asset.parent / input_file.name)
     manifest = dict(engine=lock['engine'], version=lock['version'], target=lock['target'], libraries=libraries,
         executable='libcodepocket_clangd.so', headers=dict(asset='cpp-runtime/headers.zip', sha256=sha(header_zip), bytes=header_zip.stat().st_size,

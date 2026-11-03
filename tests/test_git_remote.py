@@ -10,7 +10,7 @@ import unittest
 from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
-sys.path[:0]=[str(ROOT/'app/src/main/python'),str(ROOT/'verification/git-remote-preflight-2026-11-02')]
+sys.path[:0]=[str(ROOT/'app/src/main/python'),str(ROOT/'tests')]
 import probe_https as fixture
 import git_https
 from dulwich.objects import Blob, Tree, Commit
