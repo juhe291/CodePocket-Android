@@ -1,9 +1,9 @@
 {
-  "run_id": 41651272650,
+  "run_id": 41655045210,
   "status": "completed",
   "conclusion": "failure",
-  "head_sha": "b51ace6bd3dd3560f13c91f7a14a2d3cf0fd8018",
-  "url": "https://github.com/juhe291/CodePocket-Android/actions/runs/41651272650",
+  "head_sha": "768a1f13b0658113cf6dc61af4016ef9fcd6b60e",
+  "url": "https://github.com/juhe291/CodePocket-Android/actions/runs/41655045210",
   "jobs": [
     {
       "name": "build",
@@ -44,15 +44,15 @@
         },
         {
           "name": "Install SDK 35",
-          "conclusion": "success"
+          "conclusion": "failure"
         },
         {
           "name": "Prepare pinned local C++ analysis runtime and host comparison tool",
-          "conclusion": "success"
+          "conclusion": "skipped"
         },
         {
           "name": "Run Kotlin regression tests and Android lint",
-          "conclusion": "failure"
+          "conclusion": "skipped"
         },
         {
           "name": "Verify actual generated Shell startup on the host",
@@ -111,10 +111,10 @@
   ],
   "artifacts": [
     {
-      "id": 13238072609,
+      "id": 13238568671,
       "name": "CodePocket-verification-reports",
-      "size_in_bytes": 258969,
-      "digest": "sha256:c34995bce331224884ed3adcec0e6e36fe03b766bc59e208f7208d1e4137b16d"
+      "size_in_bytes": 577,
+      "digest": "sha256:4dac7aececa9e7c7ce223aef11239898c99b4a1b46061a10ac93bc8dcc2a96fe"
     }
   ]
 }

@@ -27,6 +27,30 @@
       "ci_run": "see remote-ci-run-second.json / remote-ci-status-second.log",
       "note": "Second push updated master and force-updated the just-created v0.2.2 tag after fixing the two CI-real failure root causes.",
       "network_note": "Direct git HTTPS was intermittently reset; retries with OpenSSL backend, explicit no-proxy and larger postBuffer succeeded. Local git proxy was offline; schannel path unavailable."
+    },
+    {
+      "sequence": 3,
+      "sha": "768a1f13b0658113cf6dc61af4016ef9fcd6b60e",
+      "parent": "b51ace6bd3dd3560f13c91f7a14a2d3cf0fd8018",
+      "tag": "v0.2.2",
+      "tag_object": "cb289d332eacb84f8bdc3e03a2c8e23d5bcacc1d",
+      "push_exit": 0,
+      "remote_ref_verified": true,
+      "ci_run": 41655045210,
+      "ci_attempts": [
+        {
+          "attempt": 1,
+          "conclusion": "failure",
+          "failed_step": "Install SDK 35",
+          "note": "remote SDK download failure, tests not executed"
+        },
+        {
+          "attempt": 2,
+          "conclusion": "success",
+          "note": "all steps success after rerun-failed-jobs"
+        }
+      ],
+      "note": "Final master=768a1f1; tag moved to final commit; remote CI attempt 2 fully green."
     }
   ],
   "repository": "https://github.com/juhe291/CodePocket-Android",
@@ -37,6 +61,17 @@
   "apk_bytes": 118168893,
   "apk_sha256": "140e4d16092bddf83a5e4d094ac51adbc89fdacb2a44da54ee9f6591aa751b16",
   "release_published": false,
-  "topics": ["android", "android-ide", "chaquopy", "code-editor", "cplusplus", "ide", "kotlin", "offline-ide", "python", "sora-editor"],
+  "topics": [
+    "android",
+    "android-ide",
+    "chaquopy",
+    "code-editor",
+    "cplusplus",
+    "ide",
+    "kotlin",
+    "offline-ide",
+    "python",
+    "sora-editor"
+  ],
   "android_execution": false
 }

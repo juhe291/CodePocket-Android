@@ -17,9 +17,9 @@
 - `apk-signature.txt`（apksigner verify）、`apk-zipalign.txt`（16 KiB）、`apk-archive.txt`、`apk-badging.txt`、`certificates.txt`、`permissions.txt`、`manifest-tree.txt`、`resources.txt`。
 - `apk-inspection.json` / `runtime-delta.json`：相对上一有效 Bug 包（6949b5f6…）只改变 10 个条目（Manifest 版本、app.imy/build.json、4 个 dex、resources.arsc、2 个引用资源 ID 的 layout 二进制与签名容器），无条目新增/删除；25 个原生库、requirements-common.imy、C++ 运行资产与其余全部条目字节一致。同源首次增量打包出现 620 KB 孤儿本地条目，已清理输出后重新 `:app:assembleDebug`，旧中间包不交付。
 
-## 推送后远端 CI 首轮（真实失败，不称通过）
+## 远端 CI 最终结果（真实全绿）
 
-`master` 首次推送 `fe39907` + tag `v0.2.2` 后，[run 41641563765](https://github.com/juhe291/CodePocket-Android/actions/runs/41641563765) 失败：Python172/SDK/C++ 准备通过，App 1191 项 2 失败、0 ignored；失败页 `remote-failure-*.html`、完整制品 `remote-reports.zip`（258877 字节，SHA256 `4375c7be…305f00`）、`remote-ci-run.json` 保留。两项为既有 Sora 异步布局与终端中断契约问题（本批此前两项 Linux CI 修复已在该 run 通过），修复与二次定向结果见交付记录第 9 节；第二次推送与 CI 结果在随后的 `push-results.json`/`remote-ci-run*.json` 记录中如实更新。
+`master` 最终 `768a1f1` + tag `v0.2.2` 的 [run 41655045210](https://github.com/juhe291/CodePocket-Android/actions/runs/41655045210)：第一次尝试在 `Install SDK 35` 因远端 SDK 下载失败中止（测试未执行，非代码失败）；通过 API 重跑失败 job 后 **attempt 2 全部步骤 success**（Python 执行/静态分析、SDK/NDK、固定 C++ 准备、Kotlin 1191 项回归+Lint、Shell、片段、Debug APK 构建、APK 归档/签名、包内 Python、语义、上传）。完整记录 `remote-ci-run-third-rerun.json`，APK 制品 `CodePocket-v0.2-debug-apk` 115446293 字节、报告 301392 字节。推送前两轮真实失败（`remote-ci-run-first.json`/`remote-ci-run-second.json`、`remote-failure-*.html`、`remote2-failure-*.html`、两份报告 zip）均保留，没有删除失败证据；四个 Linux 时序问题已在 `docs/P3C_BREAKPOINTS_UPDATES_DELIVERY_2026-11-03.md` 第 9 节按真实堆栈记录修复。Android 设备验收仍后置。
 
 ## 视觉
 

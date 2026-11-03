@@ -1,0 +1,132 @@
+{
+  "run_id": 41655045210,
+  "run_attempt": 2,
+  "status": "completed",
+  "conclusion": "success",
+  "head_sha": "768a1f13b0658113cf6dc61af4016ef9fcd6b60e",
+  "url": "https://github.com/juhe291/CodePocket-Android/actions/runs/41655045210",
+  "jobs": [
+    {
+      "name": "build",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout source",
+          "conclusion": "success"
+        },
+        {
+          "name": "Setup Java 17",
+          "conclusion": "success"
+        },
+        {
+          "name": "Setup Python for Chaquopy",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install pinned Python analysis dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Python executor and static analysis tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Setup Gradle 8.9",
+          "conclusion": "success"
+        },
+        {
+          "name": "Setup Android SDK",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install SDK 35",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare pinned local C++ analysis runtime and host comparison tool",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Kotlin regression tests and Android lint",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual generated Shell startup on the host",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify generated snippets on the host",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build debug APK",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify APK archive and signature",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify bundled Python bytecode",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify bundled semantic backend and dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload APK",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload test and lint reports",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Setup Gradle 8.9",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Setup Python for Chaquopy",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Setup Java 17",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout source",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 13241225151,
+      "name": "CodePocket-v0.2-debug-apk",
+      "size_in_bytes": 115446293,
+      "digest": "sha256:64e342d281edd51533a1bd272c65d6ac572c18574a9b7727c3e023fb2369de5f"
+    },
+    {
+      "id": 13240941021,
+      "name": "CodePocket-verification-reports",
+      "size_in_bytes": 301392,
+      "digest": "sha256:4d3bb7f46fa967329c9f4c8fbf441d30c7369d95422e7079b81791242900cd40"
+    },
+    {
+      "id": 13238568671,
+      "name": "CodePocket-verification-reports",
+      "size_in_bytes": 577,
+      "digest": "sha256:4dac7aececa9e7c7ce223aef11239898c99b4a1b46061a10ac93bc8dcc2a96fe"
+    }
+  ]
+}
