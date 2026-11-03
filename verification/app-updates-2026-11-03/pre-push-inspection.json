@@ -1,0 +1,161 @@
+{
+  "tracked_files": 8350,
+  "files_over_10mb": [
+    {
+      "path": "dist/CodePocket-assist-batch-2026-10-26-debug.apk",
+      "bytes": 26677963
+    },
+    {
+      "path": "dist/CodePocket-audit-2026-10-24-debug.apk",
+      "bytes": 26714492
+    },
+    {
+      "path": "dist/CodePocket-command-ui-2026-10-24-debug.apk",
+      "bytes": 26671767
+    },
+    {
+      "path": "dist/CodePocket-command-ui-final-2026-10-24-debug.apk",
+      "bytes": 26671767
+    },
+    {
+      "path": "dist/CodePocket-compact-captions-2026-10-26-debug.apk",
+      "bytes": 26671735
+    },
+    {
+      "path": "dist/CodePocket-context-batch-2026-10-26-debug.apk",
+      "bytes": 26676615
+    },
+    {
+      "path": "dist/CodePocket-details-batch-2026-10-26-debug.apk",
+      "bytes": 26681193
+    },
+    {
+      "path": "dist/CodePocket-diagnostic-state-2026-10-24-debug.apk",
+      "bytes": 26508745
+    },
+    {
+      "path": "dist/CodePocket-diagnostics-2026-10-24-debug.apk",
+      "bytes": 26508745
+    },
+    {
+      "path": "dist/CodePocket-explorer-state-2026-10-26-debug.apk",
+      "bytes": 26672258
+    },
+    {
+      "path": "dist/CodePocket-forms-2026-10-24-debug.apk",
+      "bytes": 26508011
+    },
+    {
+      "path": "dist/CodePocket-heading-polish-2026-10-24-debug.apk",
+      "bytes": 26509321
+    },
+    {
+      "path": "dist/CodePocket-light-theme-2026-10-24-debug.apk",
+      "bytes": 26508745
+    },
+    {
+      "path": "dist/CodePocket-main-assist-readiness-2026-10-23-debug.apk",
+      "bytes": 26605076
+    },
+    {
+      "path": "dist/CodePocket-main-caret-polish-2026-10-23-debug.apk",
+      "bytes": 26606143
+    },
+    {
+      "path": "dist/CodePocket-main-editor-feedback-2026-10-22-debug.apk",
+      "bytes": 26603493
+    },
+    {
+      "path": "dist/CodePocket-main-file-settings-2026-10-23-debug.apk",
+      "bytes": 26606143
+    },
+    {
+      "path": "dist/CodePocket-main-input-limit-2026-10-22-debug.apk",
+      "bytes": 26603722
+    },
+    {
+      "path": "dist/CodePocket-main-integrated-2026-10-23-debug.apk",
+      "bytes": 26429643
+    },
+    {
+      "path": "dist/CodePocket-main-saf-recovery-2026-10-23-debug.apk",
+      "bytes": 26606143
+    },
+    {
+      "path": "dist/CodePocket-main-sora-integration-2026-10-21-debug.apk",
+      "bytes": 26333332
+    },
+    {
+      "path": "dist/CodePocket-main-surfaces-2026-10-23-debug.apk",
+      "bytes": 26429643
+    },
+    {
+      "path": "dist/CodePocket-main-window-ui-2026-10-23-debug.apk",
+      "bytes": 26428967
+    },
+    {
+      "path": "dist/CodePocket-menu-context-2026-10-26-debug.apk",
+      "bytes": 26674560
+    },
+    {
+      "path": "dist/CodePocket-navigation-2026-10-24-debug.apk",
+      "bytes": 26432375
+    },
+    {
+      "path": "dist/CodePocket-path-status-2026-10-24-debug.apk",
+      "bytes": 26671942
+    },
+    {
+      "path": "dist/CodePocket-pickers-batch-2026-10-26-debug.apk",
+      "bytes": 26677334
+    },
+    {
+      "path": "dist/CodePocket-python-project-context-2026-10-26-debug.apk",
+      "bytes": 32750879
+    },
+    {
+      "path": "dist/CodePocket-python-semantics-2026-10-26-debug.apk",
+      "bytes": 32431159
+    },
+    {
+      "path": "dist/CodePocket-search-entry-2026-10-24-debug.apk",
+      "bytes": 26508745
+    },
+    {
+      "path": "dist/CodePocket-settings-chrome-batch-2026-10-26-debug.apk",
+      "bytes": 26681355
+    },
+    {
+      "path": "dist/CodePocket-settings-consistency-2026-10-24-debug.apk",
+      "bytes": 26472670
+    },
+    {
+      "path": "dist/CodePocket-startup-ui-2026-10-24-debug.apk",
+      "bytes": 26467525
+    },
+    {
+      "path": "dist/CodePocket-surfaces-2026-10-24-debug.apk",
+      "bytes": 26502881
+    },
+    {
+      "path": "dist/CodePocket-tab-navigation-2026-10-24-debug.apk",
+      "bytes": 26671624
+    },
+    {
+      "path": "dist/CodePocket-tab-stability-2026-10-24-debug.apk",
+      "bytes": 26671634
+    },
+    {
+      "path": "dist/CodePocket-terminal-dock-2026-10-24-debug.apk",
+      "bytes": 26472670
+    },
+    {
+      "path": "dist/CodePocket-workbench-2026-10-24-debug.apk",
+      "bytes": 26502874
+    }
+  ],
+  "github_oversize_blobs": [],
+  "tracked_signing_keys_or_tools": [],
+  "github_token_candidates": [],
+  "scope": "Read-only HEAD source pre-push inspection; no remote writes"
+}

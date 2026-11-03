@@ -151,6 +151,9 @@ class MainActivity : Activity() {
     private lateinit var auxiliarySlot: FrameLayout
     private var webPanel:WebAuxiliaryPanel?=null
     private var pendingWebState:Bundle?=null
+    private var appUpdateDialog:AppUpdateDialog?=null
+    private var appUpdateRepository=AppUpdateRepository.parse(BuildConfig.UPDATE_REPOSITORY)
+    private var appUpdateSourceFactory:(AppUpdateRepository)->AppUpdateSource={GitHubAppUpdateSource(it)}
     private var auxiliaryResize:ExplorerResizeHandle?=null
     private var auxiliaryDragWidth=AuxiliaryLayout.DEFAULT
     private var auxiliaryDragViewport:EditorViewportSnapshot?=null
@@ -534,6 +537,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        appUpdateDialog?.close();appUpdateDialog=null
         webPanel?.close();webPanel=null;auxiliaryResize?.cancelGesture();auxiliaryResize=null
         remoteGuardEpoch.incrementAndGet();remoteUi?.close();remoteUi=null
         gitUi?.close();gitUi=null;releaseGitSurface()
@@ -2820,7 +2824,14 @@ class MainActivity : Activity() {
         hideCompletion(true)
         clearSnippet()
         val restored = pendingSettingsState; pendingSettingsState = null
-        toolDialog = SettingsDialog.show(this, settings, { applySettings(it) }, restored) { next, done -> applySettings(next, done) }
+        toolDialog = SettingsDialog.show(this, settings, { applySettings(it) }, restored,
+            {next,done->applySettings(next,done)},::showAppUpdates)
+    }
+
+    private fun showAppUpdates() {
+        if(isDestroyed || isFinishing || appUpdateDialog?.isShowing==true)return
+        appUpdateDialog?.close()
+        appUpdateDialog=AppUpdateDialog(this,appUpdateRepository,appUpdateSourceFactory).also{it.show()}
     }
 
     private fun applySettings(next: AppSettings, onApplied: (Boolean) -> Unit = {}) {

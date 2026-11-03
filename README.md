@@ -1,74 +1,78 @@
 # CodePocket · Android C++ / Python IDE
 
-> 当前按[P2计划](docs/P2_IMPLEMENTATION_PLAN_2026-10-26.md)推进核心功能，零碎UI润色暂停。Python项目上下文与C++语义接入已完成代码/主机/APK验证；Android执行验收仍后置，整个计划尚未完成。
+Kotlin原生Views与正式Sora编辑器，提供Python/C++真实本地运行、PTY终端、头文件Tab补全、保存/恢复保护、项目树/搜索/Git工作台及网页辅助栏。支持手机和平板，网页搜索默认必应、可选百度。
 
-> 2026-10-27：[本地 C++ 接入](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md)已完成代码/主机/APK验证，Android执行验收仍后置。头文件 Tab 补全也已完成代码/主机/APK验证，原后续 P2/P3 范围继续。
+**当前候选：0.2.1（3），2026-11-03。** 设置 → 帮助与许可 → 检查更新；手动读取[本仓库正式发布页](https://github.com/juhe291/CodePocket-Android/releases)。本次尚未发布Release或公开APK，未发布时会明确提示。
 
-> 2026-11-03：按[P3完整计划](docs/P3_IMPLEMENTATION_PLAN_2026-11-02.md)完成本地Git和HTTPS同步候选的代码/主机/APK验证。[网页辅助栏](docs/P3_WEB_AUXILIARY_DELIVERY_2026-11-03.md)与用户设备Git路径故障已完成代码/主机/最终APK验证；设置搜索/主题与更多语言保留后续。Android执行后置，整个目标未完成。
+- [本批结果与更新约定](docs/APP_UPDATES_DELIVERY_2026-11-03.md)：新增24项及相关122项全部通过；集中1173项1171通过、1既有Windows失败、1旧跳过，Lint零错误。完整命令退出1，不称全绿；Android设备验收后置。
+- 本机安装包为`dist/CodePocket-updates-0.2.1-2026-11-03-debug.apk`（118139841字节，原Debug签名），SHA256 `4715b84bb9454c5136f823ea07cf2e09d34e3cfc4c21b24a35e688502e44bd91`。新包未加入Git；下文dist文件名用于本地历史追溯，不代表公开下载。
+- 本批保留Git手机路径修复、网页辅助栏、设置草稿、头文件Tab、真实运行和PTY。后续仍为设置搜索/主题、更多语言分析，见[原P3计划](docs/P3_IMPLEMENTATION_PLAN_2026-11-02.md)。
 
-**当前：Git 手机入口修复与网页辅助栏候选（2026-11-03）。**
+以下为既往交付与开发记录；各阶段能力和验证范围以对应日期文档为准。
 
-- [更新APK](dist/CodePocket-git-private-path-fix-2026-11-03-debug.apk)：修复Git凭据库/内部项目标题因可信私有目录别名校验失败而闪退，以及相同路径导致的workspace_changed误报；存储失败时保留编辑并给错误。详见[修复记录](docs/FIX_GIT_PRIVATE_PATHS_2026-11-03.md)。
+**历史：Git 手机入口修复与网页辅助栏候选（2026-11-03）。**
+
+- `dist/CodePocket-git-private-path-fix-2026-11-03-debug.apk`：修复Git凭据库/内部项目标题因可信私有目录别名校验失败而闪退，以及相同路径导致的workspace_changed误报；存储失败时保留编辑并给错误。详见[修复记录](docs/FIX_GIT_PRIVATE_PATHS_2026-11-03.md)。
 - 同包包含已接入的[网页辅助栏](docs/P3_WEB_AUXILIARY_DELIVERY_2026-11-03.md)：默认关闭，默认必应/可选百度，左右停靠/调宽/手机专注、真实Markdown/补全与参数文档；沿用正式Sora、保存/恢复、真实运行、PTY和头文件Tab。
 - 1149项1147通过/1既有Windows失败/1旧跳过，新40通过，Lint零错误；完整命令退出1。原签名及包检查通过，25原生库/50运行资产与101旧APK保持，未变运行专项按摘要复用。手机修复效果与Android运行仍待复测。
 - 123882556字节，SHA256 `72501cda734f4346ad4ee697b9e8aeec261c8a09acac60cc444b067d1598a4f5`。当前优先交付本修复，C/D后续工作保持。
 
 **历史：P3-B HTTPS Git 同步候选版（2026-11-03）。**
 
-- [候选APK](dist/CodePocket-github-sync-2026-11-03-debug.apk)：源代码管理标题栏“远端 Git”菜单，提供HTTPS克隆、配置/获取、安全快进、单分支非强制推送、凭据、回执和恢复记录。克隆可选新内部项目或授权空目录，保留默认项目和草稿；打开面板不自动联网。
+- `dist/CodePocket-github-sync-2026-11-03-debug.apk`：源代码管理标题栏“远端 Git”菜单，提供HTTPS克隆、配置/获取、安全快进、单分支非强制推送、凭据、回执和恢复记录。克隆可选新内部项目或授权空目录，保留默认项目和草稿；打开面板不自动联网。
 - 使用：源代码管理 → 远端 Git → 克隆，或先配置远端并明确获取 → 核对提交后快进/推送。公共读取无需令牌；需要认证时在表单填写令牌，默认仅供当前会话，勾选后设备加密保存，可清除。推送未知结果须重新获取核对。
 - [交付记录](docs/P3_GITHUB_SYNC_DELIVERY_2026-11-03.md)：1109项1107通过/1既有Windows失败/1旧跳过，旧1033身份保持、新76全通过，Lint零错误；完整命令退出1。实际APK Python48/语义22/Git及格式化82、原签名/CRC/16KiB/C++闭包通过。仅一次打包，25原生库/46运行资产/100旧APK保持；Android及真实账号授权未验收。
 - 123878915字节，SHA256 `c63e8df1d0f6b89df2f972fe2a58117c43a8fd7b0da982eb30c1e68571492c1c`。尚未包含网页侧栏，继续E→C→D；原头文件Tab、真实运行、PTY与保存保护保留。
 
 **历史：P3-A 本地 Git 候选版（2026-11-02）。**
 
-- [当前候选 APK](dist/CodePocket-local-git-2026-11-02-debug.apk)：左侧源代码管理与树/搜索共享侧栏，真实状态/差异、暂存/取消暂存、填写身份与提交、历史。内部项目和 SAF 都读取真实二进制内容，保存/恢复保护保留，无项目不生成示例正文。
+- `dist/CodePocket-local-git-2026-11-02-debug.apk`：左侧源代码管理与树/搜索共享侧栏，真实状态/差异、暂存/取消暂存、填写身份与提交、历史。内部项目和 SAF 都读取真实二进制内容，保存/恢复保护保留，无项目不生成示例正文。
 - 使用：打开项目 → 左侧源代码管理 → 非仓库可初始化 → 暂存指定文件 → 提交暂存区。当前文件未保存时先走原保存保护；提交消息和取消草稿保留。尚不含 GitHub 同步，不要求设备预装 Git。
 - [交付记录](docs/P3_LOCAL_GIT_DELIVERY_2026-11-02.md)：1033 项中1031通过/1既有 Windows 失败/1旧跳过，新38项全通过，Lint零错误。APK内 Python48/语义22/Git19/格式化20、原签名和 C++ 闭包通过，25原生库/45运行资产/99旧APK保持。123878915字节，SHA256 `26ac0bec36f7a0a89108727452d1f96a8576086e5f9ee19d889987a568961075`。
 - 同批修复缩放异步布局中的撤销越界；原侧栏、欢迎区、头文件 Tab、真实运行与 PTY 保留。完整命令真实退出1，Android实机后置。
 
 **历史：P2格式化候选版（2026-10-30建批，11-02收尾）。**
 
-- [当前候选APK](dist/CodePocket-formatting-2026-10-30-debug.apk)：真实离线Python/C++格式化、编辑菜单/Shift+Alt+F及默认关闭的保存时格式化。未保存正文参与，可一次撤销；失败继续原保存和草稿保护。
+- `dist/CodePocket-formatting-2026-10-30-debug.apk`：真实离线Python/C++格式化、编辑菜单/Shift+Alt+F及默认关闭的保存时格式化。未保存正文参与，可一次撤销；失败继续原保存和草稿保护。
 - [交付记录](docs/P2_FORMATTING_DELIVERY_2026-10-30.md)：995项中993通过/1既有Windows失败/1旧跳过，新增27全通过，Lint零错误。实际包内Python48/语义22/格式化20、签名与C++闭包通过，原25原生库及98旧APK保持。121359886字节，SHA256 `59e13ca581f0806ba25df937772228e3802c5ee1896aebb091cf80e174756668`。
 - 保留前批工作台、头文件Tab、真实运行和PTY。Android实机后置；原P3继续，整个目标未完成。完整命令真实退出1，不称整批全绿。
 
 **历史：2026-10-30工作台侧栏与欢迎区候选版。**
 
-- [当前候选 APK](dist/CodePocket-workbench-behavior-2026-10-30-debug.apk)：搜索与文件树共享手机抽屉/平板侧栏；窗口和逆向快照保持活动栏固定。首次启动及无文件显示新建/打开欢迎区，关闭项目保留原文件、草稿和恢复会话。
+- `dist/CodePocket-workbench-behavior-2026-10-30-debug.apk`：搜索与文件树共享手机抽屉/平板侧栏；窗口和逆向快照保持活动栏固定。首次启动及无文件显示新建/打开欢迎区，关闭项目保留原文件、草稿和恢复会话。
 - [完整记录](docs/WORKBENCH_BEHAVIOR_DELIVERY_2026-10-30.md)：968项中966通过/1既有Windows头文件失败/1旧跳过，Lint零错误；定向144/108/35通过，最终包内Python48/语义22及签名、C++闭包通过，97旧APK保持。完整命令退出1，Android验收后置。
 - 保留原生Views/Sora、头文件Tab、真实运行与PTY。原格式化与P3继续；该候选包含本批实际修改，SHA256见记录。
 
 **历史：2026-10-28 用例管理与运行输入修复候选版。**
 
-- [当前候选 APK](dist/CodePocket-test-cases-and-run-input-2026-10-28-debug.apk)：新增真实单项/顺序批量用例、原子记录和表单恢复；修复主题预览语法颜色、云端输入收起及本地隐藏，本地 C++ 耗时排除准备和编译。保留头文件 Tab、真实运行、PTY、保存和恢复保护。
+- `dist/CodePocket-test-cases-and-run-input-2026-10-28-debug.apk`：新增真实单项/顺序批量用例、原子记录和表单恢复；修复主题预览语法颜色、云端输入收起及本地隐藏，本地 C++ 耗时排除准备和编译。保留头文件 Tab、真实运行、PTY、保存和恢复保护。
 - [完整结果与边界](docs/P2_TEST_CASE_DELIVERY_2026-10-28.md)：946 项中 944 通过/1 个既有 Windows 头文件解压失败/1 旧跳过，Lint 零错误；本轮 Python 75/包内 48/语义 22/Shell 4/片段 14 通过，签名与包检查通过。完整命令真实返回失败，不称全绿或 Android 执行通过。
 - [下一批计划](docs/WORKBENCH_BEHAVIOR_FOLLOWUP_2026-10-28.md)：统一搜索/文件树打开方式、动画不覆盖活动栏，首次启动与无项目欢迎区；这一历史候选未包含该批修改，现见上方2026-10-30交付。原格式化与 P3 继续。
 
 **历史：2026-10-28 本地 C++ signal 6 修复候选版。**
 
-- [当前修复候选 APK](dist/CodePocket-cpp-signal6-fix-2026-10-28-debug.apk)：去除与 Android 分配器虚拟预留冲突的 exec 前地址空间上限，保留 CPU/时间/文件和进程清理，按实际 RSS 监测预算；工具崩溃明确显示阶段与信号，正常语法错误保持编译错误。
+- `dist/CodePocket-cpp-signal6-fix-2026-10-28-debug.apk`：去除与 Android 分配器虚拟预留冲突的 exec 前地址空间上限，保留 CPU/时间/文件和进程清理，按实际 RSS 监测预算；工具崩溃明确显示阶段与信号，正常语法错误保持编译错误。
 - [结果与边界](docs/CPP_SIGNAL6_FIX_2026-10-28.md)：完整 911 项中 909 通过/1 个保留的 Windows 头文件解压失败/1 旧跳过，定向 46 全通过，Lint 零错误。签名/包内运行模块与实际原生映像已核对；全量命令仍返回失败，设备根因和修复效果未验收。
 
 **历史：2026-10-28 Python 多文件运行候选版。**
 
-- [当前候选 APK](dist/CodePocket-python-project-run-candidate-2026-10-28-debug.apk)：其他标签的有效 Python 恢复草稿参与实际导入，外部项目每次读取新鲜模块/资源；内部程序的原工作目录和文件输出保留，辅助文件错误按执行源码校验后定位。
+- `dist/CodePocket-python-project-run-candidate-2026-10-28-debug.apk`：其他标签的有效 Python 恢复草稿参与实际导入，外部项目每次读取新鲜模块/资源；内部程序的原工作目录和文件输出保留，辅助文件错误按执行源码校验后定位。
 - [结果与限制](docs/P2_PYTHON_PROJECT_RUN_2026-10-28.md)：896 项中 894 通过/1 个保留的 Windows 头文件解压失败/1 旧跳过，旧 4 项 Python 提供方失败已修复，定向 61 通过；源码 Python 75/包内 48/语义 22 通过，Lint 零错误，签名与包检查通过。全量命令仍返回失败，不能称整批全绿或 Android 执行通过。
 - 保留 C++ 启动诊断、设置触摸修复和头文件 Tab。用户设备上的 C++ 服务错误根因仍待确认；用例管理、批量运行、格式化和原 P3 继续。
 
 **历史：2026-10-28 设置二级菜单触摸修复，最近整批回归通过的包。**
 
-- [设置触摸修复 APK](dist/CodePocket-settings-touch-fix-2026-10-28-debug.apk)（110.07 MiB，原签名，arm64-v8a）。移除被动选项行抢走触摸的提示行为，原说明、设置草稿及补全保留。
+- `dist/CodePocket-settings-touch-fix-2026-10-28-debug.apk`（110.07 MiB，原签名，arm64-v8a）。移除被动选项行抢走触摸的提示行为，原说明、设置草稿及补全保留。
 - [结果与限制](docs/FIX_SETTINGS_TOUCH_2026-10-28.md)：完整触摸基线 4 失败/1 通过，修复后定向 109 全通过；完整 874 项中 873 通过/1 旧跳过，Lint 零错误。设备验收仍后置。
 
 **历史：2026-10-27 C++ 头文件 Tab 补全接入。**
 
-- [最新 Debug APK](dist/CodePocket-header-tab-2026-10-27-debug.apk)（110.07 MiB，原签名，arm64-v8a）。系统/项目头文件、目录继续、路径替换和 Tab/撤销沿用同一主编辑器。
+- `dist/CodePocket-header-tab-2026-10-27-debug.apk`（110.07 MiB，原签名，arm64-v8a）。系统/项目头文件、目录继续、路径替换和 Tab/撤销沿用同一主编辑器。
 - [结果与限制](docs/P2_CPP_HEADER_COMPLETION_2026-10-27.md) · [3 张原生图](docs/cpp-header-preview/README.md)：869 项中 868 通过、1 旧跳过，定向 90/终端 146 全通过，Lint 零错误。实际 APK 与旧运行内容、原签名核验通过；Android 设备验收仍后置。
 
 **历史：2026-10-27 本地 C++ 构建/终端接入。**
 
-- [最新 Debug APK](dist/CodePocket-local-cpp-2026-10-27-debug.apk)（110.07 MiB，原签名，arm64-v8a）。本地/云端和当前文件/项目范围沿用同一运行入口；本地失败不会静默上传。
+- `dist/CodePocket-local-cpp-2026-10-27-debug.apk`（110.07 MiB，原签名，arm64-v8a）。本地/云端和当前文件/项目范围沿用同一运行入口；本地失败不会静默上传。
 - [结果与限制](docs/P2_LOCAL_CPP_INTEGRATION_2026-10-27.md) · [7 张原生图](docs/local-cpp-preview/README.md)：855 项中 854 通过、1 旧跳过，定向 87/终端 146 全通过，Lint 零错误。真实包内工具/支持文件、原运行内容及原签名已核对。
 - 尚未在 Android 验证本地工具启动、dlopen、JNI/PTY 和故障执行；主机/交叉编译证据与设备验收分别记录。
 
@@ -76,13 +80,13 @@
 
 **2026-10-27：同一主 App 接入 C++ clangd 成员补全与真实参数。**
 
-- [最新Debug APK](dist/CodePocket-cpp-semantics-2026-10-27-debug.apk)（108.27MiB，原签名，arm64-v8a）。新增工具链体积约77.04MiB；安装后原生库/头文件还占额外空间。
+- `dist/CodePocket-cpp-semantics-2026-10-27-debug.apk`（108.27MiB，原签名，arm64-v8a）。新增工具链体积约77.04MiB；安装后原生库/头文件还占额外空间。
 - [结果与限制](docs/P2_CPP_SEMANTICS_2026-10-27.md) · [4张原生图](docs/cpp-semantic-preview/README.md)：821项中820通过、1旧跳过，定向91通过，Lint零错误；实际包内C++依赖、头文件、源码、通知及原运行内容检查通过。
 - 未将Windows clangd/主机Main-Sora/JNI静态检查称作Android设备已运行。下一步本地C++可行性、多文件运行、批量用例和格式化，原P3保留。
 
 **历史：2026-10-26 Python跨文件未保存上下文与SAF新鲜快照。**
 
-- [最新Debug APK](dist/CodePocket-python-project-context-2026-10-26-debug.apk)（31.23MiB，原签名，arm64-v8a）。
+- `dist/CodePocket-python-project-context-2026-10-26-debug.apk`（31.23MiB，原签名，arm64-v8a）。
 - [结果与限制](docs/P2_PYTHON_PROJECT_CONTEXT_2026-10-26.md) · [3张原生图](docs/python-project-context-preview/README.md)：主793通过/1旧跳过，定向132通过，Lint0错误；Python源码66、实际APK语义22与运行专项通过。
 - 多个有效恢复草稿、传递导入/真实参数及SAF当前模块参与补全；原文件/镜像/保存基线不被分析改写，变化的上下文拒绝旧结果；缓存和读取有界。
 - Android分析服务/JNI实际运行、设备资源/IME/键鼠/API24/卓易通及远端CI未验收；[交接](docs/RESUME.md)。原保存、Sora、真实运行和PTY保留。
@@ -93,7 +97,7 @@
 
 **2026-10-26：Python真实补全与参数接入。** Python真实成员/标准库/已保存内部模块补全与函数参数接入同一主App；当前未保存正文参与，来源明确，失败保留词法/内置参考。
 
-- [最新Debug APK](dist/CodePocket-python-semantics-2026-10-26-debug.apk)（30.93MiB，原签名，arm64-v8a）。
+- `dist/CodePocket-python-semantics-2026-10-26-debug.apk`（30.93MiB，原签名，arm64-v8a）。
 - [结果与限制](docs/P2_PYTHON_SEMANTICS_2026-10-26.md) · [3张原生预览](docs/python-semantic-preview/README.md)：主771通过/1旧跳过，定向79通过，Lint0错误；Python源码63、APK原运行39/语义19及运行专项通过。
 - 已验证内部项目已保存模块和当前未保存正文；其他未保存标签、SAF项目快照、C++语义留后续。新增1条非阻塞触摸监听Lint提示已登记。
 - Android分析服务/JNI实际运行、IME/键鼠/API24/卓易通/性能及远端CI未验收；[交接](docs/RESUME.md)。原保存、Sora、真实Python/C++运行和PTY保持。
@@ -102,7 +106,7 @@
 
 **2026-10-23：默认单一主APK的主机整合验收通过，继续P2。** 当前主入口使用生产Sora，文件/保存/补全/界面及真实运行入口接在同一工作台。新增运行前保存/继续编辑/冲突/发送确认回归，生产代码未变。
 
-- [集成主APK](dist/CodePocket-main-integrated-2026-10-23-debug.apk)（与上一版surfaces包逐字节相同，无需重复安装）。
+- `dist/CodePocket-main-integrated-2026-10-23-debug.apk`（与上一版surfaces包逐字节相同，无需重复安装）。
 - [I4真实结果与需求审计](docs/MAIN_APP_FINAL_INTEGRATION_2026-10-23.md)：主648通过/1旧跳过，共享159和Termux146缓存，Lint0错误，默认工程和实际APK核验通过。
 - 下一步P2真实语言服务及原P2/P3；设备验收统一后置，远端Actions未运行，完整项目尚未完成。
 
@@ -111,7 +115,7 @@
 
 **2026-10-23：主工作台菜单与浮层收尾完成，继续 I4 总验收。** 修复收起空终端误新建、菜单分组/Esc、大字体参数参考、完整诊断与小窗详情、查找替换文件名/排版。保留文件安全、生产Sora和单一真实PTY。
 
-- [最新主APK](dist/CodePocket-main-surfaces-2026-10-23-debug.apk)（25.21MiB，原签名、arm64-v8a）。
+- `dist/CodePocket-main-surfaces-2026-10-23-debug.apk`（25.21MiB，原签名、arm64-v8a）。
 - [修复、测试及界面清单](docs/MAIN_APP_SURFACES_2026-10-23.md)：主App643通过/1旧跳过、新11；共享159缓存；Lint0错误，Debug构建及实际APK检查通过。
 - [集成计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：接下来I4总验收，再P2/P3；设备IME/键鼠/卓易通/FPS统一后置。代码辅助仍为词法/内置参考。
 
@@ -120,7 +124,7 @@
 
 **2026-10-23接续状态：修复设置底部留白，完善实际窗口、大字体和终端状态界面。** 原生取消/应用固定贴底、搜索内容正常；二级输入框统一边框与焦点。编辑区增加留白，终端失败提供简洁摘要、重试与完整日志详情，保留同一真实PTY。
 
-- [最新主APK](dist/CodePocket-main-window-ui-2026-10-23-debug.apk)（25.20MiB，原签名，arm64-v8a）。
+- `dist/CodePocket-main-window-ui-2026-10-23-debug.apk`（25.20MiB，原签名，arm64-v8a）。
 - [修改、测试与边界](docs/MAIN_APP_WINDOW_UI_2026-10-23.md)：主App632通过/1旧跳过，新增18项；共享159/159实际重跑，新增3项；Lint0错误，Debug构建与实际APK/Python/签名核验通过。
 - [主程序集成计划](docs/MAIN_APP_INTEGRATION_PLAN_2026-10-21.md)：继续I3剩余二级菜单和浮层清单/视觉核对，再I4整体验收；原P2/P3保留。
 
@@ -136,8 +140,8 @@
 
 **2026-10-21：Sora实验接通真实内部项目与SAF文件会话。** 临时草稿页“项目 / SAF”进入文件实验，可切文件、保存/Ctrl+S、恢复草稿并保留选区/视口；提供方失败、冲突或读取期间继续输入会阻止错误切换。原保存实现七份源码逐字节共享，默认IDE仍用原生编辑器，真实PTY/Python/Wandbox保持。
 
-- [当前主IDE APK](dist/CodePocket-editor-sora-documents-2026-10-21-debug.apk)（约21.63MiB，同旧签名）
-- [历史内部Sora文件实验APK](dist/CodePocket-Sora-documents-2026-10-21-lab-debug.apk)（约4.84MiB，独立应用；真实写回用户授权目录）
+- `dist/CodePocket-editor-sora-documents-2026-10-21-debug.apk`（约21.63MiB，同旧签名）
+- `dist/CodePocket-Sora-documents-2026-10-21-lab-debug.apk`（约4.84MiB，独立应用；真实写回用户授权目录）
 - [修改文件、真实验证与已知边界](docs/P1_SORA_DOCUMENTS_2026-10-21.md)
 
 主App539通过/1既有跳过，实验133/133（新增25）；Lint均0错、无新增警告，共享存储库0错0警告，两个APK已构建并核对实际内容。实验仍未接完整生产Port/默认迁移，当前辅助是词法/内置参考；设备IME、实体键鼠、手机/平板/卓易通与FPS按约定统一后置。
@@ -145,8 +149,8 @@
 
 **2026-10-21：Sora实验接入共享补全、片段和内置参数参考。** 主程序与实验复用现有规则；实验支持方向键/Tab、字段追踪、参数形式切换及真实光标窗口定位，修复布局未就绪时显式请求丢失。默认IDE继续使用原生编辑器，设置JSON和原运行/保存保持。
 
-- [下载当前主程序APK](dist/CodePocket-editor-sora-assistance-2026-10-21-debug.apk)（约21.63MiB，同旧签名）
-- [Sora代码辅助实验APK](dist/CodePocket-Sora-assistance-2026-10-21-lab-debug.apk)（约4.78MiB，仅临时草稿，不接项目/运行）
+- `dist/CodePocket-editor-sora-assistance-2026-10-21-debug.apk`（约21.63MiB，同旧签名）
+- `dist/CodePocket-Sora-assistance-2026-10-21-lab-debug.apk`（约4.78MiB，仅临时草稿，不接项目/运行）
 - [本批修改、测试与已知边界](docs/P1_SORA_ASSISTANCE_2026-10-21.md)
 
 主App539通过/1旧跳过，实验108通过，包含6项真实Sora View/InputConnection主机回归；Lint均0错误、无新增警告，两个APK已构建检查。当前是词法/模板/内置参考，深度语义与完整项目会话尚未完成；手机/平板/卓易通和实际输入法/键鼠/FPS仍统一后置。
@@ -154,8 +158,8 @@
 
 **2026-10-21：继续P1-C成熟编辑器适配，完成Sora导航首批。** 独立实验增加跳转行、换行重排保护和可取消视口恢复；日常IDE保持原生编辑器，复用导航保护，现有终端/Tab候选/触屏字号保留。
 
-- [下载当前主IDE APK](dist/CodePocket-editor-sora-navigation-2026-10-21-debug.apk)（约21.96MiB，同旧签名）
-- [独立Sora导航实验APK](dist/CodePocket-Sora-navigation-2026-10-21-lab-debug.apk)（约4.67MiB，仅临时草稿，不接项目或运行）
+- `dist/CodePocket-editor-sora-navigation-2026-10-21-debug.apk`（约21.96MiB，同旧签名）
+- `dist/CodePocket-Sora-navigation-2026-10-21-lab-debug.apk`（约4.67MiB，仅临时草稿，不接项目或运行）
 - [本批修改、真实测试和未验证项](docs/P1_SORA_NAVIGATION_2026-10-21.md)
 
 主App535通过/1旧跳过，Sora实验82通过；Lint均0错误、无新增警告，两份APK构建/签名/归档检查通过。Sora候选/文件会话和默认迁移尚未完成，P2/P3保留；实机输入与帧率按约定后置。
@@ -163,7 +167,7 @@
 
 **此前：新增手机隐藏字号入口：代码区底部⋮（编辑操作）→代码字号→A− / A+。** 显示当前字号、可连续调整并立即保存；与Ctrl加减共用字号，行号同步，终端字号保持。
 
-- [下载触屏字号版APK](dist/CodePocket-touch-font-zoom-2026-10-20-debug.apk)（约21.96MiB，同原签名，可覆盖安装）
+- `dist/CodePocket-touch-font-zoom-2026-10-20-debug.apk`（约21.96MiB，同原签名，可覆盖安装）
 - [修改与真实验证记录](docs/TOUCH_FONT_ZOOM_2026-10-20.md)
 
 App533通过/1原有跳过，Lint0错/11旧警告，Debug构建和安装包检查通过。手机/平板主机原生点击与焦点回归通过；实机输入法、蓝牙键鼠和卓易通仍待统一验收。
@@ -171,7 +175,7 @@ App533通过/1原有跳过，Lint0错/11旧警告，Debug构建和安装包检�
 
 **此前2026-10-20：修正实体键盘候选导航，新增Ctrl加减代码字号。** 自动候选默认↑/↓选择、Tab接受、Esc关闭；Ctrl+加号/减号缩放代码并记住字号，兼容Ctrl+=和小键盘。旧配置迁移保留OFF，其他按键策略可在设置中选择。
 
-- [下载本轮键盘与字号修复APK](dist/CodePocket-keyboard-navigation-zoom-2026-10-20-debug.apk)（约21.95MiB，同旧签名，可覆盖安装）
+- `dist/CodePocket-keyboard-navigation-zoom-2026-10-20-debug.apk`（约21.95MiB，同旧签名，可覆盖安装）
 - [修改、设置迁移与真实测试记录](docs/KEYBOARD_NAVIGATION_ZOOM_2026-10-20.md)
 
 App531通过/1原有跳过，Lint0错/11旧警告，Debug构建和实际APK检查通过。主机已覆盖手机/平板、Python/C++实际键盘事件；真实蓝牙键盘、输入法和卓易通仍待统一实机验收。
@@ -179,7 +183,7 @@ App531通过/1原有跳过，Lint0错/11旧警告，Debug构建和实际APK检�
 
 **此前2026-10-20：修复展开终端控制键闪退，简化查找替换，新增编辑区配色与错误红线。** 即时查找计数、一键替换；混合括号分层，变量/参数/常量分色；Python本地真实语法检查，C++基础括号检查和真实运行结果定位。App516通过/1旧跳过，Lint0错/11旧警告，Debug APK与实际打包Python39项测试通过。
 
-- [下载本轮修复与编辑反馈 APK](dist/CodePocket-editor-feedback-2026-10-20-debug.apk)（约21.95MiB，同原签名，可覆盖安装）
+- `dist/CodePocket-editor-feedback-2026-10-20-debug.apk`（约21.95MiB，同原签名，可覆盖安装）
 - [修改、测试和限制](docs/EDITOR_FEEDBACK_2026-10-20.md) · [手机/平板深浅主题原生局部预览](docs/editor-feedback-preview/README.md)
 
 C++完整即时语义诊断、未定义变量/类型分析仍属后续LSP工作；不会自动上传代码做检查。实机、输入法/键鼠、卓易通和帧率继续后置。**下方terminal-polish历史APK存在展开控制键闪退，请使用上面的当前修复版。**
@@ -187,49 +191,49 @@ C++完整即时语义诊断、未定义变量/类型分析仍属后续LSP工作�
 
 **此前2026-10-20：终端控件重新设计，新增关闭当前终端快捷按钮，修复短文件不弹补全。** 手机/平板自适应标题、统一会话/键盘操作；垃圾桶确认后关闭当前会话，向下箭头收起面板。原真实PTY、Python和Wandbox继续保留。App495通过/1旧跳过（496项，新增17），Lint0错/11旧警告，Debug构建及安装包检查通过。
 
-- [下载终端改版与补全修复 APK](dist/CodePocket-terminal-polish-2026-10-20-debug.apk)（同原签名，可覆盖安装）
+- `dist/CodePocket-terminal-polish-2026-10-20-debug.apk`（同原签名，可覆盖安装）
 - [手机/平板深浅主题原生控件预览](docs/terminal-preview/README.md) · [修改、测试与已知边界](docs/TERMINAL_POLISH_2026-10-20.md)
 
 原生预览中的终端内容是已标注的测试示例；主机测试没有代替实际设备IME、键鼠、卓易通与帧率验收。实机按此前约定后置，P2/P3需求继续保留。
 
 **此前2026-10-20：修复上一版 UI APK 打开即闪退。** 首页终端等6个图标的8段矢量坐标转换错误，已复现并修正。新增原生图形解析与完整启动回归：修复前7失败、修复后7通过，覆盖手机/平板和深浅主题；最终App478通过/1旧跳过，Lint0错/11旧警告，Debug APK构建及产物检查通过。
 
-- [下载启动修复版 APK](dist/CodePocket-ui-startup-fixed-2026-10-20-debug.apk)（21.63MiB，同原Debug签名，可覆盖安装）
+- `dist/CodePocket-ui-startup-fixed-2026-10-20-debug.apk`（21.63MiB，同原Debug签名，可覆盖安装）
 - [根因、修改与完整验证记录](docs/UI_STARTUP_CRASH_FIX_2026-10-20.md)
 
 此前 `CodePocket-ui-complete-2026-10-20-debug.apk` 有启动缺陷，请使用上面的修复版。当前验证为主机原生图形与生命周期回归，尚未复测实际设备；Python/PTY、IME、键鼠、卓易通及帧率的实机边界保持。
 
 **此前2026-10-20：整套UI改版和交互修复已完成代码与主机验证，实机验收后置。** 主工作台、文件树、全部App内二级菜单/弹窗、分类设置中心统一改版；补齐本地Lucide与文件类型图标、根目录收起、终端快捷按钮和五种配色，普通打字/退格光标约60ms过渡。App471通过/1旧跳过（472项，新增24），源码/打包Python各29，Lint0错/11旧警告；Debug APK已构建并检查。
 
-- [此前UI APK（已发现启动闪退，勿安装）](dist/CodePocket-ui-complete-2026-10-20-debug.apk)（约21.63MiB，Android7.0+ / arm64，同旧Debug证书）
+- `dist/CodePocket-ui-complete-2026-10-20-debug.apk`（约21.63MiB，Android7.0+ / arm64，同旧Debug证书）
 - [完整可点击设计预览](docs/ui-preview/index.html) · [浏览器截图与边界](docs/ui-preview/README.md) · [修改/测试/已知问题](docs/UI_COMPLETE_2026-10-20.md)
 
 预览中的文件与输出均是明确标注的设计示例；原生App继续使用真实PTY、Python与Wandbox。未声称实机像素、IME/键鼠、卓易通或帧率通过，原P2/P3需求保留。
 
 
-**此前2026-10-19：动画功能开发完成，已包含平板窗口适配（实机待统一验收）。** 补齐平滑光标/柔和闪烁与独立开关、树展开折叠、标签指示条、侧栏/左抽屉、终端面板、菜单弹窗及手动/系统深浅主题过渡；动态尊重系统和省电，输入/拖动优先。平板600×480dp起默认35%终端，840dp起固定多栏。App447通过/1既有跳过（448项，新增49），Python源码/打包各29，Lint0错/11旧警告，Debug构建1m 9s并完成签名/完整性检查。[动画版APK](dist/CodePocket-animations-debug.apk)约21.63MiB；[完整实现、测试与边界](docs/P1_ANIMATIONS_COMPLETE.md)。60FPS/高刷、IME/键鼠与卓易通未作本轮实测，P1其余UI及P2/P3继续保留。
+**此前2026-10-19：动画功能开发完成，已包含平板窗口适配（实机待统一验收）。** 补齐平滑光标/柔和闪烁与独立开关、树展开折叠、标签指示条、侧栏/左抽屉、终端面板、菜单弹窗及手动/系统深浅主题过渡；动态尊重系统和省电，输入/拖动优先。平板600×480dp起默认35%终端，840dp起固定多栏。App447通过/1既有跳过（448项，新增49），Python源码/打包各29，Lint0错/11旧警告，Debug构建1m 9s并完成签名/完整性检查。`dist/CodePocket-animations-debug.apk`约21.63MiB；[完整实现、测试与边界](docs/P1_ANIMATIONS_COMPLETE.md)。60FPS/高刷、IME/键鼠与卓易通未作本轮实测，P1其余UI及P2/P3继续保留。
 
-**此前2026-10-19：恢复P1工作台动画首批。** 文件树加入展开箭头、目录引导线和窄栏缩进预算；文件树/标签按路径复用，更新不反复重建；补全/参数窗口连续输入不重播淡入，取消/后台/IME时结算过渡。App398通过/1既有跳过（399项，新增26），Python源码/打包各29，Lint0错/11既有警告；Debug APK已构建并检查。[本轮APK](dist/CodePocket-workbench-motion-debug.apk)约21.63MiB；[修改、测试与边界](docs/P1_WORKBENCH_MOTION.md)。终端运行与输入链路保持；本批不是完整动画交付，光标/主题/完整面板过渡及设备FPS仍待完成。
+**此前2026-10-19：恢复P1工作台动画首批。** 文件树加入展开箭头、目录引导线和窄栏缩进预算；文件树/标签按路径复用，更新不反复重建；补全/参数窗口连续输入不重播淡入，取消/后台/IME时结算过渡。App398通过/1既有跳过（399项，新增26），Python源码/打包各29，Lint0错/11既有警告；Debug APK已构建并检查。`dist/CodePocket-workbench-motion-debug.apk`约21.63MiB；[修改、测试与边界](docs/P1_WORKBENCH_MOTION.md)。终端运行与输入链路保持；本批不是完整动画交付，光标/主题/完整面板过渡及设备FPS仍待完成。
 
-**此前2026-10-19：继续完善终端焦点与会话切换。** 最大化/还原保留终端输入；切换Shell时正确交接焦点；旧输入法连接在失焦、关闭、重启或更换会话后不能写入新终端。修复前9项失败已复现，最终App372通过/1既有跳过（373项），新增16项；源码/打包Python各29、Shell4，Lint0错/11旧警告，最终Debug构建1分11秒。[本轮APK](dist/CodePocket-terminal-focus-debug.apk) 21.63MiB；[修改与验证记录](docs/P1_TERMINAL_FOCUS_LIFECYCLE.md)。保留上版已获用户可用反馈的启动/键盘修复；本版没有新增设备或帧率验收，原P1/P2/P3继续保留。
+**此前2026-10-19：继续完善终端焦点与会话切换。** 最大化/还原保留终端输入；切换Shell时正确交接焦点；旧输入法连接在失焦、关闭、重启或更换会话后不能写入新终端。修复前9项失败已复现，最终App372通过/1既有跳过（373项），新增16项；源码/打包Python各29、Shell4，Lint0错/11旧警告，最终Debug构建1分11秒。`dist/CodePocket-terminal-focus-debug.apk` 21.63MiB；[修改与验证记录](docs/P1_TERMINAL_FOCUS_LIFECYCLE.md)。保留上版已获用户可用反馈的启动/键盘修复；本版没有新增设备或帧率验收，原P1/P2/P3继续保留。
 
-**此前2026-10-19：继续修正“Python 运行时点击终端不弹键盘”。** 用户确认仍停在启动阶段；已拆开键盘显示与进程输入门控，保留必要 Android ART/boot 环境，补齐窗口焦点等待及桥提前退出识别。App356通过/1既有跳过（357项），新增15项；真实主机Shell4、源码/打包Python各29，Lint0错/11旧警告；原仓库Debug构建1分22秒。[此前APK](dist/CodePocket-terminal-running-input-debug.apk) 21.63MiB；[原因、修改、测试与设备边界](docs/P1_TERMINAL_RUNNING_INPUT_FIX.md)。同一真实终端，原数据与功能保留；手机/平板IME和Android全链仍未复测，不能视为设备故障已闭环，动画仍暂停。
+**此前2026-10-19：继续修正“Python 运行时点击终端不弹键盘”。** 用户确认仍停在启动阶段；已拆开键盘显示与进程输入门控，保留必要 Android ART/boot 环境，补齐窗口焦点等待及桥提前退出识别。App356通过/1既有跳过（357项），新增15项；真实主机Shell4、源码/打包Python各29，Lint0错/11旧警告；原仓库Debug构建1分22秒。`dist/CodePocket-terminal-running-input-debug.apk` 21.63MiB；[原因、修改、测试与设备边界](docs/P1_TERMINAL_RUNNING_INPUT_FIX.md)。同一真实终端，原数据与功能保留；手机/平板IME和Android全链仍未复测，不能视为设备故障已闭环，动画仍暂停。
 
-**此前2026-10-19：修正系统 Shell 覆盖提示符导致的 Python 启动等待，补齐终端触屏键盘与短窗口布局。** 同一个真实PTY承载Shell和Python，不增加第二个运行终端；新增“键盘”按钮与焦点延后请求，紧凑/大字体窗口保留终端，恢复页面时保留终端焦点。App341通过/1既有跳过、核心146、源码/实际打包Python各29、Shell启动3项、模板各7；Lint0错/11既有警告，原仓库Debug构建1m9s。[此前APK](dist/CodePocket-terminal-prompt-ime-debug.apk) 21.63MiB；[原因、修改、证据与设备边界](docs/P1_TERMINAL_PROMPT_IME_FIX.md)。Android整链、手机/平板IME与卓易通仍待实测，动画保持暂停。
+**此前2026-10-19：修正系统 Shell 覆盖提示符导致的 Python 启动等待，补齐终端触屏键盘与短窗口布局。** 同一个真实PTY承载Shell和Python，不增加第二个运行终端；新增“键盘”按钮与焦点延后请求，紧凑/大字体窗口保留终端，恢复页面时保留终端焦点。App341通过/1既有跳过、核心146、源码/实际打包Python各29、Shell启动3项、模板各7；Lint0错/11既有警告，原仓库Debug构建1m9s。`dist/CodePocket-terminal-prompt-ime-debug.apk` 21.63MiB；[原因、修改、证据与设备边界](docs/P1_TERMINAL_PROMPT_IME_FIX.md)。Android整链、手机/平板IME与卓易通仍待实测，动画保持暂停。
 
-**此前2026-10-18：Python启动等待修正，取消Python预填模式。** 修复Shell依赖终端View测量及代码键盘隐藏面板导致等待的路径；点击运行显示终端，Python只在同一真实终端交互，C++仍云端预填。[此前Debug APK](dist/CodePocket-terminal-startup-debug.apk) 21.63MiB；[修正与验证](docs/P1_TERMINAL_STARTUP_FIX.md)。App327通过/1既有跳过、核心146、实际Python字节码29通过，Lint0错/11既有警告。手机上的输出恢复仍待验证，动画暂停。
+**此前2026-10-18：Python启动等待修正，取消Python预填模式。** 修复Shell依赖终端View测量及代码键盘隐藏面板导致等待的路径；点击运行显示终端，Python只在同一真实终端交互，C++仍云端预填。`dist/CodePocket-terminal-startup-debug.apk` 21.63MiB；[修正与验证](docs/P1_TERMINAL_STARTUP_FIX.md)。App327通过/1既有跳过、核心146、实际Python字节码29通过，Lint0错/11既有警告。手机上的输出恢复仍待验证，动画暂停。
 
-**此前：Shell视图初始化闪退修复（2026-10-18）。** 字号/字体初始化顺序导致空绘制器，新增实际View主机回归、完整启动异常保护及可复制的本机错误记录。[修复版Debug APK](dist/CodePocket-shell-crash-fixed-debug.apk) 21.63MiB；App286通过/1既有跳过、Lint0错误/11既有警告。见[崩溃栈、修复及验证范围](docs/P1_SHELL_CRASH_FIX.md)。尚无手机日志/PTY实测，不能据此排除设备其他故障；动画暂停，统一终端界面待接续。
+**此前：Shell视图初始化闪退修复（2026-10-18）。** 字号/字体初始化顺序导致空绘制器，新增实际View主机回归、完整启动异常保护及可复制的本机错误记录。`dist/CodePocket-shell-crash-fixed-debug.apk` 21.63MiB；App286通过/1既有跳过、Lint0错误/11既有警告。见[崩溃栈、修复及验证范围](docs/P1_SHELL_CRASH_FIX.md)。尚无手机日志/PTY实测，不能据此排除设备其他故障；动画暂停，统一终端界面待接续。
 
-**此前：原生 Shell 终端首批（2026-10-18，含本轮已修复的启动Bug）。** 运行面板选择“Shell 终端”连接真实`/system/bin/sh`（Termux原生组件/PTY，无需另装Termux）。[Debug APK](dist/CodePocket-native-terminal-debug.apk) 21.63MiB；App277通过/1既有跳过、终端核心145通过，Lint0错误/11既有警告。构建与产物通过，**设备上的Shell/IME/键鼠/卓易通仍待统一实机验收**。当前没有python/pip/clang命令，原Python仍Chaquopy、C++仍Wandbox；本地C++未实现。见[实现、验证与边界](docs/P1_NATIVE_TERMINAL.md)。
+**此前：原生 Shell 终端首批（2026-10-18，含本轮已修复的启动Bug）。** 运行面板选择“Shell 终端”连接真实`/system/bin/sh`（Termux原生组件/PTY，无需另装Termux）。`dist/CodePocket-native-terminal-debug.apk` 21.63MiB；App277通过/1既有跳过、终端核心145通过，Lint0错误/11既有警告。构建与产物通过，**设备上的Shell/IME/键鼠/卓易通仍待统一实机验收**。当前没有python/pip/clang命令，原Python仍Chaquopy、C++仍Wandbox；本地C++未实现。见[实现、验证与边界](docs/P1_NATIVE_TERMINAL.md)。
 
 **2026-10-18：Sora实验已接入离线C++ / Python TextMate语法着色。** 提供语言/纯文本选择、深浅色规则、后台加载与着色预算降级，保留草稿和历史；属于语法作用域着色，不是语义IntelliSense。见[本批结果](docs/P1_SORA_LANGUAGES.md)；[事务](docs/P1_SORA_TRANSACTIONS.md)、[定位](docs/P1_EDITOR_SURFACE.md)保留。默认IDE仍为原生CodeEditor，尚未完成生产Sora迁移。
 
 面向学习编程和算法练习的原生 Kotlin 轻量 IDE。保留现有 Android View 编辑器，Python 使用 Chaquopy 本地运行，C++17 使用 Wandbox 云端运行，不需要 API Key。
 
-**此前 [默认IDE Debug APK](dist/CodePocket-editor-sora-languages-debug.apk)** 20.87MiB，Android7.0+ / arm64-v8a。强制重编译1m 26s、64/64任务执行；原270项中269通过/1既有跳过，Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告。生产源码和依赖未改，签名/CRC/对齐及关键类定义检查通过。
+**此前 `dist/CodePocket-editor-sora-languages-debug.apk`** 20.87MiB，Android7.0+ / arm64-v8a。强制重编译1m 26s、64/64任务执行；原270项中269通过/1既有跳过，Python源码/字节码各13/13，模板各7/7，Lint0错误/11既有警告。生产源码和依赖未改，签名/CRC/对齐及关键类定义检查通过。
 
-[Sora语法实验APK](dist/CodePocket-Sora-languages-lab-debug.apk) 4.66MiB，独立包名/临时草稿；最终离线构建29s，60/60主机测试（新增19），Lint0错误/6既有警告。真实运行TM4E/Joni、Content/Cursor/UndoManager；测试仅把Android日志转发到stderr，未执行Android View/InputConnection。C++部分内嵌语言规则缺失，警告与边界已记录。新源码在当前仓库；[历史源码/许可材料包](dist/CodePocket-Sora-editor-lab-bundle.zip)不含后续适配。实机验收统一后置。
+`dist/CodePocket-Sora-languages-lab-debug.apk` 4.66MiB，独立包名/临时草稿；最终离线构建29s，60/60主机测试（新增19），Lint0错误/6既有警告。真实运行TM4E/Joni、Content/Cursor/UndoManager；测试仅把Android日志转发到stderr，未执行Android View/InputConnection。C++部分内嵌语言规则缺失，警告与边界已记录。新源码在当前仓库；`dist/CodePocket-Sora-editor-lab-bundle.zip`不含后续适配。实机验收统一后置。
 
 - [当前开发进度与接续顺序](docs/DEVELOPMENT_PROGRESS.md)
 - [P1 Sora离线语法与主题验证](docs/P1_SORA_LANGUAGES.md)
@@ -376,7 +380,7 @@ Kotlin 测试完成后，可用 `python scripts/verify_snippets.py --junit app/b
 
 .github/workflows/build-apk.yml 保留 JDK/Python/SDK 准备、Python 与 Kotlin 测试、Lint、Debug 构建、签名/归档/对齐/字节码检查；增加真实生成片段的 Python/C++17 主机执行与源样例报告。远端成功后应能下载 CodePocket-v0.2-debug-apk 与 CodePocket-verification-reports。
 
-本地已建立 Git 基线与分阶段记录，尚未配置远端或运行 GitHub Actions；没有自动 push、发布或上传 APK。
+本次按用户授权新建公开仓库并正常推送；远端提交与既有CI的实际结果见本批推送记录。不新增工作流或自动发布Release，CI结果与本地主机验证分别记录。
 
 ## 已知边界与后续
 

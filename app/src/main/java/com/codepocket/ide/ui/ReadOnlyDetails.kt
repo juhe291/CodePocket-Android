@@ -22,7 +22,12 @@ import com.codepocket.ide.animation.DialogMotion
 object ReadOnlyDetails {
     @JvmStatic
     fun show(context:Context,title:String,scope:String,text:String,icon:IdeIcon,monospace:Boolean,
-        animations:Boolean,description:String?,copyLabel:String?,copy:Runnable?):AlertDialog {
+        animations:Boolean,description:String?,copyLabel:String?,copy:Runnable?):AlertDialog =
+        show(context,title,scope,text,icon,monospace,animations,description,copyLabel,copy,null)
+
+    @JvmStatic
+    fun show(context:Context,title:String,scope:String,text:String,icon:IdeIcon,monospace:Boolean,
+        animations:Boolean,description:String?,copyLabel:String?,copy:Runnable?,closed:Runnable?):AlertDialog {
         val activity=generateSequence(context){(it as? ContextWrapper)?.baseContext?.takeIf{base->base!==it}}
             .filterIsInstance<Activity>().firstOrNull()
         val host=activity?.findViewById<View>(android.R.id.content)
@@ -130,6 +135,7 @@ object ReadOnlyDetails {
             host?.removeOnLayoutChangeListener(listener)
             if(scroll.viewTreeObserver.isAlive)scroll.viewTreeObserver.removeOnPreDrawListener(restoreScroll)
             pendingScroll=null
+            closed?.run()
         }
         return dialog
     }

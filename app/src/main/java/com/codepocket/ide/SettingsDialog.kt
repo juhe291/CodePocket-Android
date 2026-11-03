@@ -88,7 +88,10 @@ object SettingsDialog {
     fun checkpoint(dialog:AlertDialog?):String? = if(dialog?.isShowing!=true)null else (dialog.window?.decorView?.getTag(R.id.settings_checkpoint) as? (() -> String))?.invoke()
     fun show(activity:Activity,current:AppSettings,save:(AppSettings)->Unit):AlertDialog = show(activity,current,save,null,null)
     fun show(activity:Activity,current:AppSettings,save:(AppSettings)->Unit,initialState:String?,
-        apply:((AppSettings,(Boolean)->Unit)->Unit)?):AlertDialog {
+        apply:((AppSettings,(Boolean)->Unit)->Unit)?):AlertDialog =
+        show(activity,current,save,initialState,apply){AppUpdateDialog(activity).show()}
+    fun show(activity:Activity,current:AppSettings,save:(AppSettings)->Unit,initialState:String?,
+        apply:((AppSettings,(Boolean)->Unit)->Unit)?,checkUpdates:()->Unit):AlertDialog {
         val draft=Draft.restore(current,initialState);val p=DesignTokens.forContext(activity);val dp={v:Int->IdeControls.dp(activity,v)}
         val root=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;setBackgroundColor(p.surface);setPadding(dp(16),dp(8),dp(16),0)}
         val header=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL}
@@ -265,6 +268,10 @@ object SettingsDialog {
                     }
                     if(draft.category==6){
                         heading("CodePocket","原生 Android C++ / Python 学习工作台")
+                        details.addView(WorkbenchForms.caption(activity,InstalledAppUpdateVersion.read(activity).label))
+                        details.addView(WorkbenchStyle.menuRow(activity,"检查更新").apply{
+                            tag="settings-check-updates";setOnClickListener{if(!busy)checkUpdates()}
+                        })
                         details.addView(WorkbenchStyle.menuRow(activity,"C++ 语义分析许可与源码").apply{
                             setOnClickListener{if(!busy)CppLicenses.show(activity,current.animations)}
                         })

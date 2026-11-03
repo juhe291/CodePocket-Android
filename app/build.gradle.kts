@@ -16,8 +16,12 @@ android {
         applicationId = "com.codepocket.ide"
         minSdk = 24
         targetSdk = 34
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.2.1"
+
+        val updateRepository = providers.gradleProperty("codepocket.updateRepository").orElse("").get()
+        require(updateRepository.isEmpty() || Regex("[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+").matches(updateRepository))
+        buildConfigField("String", "UPDATE_REPOSITORY", "\"$updateRepository\"")
 
         // Mobile phones/tablets: keeps the APK reasonably small.
         ndk { abiFilters += listOf("arm64-v8a") }
@@ -34,7 +38,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
-    buildFeatures { viewBinding = false }
+    buildFeatures { viewBinding = false; buildConfig = true }
     externalNativeBuild { ndkBuild { path = file("src/main/jni/Android.mk") } }
     sourceSets.getByName("main") {
         jniLibs.srcDir(rootProject.file(".tools/cpp-runtime/jni"))
