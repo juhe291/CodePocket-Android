@@ -127,7 +127,12 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     public void setSelection(int at) { setSelection(at, at); }
     public void setSelection(int start, int end) { select(start, end, false, true); }
     public boolean select(int start, int end, boolean reveal, boolean focus) {
-        if (!focus && !editor.hasFocus())
+        // Pinned Sora's setSelectionRegion() always calls requestFocus() itself. An explicit
+        // focus=false request (saved-session restore, delayed background selection) must never
+        // move focus, even when this editor happens to own it right now; otherwise a stdin or
+        // terminal field silently loses focus. That is why suppression cannot depend on the
+        // current focus state.
+        if (!focus)
             return editor.withoutFocusRequests(() -> adapter.select(adapter.snapshot(), start, end, reveal, true, true));
         return adapter.select(adapter.snapshot(), start, end, reveal, focus, true);
     }

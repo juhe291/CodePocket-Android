@@ -96,6 +96,8 @@ class MainActivity : Activity() {
     private val opened = mutableListOf<String>()
     private val running get() = RunSession.running || CaseRunSession.running
     private var result: RunResult? = null
+    /** True after this Activity instance rendered a run state at least once (not inherited from pre-recreation). */
+    private var runStateRendered = false
     private var selectedOutput = 3
     private var completionPopup: CompletionPopup? = null
     private var completionTabButton: View? = null
@@ -3539,7 +3541,10 @@ class MainActivity : Activity() {
         val previous = result
         outputDisplay.synchronize(RunSession.result, running)
         result = RunSession.result
-        if (!running && result?.kind == RunKind.SERVICE && result !== previous) selectedOutput = 1
+        // A result that already existed before this Activity was created (rotation/recreation) is not a
+        // transition: keep the restored output channel instead of dropping the real terminal pane to "问题".
+        if (runStateRendered && !running && result?.kind == RunKind.SERVICE && result !== previous) selectedOutput = 1
+        runStateRendered = true
         editorAnalysis?.request()
         showOutput(selectedOutput)
         if (CaseRunSession.running) status.text = CaseRunSession.batch?.message

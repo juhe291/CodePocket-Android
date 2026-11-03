@@ -1,0 +1,4 @@
+82d2f6e7b05201c5b7bcc9b2a097775c783ba7792ac441dba1cd4e42a0f5aff2  app/src/main/java/com/codepocket/ide/MainActivity.kt
+5b6f4f2a9ee4c193ce7d65d411db4cdf7c9724ab4404d69993bb68864c6f082a  app/src/test/java/com/codepocket/ide/TerminalDockIntegrationTest.kt
+32ab85b48d51f1f2b8fc43f5fe2a93e35f243e9433182a374b17b82c74d84c81  editor-sora/src/main/java/com/codepocket/editorlab/WorkbenchEditor.java
+d57c08dfd2ddbcfed702feb44558948d36b0cd115aa82a1e9edac8aee01bc438  docs/CI_LINUX_FOCUS_TERMINAL_FIX_2026-11-03.md
