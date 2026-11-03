@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 208, in <module>
-    main()
-    ~~~~^^
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 192, in main
-    assert digest(apk.read(name)) == digest(baseline.read(name)), 'Original runtime changed: ' + name
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Original runtime changed: assets/chaquopy/app.imy

@@ -1,5 +1,0 @@
-{
-  "returncode": 1,
-  "stdout": "",
-  "stderr": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\verification\\cpp-local-probe-2026-10-27\\fixtures\\broken.cpp:2:12: error: use of undeclared identifier 'missing_identifier'\n    2 |     return missing_identifier;\n      |            ^~~~~~~~~~~~~~~~~~\n1 error generated.\n"
-}

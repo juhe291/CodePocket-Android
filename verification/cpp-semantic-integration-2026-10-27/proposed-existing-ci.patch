@@ -1,8 +1,0 @@
-diff --git a/.github/workflows/build-apk.yml b/.github/workflows/build-apk.yml
-index 9bb6ee5..78b07a0 100644
---- a/.github/workflows/build-apk.yml
-+++ b/.github/workflows/build-apk.yml
-@@ -47,0 +48,3 @@ jobs:
-+      - name: Prepare pinned local C++ analysis runtime and host comparison tool
-+        run: python scripts/prepare_cpp_runtime.py --fetch --fetch-host
-+

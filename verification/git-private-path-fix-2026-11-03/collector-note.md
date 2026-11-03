@@ -1,1 +1,0 @@
-首轮汇总因为Manifest资源ID随新组件资源合并而重编号失败；只有theme/icon/roundIcon三处，另有已核对Core1.1.0提供的appComponentFactory。原脚本/失败原文保留。现以两个实际APK的aapt资源表确认主题仍指向style/Theme.CodePocket、两个图标仍指向drawable/ic_app，再比较全部Manifest内容；没有删去属性检查或放行其他权限/组件变化。汇总修复不改生产或测试源码，不再次构建APK。101份历史APK清单沿用网页建批时已冻结的同一份，期间未交付dist新包，汇总逐份重验摘要。

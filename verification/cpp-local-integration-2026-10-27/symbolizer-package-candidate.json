@@ -1,9 +1,0 @@
-{
-  "Package": "llvm",
-  "Version": "21.1.8-3",
-  "Architecture": "aarch64",
-  "Filename": "pool/main/l/llvm/llvm_21.1.8-3_aarch64.deb",
-  "Size": "14911960",
-  "SHA256": "2d17e4dde485cae71e6872d19ce1d44555789208708b4e0fd15ebf6818a146d3",
-  "Depends": "libllvm (= 21.1.8-3)"
-}

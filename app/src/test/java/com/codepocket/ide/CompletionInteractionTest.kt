@@ -367,6 +367,15 @@ class CompletionInteractionTest {
         assertFalse(visible())
     }
     private fun signatureVisible() = ReflectionHelpers.getField<SignaturePopup?>(main,"signaturePopup")?.isShowing==true
+    /** Bounded wait for the real popup after a layout transition; slow CI hosts may finish the callback late. */
+    private fun awaitSignatureVisible(){
+        val deadline=System.nanoTime()+3_000_000_000L
+        while(!signatureVisible() && System.nanoTime()<deadline){
+            layout(main.resources.displayMetrics.widthPixels,main.resources.displayMetrics.heightPixels)
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(50));Thread.sleep(5)
+        }
+        assertTrue(diagnostics(),signatureVisible())
+    }
     @Test fun explicitCompletionWaitsForLayoutWhenAutomaticCompletionIsOff() {
         manualAssistanceOnly("pri");busyLayout(true)
         key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON);settle()
@@ -389,7 +398,7 @@ class CompletionInteractionTest {
         busyLayout(false);settle();assertTrue(diagnostics(),visible())
         loadText("range(1, ");editor.setSelection(editor.length());busyLayout(true);settle()
         assertFalse(signatureVisible());busyLayout(false);settle()
-        assertTrue("Automatic parameter help must not be lost behind the completion readiness check",signatureVisible())
+        awaitSignatureVisible()
     }
     @Test fun layoutStartingAfterCandidateCalculationAlsoKeepsTheExplicitRequest() {
         manualAssistanceOnly("pri")
@@ -404,7 +413,7 @@ class CompletionInteractionTest {
         key(KeyEvent.KEYCODE_SPACE,KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON)
         ReflectionHelpers.getField<ExecutorService>(main,"signatureExecutor").submit{}.get(10,TimeUnit.SECONDS)
         busyLayout(true);settle();assertFalse(signatureVisible())
-        busyLayout(false);settle();assertTrue(diagnostics(),signatureVisible())
+        busyLayout(false);settle();awaitSignatureVisible()
     }
     @Test fun escapeCancelsTheWaitingRequestWithoutEditingOrReopening() {
         manualAssistanceOnly("pri");busyLayout(true)

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.SafGitRemoteJournalIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-02T16:41:51" hostname="JUHE" time="2.563">
-  <properties/>
-  <testcase name="actualEngineResultsPublishThroughRealSafBinaryStreamsForAllFourOperations" classname="com.codepocket.ide.SafGitRemoteJournalIntegrationTest" time="1.736"/>
-  <testcase name="realSafPartialSourceWriteRetainsItsCurrentBytesAndExportsBothVersions" classname="com.codepocket.ide.SafGitRemoteJournalIntegrationTest" time="0.444"/>
-  <testcase name="providerPermissionLossRejectsFastForwardBeforeAnyOriginalMutation" classname="com.codepocket.ide.SafGitRemoteJournalIntegrationTest" time="0.383"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

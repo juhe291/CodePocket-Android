@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 130, in <module>
-    main()
-    ~~~~^^
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 111, in main
-    assert changed == ['runner.pyc'], 'Unapproved Python module changed: ' + repr(changed)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Unapproved Python module changed: ['diagnostics.pyc', 'runner.pyc', 'semantics.pyc']

@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_git_apk.py", line 140, in <module>
-    sys.exit(main())
-             ~~~~^^
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_git_apk.py", line 89, in main
-    assert digest(args.baseline.read_bytes()) == BASELINE, 'Use the verified formatting candidate as the Git baseline'
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Use the verified formatting candidate as the Git baseline

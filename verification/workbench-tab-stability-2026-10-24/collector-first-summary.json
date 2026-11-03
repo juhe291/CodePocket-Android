@@ -1,5 +1,0 @@
-{
-  "cause": "Copied archive collector still referenced the previous browser screenshot directory (33 rather than 41 PNGs).",
-  "resolution": "Corrected only the output directory; existing new APK was hash checked against actual build and retained without overwrite; reran all collector assertions.",
-  "apk_sha256": "26ae755de1e4bc167c9fc1570bfc137c06c69471c7162dbfe85b94131cc97712"
-}

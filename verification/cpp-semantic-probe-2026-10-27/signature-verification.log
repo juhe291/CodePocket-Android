@@ -1,9 +1,0 @@
-[GNUPG:] NEWSIG
-gpgv: Signature made Mon Oct 26 22:16:18 2026    
-gpgv:                using RSA key CC72CF8BA7DBFA0182877D045A897D96E57CF20C
-[GNUPG:] KEY_CONSIDERED CC72CF8BA7DBFA0182877D045A897D96E57CF20C 0
-gpgv: Good signature from "Termux Releases (Termux automatic builds) <contact@termux.dev>"
-gpgv:                 aka "Termux Releases (Termux automatic builds) <contact@termux.org>"
-[GNUPG:] SIG_ID CPx16tEI7Z1hwFEOJknHO68JAZc 2026-10-26 1793024178
-[GNUPG:] GOODSIG 5A897D96E57CF20C Termux Releases (Termux automatic builds) <contact@termux.dev>
-[GNUPG:] VALIDSIG CC72CF8BA7DBFA0182877D045A897D96E57CF20C 2026-10-26 1793024178 0 4 0 1 8 01 CC72CF8BA7DBFA0182877D045A897D96E57CF20C

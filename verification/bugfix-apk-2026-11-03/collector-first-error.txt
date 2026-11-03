@@ -1,1 +1,0 @@
-Summary field mismatch: native_libraries contains 12 pinned C++ libraries; the entire APK contains 25 native libraries. Verification commands themselves exited zero.

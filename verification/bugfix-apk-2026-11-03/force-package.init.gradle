@@ -1,7 +1,0 @@
-// The full regression reused the byte-identical APK. The user requested an
-// actual local package build; rerun only packaging, preserving compiled inputs.
-gradle.projectsEvaluated {
-    gradle.rootProject.project(':app').tasks.named('packageDebug').configure {
-        outputs.upToDateWhen { false }
-    }
-}

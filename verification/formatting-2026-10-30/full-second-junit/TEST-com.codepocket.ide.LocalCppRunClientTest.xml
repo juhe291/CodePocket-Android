@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.LocalCppRunClientTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-30T13:59:38" hostname="JUHE" time="0.096">
-  <properties/>
-  <testcase name="cancellationBeforeConnectionNeverSendsRunOrStartsAChild" classname="com.codepocket.ide.LocalCppRunClientTest" time="0.059"/>
-  <testcase name="cancellationWaitsForServiceCleanupAndIgnoresLateStateOrWrongIdentity" classname="com.codepocket.ide.LocalCppRunClientTest" time="0.037"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

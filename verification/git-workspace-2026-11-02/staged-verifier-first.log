@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\git-workspace-2026-11-02\inspect-staged-git.py", line 21, in <module>
-    result=verify_delta(Staged(),baseline)
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_git_apk.py", line 57, in verify_delta
-    assert name.startswith((module+'/', prefix)), name
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: dulwich-1.2.20.data/scripts/dul-receive-pack

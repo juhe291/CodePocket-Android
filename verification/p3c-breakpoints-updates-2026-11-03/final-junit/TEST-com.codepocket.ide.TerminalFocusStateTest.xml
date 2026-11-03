@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.TerminalFocusStateTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:53:46" hostname="JUHE" time="0.0">
-  <properties/>
-  <testcase name="terminalFocusSurvivesSavedSessionAndBoundsWithoutChangingOtherState" classname="com.codepocket.ide.TerminalFocusStateTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

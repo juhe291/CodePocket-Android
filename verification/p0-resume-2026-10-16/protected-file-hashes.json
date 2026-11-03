@@ -1,7 +1,0 @@
-{
-  "docs/DEVELOPMENT_REQUIREMENTS.md": "55f5e64f6fbae4057ebe4fc30fa5d2501025230ec641976e885879e7d06657b8",
-  "app/build.gradle.kts": "e3fe4c40645b5df431906c3b5c6bf2fb02530681a38758b52707f081383c24b3",
-  "app/src/main/AndroidManifest.xml": "213536c8d450cd9291d61f5a5519f3dc2cea8caf0b9359b58d9cd1aa312806f6",
-  ".github/workflows/build-apk.yml": "b8606394f5f8fdddcc5b5a9814626b51c96abd46cf69aea1edd57e639b2f896b",
-  "app/src/main/python/runner.py": "2dc0569b2ceacb2f3e44951114585a0def59ead13d8fe7d1c4336457ddce71fc"
-}

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.ProjectReadExecutorTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-28T04:26:41" hostname="JUHE" time="0.541">
-  <properties/>
-  <testcase name="uninterruptibleProviderTimesOutWithoutGrowingThreadsAndRecoversWhenReleased" classname="com.codepocket.ide.ProjectReadExecutorTest" time="0.539"/>
-  <testcase name="interruptionAndProviderFailuresReachTheCallerAndLeaveTheReaderUsable" classname="com.codepocket.ide.ProjectReadExecutorTest" time="0.002"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

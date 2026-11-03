@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.AppSettingsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-26T15:52:21" hostname="JUHE" time="0.013">
-  <properties/>
-  <testcase name="legacyThemeAndCorruptPreferencesRemainUsable" classname="com.codepocket.ide.AppSettingsTest" time="0.01"/>
-  <testcase name="motionCannotOverrideSystemDisabledAnimationOrPowerSaving" classname="com.codepocket.ide.AppSettingsTest" time="0.0"/>
-  <testcase name="independentThemesAndDisabledFeaturesSurviveRoundTrip" classname="com.codepocket.ide.AppSettingsTest" time="0.002"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

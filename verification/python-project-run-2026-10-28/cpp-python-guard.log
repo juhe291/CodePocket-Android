@@ -1,8 +1,0 @@
-test_added_removed_modules_or_no_runner_code_change_do_not_satisfy_the_exception (__main__.ArchiveGuardTest.test_added_removed_modules_or_no_runner_code_change_do_not_satisfy_the_exception) ... ok
-test_any_other_module_code_flags_or_source_size_change_is_rejected (__main__.ArchiveGuardTest.test_any_other_module_code_flags_or_source_size_change_is_rejected) ... ok
-test_runner_change_and_mtime_only_rebuild_of_other_modules_are_separate_evidence (__main__.ArchiveGuardTest.test_runner_change_and_mtime_only_rebuild_of_other_modules_are_separate_evidence) ... ok
-
-----------------------------------------------------------------------
-Ran 3 tests in 0.003s
-
-OK

@@ -1,9 +1,0 @@
-{
-  "arguments": [
-    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-integration\\runner.exe",
-    "./program.dll"
-  ],
-  "returncode": 0,
-  "stdout": "ready\n2:9:2\ncaught\nbye\n",
-  "stderr": ""
-}

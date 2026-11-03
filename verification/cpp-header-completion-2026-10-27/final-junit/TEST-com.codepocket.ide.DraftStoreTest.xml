@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.DraftStoreTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-27T15:46:42" hostname="JUHE" time="0.027">
-  <properties/>
-  <testcase name="staleSaveDoesNotDeleteNewerDraftAndReplaceFailureKeepsOldDraft" classname="com.codepocket.ide.DraftStoreTest" time="0.011"/>
-  <testcase name="oversizedDraftDoesNotReplaceOriginal" classname="com.codepocket.ide.DraftStoreTest" time="0.006"/>
-  <testcase name="diskRecoveryPreservesSourceIdentityUnicodeAndConflictBase" classname="com.codepocket.ide.DraftStoreTest" time="0.01"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

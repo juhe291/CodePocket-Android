@@ -9,8 +9,9 @@ local.properties
 __pycache__/
 *.pyc
 .tools/
-verification/*.zip
-verification/*.log
+# Verification evidence stays local; CI uploads generated reports as artifacts instead of committing them.
+verification/*
+!verification/.gitkeep
 dist/
 
 # Android external native build intermediates.

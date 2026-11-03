@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.CppHeaderEngineTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-27T15:45:20" hostname="JUHE" time="1.346">
-  <properties/>
-  <testcase name="productionEngineReturnsActualFileDirectoryAndMiddlePathEditsWithoutWritingTheBuffer" classname="com.codepocket.ide.CppHeaderEngineTest" time="1.346"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -1,5 +1,0 @@
-[arm64-v8a] Install        : libcodepocket_analysis.so => C:\Users\q1684\Desktop\??????\CodePocket-Android/.tools/cpp-execution-jni/libs/arm64-v8a/libcodepocket_analysis.so
-[arm64-v8a] Install        : codepocket_cpp_runner => C:\Users\q1684\Desktop\??????\CodePocket-Android/.tools/cpp-execution-jni/libs/arm64-v8a/codepocket_cpp_runner
-[arm64-v8a] Compile        : codepocket_execute <= terminal_relay.c
-[arm64-v8a] SharedLibrary  : libcodepocket_execute.so
-[arm64-v8a] Install        : libcodepocket_execute.so => C:\Users\q1684\Desktop\??????\CodePocket-Android/.tools/cpp-execution-jni/libs/arm64-v8a/libcodepocket_execute.so

@@ -1,9 +1,0 @@
-{
-  "source_batch": "verification/python-project-run-2026-10-28",
-  "python_source_tests": 75,
-  "packaged_semantic_tests": 22,
-  "shell_cases": 4,
-  "snippet_cases": 14,
-  "reexecuted_this_batch": false,
-  "reason": "Python sources, all 48 runtime assets, and shell/snippet implementations are unchanged; packaged Python 48 was rerun."
-}

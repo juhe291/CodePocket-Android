@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.MainSurfaceIntegrationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:13:05" hostname="JUHE" time="8.186">
-  <properties/>
-  <testcase name="projectSearchIncludesUnsavedBufferThroughTheRealWorkspaceWorker" classname="com.codepocket.ide.MainSurfaceIntegrationTest" time="8.186"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[Invalid ID 0x00000000.
-Invalid ID 0x00000000.
-]]></system-err>
-</testsuite>

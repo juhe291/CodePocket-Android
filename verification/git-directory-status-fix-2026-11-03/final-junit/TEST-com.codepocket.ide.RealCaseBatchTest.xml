@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.RealCaseBatchTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:45:02" hostname="JUHE" time="2.303">
-  <properties/>
-  <testcase name="actualCppFiniteInputEofSeparateStderrRuntimeFailureAndWrongAnswerFlowThroughTheBatch" classname="com.codepocket.ide.RealCaseBatchTest" time="1.453"/>
-  <testcase name="actualPythonRunnerFiniteInputExceptionAndExactNewlineComparisonUseTheProductionDecoder" classname="com.codepocket.ide.RealCaseBatchTest" time="0.85"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

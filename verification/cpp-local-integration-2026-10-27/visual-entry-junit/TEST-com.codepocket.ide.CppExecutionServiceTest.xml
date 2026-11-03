@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.CppExecutionServiceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-27T12:12:48" hostname="JUHE" time="3.795">
-  <properties/>
-  <testcase name="privateServiceSeparatesExecutionAndCancellationWaitsForOwnedCleanup" classname="com.codepocket.ide.CppExecutionServiceTest" time="3.748"/>
-  <testcase name="replayBusyRequestAndLateOwnershipCallbackCannotFinishOrCloseANewerRun" classname="com.codepocket.ide.CppExecutionServiceTest" time="0.047"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

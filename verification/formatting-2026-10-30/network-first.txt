@@ -1,1 +1,0 @@
-Initial sandbox request to https://pypi.org/pypi/autopep8/2.3.2/json failed: urllib.error.URLError: <urlopen error [Errno 11001] getaddrinfo failed>. A scoped elevated read of the same official metadata subsequently succeeded. No production/dependency version changed by that read.

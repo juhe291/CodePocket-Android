@@ -1,5 +1,0 @@
-{
-  "returncode": 1,
-  "stdout": "",
-  "stderr": "ld.lld: error: undefined symbol: sorted_values(int, int)\n>>> referenced by main.cpp\n>>>               C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-probe\\android-build\\main.o:(main)\n\nld.lld: error: undefined symbol: describe(std::__ndk1::vector<int, std::__ndk1::allocator<int>> const&)\n>>> referenced by main.cpp\n>>>               C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-probe\\android-build\\main.o:(main)\n"
-}

@@ -1,9 +1,0 @@
-{
-  "apk_sha256": "59e13ca581f0806ba25df937772228e3802c5ee1896aebb091cf80e174756668",
-  "apk_bytes": 121359886,
-  "app_tests_executed": false,
-  "reason": "FormattingSurfaceTest references nonexistent WorkbenchStyle.palette; compileDebugUnitTestKotlin failed",
-  "full_exit": 1,
-  "packaged": true,
-  "delivered": false
-}

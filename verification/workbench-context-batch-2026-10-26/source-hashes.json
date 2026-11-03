@@ -1,9 +1,0 @@
-{
-  "app/src/main/java/com/codepocket/ide/MainActivity.kt": "698a780bf3272885261e5457e93f858d6268b0c21e2e0eba09f19ec748fa5b7f",
-  "app/src/main/java/com/codepocket/ide/ui/IdeCommandMenu.kt": "feb572ae1703b61ffbeacf083dcd831df5ccd93c498fbb0cbb709948c89c013b",
-  "app/src/main/java/com/codepocket/ide/ui/WorkbenchMenu.kt": "c406b25f80e533eda29da4d05f0bd7538115d98faa67a16368c181c82a96b4e8",
-  "app/src/main/java/com/codepocket/ide/ui/WorkbenchForms.kt": "7ef0c9b501e7494550e4bdab6f49fbdb216fe2e99b0f317ac30d52e123701f47",
-  "app/src/test/java/com/codepocket/ide/ContextBatchIntegrationTest.kt": "6866c771341b91467954e94e94b130a6427698f5a1518a6be8ae5e1589f5b78c",
-  "docs/ui-preview/workbench.js": "b1cd19ccbcc5d4902536246057afe8495ed6c1e28f0f58536ff702572cf76cae",
-  "docs/ui-preview/workbench.css": "fbb3e1955dabfeeaf3033a07b636bd581d8b13e870547370bb4294ff5c3c895d"
-}

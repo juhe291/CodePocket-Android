@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.CppAnalysisServiceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:12:10" hostname="JUHE" time="0.052">
-  <properties/>
-  <testcase name="destroyClosesAHangingOwnedChildAndReleasesItsWorker" classname="com.codepocket.ide.CppAnalysisServiceTest" time="0.025"/>
-  <testcase name="privateServiceHasItsOwnProcessAndTimeoutClosesOnlyItsOwnedChild" classname="com.codepocket.ide.CppAnalysisServiceTest" time="0.027"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 165, in <module>
-    main()
-    ~~~~^^
-  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_cpp_apk.py", line 151, in main
-    assert len(original_native) == 10 and len(original_python) == 20
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError

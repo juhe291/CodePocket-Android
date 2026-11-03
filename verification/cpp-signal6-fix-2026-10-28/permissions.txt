@@ -1,2 +1,0 @@
-package: com.codepocket.ide
-uses-permission: name='android.permission.INTERNET'

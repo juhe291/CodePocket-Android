@@ -1,8 +1,0 @@
-{
-  "scripts/prepare_cpp_runtime.py": "f52544e6ebc5f000e07b937b2a3a1ff26ca06c74261b4cfef91e8df2d26dd497",
-  "app/src/test/java/com/codepocket/ide/RealCaseBatchTest.kt": "6df4b1b17f547158628b9f34932c401b6e44f8aba449da1a119569ed8393a3c2",
-  "app/src/test/java/com/codepocket/ide/MainSurfaceIntegrationTest.kt": "1dac46791f86d7c87d9301314a4f0e08071544990da70d944ddfca24242f8ed8",
-  "app/src/test/java/com/codepocket/ide/PythonSemanticIntegrationTest.kt": "5bf8bcaa5516616f6687e3f450ab9b991bb8f57025afd714fffaff6272ece289",
-  "app/src/test/java/com/codepocket/ide/SoraWorkbenchIntegrationTest.kt": "fe9c30712c3b3c3047c12e1aa0ede83ac3cf3018492a4540d9226d8a13b9d74e",
-  "app/src/test/java/com/codepocket/ide/TerminalDockIntegrationTest.kt": "e59e1cb85f3cadf672926225af87c173e3a33a3597e82232aca2e8265c0c64ec"
-}

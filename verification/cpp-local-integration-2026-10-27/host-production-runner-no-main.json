@@ -1,9 +1,0 @@
-{
-  "arguments": [
-    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-integration\\runner.exe",
-    "./no-main.dll"
-  ],
-  "returncode": 127,
-  "stdout": "",
-  "stderr": "CodePocket: missing main entry\n"
-}

@@ -1,8 +1,0 @@
-{
-  "apk": "dist/CodePocket-python-semantics-2026-10-26-debug.apk",
-  "sha256": "42866696f87dbd42651d910ebac1865f954c40f65fbf428618e339c8127a21d5",
-  "source_hashes_match": true,
-  "new_local_links_checked": 10,
-  "staged_paths_within_batch": true,
-  "host_executables_staged": false
-}

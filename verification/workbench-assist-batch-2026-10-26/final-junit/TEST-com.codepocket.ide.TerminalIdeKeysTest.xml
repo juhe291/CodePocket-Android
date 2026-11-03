@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.TerminalIdeKeysTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-26T02:07:35" hostname="JUHE" time="0.001">
-  <properties/>
-  <testcase name="copyStopEofAndTerminalEditingKeysAreNeverStolen" classname="com.codepocket.ide.TerminalIdeKeysTest" time="0.001"/>
-  <testcase name="ideSaveOpenCreateAndExplorerWorkFromTerminal" classname="com.codepocket.ide.TerminalIdeKeysTest" time="0.0"/>
-  <testcase name="additionalModifiersDoNotAccidentallyLaunchIdeActions" classname="com.codepocket.ide.TerminalIdeKeysTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.CppCaseFilesTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:44:48" hostname="JUHE" time="0.07">
-  <properties/>
-  <testcase name="excessiveOutputIsExplicitlyLimitedAndRemovedOutputsAreRejected" classname="com.codepocket.ide.CppCaseFilesTest" time="0.034"/>
-  <testcase name="realFiniteInputAndIndependentOutputsUseOnlyNewFilesInTheOwnedBuildDirectory" classname="com.codepocket.ide.CppCaseFilesTest" time="0.036"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
