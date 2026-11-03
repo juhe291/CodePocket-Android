@@ -4,6 +4,7 @@
 
 ## 最新优先级：检查更新与GitHub首次推送、POSIX Git修复（2026-11-03）
 
+- **最新远端状态**：45facf9已推送且SHA核对；Linux CI41586306486的159项Python全通过，Git目录转换bug闭环到主机Linux。CI随后失败在原setup-android@v3默认请求找不到的tools包。按[SDK准备修复](FIX_GITHUB_SDK_SETUP_2026-11-03.md)仅添加packages: platform-tools两行，保留后续SDK/NDK、触发/权限/产物行为。生产和最新本地36c76a0b…APK不变，无新本机构建。下一步正常追加推送/核对既有CI，不把远端未构建说成已通过。
 - 检查更新已随1948720推送到公开仓库https://github.com/juhe291/CodePocket-Android ，master/远端SHA核对。设置 → 帮助与许可 → 检查更新，当前0.2.1/3，手动访问固定正式Release；未发布/限流有真实提示，关闭取消且保留草稿，无自动联网/安装。原头文件Tab、Sora、保存、真实运行/PTY和网页保持。
 - 首次CI暴露缓存父目录和filemode=false夹具问题，9933915仅修夹具后推送；真实Linux再次157项1失败，暴露Dulwich1.2.20索引子路径的ENOTDIR生产问题。[最新修复](FIX_GIT_DIRECTORY_STATUS_2026-11-03.md)已完成：21项20通过/1失败→21通过，源码159全通过（旧157保留、新2），实际包内Python48/语义22/Git与格式化84通过。两个真实CI失败日志和旧断言保留，无新跳过。
 - 本批集中1173项1171通过/1既有Windows失败/1旧跳过，旧1173身份保持，Lint零错误（34/1/0警告）。完整命令退出1，仅一次实际打包；前更新包是另一批已验证产物，不能冒称一次打包涵盖两批。487份冻结输入和最终证据在verification/git-directory-status-fix-2026-11-03。
