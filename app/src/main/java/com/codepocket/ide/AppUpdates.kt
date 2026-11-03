@@ -93,7 +93,15 @@ internal class GitHubAppUpdateSource(private val repository:AppUpdateRepository,
     private val connect:(URL)->HttpURLConnection={it.openConnection() as HttpURLConnection}):AppUpdateSource {
     private val cancelled=AtomicBoolean()
     @Volatile private var active:HttpURLConnection?=null
-    override fun cancel(){cancelled.set(true);active?.disconnect()}
+    override fun cancel(){
+        cancelled.set(true)
+        val connection=active ?: return
+        // HttpURLConnection.disconnect() may wait on the request lock held by the reading thread.
+        // Cancellation is a caller-facing contract, so disconnect from a bounded daemon helper instead.
+        Thread({ runCatching { connection.disconnect() } }, "CodePocket-update-cancel").apply {
+            isDaemon = true; start()
+        }
+    }
     override fun check(current:AppUpdateVersion):AppUpdateResult {
         val deadline=System.nanoTime()+20_000_000_000L
         fun alive(){if(cancelled.get() || Thread.currentThread().isInterrupted)throw CancellationException();if(System.nanoTime()>deadline)throw SocketTimeoutException()}

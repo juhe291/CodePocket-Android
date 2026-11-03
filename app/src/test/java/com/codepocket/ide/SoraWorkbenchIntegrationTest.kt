@@ -292,6 +292,7 @@ class SoraWorkbenchIntegrationTest {
         val view=editor.inputView();val styles=view.javaClass.getMethod("getStyles").invoke(view)
         Class.forName("io.github.rosemoe.sora.widget.CodeEditor").getMethod("setStyles",Class.forName("io.github.rosemoe.sora.lang.styling.Styles")).invoke(view,styles)
         assertEquals(EditorPalette.color("parameter",true),colorAt(code.indexOf("value")))
+        assertTrue("The real editor must own focus before its input connection exists",editor.requestFocus())
         editor.setSelection(editor.length());editor.onCreateInputConnection(android.view.inputmethod.EditorInfo()).commitText("\nnext = 2",1)
         decorateCurrent()
         assertEquals(EditorPalette.color("variable",true),colorAt(editor.text.toString().indexOf("next")))

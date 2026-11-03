@@ -8,7 +8,7 @@ import urllib.request
 from pathlib import Path
 
 REPO = "juhe291/CodePocket-Android"
-SHA = "fe3990750582c513b97c10cf556cf9ba15f2e560"
+SHA = "b51ace6bd3dd3560f13c91f7a14a2d3cf0fd8018"
 EVIDENCE = Path(__file__).parent
 CRED = Path.home() / ".git-credentials"
 

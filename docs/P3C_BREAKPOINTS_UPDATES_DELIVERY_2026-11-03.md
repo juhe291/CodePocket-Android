@@ -79,3 +79,10 @@
 
 修复后定向：`CompletionInteractionTest` 33、`CppTerminalRunnerTest` 8、`SoraWorkbenchIntegrationTest` 32、`BreakpointIntegrationTest` 2、`MainRunIntegrationTest` 12、`TerminalDockIntegrationTest` 5、`CompletionTest` 10，共 102 项全通过。随后再次集中全量回归/Lint/构建，结果与第二次远端 CI run 以证据目录为准；不把首轮失败说成通过，也不把本地结果冒称远端通过。
 
+第二次推送 `b51ace6` 后远端 [run 41651272650](https://github.com/juhe291/CodePocket-Android/actions/runs/41651272650) 仍失败，App 1191 项中 2 项失败（0 ignored，3m04s），Lint/APK 未执行；报告 `13238072609`（258969 字节，SHA256 `c34995bc…37b16d`）已核对。失败为另一组时序问题：
+
+1. `AppUpdateHttpTest.cancellingAnActiveStreamReleasesItsRequestAndProducesNoSuccess`：`Cancellation must not block the caller` 断言失败（>1.5s）。根因是 `HttpURLConnection.disconnect()` 可能等待读线程持有的请求锁。修复：`cancel()` 只原子置位取消标记，并把实际 `disconnect()` 放到有界 daemon 线程，保证调用方立即返回；读线程仍通过取消标记/超时收敛，不改变结果类型。
+2. `SoraWorkbenchIntegrationTest.textMateReanalysisAndStyleRefreshKeepTheLexicalLayer`：`onCreateInputConnection` 在 Linux 返回 null 导致 NPE。该测试直接创建 IME 连接但未确保真实编辑器持有焦点；修复测试在创建连接前显式 `editor.requestFocus()` 并断言，保留原词法刷新断言。没有修改生产焦点行为来掩盖问题。
+
+两项修复后定向 83 项全通过（Sora32、AppUpdateHttp8、AppUpdateUi6、AppUpdateAutoCheck4、CompletionInteraction33）。第三次推送与 CI 结果继续以远端真实记录更新；日志/报告见 `verification/p3c-breakpoints-updates-2026-11-03/`。
+
