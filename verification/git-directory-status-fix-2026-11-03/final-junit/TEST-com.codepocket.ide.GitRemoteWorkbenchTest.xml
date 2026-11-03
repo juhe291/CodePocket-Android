@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitRemoteWorkbenchTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:43:13" hostname="JUHE" time="53.172">
+  <properties/>
+  <testcase name="remoteBranchQueryNeedsNoOpenProjectAndNeverChangesTheDefaultProject" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="1.968"/>
+  <testcase name="aLateEditorChangeAfterEngineCheckoutPreventsAnyOriginalBodyUpdate" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="9.093"/>
+  <testcase name="actualPushPersistsItsReceiptEvenWhenTheUiGenerationBecomesStale" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="7.839"/>
+  <testcase name="staleConfirmedSnapshotRejectsBeforeConnectingAndKeepsTheExternalChange" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="6.781"/>
+  <testcase name="realFetchOnlyPublishesObjectsAndTrackingRefThenFastForwardChangesBodies" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="9.813"/>
+  <testcase name="anActiveRecoveryDraftBlocksBodyPublicationAndOtherWorkspaceDraftsRemainIndependent" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="9.831"/>
+  <testcase name="realSafCloneTargetsOnlyTheChosenEmptyProviderAndCanBeOpenedAfterPublication" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="3.172"/>
+  <testcase name="nonemptyCloneTargetAndUnsafeManagedSelectorNeverTouchAnExistingProject" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="0.019"/>
+  <testcase name="actualTlsClonePublishesItsOwnInternalProjectAndStandardGitReadsIt" classname="com.codepocket.ide.GitRemoteWorkbenchTest" time="4.656"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

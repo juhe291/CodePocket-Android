@@ -1,0 +1,7 @@
+{
+  "scripts/verify_git_status_apk.py": {
+    "before": "35b8847115e1bb468bc2ffab757aebe8e21ffd80c51a62dd3424c28e827196ac",
+    "after": "85c196f880cccd7adda9f4a3756532646ecc5e22d1dd66cf3baec034ded57808",
+    "reason": "Accept only the four-byte pyc mtime header; source-size, flags, magic and complete code payload remain identical"
+  }
+}

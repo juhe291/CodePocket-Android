@@ -2,13 +2,13 @@
 
 **后续执行节奏（2026-10-26用户补充）**：通常合并3–5项相关修改，单项做定向测试/视觉检查，批次结束统一全量回归、Lint及APK构建。纯文档不打包；不再每个小修改都生成安装包。详见[批次规则](DEVELOPMENT_BATCH_POLICY.md)。当前批次的实际代码/产物见下文。
 
-## 最新优先级：检查更新完成验证 → GitHub推送（2026-11-03）
+## 最新优先级：检查更新与GitHub首次推送、POSIX Git修复（2026-11-03）
 
-- 1948720已正常推送到新建公开仓库https://github.com/juhe291/CodePocket-Android ，master/远端SHA精确核对，原历史保持。既有CI41583733713实际失败在两个旧夹具；已按[干净CI修复记录](FIX_GITHUB_CLEAN_CI_2026-11-03.md)仅补缓存父目录/显式filemode=false，原断言保持。干净导入原失败→成功，完整Python157重跑全通过；生产和APK不变，不重打包。修复追加提交/远端结果以verification/github-clean-ci-fix-2026-11-03/push-results.json为准。
-- [本批交付](APP_UPDATES_DELIVERY_2026-11-03.md)：从1daa97f完成手动更新入口/实际安装版本、固定juhe291/CodePocket-Android正式源、有界HTTP读取与取消、状态/全文和可信下载跳转。版本0.2.1/3，无自动联网/安装；原设置草稿、Sora保存、头文件Tab、真实运行与PTY保持。
-- 定向36/扩大122全部通过，新24全通过；集中1173项1171通过/1既有Windows失败/1旧跳过，旧1149身份和跳过保持，Lint零错误。一次实际打包，完整命令退出1，不能称全绿。486份冻结输入及全部原始证据在verification/app-updates-2026-11-03。
-- 候选dist/CodePocket-updates-0.2.1-2026-11-03-debug.apk，118139841字节，SHA256 `4715b84bb9454c5136f823ea07cf2e09d34e3cfc4c21b24a35e688502e44bd91`；原签名/CRC/16KiB/版本/Manifest/正式源/DEX检查通过，原25库/50资产和102旧包保持。未变运行专项按摘要复用，设备验收后置。
-- 用户明确授权新建公开仓库juhe291/CodePocket-Android并正常推送，替代早期仅本地限制。远端创建、origin、提交SHA及CI实际状态见本批push-results.json；尚无Release，本次不自动发布APK。历史脏文件与C计划草稿保留，不混入本批。C设置/主题、D更多语言继续保留，整个原目标未完成。
+- 检查更新已随1948720推送到公开仓库https://github.com/juhe291/CodePocket-Android ，master/远端SHA核对。设置 → 帮助与许可 → 检查更新，当前0.2.1/3，手动访问固定正式Release；未发布/限流有真实提示，关闭取消且保留草稿，无自动联网/安装。原头文件Tab、Sora、保存、真实运行/PTY和网页保持。
+- 首次CI暴露缓存父目录和filemode=false夹具问题，9933915仅修夹具后推送；真实Linux再次157项1失败，暴露Dulwich1.2.20索引子路径的ENOTDIR生产问题。[最新修复](FIX_GIT_DIRECTORY_STATUS_2026-11-03.md)已完成：21项20通过/1失败→21通过，源码159全通过（旧157保留、新2），实际包内Python48/语义22/Git与格式化84通过。两个真实CI失败日志和旧断言保留，无新跳过。
+- 本批集中1173项1171通过/1既有Windows失败/1旧跳过，旧1173身份保持，Lint零错误（34/1/0警告）。完整命令退出1，仅一次实际打包；前更新包是另一批已验证产物，不能冒称一次打包涵盖两批。487份冻结输入和最终证据在verification/git-directory-status-fix-2026-11-03。
+- 最新候选dist/CodePocket-git-directory-status-fix-2026-11-03-debug.apk，118208016字节，SHA256 `36c76a0b0a38909ee4d8c8b06267ab2af229d1a8b6607ec4506f125571d4e8d1`；原签名/CRC/16KiB/版本/Manifest通过。相对4715b84b…只允许git_workspace.pyc及对应元数据改变，其他包条目/25库/DEX/资源相同，103旧包保持；设备后置。Shell4/片段14按生成字节复用，终端146有效UP-TO-DATE。
+- 最新生产修复完成本地验证，按本轮授权正常提交/推送；最终远端SHA/既有CI以本地本批push-results.json为准，不能把未结束或失败的CI写成通过。不发布Release/新建工作流或自动任务。先跟踪本次真实CI与必要bug，再接原C设置/主题、D更多语言；C计划草稿及历史脏文件保留，整个目标未标完成。
 
 ## 最近完成：用户手机Git路径修复与网页辅助栏（2026-11-03）
 

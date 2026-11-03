@@ -159,8 +159,49 @@ def decoded_path(value):
     return decoded(value).replace(os.sep, '/')
 
 
+def status_with_blocked_index_parents(repo):
+    """Dulwich 1.2.20 handles ENOENT, but not POSIX ENOTDIR, during index status.
+
+    Only known index children hidden by an actual regular-file ancestor count as
+    removed. Keep the full index for staged/untracked comparisons and never write
+    it during status. Other filesystem failures still reach the normal error path.
+    """
+    from dulwich.index import get_unstaged_changes
+    index = repo.open_index(config=repo.get_config_stack())
+    blocked = set()
+    for tree_path, _ in index.iteritems():
+        parts = path_name(decoded(tree_path)).split('/')
+        for length in range(1, len(parts)):
+            try:
+                mode = (Path(repo.path).joinpath(*parts[:length])).lstat().st_mode
+            except (FileNotFoundError, NotADirectoryError):
+                break
+            if stat.S_ISREG(mode):
+                blocked.add(tree_path)
+                break
+    if not blocked:
+        return None
+
+    class UnstagedIndex:
+        object_format = index.object_format
+        def iteritems(self):
+            return ((path, entry) for path, entry in index.iteritems() if path not in blocked)
+
+    normalizer = repo.get_blob_normalizer(config=repo.get_config_stack())
+    changes = list(get_unstaged_changes(UnstagedIndex(), repo.path,
+        normalizer.checkin_normalize if normalizer is not None else None))
+    return porcelain.GitStatus(porcelain.get_tree_changes(repo, index), changes + list(blocked),
+        list(porcelain.get_untracked_paths(repo.path, repo.path, index,
+            exclude_ignored=True, untracked_files='all', repo=repo)))
+
+
 def status(repo):
-    current = porcelain.status(repo, untracked_files='all', optional_locks=False)
+    try:
+        current = porcelain.status(repo, untracked_files='all', optional_locks=False)
+    except NotADirectoryError:
+        current = status_with_blocked_index_parents(repo)
+        if current is None:
+            raise
     try:
         head = repo.head().decode('ascii')
     except KeyError:

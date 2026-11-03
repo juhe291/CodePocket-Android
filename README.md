@@ -5,9 +5,9 @@ Kotlin原生Views与正式Sora编辑器，提供Python/C++真实本地运行、P
 **当前候选：0.2.1（3），2026-11-03。** 设置 → 帮助与许可 → 检查更新；手动读取[本仓库正式发布页](https://github.com/juhe291/CodePocket-Android/releases)。本次尚未发布Release或公开APK，未发布时会明确提示。
 
 - [本批结果与更新约定](docs/APP_UPDATES_DELIVERY_2026-11-03.md)：新增24项及相关122项全部通过；集中1173项1171通过、1既有Windows失败、1旧跳过，Lint零错误。完整命令退出1，不称全绿；Android设备验收后置。
-- 本机安装包为`dist/CodePocket-updates-0.2.1-2026-11-03-debug.apk`（118139841字节，原Debug签名），SHA256 `4715b84bb9454c5136f823ea07cf2e09d34e3cfc4c21b24a35e688502e44bd91`。新包未加入Git；下文dist文件名用于本地历史追溯，不代表公开下载。
+- 本机安装包为`dist/CodePocket-git-directory-status-fix-2026-11-03-debug.apk`（118208016字节，原Debug签名），SHA256 `36c76a0b0a38909ee4d8c8b06267ab2af229d1a8b6607ec4506f125571d4e8d1`。新包未加入Git；下文dist文件名用于本地历史追溯，不代表公开下载。
 - 本批保留Git手机路径修复、网页辅助栏、设置草稿、头文件Tab、真实运行和PTY。后续仍为设置搜索/主题、更多语言分析，见[原P3计划](docs/P3_IMPLEMENTATION_PLAN_2026-11-02.md)。
-- 首次远端CI暴露两处旧测试夹具的干净环境差异，已[修复并重跑主机Python157项](docs/FIX_GITHUB_CLEAN_CI_2026-11-03.md)。生产和本机APK保持；[远端CI状态](https://github.com/juhe291/CodePocket-Android/actions)独立核对。
+- 首次CI的两处旧夹具差异已修；之后暴露的[Git目录转换POSIX状态错误](docs/FIX_GIT_DIRECTORY_STATUS_2026-11-03.md)已纳入本候选。源码Python159、实际包内Python48/语义22/Git与格式化84通过；[远端CI状态](https://github.com/juhe291/CodePocket-Android/actions)独立核对，设备验收后置。
 
 以下为既往交付与开发记录；各阶段能力和验证范围以对应日期文档为准。
 

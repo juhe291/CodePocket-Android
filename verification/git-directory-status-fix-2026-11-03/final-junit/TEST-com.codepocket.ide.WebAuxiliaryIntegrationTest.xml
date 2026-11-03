@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WebAuxiliaryIntegrationTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:45:29" hostname="JUHE" time="2.615">
+  <properties/>
+  <testcase name="moveRehostsTheSameWebViewHistoryAndUnsubmittedAddressWithoutReload" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.331"/>
+  <testcase name="referenceAndMarkdownStateRebuildWithoutRebindingThemToAnotherFile" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.399"/>
+  <testcase name="passiveShrinkHidesAuxiliaryFirstAndExpansionUsesTheSamePage" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.142"/>
+  <testcase name="unsavedMarkdownUsesTheActualNativeRendererAndCopiesTheWholeSource" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.231"/>
+  <testcase name="actualParameterPopupPreservesAllFormsAndCanOpenItsRealSource" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.142"/>
+  <testcase name="leftBrowserAndSearchSwitchWithTheOriginalSearchViewAndQuery" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.178"/>
+  <testcase name="theSettingsDraftStaysOpenWhileAnAuxiliaryReferenceArrives" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.154"/>
+  <testcase name="phoneFocusReturnsToTheSameDirtySoraDocument" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.174"/>
+  <testcase name="actualCompletionPopupOpensItsSelectedMetadataWithoutInsertingIt" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.161"/>
+  <testcase name="actualDividerResizesBothSidesAndKeepsTheChosenWidthAcrossRecreation" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.275"/>
+  <testcase name="baiduChoiceAndUnsubmittedAddressSurviveActualActivityRecreation" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.243"/>
+  <testcase name="leftBrowserSwitchesBackToTheExistingExplorerWithoutDestroyingThePage" classname="com.codepocket.ide.WebAuxiliaryIntegrationTest" time="0.185"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

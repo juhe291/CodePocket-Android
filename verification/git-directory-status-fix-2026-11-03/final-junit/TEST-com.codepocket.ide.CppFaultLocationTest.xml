@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppFaultLocationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:41:45" hostname="JUHE" time="0.376">
+  <properties/>
+  <testcase name="actualArm64TrapAddressMapsThroughFileOffsetsToTheHelperSecondLine" classname="com.codepocket.ide.CppFaultLocationTest" time="0.346"/>
+  <testcase name="unknownExternalAndOutOfRangeSymbolizerLocationsNeverInventAProjectLine" classname="com.codepocket.ide.CppFaultLocationTest" time="0.027"/>
+  <testcase name="boundedFaultRecordsRejectInvalidVersionsCountsSignalsAndIncompleteWrites" classname="com.codepocket.ide.CppFaultLocationTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

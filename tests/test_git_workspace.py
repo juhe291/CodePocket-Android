@@ -190,6 +190,41 @@ class GitWorkspaceTests(unittest.TestCase):
         self.write('run.sh', b'#!/bin/sh\necho two\n'); self.stage('run.sh'); self.commit('new body')
         self.assertTrue(self.git('ls-tree', 'HEAD', 'run.sh').startswith(b'100755 '))
 
+    def test_directory_replaced_by_file_keeps_real_status_and_can_stage_on_posix(self):
+        self.init(); self.write('old/child.txt', b'original child'); self.stage('old/child.txt'); self.commit()
+        (self.root/'old/child.txt').unlink(); (self.root/'old').rmdir()
+        self.write('old', b'replacement file'); self.write('keep-local.txt', b'untouched')
+        actual_lstat=os.lstat
+        blocked=os.path.normcase(os.path.normpath(str(self.root/'old/child.txt')))
+        def posix_lstat(path,*args,**kwargs):
+            if os.path.normcase(os.path.normpath(os.fsdecode(path)))==blocked:
+                raise NotADirectoryError(20,'Not a directory',os.fsdecode(path))
+            return actual_lstat(path,*args,**kwargs)
+        before={p.relative_to(self.root).as_posix():p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        with patch('dulwich.index.os.lstat',side_effect=posix_lstat):
+            state=self.ok('status')
+            self.assertEqual(['old/child.txt'],state['unstaged'])
+            self.assertEqual(['keep-local.txt','old'],state['untracked'])
+            self.assertEqual(before,{p.relative_to(self.root).as_posix():p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
+            self.stage('old/child.txt','old'); self.commit('Directory becomes file')
+        self.assertEqual(b'replacement file',self.git('show','HEAD:old'))
+        self.assertEqual(b'untouched',(self.root/'keep-local.txt').read_bytes())
+        self.assertEqual(['keep-local.txt'],self.ok('status')['untracked'])
+        self.git('fsck','--full','--strict')
+
+    def test_unexplained_not_a_directory_error_does_not_become_clean_status(self):
+        self.first(); actual_lstat=os.lstat
+        tracked=os.path.normcase(os.path.normpath(str(self.root/'main.py')))
+        def unavailable(path,*args,**kwargs):
+            if os.path.normcase(os.path.normpath(os.fsdecode(path)))==tracked:
+                raise NotADirectoryError(20,'Unexpected provider error',os.fsdecode(path))
+            return actual_lstat(path,*args,**kwargs)
+        before=(self.root/'.git/index').read_bytes()
+        with patch('dulwich.index.os.lstat',side_effect=unavailable):
+            result=self.call('status')
+        self.assertFalse(result['ok']); self.assertEqual('repository',result['error'])
+        self.assertEqual(before,(self.root/'.git/index').read_bytes())
+
     def test_provider_without_mode_support_keeps_index_modes_without_rewriting_git_config(self):
         self.init(); self.write('run.sh', b'#!/bin/sh\necho one\n'); self.stage('run.sh')
         self.git('update-index', '--chmod=+x', 'run.sh'); self.commit('executable')
