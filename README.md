@@ -1,5 +1,7 @@
 # CodePocket · Android C++ / Python IDE
 
+**2026-11-03 本地最新 Bug 候选**：[本轮构建记录](docs/BUGFIX_APK_DELIVERY_2026-11-03.md)，`dist/CodePocket-bugfix-2026-11-03-debug.apk`，SHA256 `6949b5f6d6f088a9426b69c8221f68e1c6929278d4a8bf1cca5ed16ae290ddd9`。原签名，1173项1171通过/1既有Windows失败/1旧跳过、Lint零错误；实际包内48/22/84通过，设备后置。其余工作见[DeepSeek交接](docs/DEEPSEEK_HANDOFF_2026-11-03.md)；用户已停止后续GitHub推送，远端CI仍有2项未解决，未发布Release。
+
 Kotlin原生Views与正式Sora编辑器，提供Python/C++真实本地运行、PTY终端、头文件Tab补全、保存/恢复保护、项目树/搜索/Git工作台及网页辅助栏。支持手机和平板，网页搜索默认必应、可选百度。
 
 **当前候选：0.2.1（3），2026-11-03。** 设置 → 帮助与许可 → 检查更新；手动读取[本仓库正式发布页](https://github.com/juhe291/CodePocket-Android/releases)。本次尚未发布Release或公开APK，未发布时会明确提示。

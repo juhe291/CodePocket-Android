@@ -1,0 +1,32 @@
+{
+  "base": "2a93d3d4e7bbf518f98a992d6899ec5947f219c6",
+  "user_scope": "Bug fixes and APK only; other work handed to DeepSeek",
+  "included_in_bug_apk": false,
+  "files": [
+    {
+      "path": "app/src/main/java/com/codepocket/ide/AppSettings.kt",
+      "sha256": "d83558faffdf1cfe73459e3145237f7ca8505a82a99b2569b2ae4fe5fcb4ab80",
+      "kind": "modified-tracked"
+    },
+    {
+      "path": "app/src/main/java/com/codepocket/ide/SettingsDialog.kt",
+      "sha256": "6c0442ede5f1b2300fc9c589b95115a6979e5e153fe37e058ebe799d6582d618",
+      "kind": "modified-tracked"
+    },
+    {
+      "path": "app/src/main/java/com/codepocket/ide/SettingsSearch.kt",
+      "sha256": "e21feefd73ce671003fb7f04aec3b03f39272b24a77a12debfe178bdaf3fd6f4",
+      "kind": "moved-untracked"
+    },
+    {
+      "path": "editor-sora/src/main/java/com/codepocket/editorlab/SyntaxThemeDefinition.java",
+      "sha256": "c2416596a117d240dab2acea3781235f0b7b85f2e8b9f02fc16fbfb8615eb1c0",
+      "kind": "moved-untracked"
+    },
+    {
+      "path": "app/src/test/java/com/codepocket/ide/SettingsSearchAndThemeBaselineTest.kt",
+      "sha256": "aed1651b8497799ffcf0d38241b0028b7e47148b5d6a24e05b23fabf4d0845ef",
+      "kind": "moved-untracked"
+    }
+  ]
+}

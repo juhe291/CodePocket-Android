@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppHeaderInteractionTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T10:25:54" hostname="JUHE" time="1.551">
+  <properties/>
+  <testcase name="delayedHeaderResultCannotEditOrReopenCandidatesAfterSwitchingFiles" classname="com.codepocket.ide.CppHeaderInteractionTest" time="0.286"/>
+  <testcase name="phoneLightLargeProjectHeaderAcceptsToolbarTabSavesAndUndoes" classname="com.codepocket.ide.CppHeaderInteractionTest" time="0.288"/>
+  <testcase name="tabletMiddlePathAndClosedSystemHeaderAcceptPhysicalTabWithoutDuplicateDelimiters" classname="com.codepocket.ide.CppHeaderInteractionTest" time="0.262"/>
+  <testcase name="emptyHeaderResultsAndDisabledTabAcceptanceKeepTheOriginalIndentAction" classname="com.codepocket.ide.CppHeaderInteractionTest" time="0.26"/>
+  <testcase name="acceptingADirectoryAutomaticallyRequestsItsChildrenAndRetainsSeparateUndoSteps" classname="com.codepocket.ide.CppHeaderInteractionTest" time="0.455"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

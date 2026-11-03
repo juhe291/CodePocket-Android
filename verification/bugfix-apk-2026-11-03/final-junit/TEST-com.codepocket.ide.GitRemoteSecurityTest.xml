@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitRemoteSecurityTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-03T10:26:41" hostname="JUHE" time="0.961">
+  <properties/>
+  <testcase name="malformedCredentialsAreRejectedBeforeAnythingCanBeSaved" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.002"/>
+  <testcase name="pushIntentExistsBeforeTransportAndNeverContainsUsernameOrToken" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.028"/>
+  <testcase name="rememberedCredentialsRoundTripEncryptedWithFreshIvAndCanonicalRepositoryScope" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.031"/>
+  <testcase name="malformedRemoteRepliesAndSecretEchoAreNotReturnedToTheUi" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.006"/>
+  <testcase name="concurrentLedgerWritersRetainTheConfirmedResult" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.036"/>
+  <testcase name="receiptWritesWaitForAnIndependentJvmHoldingTheFilesystemLock" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.748"/>
+  <testcase name="missingKeyDoesNotGenerateAReplacementAndExplicitClearRemovesAllRememberedSecrets" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.008"/>
+  <testcase name="receiptClaimBindsJobSnapshotRemoteBranchAndCommitAndCannotRunTwice" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.03"/>
+  <testcase name="invalidCredentialOrTraversalUrlsFailWithoutEchoingTheirInput" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.001"/>
+  <testcase name="unavailableKeysAndFailedAtomicWriteNeverFallBackToPlaintextOrSessionSuccess" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.009"/>
+  <testcase name="nativeHttpsIdentityMatchesTransportUnicodeIdnIpv6AndDefaultPortRules" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.003"/>
+  <testcase name="copiedCiphertextAndTamperingCannotBeDecryptedForAnotherRepository" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.014"/>
+  <testcase name="lateUnknownCannotOverwriteAConfirmedPushAndCleanupPreservesUncertainRecords" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.042"/>
+  <testcase name="defaultSessionCredentialsNeverReachDiskOrCreateAKeyAndAreRedacted" classname="com.codepocket.ide.GitRemoteSecurityTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
