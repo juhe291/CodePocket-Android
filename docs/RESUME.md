@@ -4,6 +4,8 @@
 
 ## 最新优先级：检查更新与GitHub首次推送、POSIX Git修复（2026-11-03）
 
+- **当前接续：[Linux CI回归修复](FIX_LINUX_CI_REGRESSION_2026-11-03.md)**。48ca1cc远端SHA已核对；CI41588320086通过Python168/SDK/C++准备，App1173中10失败，后续Lint/APK未执行。原报告ZIP与完整堆栈已保存。本批修C++准备执行权限、真实Python夹具跨平台路径及四组Main/Sora就绪检查；保留所有场景断言。主机75项74通过/1既有Windows失败，Python168通过，21准备输入及36c76a0b…本地APK字节保持，未重打包。下一步正常提交/推送并核对原CI；实际状态读verification/linux-ci-regression-2026-11-03/push-results.json。C六项失败基线和计划保留，尚未改C生产或将其推送；整个目标仍活动。
+
 - **当前接续：[固定C++下载源修复](FIX_CPP_DOWNLOAD_SOURCE_2026-11-03.md)**。4678f2c已推送且SHA核对；CI41586681306的Python159/SDK/SDK35成功，随后原CDN依赖下载403。现准备脚本加明确官方源参数，原工作流同一步骤选择官方主源，12个锁定依赖实际完整下载/原SHA256匹配。主机Python168全通过，9新测试和旧159身份保持；离线重准备21份运行输入字节不变，原36c76a0b…APK未重建。下一步正常提交/推送并核对既有CI，再继续C/D；不要改版本/摘要或上传.tools/密钥/新APK。最新真实远端状态读verification/cpp-download-sources-2026-11-03/push-results.json。
 - **最新远端状态**：45facf9已推送且SHA核对；Linux CI41586306486的159项Python全通过，Git目录转换bug闭环到主机Linux。CI随后失败在原setup-android@v3默认请求找不到的tools包。按[SDK准备修复](FIX_GITHUB_SDK_SETUP_2026-11-03.md)仅添加packages: platform-tools两行，保留后续SDK/NDK、触发/权限/产物行为。生产和最新本地36c76a0b…APK不变，无新本机构建。下一步正常追加推送/核对既有CI，不把远端未构建说成已通过。
 - 检查更新已随1948720推送到公开仓库https://github.com/juhe291/CodePocket-Android ，master/远端SHA核对。设置 → 帮助与许可 → 检查更新，当前0.2.1/3，手动访问固定正式Release；未发布/限流有真实提示，关闭取消且保留草稿，无自动联网/安装。原头文件Tab、Sora、保存、真实运行/PTY和网页保持。

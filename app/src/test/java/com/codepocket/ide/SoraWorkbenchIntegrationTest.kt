@@ -37,12 +37,7 @@ class SoraWorkbenchIntegrationTest {
         settleIo(); controller.windowFocusChanged(true);editor=field("editor");layout();editor.requestFocus();awaitEditor()
     }
     private fun awaitEditor() {
-        repeat(100) {
-            org.robolectric.Shadows.shadowOf(Looper.getMainLooper()).idle()
-            if (editor.isLayoutReady) return
-            Thread.sleep(5)
-        }
-        fail("Real Sora layout did not complete")
+        editor=awaitHostEditor(main)
     }
     private fun loadText(text:String) { editor.setText(text);awaitEditor() }
     private fun layout() {
@@ -59,7 +54,7 @@ class SoraWorkbenchIntegrationTest {
     }
     private fun switch(path:String) {
         ReflectionHelpers.callInstanceMethod<Boolean>(main,"switchFile",ClassParameter.from(String::class.java,path),ClassParameter.from(kotlin.jvm.functions.Function0::class.java,null))
-        settleIo();layout()
+        settleIo();layout();awaitEditor()
     }
     @After fun close() { main.finish();controller.pause().stop().destroy();settleIo() }
     @Test fun normalMainEntryLoadsTheExistingWorkspaceIntoTheMatureEditor() {

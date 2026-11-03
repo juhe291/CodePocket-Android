@@ -65,7 +65,7 @@ class RealCaseBatchTest {
     }
     @Test fun actualPythonRunnerFiniteInputExceptionAndExactNewlineComparisonUseTheProductionDecoder() {
         val dir=temp.newFolder().canonicalFile
-        val python=File(root,".tools/python313-full/tools/python.exe").path
+        val python=HostRemoteGit.python
         val code="import sys\ntext=sys.stdin.read()\nif text == 'fail': raise ValueError('case failure')\nprint(sum(map(int,text.split())))\nprint('diagnostic',file=sys.stderr)\n"
         val source=File(dir,"main.py").apply{writeText(code)}
         val harness=File(dir,"harness.py").apply{writeText("import sys\nfrom pathlib import Path\nsys.path.insert(0,sys.argv[1])\nimport runner\nprint(runner.run_code(Path(sys.argv[2]).read_text(encoding='utf-8'),Path(sys.argv[3]).read_text(encoding='utf-8'),sys.argv[2],sys.argv[4]))\n")}

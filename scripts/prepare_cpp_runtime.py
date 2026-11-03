@@ -120,6 +120,9 @@ def prepare(args):
             assert inspected['soname'] == 'libiconv.so' and set(inspected['needed']) <= {'libc.so', 'libm.so', 'libdl.so'}
         patched, _ = patch_dynamic(source, lock['aliases'])
         target = native / item['packaged_name']; target.write_bytes(patched)
+        # Android extracts these executable ELF tools as native libraries. Keep
+        # the same executable contract when the prepared tree is used on POSIX.
+        target.chmod(0o755)
         if not modified: assert sha(target) == item['sha256']
         checked = elf(target)
         assert all(name in lock['aliases'].values() or name in ('libc.so','libm.so','libdl.so','liblog.so','libandroid.so','libz.so') for name in checked['needed'])

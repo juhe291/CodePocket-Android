@@ -42,7 +42,7 @@ class MainSurfaceIntegrationTest {
     private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))}else emptyList()
     private fun idle(ms:Long=0){Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(ms))}
     private fun drain(){repeat(5){WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS);idle()}}
-    private fun ready(){repeat(200){idle();if(editor.isLayoutReady)return;Thread.sleep(5)};fail("Real main layout unavailable")}
+    private fun ready(){awaitHostEditor(main)}
     private fun text(value:String){editor.setText(value);ready();editor.setSelection(value.length);editor.finishMotion()}
     private fun anchor()=views(main.findViewById(android.R.id.content)).single{it.contentDescription=="打开终端"}
     private fun popup()=Shadows.shadowOf(RuntimeEnvironment.getApplication()).latestPopupWindow!!

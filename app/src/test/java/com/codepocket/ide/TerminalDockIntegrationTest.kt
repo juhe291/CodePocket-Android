@@ -80,7 +80,7 @@ class TerminalDockIntegrationTest {
         capture("phone-normal-terminal-actions")
         org.robolectric.shadows.ShadowDisplayManager.changeDisplay(Display.DEFAULT_DISPLAY,"w280dp-h900dp")
         val changed=Configuration(main.resources.configuration).apply{screenWidthDp=280;screenHeightDp=900;smallestScreenWidthDp=280}
-        controller.configurationChange(changed);main=controller.get();controller.visible();drain();controller.windowFocusChanged(true);layout()
+        controller.configurationChange(changed);main=controller.get();controller.visible();drain();controller.windowFocusChanged(true);layout();awaitHostEditor(main)
         assertEquals(280,(main.findViewById<View>(android.R.id.content).width/main.resources.displayMetrics.density).toInt())
         capture("phone-resized-terminal-actions");assertActionsFit()
         assertSame(selected,field<ShellSessionRegistry>("terminalRegistry").catalog.selected());assertEquals(content,field<WorkbenchEditor>("editor").text.toString())

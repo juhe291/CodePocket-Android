@@ -32,11 +32,11 @@ class PythonSemanticIntegrationTest {
     private val editor get()=field<WorkbenchEditor>("editor")
     private fun idle(){Shadows.shadowOf(Looper.getMainLooper()).idle()}
     private fun drain(){repeat(4){WorkspaceIo.executor.submit{}.get(10,TimeUnit.SECONDS);idle()}}
-    private fun ready(){repeat(200){idle();if(editor.isLayoutReady)return;Thread.sleep(5)};fail("Real Sora layout unavailable")}
+    private fun ready(){awaitHostEditor(main)}
     private fun setCase(tag:String){val f=SemanticFixtures.case(tag);editor.setText(f.getString("code"));ready();editor.setSelection(f.getInt("caret"));editor.finishMotion();idle()}
     private fun invoke(method:String){ReflectionHelpers.callInstanceMethod<Unit>(main,method);idle()}
     private fun waitFor(worker:String){field<ExecutorService>(worker).submit{}.get(10,TimeUnit.SECONDS);idle()}
-    private fun request(signature:Boolean=false,waitSemantic:Boolean=true){invoke(if(signature)"requestSignatureHelp" else "requestCompletion");waitFor(if(signature)"signatureExecutor" else "completionExecutor");if(waitSemantic)waitFor("semanticExecutor");ready();idle()}
+    private fun request(signature:Boolean=false,waitSemantic:Boolean=true){ready();invoke(if(signature)"requestSignatureHelp" else "requestCompletion");waitFor(if(signature)"signatureExecutor" else "completionExecutor");if(waitSemantic)waitFor("semanticExecutor");ready();idle()}
     private fun key(code:Int,meta:Int=0){main.dispatchKeyEvent(KeyEvent(0,0,KeyEvent.ACTION_DOWN,code,0,meta));main.dispatchKeyEvent(KeyEvent(0,0,KeyEvent.ACTION_UP,code,0,meta));idle()}
     private fun capture(tag:String,v:View){idle();val b=Bitmap.createBitmap(v.width,v.height,Bitmap.Config.ARGB_8888);val c=Canvas(b);c.drawColor(DesignTokens.forContext(main).overlay);v.draw(c)
         val phase=if(tag in setOf("tablet-unsaved-project","phone-project-signature","tablet-saf-live-module"))"python-project-context-2026-10-26" else "python-semantic-integration-2026-10-26"
