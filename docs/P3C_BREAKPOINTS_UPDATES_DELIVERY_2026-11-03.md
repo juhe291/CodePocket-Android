@@ -86,3 +86,14 @@
 
 两项修复后定向 83 项全通过（Sora32、AppUpdateHttp8、AppUpdateUi6、AppUpdateAutoCheck4、CompletionInteraction33）。第三次推送 `768a1f1` + tag `v0.2.2` 后，远端 [run 41655045210](https://github.com/juhe291/CodePocket-Android/actions/runs/41655045210) 第一次尝试在 `Install SDK 35` 因远端 SDK 下载失败中止（非代码失败，测试未执行）；对该失败 job 使用 GitHub API `rerun-failed-jobs` 重跑 **attempt 2 真实全部通过**：Python 执行/静态分析、SDK/NDK、固定 C++ 准备、**Kotlin 1191 项回归 + Android Lint**、Shell 启动、片段、Debug APK 构建、APK 归档/签名、包内 Python、语义后端与上传全部 `success`（run conclusion=`success`）。制品：`CodePocket-v0.2-debug-apk`（115446293 字节）与 `CodePocket-verification-reports`（301392 字节）。记录见 `verification/p3c-breakpoints-updates-2026-11-03/remote-ci-run-third-rerun.json`。这是本项目首次真实远端 CI 全绿；Android 设备验收仍后置，不把 CI 当设备通过。
 
+
+## 10. 0.2.3 正式 Release 候选补充（2026-11-03 晚）
+
+用户后续要求：修正“运行与权限说明”等仍写 C++ 云端的文案、增加“检查更新”按钮、网页辅助栏顶部输入可收起、构建正式版、整理 README。本补充记录在 0.2.2 CI 全绿代码之上的收尾改动：
+
+- **文案**：`python_terminal_help`（运行与权限说明）、`settings_save_help`、`shell_help`、Shell 关于页、终端任务说明、行内诊断、状态栏与输入提示均明确区分设备本地 C++（真实终端、可交互、不联网；CPU/会话限制）与 Wandbox 云端（确认后发送源码/输入、预填输入、完成后返回）。本地 C++ 模式下不再显示“编辑 C++ 云端预填输入”，状态栏显示“设备本地 Clang”。
+- **检查更新按钮**：设置根页新增“应用与更新 → 检查更新”（tag `settings-root-check-updates`，带当前版本说明）；“帮助与许可 → 检查更新”原入口保留。两处都调用同一 `showAppUpdates()`，不新增网络逻辑。
+- **网页地址收起**：`WebAuxiliaryPanel` 标题栏新增折叠/展开按钮（tag `web-address-toggle`），收起时隐藏地址输入行并清焦点，展开恢复原草稿；状态写入 `webAuxiliaryState.addressCollapsed`，随窗口/进程恢复；浏览器模式下保存的地址与导航不受影响。
+- **正式 Release 构建**：`app/build.gradle.kts` 增加 `buildTypes.release.signingConfig = signingConfigs.getByName("debug")`，即沿用仓库原 Debug 证书（d58e4cd7…，不重建密钥），release 变体不可调试；版本升为 0.2.3(5)。构建需 `-Pkotlin.compiler.execution.strategy=in-process`（非 ASCII 工程路径下避免 Kotlin daemon 参数文件乱码）。产物 `dist/CodePocket-0.2.3-release.apk`，108,820,432 字节，SHA256 `70f9ea67f033a5af1b2c14dcb937997d5c861658d17a1ff33c8571011e99dca0`；v2 签名、16 KiB 对齐、920 entries、25 原生库、Python/C++/终端资产齐全；release 包内 Python 51 项、语义 22 项通过。
+- **README**：重写为当前状态/功能/安装/使用/构建/边界结构；整理前原文完整保存为 `docs/HISTORY.md`。
+- **验证**：App 全量 1193 项 1191 通过/1 既有 Windows 头文件失败/1 旧跳过、Lint 0 error；新增/修改定向（AppUpdateEntryBaseline 3、WebAuxiliaryBaseline 6、WebAuxiliaryIntegration 12、SettingsSurfaceVisual 4、MainRunIntegration 12、TaskTranscript 4、CppSemantic 7）全部通过；Release APK 检查见 `release-*.json/log`。Android 设备验收后置；0.2.3 尚未推送时不以旧 CI 结果冒充本版通过。

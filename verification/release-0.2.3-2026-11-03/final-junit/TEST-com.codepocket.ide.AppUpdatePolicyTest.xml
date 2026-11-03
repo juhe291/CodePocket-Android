@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.AppUpdatePolicyTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T15:43:25" hostname="JUHE" time="0.022">
+  <properties/>
+  <testcase name="draftsPrereleasesMalformedVersionsAndExternalPagesAreRejected" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.002"/>
+  <testcase name="missingOrWrongArchitectureAssetsStillHaveAnHonestReleasePage" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
+  <testcase name="multipleBuildsAreNotGuessedAndAnExactArm64AssetBeatsUniversal" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.0"/>
+  <testcase name="equalityAndDevelopmentVersionsNeverOfferADowngrade" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
+  <testcase name="oversizedMetadataAndInvalidAssetSizesCannotMasqueradeAsDownloads" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.017"/>
+  <testcase name="numericVersionsDoNotUseLexicalOrderingAndIgnoreBuildMetadata" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.0"/>
+  <testcase name="sourcesAndReturnedLinksRemainInTheConfiguredHttpsRepository" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
+  <testcase name="publishedMetadataRetainsAllNotesAndTheActualCompatibleAsset" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -36,6 +36,12 @@ class AppUpdateEntryBaselineTest {
         assertEquals("The actual settings help page needs a single manual update entry",1,rows.size)
         assertTrue(rows.single().isEnabled)
     }
+    @Test fun rootSettingsPageProvidesOneCheckUpdateButton(){
+        views(settings.window!!.decorView).single{it.contentDescription=="返回设置分类"}.performClick();idle()
+        val buttons=views(settings.window!!.decorView).filter{it.tag=="settings-root-check-updates"}
+        assertEquals("The settings root page needs one visible update button",1,buttons.size)
+        assertTrue(buttons.single().isEnabled);assertTrue(buttons.single().isShown)
+    }
     @Test fun helpDisplaysTheActualInstalledVersion(){
         @Suppress("DEPRECATION") val info=main.packageManager.getPackageInfo(main.packageName,0)
         @Suppress("DEPRECATION") val expected="当前版本 ${info.versionName?:"未知"} (${info.versionCode})"

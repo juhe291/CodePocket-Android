@@ -16,8 +16,8 @@ android {
         applicationId = "com.codepocket.ide"
         minSdk = 24
         targetSdk = 34
-        versionCode = 4
-        versionName = "0.2.2"
+        versionCode = 5
+        versionName = "0.2.3"
 
         val updateRepository = providers.gradleProperty("codepocket.updateRepository").orElse("").get()
         require(updateRepository.isEmpty() || Regex("[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+").matches(updateRepository))
@@ -57,6 +57,15 @@ android {
             providers.gradleProperty("codepocket.testRepository").orNull?.let { repository ->
                 it.systemProperty("robolectric.dependency.repo.url", repository)
             }
+        }
+    }
+    buildTypes {
+        release {
+            // The project ships official local builds with the repository's original debug
+            // certificate so upgrades keep working; never generate a replacement key here.
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }

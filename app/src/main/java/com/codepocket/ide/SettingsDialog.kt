@@ -293,7 +293,13 @@ object SettingsDialog {
                         items.forEach(::row)
                     }
                 }
-                draft.category<0->{details.addView(WorkbenchForms.sectionHeading(activity,"工作台偏好","",IdeIcon.SETTINGS));categories.indices.forEach{details.addView(categoryRow(it))}}
+                draft.category<0->{details.addView(WorkbenchForms.sectionHeading(activity,"工作台偏好","",IdeIcon.SETTINGS));categories.indices.forEach{details.addView(categoryRow(it))}
+                    details.addView(WorkbenchForms.sectionHeading(activity,"应用与更新","",IdeIcon.REFRESH))
+                    details.addView(WorkbenchStyle.menuRow(activity,"检查更新").apply{
+                        tag="settings-root-check-updates";contentDescription="检查更新";setOnClickListener{if(!busy)checkUpdates()}
+                    })
+                    details.addView(WorkbenchForms.caption(activity,InstalledAppUpdateVersion.read(activity).label+" · 手动检查本仓库正式 Release；未发布时会明确提示。"))
+                }
                 else->{
                     details.addView(WorkbenchForms.sectionHeading(activity,categories[draft.category],"",categoryIcons[draft.category]))
                     all.filter{it.category==draft.category}.groupBy{section(it.key)}.forEach{(title,items)->

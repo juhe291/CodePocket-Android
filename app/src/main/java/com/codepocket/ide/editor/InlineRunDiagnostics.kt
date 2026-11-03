@@ -16,6 +16,6 @@ object InlineRunDiagnostics {
         val end = code.indexOf('\n', start).let { if (it < 0) code.length else it }
         val first = (start until end).firstOrNull { !code[it].isWhitespace() } ?: start
         val text = result.stderr.take(4000).ifBlank { result.kind.label }
-        return listOf(InlineIssue(first, end, text, if (frame.cpp) "C++ 云端编译 / 运行" else "Python 实际运行"))
+        return listOf(InlineIssue(first, end, text, if (frame.cpp) "C++ 编译 / 运行" else "Python 实际运行"))
     }
 }

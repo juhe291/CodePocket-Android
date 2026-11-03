@@ -61,6 +61,18 @@ class WebAuxiliaryBaselineTest {
         val url=Shadows.shadowOf(all().filterIsInstance<WebView>().single()).lastLoadedUrl
         val target=android.net.Uri.parse(url);assertEquals("cn.bing.com",target.host);assertEquals("C++ vector 中文",target.getQueryParameter("q"))
     }
+    @Test fun webAddressInputCollapsesAndRestoresWithoutLosingTheDraft(){
+        open();val address=all().single{it.tag=="web-address"} as EditText;val row=address.parent as View
+        address.setText("草稿网址")
+        val toggle=all().single{it.tag=="web-address-toggle"}
+        assertEquals(View.VISIBLE,row.visibility)
+        assertTrue(toggle.performClick());idle();layout()
+        assertEquals(View.GONE,row.visibility);assertEquals("展开网页地址栏",toggle.contentDescription.toString())
+        assertTrue(toggle.performClick());idle();layout()
+        assertEquals(View.VISIBLE,row.visibility)
+        assertEquals("草稿网址",(all().single{it.tag=="web-address"} as EditText).text.toString())
+        assertEquals("收起网页地址栏",toggle.contentDescription.toString())
+    }
     @Test fun phoneOpenAndClosePreservesDirtyDocumentAndSavedBase(){
         val editor=field<WorkbenchEditor>("editor");editor.setText("unsaved browser coexistence\n")
         val base=field<String?>("loadedVersion");assertTrue(field("dirty"));open()

@@ -7,6 +7,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  verification/p
 3f9c902b3c3fee7338298364966bf5ca2fda8cab4e87f106f5e45f0bc6081a94  verification/p3c-breakpoints-updates-2026-11-03/ci-failures-targeted.log
 9c78650893dc1c9bf3ad6b4ec5939f36d17f720704891b24b5c0cb4b641d143c  verification/p3c-breakpoints-updates-2026-11-03/ci-second-fix-targeted.log
 d40b0f43992946148883f38cc5dd79a1d9d442d4de596ce380691966c60f3e13  verification/p3c-breakpoints-updates-2026-11-03/cpp-apk.log
+9fcfff173474cb9938acec10556a189c70cdca0637e9e3b6108c4578698e84f0  verification/p3c-breakpoints-updates-2026-11-03/final-0.2.3-validation.log
 354dcd7d67371ba61638307b2ba4672c612094c8c101d3b91c90c00ac7d3af0c  verification/p3c-breakpoints-updates-2026-11-03/final-app-tests.log
 34ae00bf99a107ef37b4d8770678710845d3512127c7445845bd029db0f98775  verification/p3c-breakpoints-updates-2026-11-03/final-junit/TEST-com.codepocket.ide.AnalysisDiskCacheTest.xml
 bb3249eb1e7110a2ffb2be399639a12fb8275f803859b89f6884c2a8da035cc5  verification/p3c-breakpoints-updates-2026-11-03/final-junit/TEST-com.codepocket.ide.AppSettingsTest.xml
@@ -195,6 +196,11 @@ b657f9ecc0bc4c0b4d53e07a17276afae76ceec716ae488b23f4689af7d1b1c4  verification/p
 058cc79202444d7c4d0a730500b85c54a71c10a5149616e89d462e051a8d4a53  verification/p3c-breakpoints-updates-2026-11-03/push.log
 c956ff22600c8e097d81b28ae3385a7602755893aff8e3f1b9f010531995cf66  verification/p3c-breakpoints-updates-2026-11-03/push.py
 ea4b3ee5a0c41124a99786793a66b081fdd2795f525f9a0238fce793040778df  verification/p3c-breakpoints-updates-2026-11-03/README.md
+8dd6d642637f652dea9a3621971c1ac5ab68d5dba700f1d13969ab8dd2b786bd  verification/p3c-breakpoints-updates-2026-11-03/release-build.log
+9a5314a5c0052f4336cc8f127ff5a1bd284c2120f0219113ef21ff4d16a78d84  verification/p3c-breakpoints-updates-2026-11-03/release-packaged-python.json
+a866ebaf6503b0fc1425d0269a3efb70a9a9b3b90f5083274099f970b42fb23e  verification/p3c-breakpoints-updates-2026-11-03/release-packaged-python.log
+7d19c9c42679f3f1e326dcf6018654aa8b9609b1dfba656ff14a0f3dc9d877d9  verification/p3c-breakpoints-updates-2026-11-03/release-semantic.json
+2b72f6a2374e6e75a56341be36da0179793f5ceafb556593199e93db54397a7a  verification/p3c-breakpoints-updates-2026-11-03/release-semantic.log
 5b9e3675b6468ce7957727a6f520e317062fbd4af3813aadd8ab8100fd846948  verification/p3c-breakpoints-updates-2026-11-03/remote_ci_status.py
 f06cd788569bf31f5f548294e39311b8bc57cdd422db130f0010743c095bc65c  verification/p3c-breakpoints-updates-2026-11-03/remote-ci-run-first.json
 ad9874222a4958d23a59c500be0f87e5c2f97a1bb973f8172a9c4865e8fb5752  verification/p3c-breakpoints-updates-2026-11-03/remote-ci-run-second.json
@@ -218,6 +224,7 @@ db0bbd6959fb3415785b55a1343c558ad0d3bd2d45a0dd148d35348f4aa8b966  verification/p
 f12e7f589a618fa7bff2edb206bb8f2862b23ff42c54e5beaeeddc8992631caf  verification/p3c-breakpoints-updates-2026-11-03/runtime-delta.json
 beb30c50b7eecf1075444a2c5642ebd06a157f9e886a3add64870e0545b36540  verification/p3c-breakpoints-updates-2026-11-03/semantic-apk-inspection.json
 bfb1cdb34fe54dd2dc9cb465fee43f27dfd8d0bc1d225b492d3413a9caff4113  verification/p3c-breakpoints-updates-2026-11-03/semantic-apk.log
+b5919a11f805a37797e8a5e570014bf2fc4c673001be0aee7dce9daa319b019c  verification/p3c-breakpoints-updates-2026-11-03/settings-web-targeted.log
 074c005d765e07fcacfc12d9bf86319e495806debc9fd982a4f864d9dfa36fdb  verification/p3c-breakpoints-updates-2026-11-03/shell-startup-inspection.json
 3710b37ffad6b375471a3abc494e9cb54238346c4b9d868d582348817fd4f5f5  verification/p3c-breakpoints-updates-2026-11-03/shell-startup.log
 1c16fc4176cc41c49aac73d76e1cf6682e2e9b72792f46569e789a85a5dac426  verification/p3c-breakpoints-updates-2026-11-03/snippet-fixtures/00-py-for.py

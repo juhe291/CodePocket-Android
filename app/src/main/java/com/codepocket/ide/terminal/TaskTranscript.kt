@@ -7,7 +7,7 @@ object TaskTranscript {
     fun render(result: RunResult?, running: Boolean, cleared: Boolean): String {
         if (cleared) return "任务显示已清空；运行结果与每文件预填输入仍保留。"
         if (running) return "任务运行中 · 预填输入，执行完成后返回结果\n输入已在启动时提交；此任务尚不支持运行中键盘输入。"
-        if (result == null) return "尚无运行任务。点击运行将使用真实Python本地执行器或Wandbox云端服务。\n当前任务使用预填输入，执行完成后返回结果。"
+        if (result == null) return "尚无运行任务。点击运行将使用真实 Python 本地执行器、设备本地 C++ 或 Wandbox 云端服务。\n当前任务使用预填输入，执行完成后返回结果。"
         return buildString {
             append("任务：").append(result.sourcePath?.substringAfterLast('/') ?: "程序").append('\n')
             append(result.engine).append(" · ").append(result.kind.label)

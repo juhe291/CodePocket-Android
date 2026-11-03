@@ -59,6 +59,7 @@ internal class WebAuxiliaryPanel(private val activity:Activity,private val host:
     private var progress:ProgressBar?=null
     private var navigationRow:LinearLayout?=null
     private var addressRow:LinearLayout?=null
+    private var addressCollapsed=false
     private var documentScroll:ScrollView?=null
     private var documentText:TextView?=null
     private var documentScope:TextView?=null
@@ -99,6 +100,7 @@ internal class WebAuxiliaryPanel(private val activity:Activity,private val host:
             width=value.optInt("width",AuxiliaryLayout.DEFAULT).coerceIn(240,560);focus=value.optBoolean("focus")
             searchEngine=WebSearchEngine.restored(value.optString("search"))
             currentUrl=value.optString("url").takeIf{it.isNotEmpty()}?.let{BrowserAddress.navigation(it)}.orEmpty()
+            addressCollapsed=value.optBoolean("addressCollapsed",false)
             addressDraft=saved?.getString("address")?:currentUrl
             addressEdited=addressDraft!=currentUrl
             browserMode=value.optBoolean("browser",true)
@@ -117,7 +119,7 @@ internal class WebAuxiliaryPanel(private val activity:Activity,private val host:
     }
     private fun dp(value:Int)=IdeControls.dp(activity,value)
     private fun state()=JSONObject().put("shown",shown).put("side",side.name).put("width",width).put("focus",focus)
-        .put("search",searchEngine.name).put("url",currentUrl).put("browser",browserMode)
+        .put("search",searchEngine.name).put("url",currentUrl).put("browser",browserMode).put("addressCollapsed",addressCollapsed)
         .also{json->document?.let{doc->json.put("document",JSONObject().put("title",doc.title).put("scope",doc.scope).put("markdown",doc.markdown).put("source",doc.sourceUrl?:JSONObject.NULL)
             .also{if(!documentUnavailable && doc.body.length<=STATE_DOCUMENT_LIMIT)it.put("body",doc.body)})}}.toString()
     private fun persist(){prefs.edit().putString("webAuxiliaryState",state()).apply()}
@@ -164,6 +166,7 @@ internal class WebAuxiliaryPanel(private val activity:Activity,private val host:
         val heading=LinearLayout(activity).apply{gravity=Gravity.CENTER_VERTICAL;setPadding(dp(8),0,0,0)}
         title=TextView(activity).apply{gravity=Gravity.CENTER_VERTICAL;textSize=12f;setTextColor(palette.foreground);setSingleLine();ellipsize=android.text.TextUtils.TruncateAt.END}
         heading.addView(title,LinearLayout.LayoutParams(0,dp(48),1f))
+        heading.addView(IdeControls.icon(activity,palette,IdeIcon.COLLAPSE,"收起网页地址栏",{toggleAddress()}).apply{tag="web-address-toggle"},LinearLayout.LayoutParams(dp(48),dp(48)))
         heading.addView(IdeControls.icon(activity,palette,IdeIcon.MORE,"网页与文档选项",{}).apply{tag="web-menu";setOnClickListener{showMenu(it)}},LinearLayout.LayoutParams(dp(48),dp(48)))
         heading.addView(IdeControls.icon(activity,palette,IdeIcon.CLOSE,"关闭辅助栏",::hide).apply{tag="web-close"},LinearLayout.LayoutParams(dp(48),dp(48)))
         container.addView(heading)
@@ -268,7 +271,11 @@ internal class WebAuxiliaryPanel(private val activity:Activity,private val host:
         documentScope?.text=document?.scope;documentScope?.visibility=if(browserMode)View.GONE else View.VISIBLE
         address?.hint="输入网址或用${searchEngine.title}搜索"
         if(address?.hasFocus()!=true && !addressEdited && currentUrl.isNotEmpty() && browserMode)setAddress(currentUrl)
-        addressRow?.visibility=if(browserMode)View.VISIBLE else View.GONE
+        addressRow?.visibility=if(browserMode && !addressCollapsed)View.VISIBLE else View.GONE
+        val toggle=root?.findViewWithTag<ImageView>("web-address-toggle")
+        toggle?.visibility=if(browserMode)View.VISIBLE else View.GONE
+        toggle?.contentDescription=if(addressCollapsed)"展开网页地址栏" else "收起网页地址栏"
+        toggle?.setImageDrawable(IdeIconDrawable(activity,if(addressCollapsed)IdeIcon.DOWN else IdeIcon.COLLAPSE,palette.foreground,dp(20)))
         navigationRow?.visibility=if(browserMode)View.VISIBLE else View.GONE
         webContainer?.visibility=if(browserMode)View.VISIBLE else View.GONE;documentScroll?.visibility=if(browserMode)View.GONE else View.VISIBLE
         back?.isEnabled=web?.canGoBack()==true;forward?.isEnabled=web?.canGoForward()==true
@@ -277,6 +284,12 @@ internal class WebAuxiliaryPanel(private val activity:Activity,private val host:
         message?.text=failure?:if(loading)"正在加载…" else if(currentUrl.isEmpty())"${searchEngine.title}搜索" else Uri.parse(currentUrl).host.orEmpty()
         progress?.visibility=if(browserMode&&loading)View.VISIBLE else View.GONE
         syncLifecycle()
+    }
+    private fun toggleAddress(){
+        if(!browserMode)return
+        addressCollapsed=!addressCollapsed
+        if(addressCollapsed)address?.clearFocus()
+        persist();renderChrome()
     }
     private fun setAddress(value:String){if(address?.text?.toString()==value)return;settingAddress=true
         try{address?.setText(value)}finally{settingAddress=false}}

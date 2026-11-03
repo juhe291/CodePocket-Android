@@ -268,7 +268,7 @@ public final class ShellTerminalPane extends LinearLayout implements TerminalVie
     }
     public void showAbout() {
         dialogBuilder().setTitle("真实 Android Shell")
-                    .setMessage("使用本地 /system/bin/sh 和 Termux 终端组件，无需另装 Termux。\n\n命令以应用 UID 执行，可修改本应用有权访问的文件；终端只读取磁盘上已保存的内容。系统目录权限仍由 Android 控制，不是 root。\n\nSAF URI 不能直接作为 Shell 目录；外部项目仍由文件管理器授权和写回。Python 运行按钮把 Chaquopy 独立进程接入当前 PTY，支持真实输入输出并返回 Shell。未安装 python、pip 或 clang/g++ 命令。C++ 通过 Wandbox 预填输入运行，完成后返回。\n\nTermux v0.118.3 / 5b657c6，保留 GPLv3 与 Apache 2.0 来源及通知；完整许可见 App 资产 terminal-licenses 和仓库 third-party/termux。")
+                    .setMessage("使用本地 /system/bin/sh 和 Termux 终端组件，无需另装 Termux。\n\n命令以应用 UID 执行，可修改本应用有权访问的文件；终端只读取磁盘上已保存的内容。系统目录权限仍由 Android 控制，不是 root。\n\nSAF URI 不能直接作为 Shell 目录；外部项目仍由文件管理器授权和写回。Python 运行按钮把 Chaquopy 独立进程接入当前 PTY，支持真实输入输出并返回 Shell。C++ 可在当前终端用设备本地 Clang 编译运行（不联网，可直接键入输入），也可在设置选择 Wandbox 云端（预填输入、完成后返回，需联网并确认发送）。未安装 python、pip 或 clang/g++ 命令。\n\nTermux v0.118.3 / 5b657c6，保留 GPLv3 与 Apache 2.0 来源及通知；完整许可见 App 资产 terminal-licenses 和仓库 third-party/termux。")
                     .setPositiveButton("知道了", null).show();
     }
     public void showKeyboard() {

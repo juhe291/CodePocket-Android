@@ -1,0 +1,19 @@
+{
+  "apk": "dist\\CodePocket-0.2.3-release.apk",
+  "bytes": 108820432,
+  "sha256": "70f9ea67f033a5af1b2c14dcb937997d5c861658d17a1ff33c8571011e99dca0",
+  "entries": 920,
+  "archive_ok": true,
+  "dex": [
+    "classes.dex",
+    "classes2.dex",
+    "classes3.dex"
+  ],
+  "native_libs": 25,
+  "python_assets": 20,
+  "cpp_assets": 3,
+  "version": "0.2.3",
+  "version_code": 5,
+  "signer_cert_sha256": "d58e4cd7c849ebcf3cf35fde35f1d201c2569bb9ef11f2b48a4ba80cacd10408",
+  "debuggable": false
+}

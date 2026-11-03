@@ -1479,7 +1479,7 @@ class MainActivity : Activity() {
         input = EditText(this).apply {
             typeface = Typeface.MONOSPACE; textSize = 12f
             setTextColor(textForeground); setHintTextColor(muted)
-            gravity = Gravity.TOP or Gravity.START; hint = "C++ 云端预填输入；Python 请直接在终端输入"
+            gravity = Gravity.TOP or Gravity.START; hint = "C++ 云端预填输入；设备本地 C++ 与 Python 请直接在终端输入"
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             background = shape(editorBackground, 4, border)
             setPadding(dp(7), dp(5), dp(7), dp(5))
@@ -2303,7 +2303,9 @@ class MainActivity : Activity() {
         handler.removeCallbacks(refreshEditor); handler.post(refreshEditor)
         updateNumbers(); updateSuggestions()
         updateShellTitle()
-        status.text = if (dirty) "已恢复未写回草稿，请保存或导出" else if (isCpp()) "C++17 · Wandbox 云端" else "Python 3.13 · 本地"
+        status.text = if (dirty) "已恢复未写回草稿，请保存或导出" else if (isCpp())
+            if (settings.cppBackend == CppBackend.LOCAL) "C++17 · 设备本地 Clang" else "C++17 · Wandbox 云端"
+        else "Python 3.13 · 本地"
         refreshTabs(); persistNavigation()
         return true
     }
@@ -3757,7 +3759,7 @@ class MainActivity : Activity() {
             menu.show();return
         }
         val titles = listOf("显示虚拟键盘", "复制终端记录", "粘贴", "清空终端显示", "重命名会话", "结束会话", "查看上次终端错误", "启动 / 重新启动会话", "终端说明与许可证", "终端配色",
-            ) + if(isCpp())listOf("编辑 C++ 云端预填输入")else emptyList()
+            ) + if(usesCloudInput())listOf("编辑 C++ 云端预填输入")else emptyList()
         if(section<0){
             TerminalMenuSection.entries.forEach { category ->
                 menu.menu.add(0,100+category.ordinal,category.ordinal,category.title)
