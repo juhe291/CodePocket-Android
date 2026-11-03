@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import urllib.error
 from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -59,5 +60,29 @@ class CppRuntimeDownloadTests(unittest.TestCase):
         with patch.object(runtime.urllib.request,'urlopen',return_value=io.BytesIO(b'wrong')),self.assertRaises(AssertionError):
             runtime.obtain('package.deb',self.digest,self.url,True)
         self.assertFalse((self.cache/'downloads/package.deb').exists())
+
+    def test_pinned_iconv_source_prefers_gnu_upstream_and_keeps_the_original_mirror(self):
+        original=dict(filename='libiconv-1.19.tar.gz',url='https://mirrors.kernel.org/gnu/libiconv/libiconv-1.19.tar.gz')
+        self.assertEqual(('https://ftp.gnu.org/gnu/libiconv/libiconv-1.19.tar.gz',original['url']),runtime.source_urls(original))
+        different=dict(filename='other.tgz',url='https://example.invalid/other.tgz')
+        self.assertEqual((different['url'],),runtime.source_urls(different))
+
+    def test_an_unreachable_source_uses_the_explicit_alternate_with_the_same_digest(self):
+        alternate='https://ftp.gnu.org/gnu/libiconv/libiconv-1.19.tar.gz'
+        with patch.object(runtime.urllib.request,'urlopen',side_effect=[urllib.error.URLError('unreachable'),io.BytesIO(self.payload)]) as request:
+            target=runtime.obtain('source.tgz',self.digest,self.url,True,alternate_urls=(alternate,))
+        self.assertEqual(self.payload,target.read_bytes());self.assertEqual(2,request.call_count)
+        self.assertEqual([(self.url,),(alternate,)], [call.args for call in request.call_args_list])
+        self.assertFalse(target.with_name(target.name+'.partial').exists())
+
+    def test_a_digest_failure_is_fatal_instead_of_trying_another_source(self):
+        with patch.object(runtime.urllib.request,'urlopen',return_value=io.BytesIO(b'wrong')) as request,self.assertRaises(AssertionError):
+            runtime.obtain('source.tgz',self.digest,self.url,True,alternate_urls=('https://example.invalid/alternate',))
+        self.assertEqual(1,request.call_count);self.assertFalse((self.cache/'downloads/source.tgz').exists())
+
+    def test_exhausted_sources_preserve_the_network_error_without_promoting_a_cache_entry(self):
+        with patch.object(runtime.urllib.request,'urlopen',side_effect=urllib.error.URLError('unreachable')) as request,self.assertRaises(urllib.error.URLError):
+            runtime.obtain('source.tgz',self.digest,self.url,True,alternate_urls=('https://example.invalid/alternate',))
+        self.assertEqual(2,request.call_count);self.assertFalse((self.cache/'downloads/source.tgz').exists())
 
 if __name__=='__main__':unittest.main(verbosity=2)

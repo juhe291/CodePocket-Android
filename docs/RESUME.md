@@ -4,6 +4,8 @@
 
 ## 最新优先级：检查更新与GitHub首次推送、POSIX Git修复（2026-11-03）
 
+- **当前远端阻塞：[libiconv源码下载](FIX_CPP_SOURCE_DOWNLOAD_2026-11-03.md)**。cfbcd40已推送/SHA核对，CI41615583860两次均在原kernel.org镜像网络失败，尚未进入Kotlin回归。本次仅准备脚本优先GNU官方主站、原镜像作明确有限备用，摘要错误仍立即失败；原源码5921103字节/88dd96a8…实际下载核对。新增4项基线失败→13项下载检查通过，完整Python172通过、旧168身份保持；21准备文件及本地APK字节保持，未重打包。接着正常追加推送并看原CI实际结果，不能把10项Linux回归说成已修复通过。设置搜索本地原六项基线现4通过/2主题未实现，主题模型在接入中；C内容未混入推送，未有C APK。
+
 - **当前接续：[Linux CI回归修复](FIX_LINUX_CI_REGRESSION_2026-11-03.md)**。48ca1cc远端SHA已核对；CI41588320086通过Python168/SDK/C++准备，App1173中10失败，后续Lint/APK未执行。原报告ZIP与完整堆栈已保存。本批修C++准备执行权限、真实Python夹具跨平台路径及四组Main/Sora就绪检查；保留所有场景断言。主机75项74通过/1既有Windows失败，Python168通过，21准备输入及36c76a0b…本地APK字节保持，未重打包。下一步正常提交/推送并核对原CI；实际状态读verification/linux-ci-regression-2026-11-03/push-results.json。C六项失败基线和计划保留，尚未改C生产或将其推送；整个目标仍活动。
 
 - **当前接续：[固定C++下载源修复](FIX_CPP_DOWNLOAD_SOURCE_2026-11-03.md)**。4678f2c已推送且SHA核对；CI41586681306的Python159/SDK/SDK35成功，随后原CDN依赖下载403。现准备脚本加明确官方源参数，原工作流同一步骤选择官方主源，12个锁定依赖实际完整下载/原SHA256匹配。主机Python168全通过，9新测试和旧159身份保持；离线重准备21份运行输入字节不变，原36c76a0b…APK未重建。下一步正常提交/推送并核对既有CI，再继续C/D；不要改版本/摘要或上传.tools/密钥/新APK。最新真实远端状态读verification/cpp-download-sources-2026-11-03/push-results.json。

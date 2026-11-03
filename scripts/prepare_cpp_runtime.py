@@ -8,6 +8,7 @@ from pathlib import Path, PurePosixPath
 import shutil
 import tarfile
 import urllib.request
+import urllib.error
 import zipfile
 
 from cpp_runtime_elf import ar_members, elf, patch_dynamic
@@ -24,6 +25,13 @@ def package_url(lock, filename, repository=None):
     return (repository or lock['repository']) + '/' + filename
 
 
+def source_urls(original):
+    mirror = 'https://mirrors.kernel.org/gnu/libiconv/' + original['filename']
+    if original['url'] == mirror:
+        return ('https://ftp.gnu.org/gnu/libiconv/' + original['filename'], mirror)
+    return (original['url'],)
+
+
 def sha(file):
     digest = hashlib.sha256()
     with file.open('rb') as stream:
@@ -31,7 +39,7 @@ def sha(file):
     return digest.hexdigest()
 
 
-def obtain(filename, expected, url, fetch, fallbacks=()):
+def obtain(filename, expected, url, fetch, fallbacks=(), alternate_urls=()):
     for file in [CACHE / 'downloads' / filename] + list(fallbacks):
         if file.is_file():
             assert sha(file) == expected, f'Cached digest mismatch: {file}'
@@ -39,11 +47,19 @@ def obtain(filename, expected, url, fetch, fallbacks=()):
     if not fetch: raise FileNotFoundError(f'Missing pinned C++ input {filename}; run scripts/prepare_cpp_runtime.py --fetch')
     target = CACHE / 'downloads' / filename; target.parent.mkdir(parents=True, exist_ok=True)
     partial = target.with_name(target.name + '.partial')
-    with urllib.request.urlopen(url, timeout=60) as response, partial.open('wb') as stream:
-        shutil.copyfileobj(response, stream, 1024 * 1024)
-    assert sha(partial) == expected, f'Download digest mismatch: {filename}'
-    partial.replace(target)
-    return target
+    sources = (url,) + tuple(alternate_urls)
+    for index, source in enumerate(sources):
+        try:
+            with urllib.request.urlopen(source, timeout=60) as response, partial.open('wb') as stream:
+                shutil.copyfileobj(response, stream, 1024 * 1024)
+        except (urllib.error.URLError, ConnectionError, TimeoutError) as error:
+            if index + 1 == len(sources): raise
+            print(f'Could not download {filename} from {source}: {error}; trying the explicit alternate')
+            continue
+        # A digest failure is never a transport retry or an accepted cache entry.
+        assert sha(partial) == expected, f'Download digest mismatch: {filename}'
+        partial.replace(target)
+        return target
 
 
 def usr_path(name):
@@ -133,8 +149,9 @@ def prepare(args):
     assert len(support) == len(lock.get('build_support', [])) == 4
     support_zip = assets / 'cpp-runtime/build-support.zip'; deterministic_zip(support_zip, support)
     original = lock['source']
-    source = args.iconv_source.resolve() if args.iconv_source else obtain(original['filename'], original['sha256'], original['url'], args.fetch,
-        [ROOT / '.tools/cpp-semantic-probe/sources' / original['filename']])
+    urls = source_urls(original)
+    source = args.iconv_source.resolve() if args.iconv_source else obtain(original['filename'], original['sha256'], urls[0], args.fetch,
+        [ROOT / '.tools/cpp-semantic-probe/sources' / original['filename']], alternate_urls=urls[1:])
     assert source.stat().st_size <= 16 * 1024 * 1024
     with tarfile.open(source) as tar: assert any(entry.name.endswith('/COPYING.LIB') for entry in tar)
     # Android's asset merger transparently inflates *.gz and strips its suffix. A .tgz name
