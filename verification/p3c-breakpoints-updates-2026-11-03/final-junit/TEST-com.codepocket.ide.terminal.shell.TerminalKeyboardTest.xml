@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:59:09" hostname="JUHE" time="0.367">
+<testsuite name="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:54:53" hostname="JUHE" time="0.71">
   <properties/>
-  <testcase name="focusLostBeforeDeferredRequestDoesNotStealKeyboardBack" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.043"/>
-  <testcase name="waitsForWindowFocusAfterMenuDismissAndRunsOnlyOnce" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.065"/>
-  <testcase name="expiredWindowRequestDoesNotShowOnLaterResume" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.044"/>
-  <testcase name="cancellationAndLateGatePreventHiddenPaneFromOpeningIme" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.041"/>
-  <testcase name="explicitRequestSwitchesFocusThenShowsImeOnNextTurn" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.041"/>
-  <testcase name="clearsHiddenStateOnlyForExplicitRequestAndRetainsResize" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.047"/>
-  <testcase name="startupGateKeepsEditorFocusAndDoesNotRequestIme" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.044"/>
-  <testcase name="focusChangeOrDetachCancelsWindowWait" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.042"/>
+  <testcase name="focusLostBeforeDeferredRequestDoesNotStealKeyboardBack" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.101"/>
+  <testcase name="waitsForWindowFocusAfterMenuDismissAndRunsOnlyOnce" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.093"/>
+  <testcase name="expiredWindowRequestDoesNotShowOnLaterResume" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.109"/>
+  <testcase name="cancellationAndLateGatePreventHiddenPaneFromOpeningIme" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.076"/>
+  <testcase name="explicitRequestSwitchesFocusThenShowsImeOnNextTurn" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.08"/>
+  <testcase name="clearsHiddenStateOnlyForExplicitRequestAndRetainsResize" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.089"/>
+  <testcase name="startupGateKeepsEditorFocusAndDoesNotRequestIme" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.074"/>
+  <testcase name="focusChangeOrDetachCancelsWindowWait" classname="com.codepocket.ide.terminal.shell.TerminalKeyboardTest" time="0.087"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Invalid ID 0x00000000.
 Invalid ID 0x00000000.

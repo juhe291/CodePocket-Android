@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.TestCasesDialogTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:58:33" hostname="JUHE" time="1.771">
+<testsuite name="com.codepocket.ide.TestCasesDialogTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:53:52" hostname="JUHE" time="2.831">
   <properties/>
-  <testcase name="compactWindowKeepsButtonsAccessibleAndScrollsTheEditor" classname="com.codepocket.ide.TestCasesDialogTest" time="0.087"/>
-  <testcase name="editorCheckpointRestoresWhitespaceUnicodeRuleAndValidationDoesNotDismissIt" classname="com.codepocket.ide.TestCasesDialogTest" time="0.177"/>
-  <testcase name="tabletUsesBoundedWidthAndDeletingACasePreservesItsHistory" classname="com.codepocket.ide.TestCasesDialogTest" time="0.231"/>
-  <testcase name="failedAtomicSaveKeepsTheInputsAndCanBeRetriedWithoutDuplicatingTheCase" classname="com.codepocket.ide.TestCasesDialogTest" time="0.1"/>
-  <testcase name="historyKeepsDeletedCaseSnapshotsAndReaderCopiesExactActualTextWithTruncationNotice" classname="com.codepocket.ide.TestCasesDialogTest" time="0.696"/>
-  <testcase name="lightTabletEditorUsesTheCurrentPaletteAndKeepsItsFormOnRefresh" classname="com.codepocket.ide.TestCasesDialogTest" time="0.127"/>
-  <testcase name="foreignFileCheckpointCannotAttachItsFormToTheCurrentFile" classname="com.codepocket.ide.TestCasesDialogTest" time="0.049"/>
-  <testcase name="phoneTouchCreatesAnExactCaseAndSecondaryMenuRunsTheSelectedImmutableSnapshot" classname="com.codepocket.ide.TestCasesDialogTest" time="0.304"/>
+  <testcase name="compactWindowKeepsButtonsAccessibleAndScrollsTheEditor" classname="com.codepocket.ide.TestCasesDialogTest" time="0.194"/>
+  <testcase name="editorCheckpointRestoresWhitespaceUnicodeRuleAndValidationDoesNotDismissIt" classname="com.codepocket.ide.TestCasesDialogTest" time="0.224"/>
+  <testcase name="tabletUsesBoundedWidthAndDeletingACasePreservesItsHistory" classname="com.codepocket.ide.TestCasesDialogTest" time="0.349"/>
+  <testcase name="failedAtomicSaveKeepsTheInputsAndCanBeRetriedWithoutDuplicatingTheCase" classname="com.codepocket.ide.TestCasesDialogTest" time="0.24"/>
+  <testcase name="historyKeepsDeletedCaseSnapshotsAndReaderCopiesExactActualTextWithTruncationNotice" classname="com.codepocket.ide.TestCasesDialogTest" time="1.06"/>
+  <testcase name="lightTabletEditorUsesTheCurrentPaletteAndKeepsItsFormOnRefresh" classname="com.codepocket.ide.TestCasesDialogTest" time="0.219"/>
+  <testcase name="foreignFileCheckpointCannotAttachItsFormToTheCurrentFile" classname="com.codepocket.ide.TestCasesDialogTest" time="0.122"/>
+  <testcase name="phoneTouchCreatesAnExactCaseAndSecondaryMenuRunsTheSelectedImmutableSnapshot" classname="com.codepocket.ide.TestCasesDialogTest" time="0.422"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Invalid ID 0x00000000.
 Invalid ID 0x00000000.

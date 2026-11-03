@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.CppRuntimePreparationTest" tests="3" skipped="0" failures="1" errors="0" timestamp="2026-11-03T12:52:44" hostname="JUHE" time="14.494">
+<testsuite name="com.codepocket.ide.CppRuntimePreparationTest" tests="3" skipped="0" failures="1" errors="0" timestamp="2026-11-03T13:42:29" hostname="JUHE" time="32.666">
   <properties/>
-  <testcase name="anExistingPrivateFileIsNeverOverwrittenByRuntimePreparation" classname="com.codepocket.ide.CppRuntimePreparationTest" time="4.311"/>
-  <testcase name="trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs" classname="com.codepocket.ide.CppRuntimePreparationTest" time="10.084">
+  <testcase name="anExistingPrivateFileIsNeverOverwrittenByRuntimePreparation" classname="com.codepocket.ide.CppRuntimePreparationTest" time="9.976"/>
+  <testcase name="trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs" classname="com.codepocket.ide.CppRuntimePreparationTest" time="22.503">
     <failure message="java.lang.IllegalArgumentException: 无法创建 C++ 头文件（重名或文件系统限制）：sysroot/include/linux/netfilter/xt_connmark.h" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: 无法创建 C++ 头文件（重名或文件系统限制）：sysroot/include/linux/netfilter/xt_connmark.h
 	at com.codepocket.ide.CppHeaderArchive.extract(CppHeaderArchive.kt:24)
 	at com.codepocket.ide.CppRuntime$headers$2$1.invoke(CppRuntime.kt:14)
@@ -34,7 +34,7 @@
 	at java.base/java.lang.Thread.run(Thread.java:840)
 </failure>
   </testcase>
-  <testcase name="trustedAliasCanReuseCompletedPinnedInputsWithoutChangingTheirBytes" classname="com.codepocket.ide.CppRuntimePreparationTest" time="0.099"/>
+  <testcase name="trustedAliasCanReuseCompletedPinnedInputsWithoutChangingTheirBytes" classname="com.codepocket.ide.CppRuntimePreparationTest" time="0.187"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

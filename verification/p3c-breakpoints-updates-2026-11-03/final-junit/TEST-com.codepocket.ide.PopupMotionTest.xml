@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.PopupMotionTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:57:38" hostname="JUHE" time="0.63">
+<testsuite name="com.codepocket.ide.PopupMotionTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:14" hostname="JUHE" time="1.2">
   <properties/>
-  <testcase name="anotherDocumentStillGetsItsOwnEntranceAfterRapidDismiss" classname="com.codepocket.ide.PopupMotionTest" time="0.136"/>
-  <testcase name="rapidTypingReopenDoesNotFadeTheSameDocumentAgain" classname="com.codepocket.ide.PopupMotionTest" time="0.097"/>
-  <testcase name="disabledMotionHasNoNativeExitTransition" classname="com.codepocket.ide.PopupMotionTest" time="0.077"/>
-  <testcase name="actualSignatureUpdatesDoNotReplayEntranceAndDismissCancelsIt" classname="com.codepocket.ide.PopupMotionTest" time="0.102"/>
-  <testcase name="completionDismissCanReopenImmediatelyWithoutAStaleExitHidingIt" classname="com.codepocket.ide.PopupMotionTest" time="0.099"/>
-  <testcase name="inputReferenceDescribesTheRealInteractiveTerminal" classname="com.codepocket.ide.PopupMotionTest" time="0.05"/>
-  <testcase name="actualCompletionUpdatesDoNotReplayEntranceOrTakeEditorFocus" classname="com.codepocket.ide.PopupMotionTest" time="0.069"/>
+  <testcase name="anotherDocumentStillGetsItsOwnEntranceAfterRapidDismiss" classname="com.codepocket.ide.PopupMotionTest" time="0.221"/>
+  <testcase name="rapidTypingReopenDoesNotFadeTheSameDocumentAgain" classname="com.codepocket.ide.PopupMotionTest" time="0.155"/>
+  <testcase name="disabledMotionHasNoNativeExitTransition" classname="com.codepocket.ide.PopupMotionTest" time="0.123"/>
+  <testcase name="actualSignatureUpdatesDoNotReplayEntranceAndDismissCancelsIt" classname="com.codepocket.ide.PopupMotionTest" time="0.228"/>
+  <testcase name="completionDismissCanReopenImmediatelyWithoutAStaleExitHidingIt" classname="com.codepocket.ide.PopupMotionTest" time="0.183"/>
+  <testcase name="inputReferenceDescribesTheRealInteractiveTerminal" classname="com.codepocket.ide.PopupMotionTest" time="0.107"/>
+  <testcase name="actualCompletionUpdatesDoNotReplayEntranceOrTakeEditorFocus" classname="com.codepocket.ide.PopupMotionTest" time="0.183"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Invalid ID 0x00000000.
 Invalid ID 0x00000000.

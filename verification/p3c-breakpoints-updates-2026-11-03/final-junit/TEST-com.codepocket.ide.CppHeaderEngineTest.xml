@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.CppHeaderEngineTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:54:13" hostname="JUHE" time="1.1">
+<testsuite name="com.codepocket.ide.CppHeaderEngineTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:44:50" hostname="JUHE" time="2.866">
   <properties/>
-  <testcase name="productionEngineReturnsActualFileDirectoryAndMiddlePathEditsWithoutWritingTheBuffer" classname="com.codepocket.ide.CppHeaderEngineTest" time="1.1"/>
+  <testcase name="productionEngineReturnsActualFileDirectoryAndMiddlePathEditsWithoutWritingTheBuffer" classname="com.codepocket.ide.CppHeaderEngineTest" time="2.866"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

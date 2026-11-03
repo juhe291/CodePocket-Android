@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.SoraWorkbenchIntegrationTest" tests="32" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:58:01" hostname="JUHE" time="24.727">
+<testsuite name="com.codepocket.ide.SoraWorkbenchIntegrationTest" tests="32" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:57" hostname="JUHE" time="42.056">
   <properties/>
-  <testcase name="staleEditAndChineseCompositionCannotRewriteTheCurrentBuffer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.293"/>
-  <testcase name="obsoleteDecorationsCannotSurviveTypingTabSwitchOrComposition" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.376"/>
-  <testcase name="oversizedHighlightFallbackClearsRolesButKeepsStatusAndAllowsEditing" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.402"/>
-  <testcase name="nativeOversizedPasteDoesNotOverwriteTheFileOrClaimAnUnwrittenRecoveryDraft" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.424"/>
-  <testcase name="syntaxThemeAndFontApplyKeepTheSameTabletBufferAndTerminal" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.292"/>
-  <testcase name="textMateReanalysisAndStyleRefreshKeepTheLexicalLayer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.32"/>
-  <testcase name="emojiPasteIsRejectedAsAWholeAndNativeClipboardAndAccessibilityAreBounded" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.657"/>
-  <testcase name="physicalSaveWritesActualProjectBytesAndClearsOnlyMatchingDraft" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.236"/>
-  <testcase name="genuineDraftIoFailureStillReportsThatTheNewCheckpointWasNotWritten" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.298"/>
-  <testcase name="generationAwareInputConnectionCannotEditTheNextDocumentOrEndItsBatch" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.381"/>
-  <testcase name="mixedBracketsAndLexicalRolesAreDrawnInTheMainEditor" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.35"/>
-  <testcase name="phoneLightPythonTokensUseRestrainedLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.297"/>
-  <testcase name="compositionRangeOutsideTheSelectionIsReadFromTheRealConnection" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.741"/>
-  <testcase name="nativeIndentDuplicateAndInsertionDoNotPartiallyChangeAnOverBudgetOperation" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.647"/>
-  <testcase name="phoneDarkPythonTokensKeepTheExistingLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.294"/>
-  <testcase name="realDiagnosticRegionsAndLineNavigationUseTheCurrentDocumentVersion" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.218"/>
-  <testcase name="exactlyAtLimitRejectsFurtherTypingButAllowsSelectionReplacementAndDeletion" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.817"/>
-  <testcase name="syntaxThemeRoundTripKeepsBufferUndoAndSelection" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.253"/>
-  <testcase name="tabletLightCppTokensUseRestrainedLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.43"/>
-  <testcase name="externalConflictKeepsDirtyTextAndPreventsTabSwitch" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.318"/>
-  <testcase name="literalReplaceUsesTheSameMainBufferAndOneUndoTransaction" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.291"/>
-  <testcase name="tabletUsesTheSameEditorWithStartupTerminalAndExistingSession" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.233"/>
-  <testcase name="tabletAutomaticExtrasAtTheBoundaryKeepRawTextAndGlobalSettings" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="1.411"/>
-  <testcase name="realMouseCtrlDragCannotCopySelectionPastTheLimitButStillCopiesWhenItFits" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="2.57"/>
-  <testcase name="composingReplacementAtLimitKeepsTheActualPreeditAndThenCommits" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.685"/>
-  <testcase name="delayedViewportAndBackgroundSelectionNeverStealTerminalOrInputFocus" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.3"/>
-  <testcase name="normalMainEntryLoadsTheExistingWorkspaceIntoTheMatureEditor" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.213"/>
-  <testcase name="decorationsKeepSelectionDirtyStateRevisionAndActualUndoHistory" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.299"/>
-  <testcase name="switchingTabsSavesOldBufferAndRestoresSelectionWithoutCrossFileUndo" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.378"/>
-  <testcase name="olderAndroidComposingRangeUsesTheSamePublicContract" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="9.223"/>
-  <testcase name="modernImeOverloadsAndReplaceTextRespectTheSameLimit" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.807"/>
-  <testcase name="invalidOverlayIsRejectedBeforeChangingDiagnosticsOrBuffer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.272"/>
+  <testcase name="staleEditAndChineseCompositionCannotRewriteTheCurrentBuffer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.48"/>
+  <testcase name="obsoleteDecorationsCannotSurviveTypingTabSwitchOrComposition" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.512"/>
+  <testcase name="oversizedHighlightFallbackClearsRolesButKeepsStatusAndAllowsEditing" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.652"/>
+  <testcase name="nativeOversizedPasteDoesNotOverwriteTheFileOrClaimAnUnwrittenRecoveryDraft" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.782"/>
+  <testcase name="syntaxThemeAndFontApplyKeepTheSameTabletBufferAndTerminal" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.537"/>
+  <testcase name="textMateReanalysisAndStyleRefreshKeepTheLexicalLayer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.428"/>
+  <testcase name="emojiPasteIsRejectedAsAWholeAndNativeClipboardAndAccessibilityAreBounded" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="1.039"/>
+  <testcase name="physicalSaveWritesActualProjectBytesAndClearsOnlyMatchingDraft" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.395"/>
+  <testcase name="genuineDraftIoFailureStillReportsThatTheNewCheckpointWasNotWritten" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.505"/>
+  <testcase name="generationAwareInputConnectionCannotEditTheNextDocumentOrEndItsBatch" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.656"/>
+  <testcase name="mixedBracketsAndLexicalRolesAreDrawnInTheMainEditor" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.507"/>
+  <testcase name="phoneLightPythonTokensUseRestrainedLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.515"/>
+  <testcase name="compositionRangeOutsideTheSelectionIsReadFromTheRealConnection" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="1.329"/>
+  <testcase name="nativeIndentDuplicateAndInsertionDoNotPartiallyChangeAnOverBudgetOperation" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="1.048"/>
+  <testcase name="phoneDarkPythonTokensKeepTheExistingLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.58"/>
+  <testcase name="realDiagnosticRegionsAndLineNavigationUseTheCurrentDocumentVersion" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.505"/>
+  <testcase name="exactlyAtLimitRejectsFurtherTypingButAllowsSelectionReplacementAndDeletion" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="1.347"/>
+  <testcase name="syntaxThemeRoundTripKeepsBufferUndoAndSelection" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.464"/>
+  <testcase name="tabletLightCppTokensUseRestrainedLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.798"/>
+  <testcase name="externalConflictKeepsDirtyTextAndPreventsTabSwitch" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.681"/>
+  <testcase name="literalReplaceUsesTheSameMainBufferAndOneUndoTransaction" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.549"/>
+  <testcase name="tabletUsesTheSameEditorWithStartupTerminalAndExistingSession" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.478"/>
+  <testcase name="tabletAutomaticExtrasAtTheBoundaryKeepRawTextAndGlobalSettings" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="2.067"/>
+  <testcase name="realMouseCtrlDragCannotCopySelectionPastTheLimitButStillCopiesWhenItFits" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="4.021"/>
+  <testcase name="composingReplacementAtLimitKeepsTheActualPreeditAndThenCommits" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="1.079"/>
+  <testcase name="delayedViewportAndBackgroundSelectionNeverStealTerminalOrInputFocus" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.469"/>
+  <testcase name="normalMainEntryLoadsTheExistingWorkspaceIntoTheMatureEditor" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.409"/>
+  <testcase name="decorationsKeepSelectionDirtyStateRevisionAndActualUndoHistory" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.523"/>
+  <testcase name="switchingTabsSavesOldBufferAndRestoresSelectionWithoutCrossFileUndo" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.667"/>
+  <testcase name="olderAndroidComposingRangeUsesTheSamePublicContract" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="16.373"/>
+  <testcase name="modernImeOverloadsAndReplaceTextRespectTheSameLimit" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="1.236"/>
+  <testcase name="invalidOverlayIsRejectedBeforeChangingDiagnosticsOrBuffer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.422"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Invalid ID 0x00000000.
 Invalid ID 0x00000000.

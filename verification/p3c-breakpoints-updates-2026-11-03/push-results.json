@@ -1,0 +1,22 @@
+{
+  "pushed_sha": "fe3990750582c513b97c10cf556cf9ba15f2e560",
+  "pushed_tag": "v0.2.2",
+  "tag_object": "53e66001ce47f40231d7e41abbbf4e949d8bbf19",
+  "previous_remote_sha": "2a93d3d4e7bbf518f98a992d6899ec5947f219c6",
+  "remote_ref_verified": true,
+  "push_exit": 0,
+  "push_method": "git HTTPS with -c http.sslBackend=openssl and explicit no-proxy override (local git proxy was down; schannel credential path unavailable)",
+  "repository": "https://github.com/juhe291/CodePocket-Android",
+  "default_branch": "master",
+  "version_name": "0.2.2",
+  "version_code": 4,
+  "apk": "dist/CodePocket-p3c-breakpoints-updates-2026-11-03-debug.apk",
+  "apk_bytes": 118221699,
+  "apk_sha256": "f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a",
+  "release_published": false,
+  "topics": ["android", "android-ide", "chaquopy", "code-editor", "cplusplus", "ide", "kotlin", "offline-ide", "python", "sora-editor"],
+  "remote_ci_run": 41641563765,
+  "remote_ci_url": "https://github.com/juhe291/CodePocket-Android/actions/runs/41641563765",
+  "remote_ci_status": "see remote-ci-run.json / remote-ci-status.log",
+  "android_execution": false
+}

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.GitWorkbenchIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:56:38" hostname="JUHE" time="15.0">
+<testsuite name="com.codepocket.ide.GitWorkbenchIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:50:13" hostname="JUHE" time="37.641">
   <properties/>
-  <testcase name="lateDiffDoesNotDismissOrModifyAnOpenSettingsDraft" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="1.676"/>
-  <testcase name="largeFontCommitFormRemainsScrollableWithReachableActions" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="2.205"/>
-  <testcase name="phoneSourceControlUsesTheExistingDrawerAndCommitsOnlySavedStagedContent" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="5.87"/>
-  <testcase name="commitDraftSurvivesRecreationAndCancelWithoutChangingTheStagedIndex" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="2.788"/>
-  <testcase name="sourceControlWithoutAProjectDoesNotSeedSampleFilesOrInitializeARepository" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="0.325"/>
-  <testcase name="tabletReusesSidebarAndShowsRealDiffWithoutChangingSoraUndo" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="2.136"/>
+  <testcase name="lateDiffDoesNotDismissOrModifyAnOpenSettingsDraft" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="4.768"/>
+  <testcase name="largeFontCommitFormRemainsScrollableWithReachableActions" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="5.691"/>
+  <testcase name="phoneSourceControlUsesTheExistingDrawerAndCommitsOnlySavedStagedContent" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="15.119"/>
+  <testcase name="commitDraftSurvivesRecreationAndCancelWithoutChangingTheStagedIndex" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="6.899"/>
+  <testcase name="sourceControlWithoutAProjectDoesNotSeedSampleFilesOrInitializeARepository" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="0.419"/>
+  <testcase name="tabletReusesSidebarAndShowsRealDiffWithoutChangingSoraUndo" classname="com.codepocket.ide.GitWorkbenchIntegrationTest" time="4.745"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Invalid ID 0x00000000.
 Invalid ID 0x00000000.

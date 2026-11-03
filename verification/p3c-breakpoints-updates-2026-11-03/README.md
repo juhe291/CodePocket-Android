@@ -13,9 +13,13 @@
 
 ## 最终 APK
 
-- `dist/CodePocket-p3c-breakpoints-updates-2026-11-03-debug.apk`，**118,221,699 字节**，SHA256 `f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a`，0.2.2 (4)，原 Debug 签名。
-- `apk-signature.txt`（apksigner verify）、`apk-zipalign.txt`（16 KiB）、`apk-archive.txt`（928 entries 可完整读取）、`apk-badging.txt`、`certificates.txt`、`permissions.txt`、`manifest-tree.txt`、`resources.txt`。
-- `apk-inspection.json` / `runtime-delta.json`：相对上一有效 Bug 包（6949b5f6…）只改变 10 个条目（Manifest 版本、app.imy/build.json、4 个 dex、resources.arsc、2 个引用资源 ID 的 layout 二进制与签名容器），无条目新增/删除；25 个原生库、requirements-common.imy、C++ 运行资产与其余全部条目字节一致。
+- `dist/CodePocket-p3c-breakpoints-updates-2026-11-03-debug.apk`，**118,168,893 字节**，SHA256 `140e4d16092bddf83a5e4d094ac51adbc89fdacb2a44da54ee9f6591aa751b16`，0.2.2 (4)，原 Debug 签名。
+- `apk-signature.txt`（apksigner verify）、`apk-zipalign.txt`（16 KiB）、`apk-archive.txt`、`apk-badging.txt`、`certificates.txt`、`permissions.txt`、`manifest-tree.txt`、`resources.txt`。
+- `apk-inspection.json` / `runtime-delta.json`：相对上一有效 Bug 包（6949b5f6…）只改变 10 个条目（Manifest 版本、app.imy/build.json、4 个 dex、resources.arsc、2 个引用资源 ID 的 layout 二进制与签名容器），无条目新增/删除；25 个原生库、requirements-common.imy、C++ 运行资产与其余全部条目字节一致。同源首次增量打包出现 620 KB 孤儿本地条目，已清理输出后重新 `:app:assembleDebug`，旧中间包不交付。
+
+## 推送后远端 CI 首轮（真实失败，不称通过）
+
+`master` 首次推送 `fe39907` + tag `v0.2.2` 后，[run 41641563765](https://github.com/juhe291/CodePocket-Android/actions/runs/41641563765) 失败：Python172/SDK/C++ 准备通过，App 1191 项 2 失败、0 ignored；失败页 `remote-failure-*.html`、完整制品 `remote-reports.zip`（258877 字节，SHA256 `4375c7be…305f00`）、`remote-ci-run.json` 保留。两项为既有 Sora 异步布局与终端中断契约问题（本批此前两项 Linux CI 修复已在该 run 通过），修复与二次定向结果见交付记录第 9 节；第二次推送与 CI 结果在随后的 `push-results.json`/`remote-ci-run*.json` 记录中如实更新。
 
 ## 视觉
 

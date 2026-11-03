@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.SemanticProtocolTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:57:56" hostname="JUHE" time="0.112">
+<testsuite name="com.codepocket.ide.SemanticProtocolTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:49" hostname="JUHE" time="0.258">
   <properties/>
-  <testcase name="exactMiddleTokenReplacementKeepsTheUnchangedPrefixAndUndoSource" classname="com.codepocket.ide.SemanticProtocolTest" time="0.021"/>
-  <testcase name="malformedOrSplitSurrogateEditsAreRejected" classname="com.codepocket.ide.SemanticProtocolTest" time="0.012"/>
-  <testcase name="unicodeOffsetsAreAndroidUtf16AndDoNotDeleteEmoji" classname="com.codepocket.ide.SemanticProtocolTest" time="0.012"/>
-  <testcase name="noResultIsDifferentFromBackendFailure" classname="com.codepocket.ide.SemanticProtocolTest" time="0.018"/>
-  <testcase name="actualListAndClassMembersHaveTheirRealKinds" classname="com.codepocket.ide.SemanticProtocolTest" time="0.018"/>
-  <testcase name="actualSignaturesOverrideCuratedSameNameAndCarryCurrentParameter" classname="com.codepocket.ide.SemanticProtocolTest" time="0.018"/>
-  <testcase name="clientPassesCurrentFileScopeAndNeverAnalyzesCppOrOversizedCode" classname="com.codepocket.ide.SemanticProtocolTest" time="0.013"/>
+  <testcase name="exactMiddleTokenReplacementKeepsTheUnchangedPrefixAndUndoSource" classname="com.codepocket.ide.SemanticProtocolTest" time="0.04"/>
+  <testcase name="malformedOrSplitSurrogateEditsAreRejected" classname="com.codepocket.ide.SemanticProtocolTest" time="0.037"/>
+  <testcase name="unicodeOffsetsAreAndroidUtf16AndDoNotDeleteEmoji" classname="com.codepocket.ide.SemanticProtocolTest" time="0.035"/>
+  <testcase name="noResultIsDifferentFromBackendFailure" classname="com.codepocket.ide.SemanticProtocolTest" time="0.035"/>
+  <testcase name="actualListAndClassMembersHaveTheirRealKinds" classname="com.codepocket.ide.SemanticProtocolTest" time="0.038"/>
+  <testcase name="actualSignaturesOverrideCuratedSameNameAndCarryCurrentParameter" classname="com.codepocket.ide.SemanticProtocolTest" time="0.036"/>
+  <testcase name="clientPassesCurrentFileScopeAndNeverAnalyzesCppOrOversizedCode" classname="com.codepocket.ide.SemanticProtocolTest" time="0.037"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

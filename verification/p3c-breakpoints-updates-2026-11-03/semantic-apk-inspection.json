@@ -1,5 +1,5 @@
 {
-  "apk_sha256": "f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a",
+  "apk_sha256": "140e4d16092bddf83a5e4d094ac51adbc89fdacb2a44da54ee9f6591aa751b16",
   "backend_bytecode_sha256": "e643351943fcae6bbf05399286a776ffe1a5a78367450acda27ed2b3d0161fb3",
   "tests": 22,
   "failures": 0,

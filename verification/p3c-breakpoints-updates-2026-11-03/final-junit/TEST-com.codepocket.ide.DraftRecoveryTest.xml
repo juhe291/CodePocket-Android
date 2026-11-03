@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.DraftRecoveryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:54:23" hostname="JUHE" time="0.143">
+<testsuite name="com.codepocket.ide.DraftRecoveryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:45:11" hostname="JUHE" time="0.172">
   <properties/>
-  <testcase name="alreadySavedCheckpointDoesNotCauseFalseConflictOnNextEdit" classname="com.codepocket.ide.DraftRecoveryTest" time="0.047"/>
+  <testcase name="alreadySavedCheckpointDoesNotCauseFalseConflictOnNextEdit" classname="com.codepocket.ide.DraftRecoveryTest" time="0.061"/>
   <testcase name="unwrittenCheckpointStillSavesAgainstItsOriginalVersion" classname="com.codepocket.ide.DraftRecoveryTest" time="0.045"/>
-  <testcase name="realExternalConflictKeepsDraftAndDoesNotOverwriteTheFile" classname="com.codepocket.ide.DraftRecoveryTest" time="0.044"/>
-  <testcase name="noCheckpointStartsFromCurrentFileWithoutDirtyState" classname="com.codepocket.ide.DraftRecoveryTest" time="0.006"/>
+  <testcase name="realExternalConflictKeepsDraftAndDoesNotOverwriteTheFile" classname="com.codepocket.ide.DraftRecoveryTest" time="0.05"/>
+  <testcase name="noCheckpointStartsFromCurrentFileWithoutDirtyState" classname="com.codepocket.ide.DraftRecoveryTest" time="0.015"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

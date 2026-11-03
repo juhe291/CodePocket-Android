@@ -1,7 +1,7 @@
 {
   "apk": "app/build/outputs/apk/debug/app-debug.apk",
-  "bytes": 118221699,
-  "sha256": "f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a",
+  "bytes": 118168893,
+  "sha256": "140e4d16092bddf83a5e4d094ac51adbc89fdacb2a44da54ee9f6591aa751b16",
   "entries": 929,
   "badging": "package: name='com.codepocket.ide' versionCode='4' versionName='0.2.2' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'",
   "signature_verified": true,

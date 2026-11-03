@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.WorkbenchStartupBehaviorTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:58:52" hostname="JUHE" time="3.48">
+<testsuite name="com.codepocket.ide.WorkbenchStartupBehaviorTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:54:24" hostname="JUHE" time="5.845">
   <properties/>
-  <testcase name="closingAProjectKeepsItsFilesAndRestoresItsSavedTabsOnlyWhenReopened" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.571"/>
-  <testcase name="tabletLightWelcomeHasRealReachableActionsAndNoSamples" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.289"/>
-  <testcase name="recreatingTheWelcomeScreenDoesNotTurnItIntoAnImplicitSampleProject" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.229"/>
-  <testcase name="closingTheLastTabSavesItsRealFileAndReopeningKeepsItsStableIdentity" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.367"/>
-  <testcase name="firstLaunchOffersNewAndOpenWithNoSeededCodeOrDemoFiles" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.189"/>
-  <testcase name="newFileFromWelcomeCreatesOnlyTheRequestedEmptyFileAndKeepsSavedEdits" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.464"/>
-  <testcase name="cancellingNewFileLeavesTheWelcomeAreaAndDoesNotCreateAnUnrequestedDemo" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.156"/>
-  <testcase name="conflictingSaveBlocksClosingTheLastTabAndKeepsBothDraftAndProviderBytes" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.299"/>
-  <testcase name="existingFileAndSavedProjectStillRestoreTheirExactBytes" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.168"/>
-  <testcase name="compactLargeWelcomeCanScrollToItsActionsWithoutOpeningADocument" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.174"/>
-  <testcase name="cancellingTheSystemOpenProjectPickerKeepsTheWelcomeState" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.138"/>
-  <testcase name="searchWithoutAnOpenProjectUsesTheDrawerAndCannotSearchRetainedClosedFiles" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.436"/>
+  <testcase name="closingAProjectKeepsItsFilesAndRestoresItsSavedTabsOnlyWhenReopened" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="1.04"/>
+  <testcase name="tabletLightWelcomeHasRealReachableActionsAndNoSamples" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.384"/>
+  <testcase name="recreatingTheWelcomeScreenDoesNotTurnItIntoAnImplicitSampleProject" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.482"/>
+  <testcase name="closingTheLastTabSavesItsRealFileAndReopeningKeepsItsStableIdentity" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.911"/>
+  <testcase name="firstLaunchOffersNewAndOpenWithNoSeededCodeOrDemoFiles" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.431"/>
+  <testcase name="newFileFromWelcomeCreatesOnlyTheRequestedEmptyFileAndKeepsSavedEdits" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.598"/>
+  <testcase name="cancellingNewFileLeavesTheWelcomeAreaAndDoesNotCreateAnUnrequestedDemo" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.258"/>
+  <testcase name="conflictingSaveBlocksClosingTheLastTabAndKeepsBothDraftAndProviderBytes" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.477"/>
+  <testcase name="existingFileAndSavedProjectStillRestoreTheirExactBytes" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.215"/>
+  <testcase name="compactLargeWelcomeCanScrollToItsActionsWithoutOpeningADocument" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.31"/>
+  <testcase name="cancellingTheSystemOpenProjectPickerKeepsTheWelcomeState" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.203"/>
+  <testcase name="searchWithoutAnOpenProjectUsesTheDrawerAndCannotSearchRetainedClosedFiles" classname="com.codepocket.ide.WorkbenchStartupBehaviorTest" time="0.535"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Invalid ID 0x00000000.
 Invalid ID 0x00000000.

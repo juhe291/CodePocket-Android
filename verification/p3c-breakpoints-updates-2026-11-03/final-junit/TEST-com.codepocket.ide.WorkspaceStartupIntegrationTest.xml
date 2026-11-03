@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.WorkspaceStartupIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:59:04" hostname="JUHE" time="1.435">
+<testsuite name="com.codepocket.ide.WorkspaceStartupIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:54:45" hostname="JUHE" time="2.298">
   <properties/>
-  <testcase name="phoneDarkLoadingBecomesTheRealWorkspace" classname="com.codepocket.ide.WorkspaceStartupIntegrationTest" time="0.25"/>
-  <testcase name="tabletLightLoadingBecomesTheRealWorkspace" classname="com.codepocket.ide.WorkspaceStartupIntegrationTest" time="0.332"/>
-  <testcase name="phoneLargeFailurePreservesDraftAndOpensActualInternalProject" classname="com.codepocket.ide.WorkspaceStartupIntegrationTest" time="0.853"/>
+  <testcase name="phoneDarkLoadingBecomesTheRealWorkspace" classname="com.codepocket.ide.WorkspaceStartupIntegrationTest" time="0.357"/>
+  <testcase name="tabletLightLoadingBecomesTheRealWorkspace" classname="com.codepocket.ide.WorkspaceStartupIntegrationTest" time="0.49"/>
+  <testcase name="phoneLargeFailurePreservesDraftAndOpensActualInternalProject" classname="com.codepocket.ide.WorkspaceStartupIntegrationTest" time="1.451"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Invalid ID 0x00000000.
 Invalid ID 0x00000000.

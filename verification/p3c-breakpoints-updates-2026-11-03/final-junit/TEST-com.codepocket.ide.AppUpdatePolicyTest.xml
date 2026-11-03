@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.AppUpdatePolicyTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:53:32" hostname="JUHE" time="0.037">
+<testsuite name="com.codepocket.ide.AppUpdatePolicyTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:43:43" hostname="JUHE" time="0.056">
   <properties/>
-  <testcase name="draftsPrereleasesMalformedVersionsAndExternalPagesAreRejected" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
+  <testcase name="draftsPrereleasesMalformedVersionsAndExternalPagesAreRejected" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.005"/>
   <testcase name="missingOrWrongArchitectureAssetsStillHaveAnHonestReleasePage" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
   <testcase name="multipleBuildsAreNotGuessedAndAnExactArm64AssetBeatsUniversal" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
-  <testcase name="equalityAndDevelopmentVersionsNeverOfferADowngrade" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
-  <testcase name="oversizedMetadataAndInvalidAssetSizesCannotMasqueradeAsDownloads" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.018"/>
+  <testcase name="equalityAndDevelopmentVersionsNeverOfferADowngrade" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.0"/>
+  <testcase name="oversizedMetadataAndInvalidAssetSizesCannotMasqueradeAsDownloads" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.039"/>
   <testcase name="numericVersionsDoNotUseLexicalOrderingAndIgnoreBuildMetadata" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
-  <testcase name="sourcesAndReturnedLinksRemainInTheConfiguredHttpsRepository" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.013"/>
+  <testcase name="sourcesAndReturnedLinksRemainInTheConfiguredHttpsRepository" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.006"/>
   <testcase name="publishedMetadataRetainsAllNotesAndTheActualCompatibleAsset" classname="com.codepocket.ide.AppUpdatePolicyTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

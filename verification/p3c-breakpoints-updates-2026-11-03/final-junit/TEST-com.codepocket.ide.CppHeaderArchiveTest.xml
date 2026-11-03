@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.CppHeaderArchiveTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:54:13" hostname="JUHE" time="0.069">
+<testsuite name="com.codepocket.ide.CppHeaderArchiveTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:44:50" hostname="JUHE" time="0.162">
   <properties/>
-  <testcase name="boundedExtractionPreservesActualHeaderText" classname="com.codepocket.ide.CppHeaderArchiveTest" time="0.024"/>
-  <testcase name="duplicateEntriesCannotReplaceAnExistingPrivateFile" classname="com.codepocket.ide.CppHeaderArchiveTest" time="0.012"/>
-  <testcase name="traversalUnexpectedPathsAndSizeOrCountMismatchesFailClosed" classname="com.codepocket.ide.CppHeaderArchiveTest" time="0.032"/>
+  <testcase name="boundedExtractionPreservesActualHeaderText" classname="com.codepocket.ide.CppHeaderArchiveTest" time="0.052"/>
+  <testcase name="duplicateEntriesCannotReplaceAnExistingPrivateFile" classname="com.codepocket.ide.CppHeaderArchiveTest" time="0.055"/>
+  <testcase name="traversalUnexpectedPathsAndSizeOrCountMismatchesFailClosed" classname="com.codepocket.ide.CppHeaderArchiveTest" time="0.055"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

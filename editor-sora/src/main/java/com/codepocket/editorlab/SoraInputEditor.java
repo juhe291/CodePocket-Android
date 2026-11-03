@@ -93,7 +93,26 @@ final class SoraInputEditor extends CodeEditor {
     private boolean suppressFocus;
     private SoraInputGuard inputGuard;
     void limitInput(int maximum, Runnable rejected) { inputGuard = new SoraInputGuard(this, maximum, rejected); }
+    /** Pinned Sora rebuilds its line table asynchronously; inserting before it exists crashes afterInsert. */
+    private boolean contentLayoutUnstable() {
+        var layout = getLayout();
+        return (getEditable() && !isEditable()) || layout == null || layout.getRowCount() <= 0;
+    }
+    private void commitAfterLayout(CharSequence text, boolean indent, boolean pairs, int attempts) {
+        postDelayed(() -> {
+            if (contentLayoutUnstable() && attempts > 0) commitAfterLayout(text, indent, pairs, attempts - 1);
+            else commitNow(text, indent, pairs);
+        }, 16);
+    }
     @Override public void commitText(CharSequence text, boolean indent, boolean pairs) {
+        if (contentLayoutUnstable()) {
+            // Keep the user's real text and order instead of dropping input or touching a half-built layout.
+            commitAfterLayout(text == null ? "" : text.toString(), indent, pairs, 60);
+            return;
+        }
+        commitNow(text, indent, pairs);
+    }
+    private void commitNow(CharSequence text, boolean indent, boolean pairs) {
         if (inputGuard != null) {
             var cur = getCursor();
             if (!inputGuard.replacement(text, cur.getRight() - cur.getLeft())) return;

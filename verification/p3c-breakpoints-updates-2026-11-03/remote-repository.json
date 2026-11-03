@@ -1,0 +1,19 @@
+{
+  "full_name": "juhe291/CodePocket-Android",
+  "default_branch": "master",
+  "private": false,
+  "description": "Native Android C++ / Python IDE with Sora, local runtimes, PTY terminal and Git workbench.",
+  "html_url": "https://github.com/juhe291/CodePocket-Android",
+  "topics": [
+    "android",
+    "android-ide",
+    "chaquopy",
+    "code-editor",
+    "cplusplus",
+    "ide",
+    "kotlin",
+    "offline-ide",
+    "python",
+    "sora-editor"
+  ]
+}

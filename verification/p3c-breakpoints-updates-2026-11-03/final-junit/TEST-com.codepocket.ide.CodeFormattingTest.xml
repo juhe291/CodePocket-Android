@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.CodeFormattingTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:53:50" hostname="JUHE" time="0.959">
+<testsuite name="com.codepocket.ide.CodeFormattingTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:44:10" hostname="JUHE" time="1.589">
   <properties/>
-  <testcase name="cppUtf16CrLfSelectionAndReverseOrderedEditsAreValidated" classname="com.codepocket.ide.CodeFormattingTest" time="0.016"/>
-  <testcase name="responseMustMatchSourceEngineLimitsAndSelection" classname="com.codepocket.ide.CodeFormattingTest" time="0.036"/>
-  <testcase name="actualPythonClientUsesUnsavedSourceAndMapsUnicodeSelection" classname="com.codepocket.ide.CodeFormattingTest" time="0.25"/>
-  <testcase name="insertedCppWhitespaceStaysOutsideTheOriginalSelectedToken" classname="com.codepocket.ide.CodeFormattingTest" time="0.001"/>
-  <testcase name="largerFormattingFramesDoNotRelaxTheOriginalSemanticFrameLimit" classname="com.codepocket.ide.CodeFormattingTest" time="0.092"/>
-  <testcase name="malformedOverlappingSurrogateAndOverlargeEditsFailClosed" classname="com.codepocket.ide.CodeFormattingTest" time="0.01"/>
-  <testcase name="actualCppFormatterUsesPrivateStylePreservesIncludeOrderAndDoesNotWriteDraft" classname="com.codepocket.ide.CodeFormattingTest" time="0.552"/>
+  <testcase name="cppUtf16CrLfSelectionAndReverseOrderedEditsAreValidated" classname="com.codepocket.ide.CodeFormattingTest" time="0.011"/>
+  <testcase name="responseMustMatchSourceEngineLimitsAndSelection" classname="com.codepocket.ide.CodeFormattingTest" time="0.01"/>
+  <testcase name="actualPythonClientUsesUnsavedSourceAndMapsUnicodeSelection" classname="com.codepocket.ide.CodeFormattingTest" time="0.43"/>
+  <testcase name="insertedCppWhitespaceStaysOutsideTheOriginalSelectedToken" classname="com.codepocket.ide.CodeFormattingTest" time="0.002"/>
+  <testcase name="largerFormattingFramesDoNotRelaxTheOriginalSemanticFrameLimit" classname="com.codepocket.ide.CodeFormattingTest" time="0.129"/>
+  <testcase name="malformedOverlappingSurrogateAndOverlargeEditsFailClosed" classname="com.codepocket.ide.CodeFormattingTest" time="0.015"/>
+  <testcase name="actualCppFormatterUsesPrivateStylePreservesIncludeOrderAndDoesNotWriteDraft" classname="com.codepocket.ide.CodeFormattingTest" time="0.99"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

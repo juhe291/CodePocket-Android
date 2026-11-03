@@ -108,7 +108,10 @@ internal class CppTerminalRunner(private val launch: (IntArray) -> TerminalExecu
             }
             running(); var lastSize = endpoint.dimensions()
             while (true) {
-                if (cancelled() || Thread.currentThread().isInterrupted) throw CancellationException()
+                if (cancelled()) throw CancellationException()
+                // A coordinator interrupt is the documented caller contract; keep it an
+                // InterruptedException instead of a cancellation so ownership release stays explicit.
+                if (Thread.currentThread().isInterrupted) throw InterruptedException()
                 val exit = process.poll()
                 if (exit != null) {
                     // Freeze before draining output/fault pipes or cleaning up relays.

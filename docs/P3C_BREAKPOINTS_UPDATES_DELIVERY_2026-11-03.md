@@ -47,7 +47,7 @@
   - App **1191 项：1189 通过、1 个既有 Windows 头文件大小写冲突失败（`CppRuntimePreparationTest.trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs`）、1 个旧跳过**；完整命令真实退出 1，不称全绿。termux terminal-emulator **146 项全通过**；editor-assist `NO-SOURCE`。
   - Lint **零错误**：App 37 warnings（含既有 4 条更新对话框 `SetTextI18n` 登记 + 本批新增 3 条主题/更新文案拼接提示），editor-sora 1 warning（既有 `GradleDependency` 0.23.7→0.24.4 提示），workspace-core 0 error/0 warning。新增断点自定义 View 的 2 条 Lint 警告已修复（`ViewConstructor`/`ClickableViewAccessibility`）。
   - 集中构建 12m15s，245 tasks（40 executed / 205 up-to-date），只实际打包一次最终 APK。
-- 版本：`0.2.2 (4)`（原 Debug 签名，未重建密钥）。本批最终 APK：`dist/CodePocket-p3c-breakpoints-updates-2026-11-03-debug.apk`，**118,221,699 字节**，SHA256 `f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a`；929 entries；`apksigner` 验证、`zipalign -c -P 16 4`、`zipfile` 完整性、Manifest（versionCode 4 / versionName 0.2.2）通过；相对上一有效 Bug 包只改变 `AndroidManifest.xml`、`assets/chaquopy/app.imy`、`assets/chaquopy/build.json`、`classes2/3/6/7.dex`、`resources.arsc`、两个引用资源 ID 的 layout 二进制与签名容器，无新增/删除包条目。包内 Python/语义/Git/格式化/Web/C++/矢量/Shell/片段专项见同目录日志。
+- 版本：`0.2.2 (4)`（原 Debug 签名，未重建密钥）。本批最终 APK：`dist/CodePocket-p3c-breakpoints-updates-2026-11-03-debug.apk`，**118,168,893 字节**，SHA256 `140e4d16092bddf83a5e4d094ac51adbc89fdacb2a44da54ee9f6591aa751b16`；929 entries；`apksigner` 验证、`zipalign -c -P 16 4`、`zipfile` 完整性、Manifest（versionCode 4 / versionName 0.2.2）通过；相对上一有效 Bug 包只改变 10 个条目（`AndroidManifest.xml`、`assets/chaquopy/app.imy`、`assets/chaquopy/build.json`、`classes2/3/6/7.dex`、`resources.arsc`、两个引用资源 ID 的 layout 二进制与签名容器），无新增/删除包条目；25 原生库、requirements-common.imy、C++ 运行资产与其余全部条目字节一致。注：同源首次增量打包曾出现 620 KB 孤儿本地条目（不在中央目录、不改变运行内容，但使包变大到 118,842,926 字节）；已删除输出并重新 `:app:assembleDebug` 生成干净包，旧中间包不交付。
 - 原生视觉实际查看：手机深色自定义主题设置（含 JSON 编辑器/预览）、平板浅色自定义主题设置、手机深色真实 Sora 自定义配色、手机断点标记；未发现荧光/光晕/彩虹渐变或重复入口。
 - 设备/Android 实际执行：断点命中、Sora 主题、自动更新网络与对话框、终端 PTY 均**后置**，不以主机测试冒称设备通过。
 
@@ -62,3 +62,20 @@
 
 生产：`AppSettings.kt`、`SettingsDialog.kt`、`SettingsSearch.kt`、`AppUpdateDialog.kt`、`AppUpdateAutoCheck.kt`、`MainActivity.kt`、`ExecutionEngines.kt`、`PythonExecutionService.kt`、`RunSession.kt`、`strings.xml`、`workspace-core/.../EditorSessions.kt`、`editor-sora/.../WorkbenchEditor.java`、`SoraSyntaxController.java`、`TextMateBundle.java`、`SyntaxThemeDefinition.java`、`SyntaxThemePreview.java`、`BreakpointGutter.java`、`app/src/main/python/runner.py`。
 测试：`SettingsSearchAndThemeBaselineTest.kt`、`P3CVisualEvidenceTest.kt`、`BreakpointIntegrationTest.kt`、`AppUpdateAutoCheckTest.kt`、`EditorSessionsTest.kt`、`SoraWorkbenchIntegrationTest.kt`、`TerminalDockIntegrationTest.kt`、`tests/test_terminal_runner.py`。
+证据：`verification/p3c-breakpoints-updates-2026-11-03/`（真实 JUnit/Lint/APK 检查/包内运行时/推送/CI 记录）与 `verification/p3-settings-themes-2026-11-03/previews/`（4 张原生渲染图）。
+
+## 8. 推送、仓库整理与远端 CI（用户已授权）
+
+- 推送：`master` `2a93d3d..fe39907`（含 CI 修复提交 `39c7834` 与本批 `fe39907`），附 annotated tag `v0.2.2`；远端 ref 已用 `git ls-remote` 核对。本机 git 直连 TLS 的 schannel 路径不可用且本地代理已关闭，实际使用本机已配置的 `git -c http.sslBackend=openssl -c http.proxy=` 完成推送，凭据未打印、未上传任何密钥。
+- 仓库整理：补充 topics（android/android-ide/ide/kotlin/python/cplusplus/code-editor/sora-editor/chaquopy/offline-ide），保留原有描述与默认分支，未发布 Release、未上传 APK。
+- 远端 CI：[run 41641563765](https://github.com/juhe291/CodePocket-Android/actions/runs/41641563765)，触发提交 `fe39907`；真实结果以 `verification/p3c-breakpoints-updates-2026-11-03/remote-ci-run.json` 为准。**不预先把该 run 写成通过；若远端失败/未完成，将在下一次接续记录中如实说明并修复。**
+
+## 9. 推送后远端 CI 首轮结果与二次修复（2026-11-03）
+
+推送后远端 [run 41641563765](https://github.com/juhe291/CodePocket-Android/actions/runs/41641563765) **失败**：Python172/SDK/C++ 准备通过；App **1191 项中 2 项失败**（0 ignored，2m35s），Lint/APK/后续步骤未执行；报告制品 `13233935986`（258877 字节，SHA256 `4375c7be…305f00`）已下载核对。**本批先前两项 Linux CI 修复（Sora 后台选择焦点、终端重建面板）在该 run 中已通过**；新暴露的两个失败是既有 Sora/终端 Linux 时序问题，不是本批主题/更新/断点功能断言：
+
+1. `CompletionInteractionTest.fontZoomDoesNotDestroyTheNativeUndoHistory`：`ArrayIndexOutOfBoundsException: index=0, length=0`，真实堆栈在 pinned Sora `LineBreakLayout.afterInsert(147)` ← `Content.insert` ← `commitText`（首次输入，尚未缩放）。根因是 Sora 异步重建行表期间提交文本与会话布局竞争。修复：`SoraInputEditor.commitText` 在布局未稳定（布局忙/行表为空）时**保留真实文本与顺序，延迟到布局可用后提交**（16ms 重试，1s 上限，不丢弃输入），不再直接写半构建布局。
+2. `CppTerminalRunnerTest.interruptedCoordinatorStillJoinsItsRelaysBeforeReleasingOwnership`：参与者线程被中断时，原代码在循环顶部把“取消”与“中断”都抛成 `CancellationException`，测试按文档契约期望 `InterruptedException`。修复：区分 `cancelled()` 与 `Thread.currentThread().isInterrupted`，中断明确抛 `InterruptedException`，释放 relay/子进程所有权后再传播；取消仍保持 `CancellationException`。
+
+修复后定向：`CompletionInteractionTest` 33、`CppTerminalRunnerTest` 8、`SoraWorkbenchIntegrationTest` 32、`BreakpointIntegrationTest` 2、`MainRunIntegrationTest` 12、`TerminalDockIntegrationTest` 5、`CompletionTest` 10，共 102 项全通过。随后再次集中全量回归/Lint/构建，结果与第二次远端 CI run 以证据目录为准；不把首轮失败说成通过，也不把本地结果冒称远端通过。
+

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.MainCaretMotionIntegrationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:57:08" hostname="JUHE" time="2.395">
+<testsuite name="com.codepocket.ide.MainCaretMotionIntegrationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:51:24" hostname="JUHE" time="3.571">
   <properties/>
-  <testcase name="phoneMainImeCommitsImmediatelyAndUsesTheRequestedTypingAndBackspaceDuration" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.256"/>
-  <testcase name="phoneCompositionAndBackgroundFocusKeepTheCursorAndTerminalOwnershipAccurate" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.316"/>
-  <testcase name="actualHardwareArrowChangesLogicalSelectionBeforeEightyMillisecondTransition" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.253"/>
-  <testcase name="actualSettingsApplySeparatelyControlsMovementAndBlinkWithoutReplacingTheBuffer" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.293"/>
-  <testcase name="tabletLightWindowResizeKeepsPanelsSessionsAndCancelsOnlyTheCaretTransition" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.319"/>
-  <testcase name="completionShowAlignsTheCaretEvenBeforeAnExtendedTweenCanFinish" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.239"/>
-  <testcase name="systemReducedAnimationSettingCancelsActualMainEditorAnimations" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.235"/>
-  <testcase name="powerSavingBroadcastStopsAnimationsAndKeepsTheDocument" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.229"/>
-  <testcase name="mainLifecyclePauseReleasesCaretCallbacksAndResumeRetainsSelection" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.255"/>
+  <testcase name="phoneMainImeCommitsImmediatelyAndUsesTheRequestedTypingAndBackspaceDuration" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.36"/>
+  <testcase name="phoneCompositionAndBackgroundFocusKeepTheCursorAndTerminalOwnershipAccurate" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.359"/>
+  <testcase name="actualHardwareArrowChangesLogicalSelectionBeforeEightyMillisecondTransition" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.381"/>
+  <testcase name="actualSettingsApplySeparatelyControlsMovementAndBlinkWithoutReplacingTheBuffer" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.504"/>
+  <testcase name="tabletLightWindowResizeKeepsPanelsSessionsAndCancelsOnlyTheCaretTransition" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.501"/>
+  <testcase name="completionShowAlignsTheCaretEvenBeforeAnExtendedTweenCanFinish" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.337"/>
+  <testcase name="systemReducedAnimationSettingCancelsActualMainEditorAnimations" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.339"/>
+  <testcase name="powerSavingBroadcastStopsAnimationsAndKeepsTheDocument" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.357"/>
+  <testcase name="mainLifecyclePauseReleasesCaretCallbacksAndResumeRetainsSelection" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.433"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[Invalid ID 0x00000000.
 Invalid ID 0x00000000.
@@ -27,7 +27,7 @@ Invalid ID 0x00000000.
 Invalid ID 0x00000000.
 Invalid ID 0x00000000.
 Invalid ID 0x00000000.
-Intent = Intent { act=android.os.action.POWER_SAVE_MODE_CHANGED }; Matching wrappers: [Wrapper[receiver=[com.codepocket.ide.animation.MotionEnvironment$receiver$1@2d02598d], context=[android.app.ContextImpl@583c7a7c], intentFilter=[android.content.IntentFilter@6c30f498]]]
+Intent = Intent { act=android.os.action.POWER_SAVE_MODE_CHANGED }; Matching wrappers: [Wrapper[receiver=[com.codepocket.ide.animation.MotionEnvironment$receiver$1@2a5ef358], context=[android.app.ContextImpl@1439051d], intentFilter=[android.content.IntentFilter@339b9b87]]]
 Invalid ID 0x00000000.
 Invalid ID 0x00000000.
 ]]></system-err>

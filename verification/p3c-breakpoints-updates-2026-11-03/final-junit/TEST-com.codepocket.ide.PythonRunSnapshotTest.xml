@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codepocket.ide.PythonRunSnapshotTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:57:42" hostname="JUHE" time="0.482">
+<testsuite name="com.codepocket.ide.PythonRunSnapshotTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:20" hostname="JUHE" time="1.019">
   <properties/>
-  <testcase name="changedDiskOrOtherDraftInvalidatesPreparationWithoutChangingTheCapturedManifest" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.056"/>
-  <testcase name="privateServiceRejectsForeignJobsTraversalAndAnotherJobsExecutionRoot" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.059"/>
-  <testcase name="externalJobUsesFreshModulesAndBinaryResourcesAndNeverChangesTheEditorMirror" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.029"/>
-  <testcase name="deletedModulesAreNotResurrectedAndWrongDraftIdentityCleansOnlyTheNewJob" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.039"/>
-  <testcase name="staleActiveBytesAndAnExistingParentFileAreNotSilentlyAccepted" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.022"/>
-  <testcase name="internalDraftManifestKeepsTheRealRootAndCloseNeverDeletesProgramOutputs" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.057"/>
-  <testcase name="oversizedCombinedDraftsDoNotLeavePartialMetadataOrOverwriteOriginalFiles" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.22"/>
+  <testcase name="changedDiskOrOtherDraftInvalidatesPreparationWithoutChangingTheCapturedManifest" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.142"/>
+  <testcase name="privateServiceRejectsForeignJobsTraversalAndAnotherJobsExecutionRoot" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.109"/>
+  <testcase name="externalJobUsesFreshModulesAndBinaryResourcesAndNeverChangesTheEditorMirror" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.091"/>
+  <testcase name="deletedModulesAreNotResurrectedAndWrongDraftIdentityCleansOnlyTheNewJob" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.104"/>
+  <testcase name="staleActiveBytesAndAnExistingParentFileAreNotSilentlyAccepted" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.041"/>
+  <testcase name="internalDraftManifestKeepsTheRealRootAndCloseNeverDeletesProgramOutputs" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.118"/>
+  <testcase name="oversizedCombinedDraftsDoNotLeavePartialMetadataOrOverwriteOriginalFiles" classname="com.codepocket.ide.PythonRunSnapshotTest" time="0.414"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

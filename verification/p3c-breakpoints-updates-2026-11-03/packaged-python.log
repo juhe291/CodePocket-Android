@@ -51,13 +51,13 @@ test_valid_nested_brackets_and_formatted_strings (test_diagnostics.TestSyntaxDia
 test_valid_program_is_not_executed (test_diagnostics.TestSyntaxDiagnostics.test_valid_program_is_not_executed) ... ok
 
 ----------------------------------------------------------------------
-Ran 51 tests in 6.200s
+Ran 51 tests in 11.621s
 
 OK
 {
   "apk": "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
-  "size_bytes": 118221699,
-  "sha256": "f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a",
+  "size_bytes": 118168893,
+  "sha256": "140e4d16092bddf83a5e4d094ac51adbc89fdacb2a44da54ee9f6591aa751b16",
   "zip_crc_passed": true,
   "abis": [
     "arm64-v8a"
