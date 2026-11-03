@@ -6,7 +6,7 @@ Android 上的轻量 C++ / Python 学习 IDE：原生 Kotlin 界面 + Sora 编�
 
 | 版本 | 文件 | 大小 | SHA-256 |
 | --- | --- | --- | --- |
-| 0.2.3 (5) | `dist/CodePocket-0.2.3-release.apk` | 108,820,432 B | `70f9ea67f033a5af1b2c14dcb937997d5c861658d17a1ff33c8571011e99dca0` |
+| 0.2.3 (5) | `dist/CodePocket-0.2.3-release.apk` | 108,820,580 B | `fe2ec8eb89af23aa456d89b5fe5a693e50ababcd624bec6543edfe58dfe2ab32` |
 
 - 正式 Release 构建，沿用仓库原有 Debug 证书，可直接覆盖安装旧版（数据保留）。
 - 未发布 GitHub Release；升级前请先导出重要内容。

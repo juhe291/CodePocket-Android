@@ -233,7 +233,12 @@ class CompletionInteractionTest {
         assertEquals("abcd",editor.text.toString())
         key(KeyEvent.KEYCODE_PLUS,KeyEvent.META_CTRL_ON)
         awaitEditor() // Zoom rebuilds native Sora layout asynchronously.
-        assertTrue(editor.onTextContextMenuItem(android.R.id.undo));assertEquals("abc",editor.text.toString())
+        var undone=false;val deadline=System.nanoTime()+3_000_000_000L
+        while(!undone && System.nanoTime()<deadline){
+            awaitEditor();undone=editor.onTextContextMenuItem(android.R.id.undo)
+            if(!undone){shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(30));Thread.sleep(5)}
+        }
+        assertTrue("Native undo must survive the async layout rebuild",undone);assertEquals("abc",editor.text.toString())
     }
     @Test fun historyWaitsForNativeLayoutWithoutConsumingItsUndoOrRedo() {
         loadText("abc");editor.setSelection(3)

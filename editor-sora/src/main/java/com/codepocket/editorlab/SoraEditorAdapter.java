@@ -13,6 +13,7 @@ import java.util.List;
 import com.codepocket.editor.surface.TextEdits;
 import com.codepocket.editor.surface.TextEdits.Result;
 import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.widget.layout.Layout;
 
 /** Experimental widget adapter. Does not access project files, URI permissions or the runner. */
 final class SoraEditorAdapter implements EditorSurface, AutoCloseable {
@@ -72,11 +73,15 @@ final class SoraEditorAdapter implements EditorSurface, AutoCloseable {
         return buffer.apply(source, start, end, text, selectionStart, selectionEnd, editor.hasComposingText(), true,
             (a, b) -> select(a, b, true));
     }
+    private boolean layoutStable() {
+        Layout layout = editor.getLayout();
+        return layout != null && layout.getRowCount() > 0;
+    }
     boolean history(SoraBuffer.Snapshot source, boolean redo) {
         cancelNavigation();
         // Font/line-wrap reflow temporarily owns the layout's line-width table.
         // Native undo/redo mutates it synchronously and must respect that gate.
-        return available() && !layoutBusy() && editor.hasFocus() && buffer.history(source, editor.hasComposingText(), redo, redo ? editor::redo : editor::undo);
+        return available() && !layoutBusy() && layoutStable() && editor.hasFocus() && buffer.history(source, editor.hasComposingText(), redo, redo ? editor::redo : editor::undo);
     }
     private void select(int start, int end, boolean reveal) {
         CharPosition a = editor.getText().getIndexer().getCharPosition(Math.min(start, end));
