@@ -15,7 +15,7 @@ internal data class GitPushReceipt(val id:String,val scope:String,val url:String
 /** Durable intent precedes IPC. A filesystem lock serializes UI and :git_remote writers,
  * so a late cancellation cannot replace a confirmed server report with "unknown". */
 internal class GitPushLedger(directory:File,private val replace:(File,File)->Unit={a,b->android.system.Os.rename(a.path,b.path)}) {
-    constructor(context:Context):this(File(context.applicationContext.noBackupFilesDir,"git-push-receipts"))
+    constructor(context:Context):this(File(context.applicationContext.noBackupFilesDir.canonicalFile,"git-push-receipts"))
     private val folder=directory.absoluteFile.also{require(it==it.canonicalFile && (it.isDirectory || it.mkdirs() || it.isDirectory))}
     private val mutex=locks.computeIfAbsent(folder.path){Any()}
     private val uuid=Regex("[a-f0-9-]{36}");private val sha=Regex("[a-f0-9]{64}")

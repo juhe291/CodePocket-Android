@@ -1,0 +1,46 @@
+{
+  "exit": 1,
+  "suites": [
+    {
+      "class": "WebAuxiliaryIntegrationTest",
+      "tests": 10,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-03T01:07:28"
+    },
+    {
+      "class": "WebPanelBehaviorTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-03T01:07:40"
+    },
+    {
+      "class": "BrowserPolicyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-03T01:07:19"
+    },
+    {
+      "class": "WebComponentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-03T01:07:40"
+    },
+    {
+      "class": "WebAuxiliaryBaselineTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-03T01:07:20"
+    }
+  ],
+  "scope": "Host Robolectric; not device Chromium"
+}

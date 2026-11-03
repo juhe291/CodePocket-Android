@@ -1,0 +1,15 @@
+{
+  "tests": 5,
+  "failures": 4,
+  "passed": 1,
+  "skipped": 0,
+  "production_changed": false,
+  "baseline_commit": "d33faa3",
+  "identities": [
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.addressSearchUsesBingForChineseAndCppKeywords",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.auxiliaryRemainsClosedAtFirstStartAndDoesNotCreateWebViewEarly",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.phoneOpenAndClosePreservesDirtyDocumentAndSavedBase",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.phoneRailHasTheActualWebEntryAndOpeningItKeepsTheRail",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.tabletOpensARealWebViewInTheRightAuxiliarySlot"
+  ]
+}

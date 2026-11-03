@@ -1,0 +1,32 @@
+{
+  "tests": 9,
+  "counts": {
+    "BrowserPolicyTest": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "WebComponentTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "identities": [
+    "com.codepocket.ide.BrowserPolicyTest.bothSidebarsBudgetTheEditorAndMovingLeftReplacesThePrimaryBudget",
+    "com.codepocket.ide.BrowserPolicyTest.defaultSearchIsBingAndBaiduCanBeRestoredWithoutGoogleFallback",
+    "com.codepocket.ide.BrowserPolicyTest.webpageLinksCannotTurnFileJavascriptCredentialsOrUnknownSchemesIntoNavigation",
+    "com.codepocket.ide.BrowserPolicyTest.resizeValuesAreBoundedWithoutChangingTheSavedPreference",
+    "com.codepocket.ide.BrowserPolicyTest.typedHostAndExplicitHttpPreserveUnicodeEscapesAndLocalPorts",
+    "com.codepocket.ide.BrowserPolicyTest.passiveShrinkHidesAuxiliaryButExplicitFocusKeepsTheMeasuredWorkspace",
+    "com.codepocket.ide.WebComponentTest.commonmarkParserPreservesActualLinkAndInlineCodeNodes",
+    "com.codepocket.ide.WebComponentTest.webkitCompatibilityPackageLookupUsesTheActualLibraryWithoutRequiringChromium",
+    "com.codepocket.ide.WebComponentTest.markdownCoreRendersActualNativeSpansWithoutAWebView"
+  ],
+  "actual_android_webkit_library": true,
+  "actual_markwon_renderer": true,
+  "android_chromium_executed": false,
+  "new_apk_built": false
+}

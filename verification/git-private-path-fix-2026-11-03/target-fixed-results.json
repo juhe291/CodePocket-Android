@@ -1,0 +1,19 @@
+{
+  "tests": 11,
+  "passed": 11,
+  "previous_failing_identities_retained": 8,
+  "identities": [
+    "com.codepocket.ide.GitPrivatePathRegressionTest.actualLocalGitStatusAndInitializationKeepTheOriginalSource",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.pushReceiptLedgerUsesTheSameCanonicalPrivateBoundary",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.unavailableCloneListStillAllowsTheRealWorkspacePickerAndKeepsItsSentinel",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.projectPickerCanListCreateAndReopenAManagedCloneUnderTheTrustedAlias",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.temporaryCredentialsUseTheTrustedNoBackupAliasWithoutCreatingAKey",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.actualRemoteSnapshotAlsoUsesTheCanonicalRecoveryAndJobRoots",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.unavailableCredentialStorageShowsAnErrorAndKeepsTheDirtyEditor",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.localJobsRoundTripTheirStrictRootGuardAndCleanupThroughTheAlias",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.realInternalProjectHeadingOpensTheWorkspacePickerWithoutCrashing",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.realSourceControlMoreButtonOpensWithoutTheDeviceVaultConstructorCrash",
+    "com.codepocket.ide.GitPrivatePathRegressionTest.remoteJobsRoundTripTheirStrictRootGuardAndCleanupThroughTheAlias"
+  ],
+  "host_only": true
+}

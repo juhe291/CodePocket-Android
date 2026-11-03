@@ -13,7 +13,7 @@ internal data class GitCloneTarget(val selector:String,val identity:String,val t
 internal class GitCloneTargets(context:Context) {
     private val app=context.applicationContext
     private val prefix="internal-git:"
-    private fun parent()=File(app.filesDir,"git-projects").absoluteFile.also{require(it==it.canonicalFile && (it.isDirectory || it.mkdirs() || it.isDirectory))}
+    private fun parent()=File(app.filesDir.canonicalFile,"git-projects").absoluteFile.also{require(it==it.canonicalFile && (it.isDirectory || it.mkdirs() || it.isDirectory))}
     private fun directory(selector:String):File {
         require(selector.startsWith(prefix));val id=selector.removePrefix(prefix);require(Regex("[a-f0-9-]{36}").matches(id))
         return File(parent(),id).also{require(it==it.canonicalFile && it.isDirectory)}

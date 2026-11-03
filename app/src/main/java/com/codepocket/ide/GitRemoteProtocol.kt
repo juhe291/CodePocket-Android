@@ -86,7 +86,7 @@ internal object GitRemoteProtocol {
 /** Separate namespace: :git_remote startup must never remove :git's live jobs. */
 internal object GitRemoteJobs {
     private val uuid=Regex("[a-f0-9-]{36}")
-    fun parent(context:Context)=File(context.cacheDir,"git-remote-jobs").absoluteFile.also {
+    fun parent(context:Context)=File(context.cacheDir.canonicalFile,"git-remote-jobs").absoluteFile.also {
         require(it==it.canonicalFile && (it.isDirectory || it.mkdirs() || it.isDirectory))
     }
     fun next(context:Context)=File(parent(context),UUID.randomUUID().toString())

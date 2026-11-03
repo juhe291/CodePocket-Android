@@ -112,6 +112,8 @@ chaquopy {
 }
 
 dependencies {
+    implementation("androidx.webkit:webkit:1.18.0")
+    implementation("io.noties.markwon:core:4.6.2")
     implementation(project(":editor-sora"))
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     implementation(project(":workspace-core"))

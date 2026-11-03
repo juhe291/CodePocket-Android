@@ -95,7 +95,7 @@ class ShellUiTest {
         val unloaded = editing.copy(loaded = false)
         val allowed = setOf(IdeCommand.THEME, IdeCommand.SETTINGS, IdeCommand.SHORTCUTS, IdeCommand.HELP,
             IdeCommand.NEW_FILE, IdeCommand.NEW_FOLDER, IdeCommand.IMPORT_COPY, IdeCommand.WORKSPACE,
-            IdeCommand.CLOSE_WORKSPACE, IdeCommand.EXPLORER, IdeCommand.SEARCH, IdeCommand.SOURCE_CONTROL, IdeCommand.RECOVER,
+            IdeCommand.CLOSE_WORKSPACE, IdeCommand.EXPLORER, IdeCommand.SEARCH, IdeCommand.SOURCE_CONTROL, IdeCommand.WEB, IdeCommand.RECOVER,
             IdeCommand.PANEL, IdeCommand.PANEL_SIZE, IdeCommand.MAXIMIZE_TERMINAL, IdeCommand.CLOSE_TERMINAL,
             IdeCommand.CLEAR_TERMINAL, IdeCommand.HIDE_KEYBOARD)
         assertEquals(allowed, IdeCommand.entries.filter { IdeCommands.enabled(it, unloaded) }.toSet())

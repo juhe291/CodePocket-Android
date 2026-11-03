@@ -33,7 +33,7 @@ internal data class GitRemoteRun(val reply:GitRemoteReply=GitRemoteReply(error="
 internal class GitRemoteWorkbench(context:Context,private val client:GitRemoteClient,private val ledger:GitPushLedger):Closeable {
     constructor(context:Context):this(context,GitRemoteClient(context),GitPushLedger(context))
     private val app=context.applicationContext
-    private fun recovery(identity:String)=File(app.filesDir,"git-recovery/"+DocumentTree.digest(identity))
+    private fun recovery(identity:String)=File(app.filesDir.canonicalFile,"git-recovery/"+DocumentTree.digest(identity))
     private fun <T> serial(work:()->T):T {
         val task=WorkspaceIo.executor.submit<T>{work()};var interrupted=false
         try {

@@ -149,6 +149,11 @@ class MainActivity : Activity() {
     private lateinit var splitHost: LinearLayout
     private lateinit var topWorkspace: LinearLayout
     private lateinit var auxiliarySlot: FrameLayout
+    private var webPanel:WebAuxiliaryPanel?=null
+    private var pendingWebState:Bundle?=null
+    private var auxiliaryResize:ExplorerResizeHandle?=null
+    private var auxiliaryDragWidth=AuxiliaryLayout.DEFAULT
+    private var auxiliaryDragViewport:EditorViewportSnapshot?=null
     private lateinit var panelResize: PanelResizeHandle
     private var activityBar: ActivityBar? = null
     private var explorerResizeHandle: ExplorerResizeHandle? = null
@@ -270,6 +275,7 @@ class MainActivity : Activity() {
         sidebarGitActive=savedInstanceState?.getBoolean("sidebarGitActive",false)?:false
         pendingGitUiState=savedInstanceState?.getString("gitUiState")
         pendingRemoteUiState=savedInstanceState?.getString("remoteUiState")
+        pendingWebState=savedInstanceState?.getBundle("webAuxiliaryState")
         pendingGitCloneUri=savedInstanceState?.getString("gitCloneUri")
         pendingGitExportIdentity=savedInstanceState?.getString("gitExportIdentity")
         pendingGitExportUri=savedInstanceState?.getString("gitExportUri")
@@ -368,8 +374,8 @@ class MainActivity : Activity() {
                         if (pendingSettingsState != null) handler.post { if (!isDestroyed) showSettings() }
                         if (pendingCasesState != null) handler.post { if (!isDestroyed) showTestCases() }
                         gitUi?.bind(workspace,pendingGitUiState)
-                        if(pendingRemoteUiState!=null)handler.post{if(!isDestroyed){remoteController().restoreForm();pendingRemoteUiState=null}}
-                        pendingGitCloneUri?.let{value->pendingGitCloneUri=null;handler.post{if(!isDestroyed)remoteController().cloneTo(Uri.parse(value))}}
+                        if(pendingRemoteUiState!=null)handler.post{if(!isDestroyed){remoteController()?.let{it.restoreForm();pendingRemoteUiState=null}}}
+                        pendingGitCloneUri?.let{value->pendingGitCloneUri=null;handler.post{if(!isDestroyed && remoteController()?.let{it.cloneTo(Uri.parse(value));true}!=true)pendingGitCloneUri=value}}
                         if (sidebarGitActive) handler.post { if (!isDestroyed) showSourceControl() }
                         else if (sidebarSearchActive) handler.post { if (!isDestroyed) showProjectSearch() }
                         pendingGitExportUri?.let{value->pendingGitExportUri=null;handler.post{if(!isDestroyed)writeGitRecovery(Uri.parse(value))}}
@@ -449,6 +455,7 @@ class MainActivity : Activity() {
         outState.putBoolean("sidebarGitActive",sidebarGitActive)
         outState.putString("gitUiState",gitUi?.checkpoint()?:pendingGitUiState)
         outState.putString("remoteUiState",remoteUi?.checkpoint()?:pendingRemoteUiState)
+        webPanel?.let{panel->outState.putBundle("webAuxiliaryState",Bundle().apply{panel.save(this)})}
         outState.putString("gitCloneUri",pendingGitCloneUri)
         outState.putString("gitExportIdentity",pendingGitExportIdentity)
         outState.putString("gitExportUri",pendingGitExportUri)
@@ -468,6 +475,7 @@ class MainActivity : Activity() {
         super.onResume()
         if (::editor.isInitialized) editor.resume()
         motionForeground = true
+        webPanel?.activityResumed(true)
         shellPane?.hostActive(true)
         refreshMotionPolicy()
         if (::editor.isInitialized) { handler.removeCallbacks(refreshEditor); handler.post(refreshEditor) }
@@ -476,6 +484,7 @@ class MainActivity : Activity() {
     override fun onPause() {
         super.onPause()
         motionForeground = false
+        webPanel?.activityResumed(false)
         if (::editor.isInitialized) editor.pause()
         shellPane?.hostActive(false)
         refreshMotionPolicy()
@@ -525,6 +534,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        webPanel?.close();webPanel=null;auxiliaryResize?.cancelGesture();auxiliaryResize=null
         remoteGuardEpoch.incrementAndGet();remoteUi?.close();remoteUi=null
         gitUi?.close();gitUi=null;releaseGitSurface()
         releaseSidebarSearch()
@@ -583,6 +593,7 @@ class MainActivity : Activity() {
     }
 
     private fun createUi() {
+        webPanel?.detach();auxiliaryResize?.cancelGesture();auxiliaryResize=null
         releaseSidebarSearch()
         releaseGitSurface()
         commandMenu?.dismiss(); commandMenu = null
@@ -630,7 +641,7 @@ class MainActivity : Activity() {
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
 
         activityBar = ActivityBar(this, palette, { dispatchCommand(IdeCommand.SEARCH) }, ::showSettings,
-            onSourceControl={dispatchCommand(IdeCommand.SOURCE_CONTROL)}) { dispatchCommand(IdeCommand.EXPLORER) }.also {
+            onSourceControl={dispatchCommand(IdeCommand.SOURCE_CONTROL)},onWeb={dispatchCommand(IdeCommand.WEB)}) { dispatchCommand(IdeCommand.EXPLORER) }.also {
             content.addView(it, LinearLayout.LayoutParams(dp(48), -1))
         }
         val work = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
@@ -650,9 +661,10 @@ class MainActivity : Activity() {
         }
         topWorkspace = LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL; layoutDirection=View.LAYOUT_DIRECTION_LTR }
         topWorkspace.addView(editorRegion, LinearLayout.LayoutParams(0, -1, 1f))
-        // Reserved visual architecture only. Browser/Git/extensions stay deferred; no fake feature surfaces.
+        // The same auxiliary view is rehosted here or at the left edge; the editor/PTY stay owned by Main.
         auxiliarySlot = FrameLayout(this).apply { visibility=View.GONE; tag="auxiliary-slot" }
         topWorkspace.addView(auxiliarySlot, LinearLayout.LayoutParams(dp(260), -1))
+        if(webPanel==null && (pendingWebState!=null || prefs.contains("webAuxiliaryState")))webController()
         splitHost.addView(topWorkspace, LinearLayout.LayoutParams(-1, 0, 1f))
         splitHost.addView(panelResize, LinearLayout.LayoutParams(-1, dp(PanelLayoutPolicy.HANDLE)))
         splitHost.addView(console, LinearLayout.LayoutParams(-1, dp(225)))
@@ -751,6 +763,110 @@ class MainActivity : Activity() {
             if(sidebarGitActive && explorerVisible && sidebarGitView!=null)attachGitDrawer()
             listOfNotNull(explorerDialog,sidebarSearchDialog,sidebarGitDialog).filter{it.isShowing}.forEach(::sizeSidebarDrawer)
         }
+        updateAuxiliaryLayout()
+    }
+
+    private fun webController():WebAuxiliaryPanel = webPanel?:WebAuxiliaryPanel(this,object:WebAuxiliaryHost {
+        override val motion get()=motionAllowed()
+        override fun layoutChanged(){updateAuxiliaryLayout()}
+        override fun closed(){val stamp=capturePanelViewport();updateAuxiliaryLayout();restorePanelViewport(stamp,toolDialog?.isShowing!=true)}
+        override fun previewMarkdown(){previewMarkdownInAuxiliary()}
+        override fun status(message:String){if(this@MainActivity::status.isInitialized)this@MainActivity.status.text=message}
+        override fun navigated(){hideCompletion(true);hideSignatureHelp(true);hideKeyboard()}
+    },pendingWebState).also{webPanel=it;pendingWebState=null;it.activityResumed(motionForeground)}
+
+    private fun showWebBrowser() {
+        if(workspaceBusy || !::topWorkspace.isInitialized)return
+        val panel=webController()
+        if(panel.shown&&panel.presented!=AuxiliaryMode.HIDDEN){panel.hide();return}
+        hideCompletion(true);hideSignatureHelp(true)
+        // Close only sidebar windows; an unrelated settings/file draft retains its owner.
+        explorerDialog?.dismiss();explorerDialog=null
+        val search=sidebarSearchDialog;sidebarSearchDialog=null;if(toolDialog===search)toolDialog=null;search?.dismiss()
+        val git=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===git)toolDialog=null;git?.dismiss()
+        if(panelState.maximized&&panelVisible)setPanelMaximized(false)
+        panel.open()
+        if(panel.presented==AuxiliaryMode.HIDDEN)panel.openFocus()
+    }
+    private fun previewMarkdownInAuxiliary() {
+        if(workspaceBusy || loadedPath==null || loadedPath!=activePath || activePath.substringAfterLast('.').lowercase() !in setOf("md","markdown","mdown")) {
+            status.text="请先打开 Markdown 文件";return
+        }
+        showAuxiliaryDocument(AuxiliaryDocument(workspace.resolve(activePath).name,
+            workspace.title+" · "+activePath+if(dirty)" · 未保存正文快照" else " · 已保存正文快照",editor.text.toString(),true))
+    }
+    private fun showAuxiliaryDocument(document:AuxiliaryDocument) {
+        if(workspaceBusy || !::topWorkspace.isInitialized)return
+        val panel=webController();panel.showDocument(document)
+        if(panel.presented==AuxiliaryMode.HIDDEN)panel.openFocus()
+    }
+    private fun showCompletionDocumentation(item:CompletionItem,source:String) {
+        val request=completionBatch?.request?:return
+        if(workspaceBusy || loadedPath!=activePath || request.document!=sessions.key(activePath) || request.revision!=editRevision)return
+        val body=item.label+"\n候选类型："+item.kind.title+"\n\n"+item.detail.ifEmpty{"当前引擎没有提供更多说明。"}
+        val scope=workspace.title+" · "+activePath+" · "+source
+        hideCompletion(true);showAuxiliaryDocument(AuxiliaryDocument("补全说明 · "+item.label,scope,body))
+    }
+    private fun showSignatureDocumentation(reference:BuiltinSignature,variant:Int,active:Int?) {
+        if(workspaceBusy || loadedPath!=activePath)return
+        val form=reference.forms.getOrNull(variant)
+        val body=reference.forms.joinToString("\n"){it.label(reference.name)}+
+            active?.let{index->form?.parts?.getOrNull(index)?.let{"\n\n当前参数：$it"}}.orEmpty()+
+            "\n\n"+reference.description+"\n\n来源："+reference.source
+        val scope=workspace.title+" · "+activePath+if(reference.semantic)" · 引擎语义结果" else " · 内置参数参考"
+        val link=runCatching{BrowserAddress.navigation(reference.source)}.getOrNull()
+        hideSignatureHelp(true);showAuxiliaryDocument(AuxiliaryDocument("函数与参数 · "+reference.name,scope,body,sourceUrl=link))
+    }
+    private fun leaveWebForPrimary() {
+        val panel=webPanel?:return
+        if(panel.presented==AuxiliaryMode.FOCUS || panel.side==AuxiliarySide.LEFT&&panel.presented!=AuxiliaryMode.HIDDEN){panel.hide();explorerVisible=false}
+    }
+    private fun updateAuxiliaryLayout() {
+        if(!::auxiliarySlot.isInitialized || !::topWorkspace.isInitialized || isDestroyed)return
+        val panel=webPanel
+        val primary=currentGeometry?.showExplorerSidebar==true && explorerVisible
+        explorerPane?.visibility=if(primary)View.VISIBLE else View.GONE
+        explorerResizeHandle?.visibility=if(primary)View.VISIBLE else View.GONE
+        activityBar?.setExplorerActive(primary&&!sidebarSearchActive&&!sidebarGitActive || explorerDialog?.isShowing==true)
+        activityBar?.setSearchActive(primary&&sidebarSearchActive || sidebarSearchDialog?.isShowing==true)
+        activityBar?.setSourceActive(primary&&sidebarGitActive || sidebarGitDialog?.isShowing==true)
+        if(panel==null || !panel.shown){auxiliarySlot.visibility=View.GONE;auxiliaryResize?.visibility=View.GONE
+            editorRegion.visibility=View.VISIBLE;activityBar?.setWebActive(false);panel?.setPresented(AuxiliaryMode.HIDDEN);return}
+        val scale=resources.displayMetrics.density
+        val available=((if(topWorkspace.width>0)topWorkspace.width else (contentHost.width-dp(48)).coerceAtLeast(0))/scale).toInt()
+        val height=((if(topWorkspace.height>0)topWorkspace.height else contentHost.height)/scale).toInt()
+        val primaryWidth=if(primary)((explorerPane?.layoutParams?.width?:dp(explorerWidth))/scale).toInt() else 0
+        var layout=AuxiliaryLayout.resolve(available,height,true,panel.side,panel.width,primaryWidth,panel.focus)
+        if(layout.mode==AuxiliaryMode.HIDDEN && imeVisible && panel.hasInputFocus())
+            layout=AuxiliaryLayout.resolve(available,height,true,panel.side,panel.width,primaryWidth,true)
+        if(layout.mode==AuxiliaryMode.HIDDEN){auxiliarySlot.visibility=View.GONE;auxiliaryResize?.visibility=View.GONE
+            editorRegion.visibility=View.VISIBLE;activityBar?.setWebActive(false);panel.setPresented(layout.mode);return}
+        val body=panel.view(palette)
+        if(body.parent!==auxiliarySlot){(body.parent as? ViewGroup)?.removeView(body);auxiliarySlot.removeAllViews();auxiliarySlot.addView(body,FrameLayout.LayoutParams(-1,-1))}
+        val handle=auxiliaryResize?:ExplorerResizeHandle(this).also{resize->
+            resize.tag="web-resize";resize.contentDescription="调整辅助栏宽度；左右方向键调整，点击恢复默认";resize.setBackgroundColor(palette.border)
+            resize.setCallbacks({delta->
+                if(!workspaceBusy){val direction=if(panel.side==AuxiliarySide.RIGHT)-1 else 1
+                    panel.resized(auxiliaryDragWidth+(direction*delta/scale).toInt())}
+            },{val stamp=auxiliaryDragViewport;auxiliaryDragViewport=null;restorePanelViewport(stamp)}) {
+                auxiliaryDragWidth=((auxiliarySlot.layoutParams.width.coerceAtLeast(0))/scale).toInt()
+                auxiliaryDragViewport=capturePanelViewport();hideCompletion(true);hideSignatureHelp(true)
+            }
+            resize.setOnClickListener{panel.resetWidth()};auxiliaryResize=resize;topWorkspace.addView(resize,LinearLayout.LayoutParams(dp(AuxiliaryLayout.HANDLE),-1))
+        }
+        val left=panel.side==AuxiliarySide.LEFT
+        if(left&&(topWorkspace.indexOfChild(auxiliarySlot)!=0 || topWorkspace.indexOfChild(handle)!=1) ||
+            !left&&(topWorkspace.indexOfChild(auxiliarySlot)!=topWorkspace.childCount-1 || topWorkspace.indexOfChild(handle)!=topWorkspace.childCount-2)) {
+            topWorkspace.removeView(auxiliarySlot);topWorkspace.removeView(handle)
+            if(left){topWorkspace.addView(auxiliarySlot,0);topWorkspace.addView(handle,1)}else{topWorkspace.addView(handle);topWorkspace.addView(auxiliarySlot)}
+        }
+        val focus=layout.mode==AuxiliaryMode.FOCUS
+        auxiliarySlot.layoutParams=LinearLayout.LayoutParams(if(focus)0 else dp(layout.width),-1,if(focus)1f else 0f)
+        auxiliarySlot.visibility=View.VISIBLE;handle.visibility=if(focus)View.GONE else View.VISIBLE;handle.isEnabled=!workspaceBusy
+        editorRegion.visibility=if(focus)View.GONE else View.VISIBLE
+        if(left||focus){explorerPane?.visibility=View.GONE;explorerResizeHandle?.visibility=View.GONE
+            activityBar?.setExplorerActive(false);activityBar?.setSearchActive(false);activityBar?.setSourceActive(false)}
+        activityBar?.setWebActive(true);panel.setPresented(layout.mode)
     }
 
     private fun resizeExplorer(delta: Float) {
@@ -880,6 +996,7 @@ class MainActivity : Activity() {
             IdeCommand.TEST_CASES -> showTestCases()
             IdeCommand.EXPLORER -> showExplorer()
             IdeCommand.SOURCE_CONTROL -> showSourceControl()
+            IdeCommand.WEB -> showWebBrowser()
             IdeCommand.SEARCH -> showProjectSearch()
             IdeCommand.FIND -> showSearch(false)
             IdeCommand.NEW_FILE -> askCreate(false)
@@ -1137,7 +1254,8 @@ class MainActivity : Activity() {
         outputRegion.visibility = if (spec.showPanel) View.VISIBLE else View.GONE
         if (!spec.showEditor && editor.hasFocus()) outputRegion.requestFocus()
         topWorkspace.visibility = if (spec.showEditor) View.VISIBLE else View.GONE
-        editorRegion.visibility = if (spec.showEditor) View.VISIBLE else View.GONE
+        // Terminal geometry must preserve the explicit auxiliary focus view in the upper workspace.
+        editorRegion.visibility = if (spec.showEditor && webPanel?.presented!=AuxiliaryMode.FOCUS) View.VISIBLE else View.GONE
         panelResize.visibility = if (spec.resizable) View.VISIBLE else View.GONE
         panelResize.configure(spec.dock, dp(spec.extent), dp(spec.minimum), dp(spec.maximum), dp(spec.available))
         panelResize.isEnabled = spec.resizable && !workspaceBusy
@@ -1487,6 +1605,7 @@ class MainActivity : Activity() {
 
     private fun showExplorer() {
         if (workspaceBusy) return
+        leaveWebForPrimary()
         val switching=sidebarSearchActive || sidebarGitActive
         sidebarGitActive=false;sidebarGitView?.visibility=View.GONE
         val oldGit=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===oldGit)toolDialog=null;oldGit?.dismiss()
@@ -1509,6 +1628,7 @@ class MainActivity : Activity() {
                 Animations.cancelTree(pane); pane.visibility = View.GONE
             }
             prefs.edit().putBoolean("explorerVisible", explorerVisible).apply()
+            updateAuxiliaryLayout()
             return
         }
         if (explorerDialog?.isShowing == true) { explorerDialog?.dismiss(); return }
@@ -1576,9 +1696,11 @@ class MainActivity : Activity() {
         override fun reader(title:String,scope:String,text:String){showGitReader(title,scope,text)}
         override fun size(dialog:AlertDialog,width:Int){sizeForm(dialog,width)}
         override fun exportRecovery(){chooseGitRecoveryExport()}
-    },{gitFactory(this)},{remoteController().showMenu(it)}).also{gitUi=it;it.bind(workspace,pendingGitUiState)}
+    },{gitFactory(this)},{remoteController()?.showMenu(it)}).also{gitUi=it;it.bind(workspace,pendingGitUiState)}
 
-    private fun remoteController():GitRemoteUiController = remoteUi?:GitRemoteUiController(this,object:GitRemoteUiHost {
+    private fun remoteController():GitRemoteUiController? {
+        remoteUi?.let{return it}
+        return try {GitRemoteUiController(this,object:GitRemoteUiHost {
         override val workspace get()=this@MainActivity.workspace
         override val projectOpen get()=workspaceOpen
         override val blocked get()=workspaceBusy||saving||running||gitUi?.busy==true
@@ -1605,10 +1727,16 @@ class MainActivity : Activity() {
         override fun openClone(selector:String){requestWorkspace(selector)}
         override fun busyChanged(){updateMainToolbarState()}
         override fun exportRecovery(){chooseGitRecoveryExport()}
-    },{remoteFactory(this)},saved=pendingRemoteUiState).also{remoteUi=it}
+    },{remoteFactory(this)},saved=pendingRemoteUiState).also{remoteUi=it}}
+        catch(_:Exception){
+            alert("Git 凭据存储暂不可用，请检查应用存储后重试。当前文件与恢复草稿仍保留。")
+            null
+        }
+    }
 
     private fun showSourceControl() {
         if(workspaceBusy || !::workspace.isInitialized)return
+        leaveWebForPrimary()
         if(sidebarGitActive && sidebarGitView!=null &&
             (sidebarGitDialog?.isShowing==true || currentGeometry?.showExplorerSidebar==true&&explorerVisible)) {
             closeGitSidebar();return
@@ -1628,7 +1756,7 @@ class MainActivity : Activity() {
         sidebarGitActive=false;explorerVisible=false
         val old=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===old)toolDialog=null;old?.dismiss()
         if(currentGeometry?.showExplorerSidebar==true){explorerPane?.visibility=View.GONE;explorerResizeHandle?.visibility=View.GONE}
-        activityBar?.setSourceActive(false);if(::sessions.isInitialized)persistNavigation()
+        activityBar?.setSourceActive(false);if(::sessions.isInitialized)persistNavigation();updateAuxiliaryLayout()
     }
     private fun releaseGitSurface() {
         val reader=gitReader;gitReader=null;if(toolDialog===reader)toolDialog=null;reader?.dismiss()
@@ -1689,6 +1817,7 @@ class MainActivity : Activity() {
         }
         activityBar?.setSearchActive(false)
         if (::sessions.isInitialized) persistNavigation()
+        updateAuxiliaryLayout()
     }
     private fun attachSearchSidebar() {
         val view=sidebarSearchView?:return;val host=explorerPane as? FrameLayout?:return
@@ -2407,7 +2536,7 @@ class MainActivity : Activity() {
                         completionBatch?.let { completionSuppressed = it.request }
                         completionBatch = null; completionGeneration++; completionTask?.cancel(true)
                         semanticCompletionTask?.cancel(true)
-                    }).also { completionPopup = it }
+                    }).also { completionPopup = it;it.onDocumentation=::showCompletionDocumentation }
                 editor.finishMotion() // Popup and drawn caret must agree on the real insertion point immediately.
                 if (!popup.show(batch, motionEnabled())) {
                     hideCompletion()
@@ -2469,7 +2598,7 @@ class MainActivity : Activity() {
                     return@runOnUiThread
                 }
                 val popup = signaturePopup ?: SignaturePopup(this, editor, editorPort ?: return@runOnUiThread, surface, textForeground, muted, accent,
-                    { hideSignatureHelp(true) }).also { signaturePopup = it }
+                    { hideSignatureHelp(true) }).also { signaturePopup = it;it.onDocumentation=::showSignatureDocumentation }
                 editor.finishMotion()
                 if (!popup.show(found, motionEnabled()) && force) status.setText(R.string.signature_no_space)
             }
@@ -2827,6 +2956,7 @@ class MainActivity : Activity() {
 
     private fun showProjectSearch() {
         if (workspaceBusy || !::workspace.isInitialized) return
+        leaveWebForPrimary()
         sidebarGitActive=false;sidebarGitView?.visibility=View.GONE
         val oldGit=sidebarGitDialog;sidebarGitDialog=null;if(toolDialog===oldGit)toolDialog=null;oldGit?.dismiss();activityBar?.setSourceActive(false)
         if(sidebarSearchActive && sidebarSearchView!=null &&
@@ -2936,6 +3066,7 @@ class MainActivity : Activity() {
     @Deprecated("Native back handling retained for API 24; predictive-back UI still needs device verification")
     override fun onBackPressed() {
         if (!::editor.isInitialized) { super.onBackPressed(); return }
+        if(!imeVisible && webPanel?.backPressed()==true)return
         when (InteractionState.back(imeVisible, currentGeometry?.showExplorerSidebar == true && explorerVisible,
             panelState.maximized && panelVisible, panelLayout?.showPanel == true)) {
             BackAction.HIDE_IME -> hideKeyboard()
@@ -3173,7 +3304,10 @@ class MainActivity : Activity() {
             WorkbenchChoice("reload","重新载入当前目录","",IdeIcon.REFRESH)
         )
         val managed=GitCloneTargets(this)
-        val destinations=managed.list().toMutableList()
+        val destinations=runCatching{managed.list()}.getOrElse{
+            status.text="内部克隆列表暂不可读取，仍可选择其他工作区"
+            emptyList()
+        }.toMutableList()
         for(i in 0 until recent.length()) {
             val entry=recent.getJSONObject(i);val selector=entry.optString("uri")
             if(!managed.managed(selector))destinations.add(selector to entry.optString("name").ifBlank{"未命名目录"})
@@ -3243,7 +3377,7 @@ class MainActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==204 && resultCode!=RESULT_OK){pendingGitExportIdentity=null;pendingGitExportUri=null}
-        if(requestCode==205 && resultCode!=RESULT_OK)remoteController().pickerCancelled()
+        if(requestCode==205 && resultCode!=RESULT_OK)remoteUi?.pickerCancelled()
         if (resultCode != RESULT_OK) return
         val uri = data?.data ?: return
         when (requestCode) {
@@ -3251,8 +3385,8 @@ class MainActivity : Activity() {
                 val flags=data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 require(flags and Intent.FLAG_GRANT_READ_URI_PERMISSION!=0 && flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION!=0){"请选择可读写目录"}
                 contentResolver.takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                if(workspaceBusy || !::workspace.isInitialized)pendingGitCloneUri=uri.toString() else remoteController().cloneTo(uri)
-            }catch(e:Exception){remoteController().pickerCancelled();alert("克隆目录授权失败：${e.message}")}
+                if(workspaceBusy || !::workspace.isInitialized)pendingGitCloneUri=uri.toString() else if(remoteController()?.let{it.cloneTo(uri);true}!=true)pendingGitCloneUri=uri.toString()
+            }catch(e:Exception){remoteUi?.pickerCancelled();alert("克隆目录授权失败：${e.message}")}
             204 -> writeGitRecovery(uri)
             203 -> try {
                 val flags = data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)

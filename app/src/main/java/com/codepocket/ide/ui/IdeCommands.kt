@@ -16,7 +16,7 @@ enum class IdeCommand(val title: String, val editorOnly: Boolean = false) {
     PRESET_INPUT("展开 / 收起云端输入"), CLEAR_INPUT("清空当前文件预设输入"), HIDE_KEYBOARD("收起虚拟键盘"),
     THEME("切换深浅主题"), SETTINGS("设置"), SHORTCUTS("快捷键说明"), HELP("使用说明"),
     FONT_SIZE("代码字号  Ctrl++ / Ctrl+-"), TEST_CASES("测试用例"), CLOSE_WORKSPACE("关闭项目"),
-    FORMAT_DOCUMENT("格式化文档  Shift+Alt+F", true), SOURCE_CONTROL("源代码管理")
+    FORMAT_DOCUMENT("格式化文档  Shift+Alt+F", true), SOURCE_CONTROL("源代码管理"),WEB("网页辅助栏")
 }
 data class CommandContext(val busy: Boolean, val loaded: Boolean, val editorFocused: Boolean,
     val inputFocused: Boolean, val composing: Boolean, val running: Boolean, val saving: Boolean,
@@ -25,7 +25,7 @@ data class CommandContext(val busy: Boolean, val loaded: Boolean, val editorFocu
 /** These collections are consumed by the actual native toolbars/menus, not a parallel test-only catalogue. */
 object IdeCommands {
     val runMenuItems = listOf(IdeCommand.RUN_STOP, IdeCommand.TEST_CASES)
-    val viewMenuItems=listOf(IdeCommand.EXPLORER,IdeCommand.SEARCH,IdeCommand.SOURCE_CONTROL,IdeCommand.PANEL,IdeCommand.THEME,IdeCommand.HIDE_KEYBOARD)
+    val viewMenuItems=listOf(IdeCommand.EXPLORER,IdeCommand.SEARCH,IdeCommand.SOURCE_CONTROL,IdeCommand.WEB,IdeCommand.PANEL,IdeCommand.THEME,IdeCommand.HIDE_KEYBOARD)
     val editMenuItems = listOf(IdeCommand.UNDO, IdeCommand.REDO, IdeCommand.FIND, IdeCommand.REPLACE,
         IdeCommand.GOTO_LINE, IdeCommand.FORMAT_DOCUMENT, IdeCommand.FONT_SIZE, IdeCommand.COMPLETE,
         IdeCommand.SIGNATURE, IdeCommand.SNIPPET)
@@ -59,7 +59,7 @@ object IdeCommands {
                 IdeCommand.WORKSPACE, IdeCommand.CLOSE_WORKSPACE) && (state.running || state.saving)) return false
         if (command == IdeCommand.CLOSE_WORKSPACE) return state.projectOpen
         if (!state.loaded) return command in setOf(IdeCommand.NEW_FILE, IdeCommand.NEW_FOLDER,
-            IdeCommand.IMPORT_COPY, IdeCommand.WORKSPACE, IdeCommand.EXPLORER, IdeCommand.SEARCH, IdeCommand.SOURCE_CONTROL,
+            IdeCommand.IMPORT_COPY, IdeCommand.WORKSPACE, IdeCommand.EXPLORER, IdeCommand.SEARCH, IdeCommand.SOURCE_CONTROL,IdeCommand.WEB,
             IdeCommand.RECOVER, IdeCommand.PANEL, IdeCommand.PANEL_SIZE, IdeCommand.MAXIMIZE_TERMINAL,
             IdeCommand.CLOSE_TERMINAL, IdeCommand.CLEAR_TERMINAL, IdeCommand.HIDE_KEYBOARD)
         if (command == IdeCommand.FONT_SIZE) return !state.composing

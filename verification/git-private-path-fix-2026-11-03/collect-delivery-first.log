@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\git-private-path-fix-2026-11-03\collect-delivery.py", line 43, in <module>
+    assert normalize(manifest.replace(factory[0],''))==normalize(log(PREVIOUS/'manifest-tree.txt'))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

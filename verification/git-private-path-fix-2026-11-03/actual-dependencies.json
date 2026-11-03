@@ -1,0 +1,222 @@
+{
+    "debugCompileClasspath": [
+        {
+            "coordinate": "androidx.annotation:annotation-experimental:1.3.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.annotation\\annotation-experimental\\1.3.0\\5087c6f545117dcd474e69e1a93cacec9d7334af\\annotation-experimental-1.3.0.aar",
+            "bytes": 36019,
+            "sha256": "abfd29c8556e5bd0325a9f769ab9e9d154ff4a5515c476cdd5a2a8285b1b19dc"
+        },
+        {
+            "coordinate": "androidx.annotation:annotation-jvm:1.9.1",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.annotation\\annotation-jvm\\1.9.1\\b17951747e38bf3986a24431b9ba0d039958aa5f\\annotation-jvm-1.9.1.jar",
+            "bytes": 60577,
+            "sha256": "1e343917ebf27ba96fe4dc52b1cad7fd32b738fbc6355bb6cd5b3b305d7212d0"
+        },
+        {
+            "coordinate": "androidx.arch.core:core-common:2.0.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.arch.core\\core-common\\2.0.0\\bb21b9a11761451b51624ac428d1f1bb5deeac38\\core-common-2.0.0.jar",
+            "bytes": 11249,
+            "sha256": "4b80b337779b526e64b0ee0ca9e0df43b808344d145f8e9b1c42a134dac57ad8"
+        },
+        {
+            "coordinate": "androidx.collection:collection-jvm:1.5.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.collection\\collection-jvm\\1.5.0\\7ba2c69414d46ebc2dd76598bdd0a75c54281a57\\collection-jvm-1.5.0.jar",
+            "bytes": 877998,
+            "sha256": "70b35924e4babcdffa37d0e575ee039c56a2d97123342624c48b603233704341"
+        },
+        {
+            "coordinate": "androidx.core:core:1.1.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.core\\core\\1.1.0\\b9addd897d6b9c8634fe789bdb82f993171432ae\\core-1.1.0.aar",
+            "bytes": 680824,
+            "sha256": "76c7cfbe596fe3c09a6983bf1c89e889299c08ac9a3b52ce5182a088d056647e"
+        },
+        {
+            "coordinate": "androidx.lifecycle:lifecycle-common:2.0.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.lifecycle\\lifecycle-common\\2.0.0\\e070ffae07452331bc5684734fce6831d531785c\\lifecycle-common-2.0.0.jar",
+            "bytes": 20306,
+            "sha256": "7bad7a188804adea6fa1f35d5ef99b705f20bd93ecadde484760ff86b535fefc"
+        },
+        {
+            "coordinate": "androidx.lifecycle:lifecycle-runtime:2.0.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.lifecycle\\lifecycle-runtime\\2.0.0\\ea27e9e79e9a0fbedfa4dbbef5ddccf0e1d9d73f\\lifecycle-runtime-2.0.0.aar",
+            "bytes": 9164,
+            "sha256": "e4afc9e636183f6f3e0edf1cf46121a492ffd2c673075bb07f55c7a99dd43cfb"
+        },
+        {
+            "coordinate": "androidx.versionedparcelable:versionedparcelable:1.1.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.versionedparcelable\\versionedparcelable\\1.1.0\\91acce73e00a17b524f6697f6c3893efb8ea349f\\versionedparcelable-1.1.0.aar",
+            "bytes": 31062,
+            "sha256": "9a1d77140ac222b7866b5054ee7d159bc1800987ed2d46dd6afdd145abb710c1"
+        },
+        {
+            "coordinate": "androidx.webkit:webkit:1.18.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.webkit\\webkit\\1.18.0\\a2f431c92c96505158d4abeb65f8df667c18be33\\webkit-1.18.0.aar",
+            "bytes": 295710,
+            "sha256": "f15a0bd7d51f4bb8dffdd3a2cf5829f9a7de9ad4ba2682fa85d619032050581f"
+        },
+        {
+            "coordinate": "com.atlassian.commonmark:commonmark:0.13.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\com.atlassian.commonmark\\commonmark\\0.13.0\\d233ad1436f35c7f88e3488ce6c1e65425c1a059\\commonmark-0.13.0.jar",
+            "bytes": 141562,
+            "sha256": "fd38aecef680649894ffd7b434e10081fc609e260c63e16c4323a3eaa2a9f096"
+        },
+        {
+            "coordinate": "io.noties.markwon:core:4.6.2",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\io.noties.markwon\\core\\4.6.2\\bfe263d409eb7ccc86769a1ecf443f4e6538a1e9\\core-4.6.2.aar",
+            "bytes": 133475,
+            "sha256": "29e4c1de9aefa3d3c7f8a7948ba24c3696adc34b29e3d7d106eb35e8fa2c85fd"
+        },
+        {
+            "coordinate": "org.jetbrains.kotlin:kotlin-stdlib:1.9.25",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\1.9.25\\f700a2f2b8f0d6d0fde48f56d894dc722fb029d7\\kotlin-stdlib-1.9.25.jar",
+            "bytes": 1718956,
+            "sha256": "f9cdcdbff1f5de85380ae526977e683726c2aa42db1ed6e6e50ae89e496e95fd"
+        },
+        {
+            "coordinate": "org.jetbrains:annotations:13.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\13.0\\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\\annotations-13.0.jar",
+            "bytes": 17536,
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+        },
+        {
+            "coordinate": "org.jspecify:jspecify:1.0.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.jspecify\\jspecify\\1.0.0\\7425a601c1c7ec76645a78d22b8c6a627edee507\\jspecify-1.0.0.jar",
+            "bytes": 3819,
+            "sha256": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab"
+        }
+    ],
+    "debugRuntimeClasspath": [
+        {
+            "coordinate": "androidx.annotation:annotation-experimental:1.3.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.annotation\\annotation-experimental\\1.3.0\\5087c6f545117dcd474e69e1a93cacec9d7334af\\annotation-experimental-1.3.0.aar",
+            "bytes": 36019,
+            "sha256": "abfd29c8556e5bd0325a9f769ab9e9d154ff4a5515c476cdd5a2a8285b1b19dc"
+        },
+        {
+            "coordinate": "androidx.annotation:annotation-jvm:1.9.1",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.annotation\\annotation-jvm\\1.9.1\\b17951747e38bf3986a24431b9ba0d039958aa5f\\annotation-jvm-1.9.1.jar",
+            "bytes": 60577,
+            "sha256": "1e343917ebf27ba96fe4dc52b1cad7fd32b738fbc6355bb6cd5b3b305d7212d0"
+        },
+        {
+            "coordinate": "androidx.arch.core:core-common:2.0.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.arch.core\\core-common\\2.0.0\\bb21b9a11761451b51624ac428d1f1bb5deeac38\\core-common-2.0.0.jar",
+            "bytes": 11249,
+            "sha256": "4b80b337779b526e64b0ee0ca9e0df43b808344d145f8e9b1c42a134dac57ad8"
+        },
+        {
+            "coordinate": "androidx.collection:collection-jvm:1.5.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.collection\\collection-jvm\\1.5.0\\7ba2c69414d46ebc2dd76598bdd0a75c54281a57\\collection-jvm-1.5.0.jar",
+            "bytes": 877998,
+            "sha256": "70b35924e4babcdffa37d0e575ee039c56a2d97123342624c48b603233704341"
+        },
+        {
+            "coordinate": "androidx.core:core:1.1.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.core\\core\\1.1.0\\b9addd897d6b9c8634fe789bdb82f993171432ae\\core-1.1.0.aar",
+            "bytes": 680824,
+            "sha256": "76c7cfbe596fe3c09a6983bf1c89e889299c08ac9a3b52ce5182a088d056647e"
+        },
+        {
+            "coordinate": "androidx.lifecycle:lifecycle-common:2.0.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.lifecycle\\lifecycle-common\\2.0.0\\e070ffae07452331bc5684734fce6831d531785c\\lifecycle-common-2.0.0.jar",
+            "bytes": 20306,
+            "sha256": "7bad7a188804adea6fa1f35d5ef99b705f20bd93ecadde484760ff86b535fefc"
+        },
+        {
+            "coordinate": "androidx.lifecycle:lifecycle-runtime:2.0.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.lifecycle\\lifecycle-runtime\\2.0.0\\ea27e9e79e9a0fbedfa4dbbef5ddccf0e1d9d73f\\lifecycle-runtime-2.0.0.aar",
+            "bytes": 9164,
+            "sha256": "e4afc9e636183f6f3e0edf1cf46121a492ffd2c673075bb07f55c7a99dd43cfb"
+        },
+        {
+            "coordinate": "androidx.versionedparcelable:versionedparcelable:1.1.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.versionedparcelable\\versionedparcelable\\1.1.0\\91acce73e00a17b524f6697f6c3893efb8ea349f\\versionedparcelable-1.1.0.aar",
+            "bytes": 31062,
+            "sha256": "9a1d77140ac222b7866b5054ee7d159bc1800987ed2d46dd6afdd145abb710c1"
+        },
+        {
+            "coordinate": "androidx.webkit:webkit:1.18.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\androidx.webkit\\webkit\\1.18.0\\a2f431c92c96505158d4abeb65f8df667c18be33\\webkit-1.18.0.aar",
+            "bytes": 295710,
+            "sha256": "f15a0bd7d51f4bb8dffdd3a2cf5829f9a7de9ad4ba2682fa85d619032050581f"
+        },
+        {
+            "coordinate": "com.atlassian.commonmark:commonmark:0.13.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\com.atlassian.commonmark\\commonmark\\0.13.0\\d233ad1436f35c7f88e3488ce6c1e65425c1a059\\commonmark-0.13.0.jar",
+            "bytes": 141562,
+            "sha256": "fd38aecef680649894ffd7b434e10081fc609e260c63e16c4323a3eaa2a9f096"
+        },
+        {
+            "coordinate": "com.google.code.gson:gson:2.13.1",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\com.google.code.gson\\gson\\2.13.1\\853ce06c11316b33a8eae5e9095da096a9528b8f\\gson-2.13.1.jar",
+            "bytes": 286972,
+            "sha256": "94855942d4992f112946d3de1c334e709237b8126d8130bf07807c018a4a2120"
+        },
+        {
+            "coordinate": "com.google.errorprone:error_prone_annotations:2.38.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\com.google.errorprone\\error_prone_annotations\\2.38.0\\fc0ae991433e8590ba51cd558421478318a74c8c\\error_prone_annotations-2.38.0.jar",
+            "bytes": 20389,
+            "sha256": "6661d5335090a5fc61dd869d2095bc6c1e2156e3aa47a6e4ababdf64c99a7889"
+        },
+        {
+            "coordinate": "io.github.rosemoe:editor:0.23.7",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\io.github.rosemoe\\editor\\0.23.7\\cd3f7161dbb66fdc43aeea3cd0f92bb918389282\\editor-0.23.7.aar",
+            "bytes": 665857,
+            "sha256": "373c784fbf14d8288dca973d8938fdf4b134724413783c9e55d91dc4edeb2f11"
+        },
+        {
+            "coordinate": "io.github.rosemoe:language-textmate:0.23.7",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\io.github.rosemoe\\language-textmate\\0.23.7\\4992b47a30d4760f605f7dd448712e081101dfe6\\language-textmate-0.23.7.aar",
+            "bytes": 260567,
+            "sha256": "909576591348f999b318ef601568a208550ee1c0cae375d70626f70f2b7c63ba"
+        },
+        {
+            "coordinate": "io.noties.markwon:core:4.6.2",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\io.noties.markwon\\core\\4.6.2\\bfe263d409eb7ccc86769a1ecf443f4e6538a1e9\\core-4.6.2.aar",
+            "bytes": 133475,
+            "sha256": "29e4c1de9aefa3d3c7f8a7948ba24c3696adc34b29e3d7d106eb35e8fa2c85fd"
+        },
+        {
+            "coordinate": "org.eclipse.jdt:org.eclipse.jdt.annotation:2.3.100",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.eclipse.jdt\\org.eclipse.jdt.annotation\\2.3.100\\b635711fb57544837a5675e6c2d754136b083d2f\\org.eclipse.jdt.annotation-2.3.100.jar",
+            "bytes": 33226,
+            "sha256": "899dc22cbc1da99bfac4ce2cfc58e37918a3399012f724509fa47f6776bc638a"
+        },
+        {
+            "coordinate": "org.jetbrains.kotlin:kotlin-stdlib:2.1.21",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.1.21\\97a0975aa19d925e109537af60eb46902920015c\\kotlin-stdlib-2.1.21.jar",
+            "bytes": 1724058,
+            "sha256": "263bdc679e1f62012db7b091796279b6d71cf36f4797a98ff1ace05835f201c8"
+        },
+        {
+            "coordinate": "org.jetbrains:annotations:13.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\13.0\\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\\annotations-13.0.jar",
+            "bytes": 17536,
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+        },
+        {
+            "coordinate": "org.jruby.jcodings:jcodings:1.0.63",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.jruby.jcodings\\jcodings\\1.0.63\\b8c386790e72f0bad666c8f1a8af12d0528992e0\\jcodings-1.0.63.jar",
+            "bytes": 1760082,
+            "sha256": "ef11e1741a65160c5619cd2c3c79c40ee0affda847062f012616034b9d10e719"
+        },
+        {
+            "coordinate": "org.jruby.joni:joni:2.2.6",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.jruby.joni\\joni\\2.2.6\\864217ab7dcece78ad7bf3c045a602d871ff309a\\joni-2.2.6.jar",
+            "bytes": 232385,
+            "sha256": "fb33f60ab43e38653317bbf41a1fec89cbee270c48e53b0b56d1165c00de0e07"
+        },
+        {
+            "coordinate": "org.jspecify:jspecify:1.0.0",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.jspecify\\jspecify\\1.0.0\\7425a601c1c7ec76645a78d22b8c6a627edee507\\jspecify-1.0.0.jar",
+            "bytes": 3819,
+            "sha256": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab"
+        },
+        {
+            "coordinate": "org.snakeyaml:snakeyaml-engine:2.9",
+            "file": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\gradle-home\\caches\\modules-2\\files-2.1\\org.snakeyaml\\snakeyaml-engine\\2.9\\71b61db4fe4f9c85842ef577295599eb5f0410fb\\snakeyaml-engine-2.9.jar",
+            "bytes": 294658,
+            "sha256": "2f7a957461b6d70c0005e2c35b78a1c97bef6c446704c0ee9393ce98e4958ba8"
+        }
+    ]
+}

@@ -47,7 +47,7 @@ internal object AndroidGitCredentialKeys:GitCredentialKeys {
  * A failed key/encryption/write never turns into a plaintext or silent temporary fallback. */
 internal class GitCredentialVault(private val directory:File,private val keys:GitCredentialKeys,
     private val replace:(File,File)->Unit={a,b->android.system.Os.rename(a.path,b.path)}) {
-    constructor(context:Context):this(File(context.applicationContext.noBackupFilesDir,"git-credentials"),AndroidGitCredentialKeys)
+    constructor(context:Context):this(File(context.applicationContext.noBackupFilesDir.canonicalFile,"git-credentials"),AndroidGitCredentialKeys)
     private val folder=directory.absoluteFile.also{require(it==it.canonicalFile && (it.isDirectory || it.mkdirs() || it.isDirectory))}
     private val lock=locks.computeIfAbsent(folder.path){Any()}
     private val session=mutableMapOf<String,GitCredentials>()

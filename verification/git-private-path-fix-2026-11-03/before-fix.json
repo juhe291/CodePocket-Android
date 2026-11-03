@@ -1,0 +1,15 @@
+{
+  "parent_commit": "d33faa3",
+  "web_first_full_tests": 1138,
+  "passed": 1136,
+  "known_failure": 1,
+  "old_skip": 1,
+  "lint_errors": 0,
+  "lint_app_warnings": 30,
+  "full_exit": 1,
+  "full_duration": "6m14s",
+  "dependency_recording_failed": "Gradle artifact variant ambiguity; not an App build failure",
+  "intermediate_apk": ".tools\\web-sidebar-before-device-fix\\app-debug.apk",
+  "intermediate_sha256": "fda0fc43ed0f0a0aac9ad7512a5c263e895adfc57e71491b52de98a96d1be61c",
+  "delivered": false
+}

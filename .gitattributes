@@ -43,3 +43,19 @@ verification/git-remote-workbench-2026-11-02/*.log -text whitespace=cr-at-eol,-b
 verification/git-remote-delivery-2026-11-03/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 # JUnit comparison failures can contain literal CRLF inside otherwise LF XML.
 verification/git-remote-*/**/*.xml -text whitespace=cr-at-eol
+
+# Web component notices and raw verification evidence keep their inspected bytes.
+app/src/main/assets/web-licenses/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/web-sidebar-preflight-2026-11-03/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/web-sidebar-preflight-2026-11-03/*LICENSE.txt -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/web-sidebar-preflight-2026-11-03/**/*.xml -text whitespace=cr-at-eol
+verification/web-sidebar-delivery-2026-11-03/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/web-sidebar-delivery-2026-11-03/**/*.xml -text whitespace=cr-at-eol
+
+verification/git-private-path-fix-2026-11-03/*.log -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-private-path-fix-2026-11-03/**/*.xml -text whitespace=cr-at-eol
+verification/git-private-path-fix-2026-11-03/*.before -text whitespace=cr-at-eol
+
+verification/web-sidebar-preflight-2026-11-03/*.txt -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/web-sidebar-delivery-2026-11-03/*.txt -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+verification/git-private-path-fix-2026-11-03/*.txt -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

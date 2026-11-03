@@ -1,0 +1,1065 @@
+Package Groups (1)
+Package Group 0 id=0x7f packageCount=1 name=com.codepocket.ide
+  Package 0 id=0x7f name=com.codepocket.ide
+    type 0 configCount=1 entryCount=8
+      spec resource 0x7f010000 com.codepocket.ide:anim/anim_diagnostic_tooltip_window_enter: flags=0x00000000
+      spec resource 0x7f010001 com.codepocket.ide:anim/anim_diagnostic_tooltip_window_exit: flags=0x00000000
+      spec resource 0x7f010002 com.codepocket.ide:anim/anim_text_action_popup_enter: flags=0x00000000
+      spec resource 0x7f010003 com.codepocket.ide:anim/anim_text_action_popup_exit: flags=0x00000000
+      spec resource 0x7f010004 com.codepocket.ide:anim/workbench_drawer_enter: flags=0x00000000
+      spec resource 0x7f010005 com.codepocket.ide:anim/workbench_drawer_exit: flags=0x00000000
+      spec resource 0x7f010006 com.codepocket.ide:anim/workbench_enter: flags=0x00000000
+      spec resource 0x7f010007 com.codepocket.ide:anim/workbench_exit: flags=0x00000000
+      config (default):
+        resource 0x7f010000 com.codepocket.ide:anim/anim_diagnostic_tooltip_window_enter: t=0x03 d=0x0000002b (s=0x0008 r=0x00)
+        resource 0x7f010001 com.codepocket.ide:anim/anim_diagnostic_tooltip_window_exit: t=0x03 d=0x0000002c (s=0x0008 r=0x00)
+        resource 0x7f010002 com.codepocket.ide:anim/anim_text_action_popup_enter: t=0x03 d=0x0000002d (s=0x0008 r=0x00)
+        resource 0x7f010003 com.codepocket.ide:anim/anim_text_action_popup_exit: t=0x03 d=0x0000002e (s=0x0008 r=0x00)
+        resource 0x7f010004 com.codepocket.ide:anim/workbench_drawer_enter: t=0x03 d=0x0000002f (s=0x0008 r=0x00)
+        resource 0x7f010005 com.codepocket.ide:anim/workbench_drawer_exit: t=0x03 d=0x00000030 (s=0x0008 r=0x00)
+        resource 0x7f010006 com.codepocket.ide:anim/workbench_enter: t=0x03 d=0x00000031 (s=0x0008 r=0x00)
+        resource 0x7f010007 com.codepocket.ide:anim/workbench_exit: t=0x03 d=0x00000032 (s=0x0008 r=0x00)
+    type 1 configCount=1 entryCount=38
+      spec resource 0x7f020000 com.codepocket.ide:attr/alpha: flags=0x00000000
+      spec resource 0x7f020001 com.codepocket.ide:attr/autoCompleteEnabled: flags=0x00000000
+      spec resource 0x7f020002 com.codepocket.ide:attr/codeEditorStyle: flags=0x00000000
+      spec resource 0x7f020003 com.codepocket.ide:attr/cursorBlinkPeriod: flags=0x00000000
+      spec resource 0x7f020004 com.codepocket.ide:attr/dividerMargin: flags=0x00000000
+      spec resource 0x7f020005 com.codepocket.ide:attr/dividerWidth: flags=0x00000000
+      spec resource 0x7f020006 com.codepocket.ide:attr/font: flags=0x00000000
+      spec resource 0x7f020007 com.codepocket.ide:attr/fontProviderAuthority: flags=0x00000000
+      spec resource 0x7f020008 com.codepocket.ide:attr/fontProviderCerts: flags=0x00000000
+      spec resource 0x7f020009 com.codepocket.ide:attr/fontProviderFetchStrategy: flags=0x00000000
+      spec resource 0x7f02000a com.codepocket.ide:attr/fontProviderFetchTimeout: flags=0x00000000
+      spec resource 0x7f02000b com.codepocket.ide:attr/fontProviderPackage: flags=0x00000000
+      spec resource 0x7f02000c com.codepocket.ide:attr/fontProviderQuery: flags=0x00000000
+      spec resource 0x7f02000d com.codepocket.ide:attr/fontStyle: flags=0x00000000
+      spec resource 0x7f02000e com.codepocket.ide:attr/fontVariationSettings: flags=0x00000000
+      spec resource 0x7f02000f com.codepocket.ide:attr/fontWeight: flags=0x00000000
+      spec resource 0x7f020010 com.codepocket.ide:attr/highlightBracketPair: flags=0x00000000
+      spec resource 0x7f020011 com.codepocket.ide:attr/highlightCurrentBlock: flags=0x00000000
+      spec resource 0x7f020012 com.codepocket.ide:attr/highlightCurrentLine: flags=0x00000000
+      spec resource 0x7f020013 com.codepocket.ide:attr/horizontalScrollbarEnabled: flags=0x00000000
+      spec resource 0x7f020014 com.codepocket.ide:attr/ligatures: flags=0x00000000
+      spec resource 0x7f020015 com.codepocket.ide:attr/lineNumberVisible: flags=0x00000000
+      spec resource 0x7f020016 com.codepocket.ide:attr/lnPanelPosition: flags=0x00000000
+      spec resource 0x7f020017 com.codepocket.ide:attr/lnPanelPositionMode: flags=0x00000000
+      spec resource 0x7f020018 com.codepocket.ide:attr/pinLineNumber: flags=0x00000000
+      spec resource 0x7f020019 com.codepocket.ide:attr/renderFunctionChars: flags=0x00000000
+      spec resource 0x7f02001a com.codepocket.ide:attr/scalable: flags=0x00000000
+      spec resource 0x7f02001b com.codepocket.ide:attr/scrollbarThumbHorizontal: flags=0x00000000
+      spec resource 0x7f02001c com.codepocket.ide:attr/scrollbarThumbVertical: flags=0x00000000
+      spec resource 0x7f02001d com.codepocket.ide:attr/scrollbarTrackHorizontal: flags=0x00000000
+      spec resource 0x7f02001e com.codepocket.ide:attr/scrollbarTrackVertical: flags=0x00000000
+      spec resource 0x7f02001f com.codepocket.ide:attr/symbolCompletionEnabled: flags=0x00000000
+      spec resource 0x7f020020 com.codepocket.ide:attr/tabWidth: flags=0x00000000
+      spec resource 0x7f020021 com.codepocket.ide:attr/text: flags=0x00000000
+      spec resource 0x7f020022 com.codepocket.ide:attr/textSize: flags=0x00000000
+      spec resource 0x7f020023 com.codepocket.ide:attr/ttcIndex: flags=0x00000000
+      spec resource 0x7f020024 com.codepocket.ide:attr/verticalScrollbarEnabled: flags=0x00000000
+      spec resource 0x7f020025 com.codepocket.ide:attr/wordwrapMode: flags=0x00000000
+      config (default):
+        resource 0x7f020000 com.codepocket.ide:attr/alpha: <bag>
+        resource 0x7f020001 com.codepocket.ide:attr/autoCompleteEnabled: <bag>
+        resource 0x7f020002 com.codepocket.ide:attr/codeEditorStyle: <bag>
+        resource 0x7f020003 com.codepocket.ide:attr/cursorBlinkPeriod: <bag>
+        resource 0x7f020004 com.codepocket.ide:attr/dividerMargin: <bag>
+        resource 0x7f020005 com.codepocket.ide:attr/dividerWidth: <bag>
+        resource 0x7f020006 com.codepocket.ide:attr/font: <bag>
+        resource 0x7f020007 com.codepocket.ide:attr/fontProviderAuthority: <bag>
+        resource 0x7f020008 com.codepocket.ide:attr/fontProviderCerts: <bag>
+        resource 0x7f020009 com.codepocket.ide:attr/fontProviderFetchStrategy: <bag>
+        resource 0x7f02000a com.codepocket.ide:attr/fontProviderFetchTimeout: <bag>
+        resource 0x7f02000b com.codepocket.ide:attr/fontProviderPackage: <bag>
+        resource 0x7f02000c com.codepocket.ide:attr/fontProviderQuery: <bag>
+        resource 0x7f02000d com.codepocket.ide:attr/fontStyle: <bag>
+        resource 0x7f02000e com.codepocket.ide:attr/fontVariationSettings: <bag>
+        resource 0x7f02000f com.codepocket.ide:attr/fontWeight: <bag>
+        resource 0x7f020010 com.codepocket.ide:attr/highlightBracketPair: <bag>
+        resource 0x7f020011 com.codepocket.ide:attr/highlightCurrentBlock: <bag>
+        resource 0x7f020012 com.codepocket.ide:attr/highlightCurrentLine: <bag>
+        resource 0x7f020013 com.codepocket.ide:attr/horizontalScrollbarEnabled: <bag>
+        resource 0x7f020014 com.codepocket.ide:attr/ligatures: <bag>
+        resource 0x7f020015 com.codepocket.ide:attr/lineNumberVisible: <bag>
+        resource 0x7f020016 com.codepocket.ide:attr/lnPanelPosition: <bag>
+        resource 0x7f020017 com.codepocket.ide:attr/lnPanelPositionMode: <bag>
+        resource 0x7f020018 com.codepocket.ide:attr/pinLineNumber: <bag>
+        resource 0x7f020019 com.codepocket.ide:attr/renderFunctionChars: <bag>
+        resource 0x7f02001a com.codepocket.ide:attr/scalable: <bag>
+        resource 0x7f02001b com.codepocket.ide:attr/scrollbarThumbHorizontal: <bag>
+        resource 0x7f02001c com.codepocket.ide:attr/scrollbarThumbVertical: <bag>
+        resource 0x7f02001d com.codepocket.ide:attr/scrollbarTrackHorizontal: <bag>
+        resource 0x7f02001e com.codepocket.ide:attr/scrollbarTrackVertical: <bag>
+        resource 0x7f02001f com.codepocket.ide:attr/symbolCompletionEnabled: <bag>
+        resource 0x7f020020 com.codepocket.ide:attr/tabWidth: <bag>
+        resource 0x7f020021 com.codepocket.ide:attr/text: <bag>
+        resource 0x7f020022 com.codepocket.ide:attr/textSize: <bag>
+        resource 0x7f020023 com.codepocket.ide:attr/ttcIndex: <bag>
+        resource 0x7f020024 com.codepocket.ide:attr/verticalScrollbarEnabled: <bag>
+        resource 0x7f020025 com.codepocket.ide:attr/wordwrapMode: <bag>
+    type 2 configCount=2 entryCount=7
+      spec resource 0x7f030000 com.codepocket.ide:color/defaultSymbolInputBackgroundColor: flags=0x00001000
+      spec resource 0x7f030001 com.codepocket.ide:color/defaultSymbolInputTextColor: flags=0x00001000
+      spec resource 0x7f030002 com.codepocket.ide:color/notification_action_color_filter: flags=0x00000000
+      spec resource 0x7f030003 com.codepocket.ide:color/notification_icon_bg_color: flags=0x00000000
+      spec resource 0x7f030004 com.codepocket.ide:color/ripple_material_light: flags=0x00000000
+      spec resource 0x7f030005 com.codepocket.ide:color/secondary_text_default_material_light: flags=0x00000000
+      spec resource 0x7f030006 com.codepocket.ide:color/textActionNameColor: flags=0x00000000
+      config (default):
+        resource 0x7f030000 com.codepocket.ide:color/defaultSymbolInputBackgroundColor: t=0x01 d=0x0106000f (s=0x0008 r=0x00)
+        resource 0x7f030001 com.codepocket.ide:color/defaultSymbolInputTextColor: t=0x01 d=0x0106000c (s=0x0008 r=0x00)
+        resource 0x7f030002 com.codepocket.ide:color/notification_action_color_filter: t=0x01 d=0x7f030005 (s=0x0008 r=0x00)
+        resource 0x7f030003 com.codepocket.ide:color/notification_icon_bg_color: t=0x1c d=0xff9e9e9e (s=0x0008 r=0x00)
+        resource 0x7f030004 com.codepocket.ide:color/ripple_material_light: t=0x1c d=0x1f000000 (s=0x0008 r=0x00)
+        resource 0x7f030005 com.codepocket.ide:color/secondary_text_default_material_light: t=0x1c d=0x8a000000 (s=0x0008 r=0x00)
+        resource 0x7f030006 com.codepocket.ide:color/textActionNameColor: t=0x01 d=0x01060011 (s=0x0008 r=0x00)
+      config night:
+        resource 0x7f030000 com.codepocket.ide:color/defaultSymbolInputBackgroundColor: t=0x01 d=0x0106000e (s=0x0008 r=0x00)
+        resource 0x7f030001 com.codepocket.ide:color/defaultSymbolInputTextColor: t=0x01 d=0x0106000b (s=0x0008 r=0x00)
+    type 3 configCount=1 entryCount=22
+      spec resource 0x7f040000 com.codepocket.ide:dimen/compat_button_inset_horizontal_material: flags=0x00000000
+      spec resource 0x7f040001 com.codepocket.ide:dimen/compat_button_inset_vertical_material: flags=0x00000000
+      spec resource 0x7f040002 com.codepocket.ide:dimen/compat_button_padding_horizontal_material: flags=0x00000000
+      spec resource 0x7f040003 com.codepocket.ide:dimen/compat_button_padding_vertical_material: flags=0x00000000
+      spec resource 0x7f040004 com.codepocket.ide:dimen/compat_control_corner_material: flags=0x00000000
+      spec resource 0x7f040005 com.codepocket.ide:dimen/compat_notification_large_icon_max_height: flags=0x00000000
+      spec resource 0x7f040006 com.codepocket.ide:dimen/compat_notification_large_icon_max_width: flags=0x00000000
+      spec resource 0x7f040007 com.codepocket.ide:dimen/notification_action_icon_size: flags=0x00000000
+      spec resource 0x7f040008 com.codepocket.ide:dimen/notification_action_text_size: flags=0x00000000
+      spec resource 0x7f040009 com.codepocket.ide:dimen/notification_big_circle_margin: flags=0x00000000
+      spec resource 0x7f04000a com.codepocket.ide:dimen/notification_content_margin_start: flags=0x00000000
+      spec resource 0x7f04000b com.codepocket.ide:dimen/notification_large_icon_height: flags=0x00000000
+      spec resource 0x7f04000c com.codepocket.ide:dimen/notification_large_icon_width: flags=0x00000000
+      spec resource 0x7f04000d com.codepocket.ide:dimen/notification_main_column_padding_top: flags=0x00000000
+      spec resource 0x7f04000e com.codepocket.ide:dimen/notification_media_narrow_margin: flags=0x00000000
+      spec resource 0x7f04000f com.codepocket.ide:dimen/notification_right_icon_size: flags=0x00000000
+      spec resource 0x7f040010 com.codepocket.ide:dimen/notification_right_side_padding_top: flags=0x00000000
+      spec resource 0x7f040011 com.codepocket.ide:dimen/notification_small_icon_background_padding: flags=0x00000000
+      spec resource 0x7f040012 com.codepocket.ide:dimen/notification_small_icon_size_as_large: flags=0x00000000
+      spec resource 0x7f040013 com.codepocket.ide:dimen/notification_subtext_size: flags=0x00000000
+      spec resource 0x7f040014 com.codepocket.ide:dimen/notification_top_pad: flags=0x00000000
+      spec resource 0x7f040015 com.codepocket.ide:dimen/notification_top_pad_large_text: flags=0x00000000
+      config (default):
+        resource 0x7f040000 com.codepocket.ide:dimen/compat_button_inset_horizontal_material: t=0x05 d=0x00000401 (s=0x0008 r=0x00)
+        resource 0x7f040001 com.codepocket.ide:dimen/compat_button_inset_vertical_material: t=0x05 d=0x00000601 (s=0x0008 r=0x00)
+        resource 0x7f040002 com.codepocket.ide:dimen/compat_button_padding_horizontal_material: t=0x05 d=0x00000801 (s=0x0008 r=0x00)
+        resource 0x7f040003 com.codepocket.ide:dimen/compat_button_padding_vertical_material: t=0x05 d=0x00000401 (s=0x0008 r=0x00)
+        resource 0x7f040004 com.codepocket.ide:dimen/compat_control_corner_material: t=0x05 d=0x00000201 (s=0x0008 r=0x00)
+        resource 0x7f040005 com.codepocket.ide:dimen/compat_notification_large_icon_max_height: t=0x05 d=0x00014001 (s=0x0008 r=0x00)
+        resource 0x7f040006 com.codepocket.ide:dimen/compat_notification_large_icon_max_width: t=0x05 d=0x00014001 (s=0x0008 r=0x00)
+        resource 0x7f040007 com.codepocket.ide:dimen/notification_action_icon_size: t=0x05 d=0x00002001 (s=0x0008 r=0x00)
+        resource 0x7f040008 com.codepocket.ide:dimen/notification_action_text_size: t=0x05 d=0x00000d02 (s=0x0008 r=0x00)
+        resource 0x7f040009 com.codepocket.ide:dimen/notification_big_circle_margin: t=0x05 d=0x00000c01 (s=0x0008 r=0x00)
+        resource 0x7f04000a com.codepocket.ide:dimen/notification_content_margin_start: t=0x05 d=0x00000001 (s=0x0008 r=0x00)
+        resource 0x7f04000b com.codepocket.ide:dimen/notification_large_icon_height: t=0x05 d=0x00004001 (s=0x0008 r=0x00)
+        resource 0x7f04000c com.codepocket.ide:dimen/notification_large_icon_width: t=0x05 d=0x00004001 (s=0x0008 r=0x00)
+        resource 0x7f04000d com.codepocket.ide:dimen/notification_main_column_padding_top: t=0x05 d=0x00000001 (s=0x0008 r=0x00)
+        resource 0x7f04000e com.codepocket.ide:dimen/notification_media_narrow_margin: t=0x05 d=0x00000c01 (s=0x0008 r=0x00)
+        resource 0x7f04000f com.codepocket.ide:dimen/notification_right_icon_size: t=0x05 d=0x00001001 (s=0x0008 r=0x00)
+        resource 0x7f040010 com.codepocket.ide:dimen/notification_right_side_padding_top: t=0x05 d=0x00000401 (s=0x0008 r=0x00)
+        resource 0x7f040011 com.codepocket.ide:dimen/notification_small_icon_background_padding: t=0x05 d=0x00000301 (s=0x0008 r=0x00)
+        resource 0x7f040012 com.codepocket.ide:dimen/notification_small_icon_size_as_large: t=0x05 d=0x00001801 (s=0x0008 r=0x00)
+        resource 0x7f040013 com.codepocket.ide:dimen/notification_subtext_size: t=0x05 d=0x00000d02 (s=0x0008 r=0x00)
+        resource 0x7f040014 com.codepocket.ide:dimen/notification_top_pad: t=0x05 d=0x00000a01 (s=0x0008 r=0x00)
+        resource 0x7f040015 com.codepocket.ide:dimen/notification_top_pad_large_text: t=0x05 d=0x00000501 (s=0x0008 r=0x00)
+    type 4 configCount=4 entryCount=73
+      spec resource 0x7f050000 com.codepocket.ide:drawable/baseline_more_vert_24: flags=0x00000000
+      spec resource 0x7f050001 com.codepocket.ide:drawable/editor_cursor_transparent: flags=0x00000000
+      spec resource 0x7f050002 com.codepocket.ide:drawable/editor_text_select_start: flags=0x00000000
+      spec resource 0x7f050003 com.codepocket.ide:drawable/ic_app: flags=0x00000000
+      spec resource 0x7f050004 com.codepocket.ide:drawable/ic_more_vert_black_20dp: flags=0x00000000
+      spec resource 0x7f050005 com.codepocket.ide:drawable/ic_sora_handle_drop: flags=0x00000000
+      spec resource 0x7f050006 com.codepocket.ide:drawable/ic_source_control: flags=0x00000000
+      spec resource 0x7f050007 com.codepocket.ide:drawable/lucide_arrow_left: flags=0x00000000
+      spec resource 0x7f050008 com.codepocket.ide:drawable/lucide_arrow_right: flags=0x00000000
+      spec resource 0x7f050009 com.codepocket.ide:drawable/lucide_brackets: flags=0x00000000
+      spec resource 0x7f05000a com.codepocket.ide:drawable/lucide_case_sensitive: flags=0x00000000
+      spec resource 0x7f05000b com.codepocket.ide:drawable/lucide_check: flags=0x00000000
+      spec resource 0x7f05000c com.codepocket.ide:drawable/lucide_chevron_down: flags=0x00000000
+      spec resource 0x7f05000d com.codepocket.ide:drawable/lucide_chevron_right: flags=0x00000000
+      spec resource 0x7f05000e com.codepocket.ide:drawable/lucide_circle_help: flags=0x00000000
+      spec resource 0x7f05000f com.codepocket.ide:drawable/lucide_clipboard: flags=0x00000000
+      spec resource 0x7f050010 com.codepocket.ide:drawable/lucide_copy: flags=0x00000000
+      spec resource 0x7f050011 com.codepocket.ide:drawable/lucide_crosshair: flags=0x00000000
+      spec resource 0x7f050012 com.codepocket.ide:drawable/lucide_download: flags=0x00000000
+      spec resource 0x7f050013 com.codepocket.ide:drawable/lucide_ellipsis_vertical: flags=0x00000000
+      spec resource 0x7f050014 com.codepocket.ide:drawable/lucide_eraser: flags=0x00000000
+      spec resource 0x7f050015 com.codepocket.ide:drawable/lucide_file: flags=0x00000000
+      spec resource 0x7f050016 com.codepocket.ide:drawable/lucide_file_code_2: flags=0x00000000
+      spec resource 0x7f050017 com.codepocket.ide:drawable/lucide_file_json: flags=0x00000000
+      spec resource 0x7f050018 com.codepocket.ide:drawable/lucide_file_plus_2: flags=0x00000000
+      spec resource 0x7f050019 com.codepocket.ide:drawable/lucide_file_text: flags=0x00000000
+      spec resource 0x7f05001a com.codepocket.ide:drawable/lucide_files: flags=0x00000000
+      spec resource 0x7f05001b com.codepocket.ide:drawable/lucide_folder: flags=0x00000000
+      spec resource 0x7f05001c com.codepocket.ide:drawable/lucide_folder_open: flags=0x00000000
+      spec resource 0x7f05001d com.codepocket.ide:drawable/lucide_folder_plus: flags=0x00000000
+      spec resource 0x7f05001e com.codepocket.ide:drawable/lucide_globe: flags=0x00000000
+      spec resource 0x7f05001f com.codepocket.ide:drawable/lucide_info: flags=0x00000000
+      spec resource 0x7f050020 com.codepocket.ide:drawable/lucide_keyboard: flags=0x00000000
+      spec resource 0x7f050021 com.codepocket.ide:drawable/lucide_list_collapse: flags=0x00000000
+      spec resource 0x7f050022 com.codepocket.ide:drawable/lucide_list_filter: flags=0x00000000
+      spec resource 0x7f050023 com.codepocket.ide:drawable/lucide_maximize_2: flags=0x00000000
+      spec resource 0x7f050024 com.codepocket.ide:drawable/lucide_minimize_2: flags=0x00000000
+      spec resource 0x7f050025 com.codepocket.ide:drawable/lucide_move: flags=0x00000000
+      spec resource 0x7f050026 com.codepocket.ide:drawable/lucide_palette: flags=0x00000000
+      spec resource 0x7f050027 com.codepocket.ide:drawable/lucide_pencil: flags=0x00000000
+      spec resource 0x7f050028 com.codepocket.ide:drawable/lucide_play: flags=0x00000000
+      spec resource 0x7f050029 com.codepocket.ide:drawable/lucide_plus: flags=0x00000000
+      spec resource 0x7f05002a com.codepocket.ide:drawable/lucide_redo_2: flags=0x00000000
+      spec resource 0x7f05002b com.codepocket.ide:drawable/lucide_refresh_cw: flags=0x00000000
+      spec resource 0x7f05002c com.codepocket.ide:drawable/lucide_save: flags=0x00000000
+      spec resource 0x7f05002d com.codepocket.ide:drawable/lucide_search: flags=0x00000000
+      spec resource 0x7f05002e com.codepocket.ide:drawable/lucide_settings_2: flags=0x00000000
+      spec resource 0x7f05002f com.codepocket.ide:drawable/lucide_square: flags=0x00000000
+      spec resource 0x7f050030 com.codepocket.ide:drawable/lucide_terminal: flags=0x00000000
+      spec resource 0x7f050031 com.codepocket.ide:drawable/lucide_trash_2: flags=0x00000000
+      spec resource 0x7f050032 com.codepocket.ide:drawable/lucide_undo_2: flags=0x00000000
+      spec resource 0x7f050033 com.codepocket.ide:drawable/lucide_upload: flags=0x00000000
+      spec resource 0x7f050034 com.codepocket.ide:drawable/lucide_x: flags=0x00000000
+      spec resource 0x7f050035 com.codepocket.ide:drawable/magnifier_background: flags=0x00000000
+      spec resource 0x7f050036 com.codepocket.ide:drawable/notification_action_background: flags=0x00000000
+      spec resource 0x7f050037 com.codepocket.ide:drawable/notification_bg: flags=0x00000000
+      spec resource 0x7f050038 com.codepocket.ide:drawable/notification_bg_low: flags=0x00000000
+      spec resource 0x7f050039 com.codepocket.ide:drawable/notification_bg_low_normal: flags=0x00000100
+      spec resource 0x7f05003a com.codepocket.ide:drawable/notification_bg_low_pressed: flags=0x00000100
+      spec resource 0x7f05003b com.codepocket.ide:drawable/notification_bg_normal: flags=0x00000100
+      spec resource 0x7f05003c com.codepocket.ide:drawable/notification_bg_normal_pressed: flags=0x00000100
+      spec resource 0x7f05003d com.codepocket.ide:drawable/notification_icon_background: flags=0x00000000
+      spec resource 0x7f05003e com.codepocket.ide:drawable/notification_template_icon_bg: flags=0x00000000
+      spec resource 0x7f05003f com.codepocket.ide:drawable/notification_template_icon_low_bg: flags=0x00000000
+      spec resource 0x7f050040 com.codepocket.ide:drawable/notification_tile_bg: flags=0x00000000
+      spec resource 0x7f050041 com.codepocket.ide:drawable/notify_panel_notification_icon_bg: flags=0x00000100
+      spec resource 0x7f050042 com.codepocket.ide:drawable/round_content_copy_20: flags=0x00000000
+      spec resource 0x7f050043 com.codepocket.ide:drawable/round_content_cut_20: flags=0x00000000
+      spec resource 0x7f050044 com.codepocket.ide:drawable/round_content_paste_20: flags=0x00000000
+      spec resource 0x7f050045 com.codepocket.ide:drawable/round_save_20: flags=0x00000000
+      spec resource 0x7f050046 com.codepocket.ide:drawable/round_select_all_20: flags=0x00000000
+      spec resource 0x7f050047 com.codepocket.ide:drawable/text_select_handle_left_material: flags=0x00000000
+      spec resource 0x7f050048 com.codepocket.ide:drawable/text_select_handle_right_material: flags=0x00000000
+      config (default):
+        resource 0x7f050000 com.codepocket.ide:drawable/baseline_more_vert_24: t=0x03 d=0x00000043 (s=0x0008 r=0x00)
+        resource 0x7f050001 com.codepocket.ide:drawable/editor_cursor_transparent: t=0x03 d=0x00000044 (s=0x0008 r=0x00)
+        resource 0x7f050002 com.codepocket.ide:drawable/editor_text_select_start: t=0x03 d=0x00000045 (s=0x0008 r=0x00)
+        resource 0x7f050003 com.codepocket.ide:drawable/ic_app: t=0x03 d=0x00000046 (s=0x0008 r=0x00)
+        resource 0x7f050004 com.codepocket.ide:drawable/ic_more_vert_black_20dp: t=0x03 d=0x00000047 (s=0x0008 r=0x00)
+        resource 0x7f050005 com.codepocket.ide:drawable/ic_sora_handle_drop: t=0x03 d=0x00000048 (s=0x0008 r=0x00)
+        resource 0x7f050006 com.codepocket.ide:drawable/ic_source_control: t=0x03 d=0x00000049 (s=0x0008 r=0x00)
+        resource 0x7f050007 com.codepocket.ide:drawable/lucide_arrow_left: t=0x03 d=0x0000004a (s=0x0008 r=0x00)
+        resource 0x7f050008 com.codepocket.ide:drawable/lucide_arrow_right: t=0x03 d=0x0000004b (s=0x0008 r=0x00)
+        resource 0x7f050009 com.codepocket.ide:drawable/lucide_brackets: t=0x03 d=0x0000004c (s=0x0008 r=0x00)
+        resource 0x7f05000a com.codepocket.ide:drawable/lucide_case_sensitive: t=0x03 d=0x0000004d (s=0x0008 r=0x00)
+        resource 0x7f05000b com.codepocket.ide:drawable/lucide_check: t=0x03 d=0x0000004e (s=0x0008 r=0x00)
+        resource 0x7f05000c com.codepocket.ide:drawable/lucide_chevron_down: t=0x03 d=0x0000004f (s=0x0008 r=0x00)
+        resource 0x7f05000d com.codepocket.ide:drawable/lucide_chevron_right: t=0x03 d=0x00000050 (s=0x0008 r=0x00)
+        resource 0x7f05000e com.codepocket.ide:drawable/lucide_circle_help: t=0x03 d=0x00000051 (s=0x0008 r=0x00)
+        resource 0x7f05000f com.codepocket.ide:drawable/lucide_clipboard: t=0x03 d=0x00000052 (s=0x0008 r=0x00)
+        resource 0x7f050010 com.codepocket.ide:drawable/lucide_copy: t=0x03 d=0x00000053 (s=0x0008 r=0x00)
+        resource 0x7f050011 com.codepocket.ide:drawable/lucide_crosshair: t=0x03 d=0x00000054 (s=0x0008 r=0x00)
+        resource 0x7f050012 com.codepocket.ide:drawable/lucide_download: t=0x03 d=0x00000055 (s=0x0008 r=0x00)
+        resource 0x7f050013 com.codepocket.ide:drawable/lucide_ellipsis_vertical: t=0x03 d=0x00000056 (s=0x0008 r=0x00)
+        resource 0x7f050014 com.codepocket.ide:drawable/lucide_eraser: t=0x03 d=0x00000057 (s=0x0008 r=0x00)
+        resource 0x7f050015 com.codepocket.ide:drawable/lucide_file: t=0x03 d=0x00000058 (s=0x0008 r=0x00)
+        resource 0x7f050016 com.codepocket.ide:drawable/lucide_file_code_2: t=0x03 d=0x00000059 (s=0x0008 r=0x00)
+        resource 0x7f050017 com.codepocket.ide:drawable/lucide_file_json: t=0x03 d=0x0000005a (s=0x0008 r=0x00)
+        resource 0x7f050018 com.codepocket.ide:drawable/lucide_file_plus_2: t=0x03 d=0x0000005b (s=0x0008 r=0x00)
+        resource 0x7f050019 com.codepocket.ide:drawable/lucide_file_text: t=0x03 d=0x0000005c (s=0x0008 r=0x00)
+        resource 0x7f05001a com.codepocket.ide:drawable/lucide_files: t=0x03 d=0x0000005d (s=0x0008 r=0x00)
+        resource 0x7f05001b com.codepocket.ide:drawable/lucide_folder: t=0x03 d=0x0000005e (s=0x0008 r=0x00)
+        resource 0x7f05001c com.codepocket.ide:drawable/lucide_folder_open: t=0x03 d=0x0000005f (s=0x0008 r=0x00)
+        resource 0x7f05001d com.codepocket.ide:drawable/lucide_folder_plus: t=0x03 d=0x00000060 (s=0x0008 r=0x00)
+        resource 0x7f05001e com.codepocket.ide:drawable/lucide_globe: t=0x03 d=0x00000061 (s=0x0008 r=0x00)
+        resource 0x7f05001f com.codepocket.ide:drawable/lucide_info: t=0x03 d=0x00000062 (s=0x0008 r=0x00)
+        resource 0x7f050020 com.codepocket.ide:drawable/lucide_keyboard: t=0x03 d=0x00000063 (s=0x0008 r=0x00)
+        resource 0x7f050021 com.codepocket.ide:drawable/lucide_list_collapse: t=0x03 d=0x00000064 (s=0x0008 r=0x00)
+        resource 0x7f050022 com.codepocket.ide:drawable/lucide_list_filter: t=0x03 d=0x00000065 (s=0x0008 r=0x00)
+        resource 0x7f050023 com.codepocket.ide:drawable/lucide_maximize_2: t=0x03 d=0x00000066 (s=0x0008 r=0x00)
+        resource 0x7f050024 com.codepocket.ide:drawable/lucide_minimize_2: t=0x03 d=0x00000067 (s=0x0008 r=0x00)
+        resource 0x7f050025 com.codepocket.ide:drawable/lucide_move: t=0x03 d=0x00000068 (s=0x0008 r=0x00)
+        resource 0x7f050026 com.codepocket.ide:drawable/lucide_palette: t=0x03 d=0x00000069 (s=0x0008 r=0x00)
+        resource 0x7f050027 com.codepocket.ide:drawable/lucide_pencil: t=0x03 d=0x0000006a (s=0x0008 r=0x00)
+        resource 0x7f050028 com.codepocket.ide:drawable/lucide_play: t=0x03 d=0x0000006b (s=0x0008 r=0x00)
+        resource 0x7f050029 com.codepocket.ide:drawable/lucide_plus: t=0x03 d=0x0000006c (s=0x0008 r=0x00)
+        resource 0x7f05002a com.codepocket.ide:drawable/lucide_redo_2: t=0x03 d=0x0000006d (s=0x0008 r=0x00)
+        resource 0x7f05002b com.codepocket.ide:drawable/lucide_refresh_cw: t=0x03 d=0x0000006e (s=0x0008 r=0x00)
+        resource 0x7f05002c com.codepocket.ide:drawable/lucide_save: t=0x03 d=0x0000006f (s=0x0008 r=0x00)
+        resource 0x7f05002d com.codepocket.ide:drawable/lucide_search: t=0x03 d=0x00000070 (s=0x0008 r=0x00)
+        resource 0x7f05002e com.codepocket.ide:drawable/lucide_settings_2: t=0x03 d=0x00000071 (s=0x0008 r=0x00)
+        resource 0x7f05002f com.codepocket.ide:drawable/lucide_square: t=0x03 d=0x00000072 (s=0x0008 r=0x00)
+        resource 0x7f050030 com.codepocket.ide:drawable/lucide_terminal: t=0x03 d=0x00000073 (s=0x0008 r=0x00)
+        resource 0x7f050031 com.codepocket.ide:drawable/lucide_trash_2: t=0x03 d=0x00000074 (s=0x0008 r=0x00)
+        resource 0x7f050032 com.codepocket.ide:drawable/lucide_undo_2: t=0x03 d=0x00000075 (s=0x0008 r=0x00)
+        resource 0x7f050033 com.codepocket.ide:drawable/lucide_upload: t=0x03 d=0x00000076 (s=0x0008 r=0x00)
+        resource 0x7f050034 com.codepocket.ide:drawable/lucide_x: t=0x03 d=0x00000077 (s=0x0008 r=0x00)
+        resource 0x7f050035 com.codepocket.ide:drawable/magnifier_background: t=0x03 d=0x00000078 (s=0x0008 r=0x00)
+        resource 0x7f050036 com.codepocket.ide:drawable/notification_action_background: t=0x03 d=0x0000003d (s=0x0008 r=0x00)
+        resource 0x7f050037 com.codepocket.ide:drawable/notification_bg: t=0x03 d=0x00000079 (s=0x0008 r=0x00)
+        resource 0x7f050038 com.codepocket.ide:drawable/notification_bg_low: t=0x03 d=0x0000007a (s=0x0008 r=0x00)
+        resource 0x7f05003d com.codepocket.ide:drawable/notification_icon_background: t=0x03 d=0x0000007b (s=0x0008 r=0x00)
+        resource 0x7f05003e com.codepocket.ide:drawable/notification_template_icon_bg: t=0x1c d=0x3333b5e5 (s=0x0008 r=0x00)
+        resource 0x7f05003f com.codepocket.ide:drawable/notification_template_icon_low_bg: t=0x1c d=0x0cffffff (s=0x0008 r=0x00)
+        resource 0x7f050040 com.codepocket.ide:drawable/notification_tile_bg: t=0x03 d=0x0000007c (s=0x0008 r=0x00)
+        resource 0x7f050042 com.codepocket.ide:drawable/round_content_copy_20: t=0x03 d=0x0000007d (s=0x0008 r=0x00)
+        resource 0x7f050043 com.codepocket.ide:drawable/round_content_cut_20: t=0x03 d=0x0000007e (s=0x0008 r=0x00)
+        resource 0x7f050044 com.codepocket.ide:drawable/round_content_paste_20: t=0x03 d=0x0000007f (s=0x0008 r=0x00)
+        resource 0x7f050045 com.codepocket.ide:drawable/round_save_20: t=0x03 d=0x00000080 (s=0x0008 r=0x00)
+        resource 0x7f050046 com.codepocket.ide:drawable/round_select_all_20: t=0x03 d=0x00000081 (s=0x0008 r=0x00)
+        resource 0x7f050047 com.codepocket.ide:drawable/text_select_handle_left_material: t=0x03 d=0x00000082 (s=0x0008 r=0x00)
+        resource 0x7f050048 com.codepocket.ide:drawable/text_select_handle_right_material: t=0x03 d=0x00000083 (s=0x0008 r=0x00)
+      config mdpi:
+        resource 0x7f050039 com.codepocket.ide:drawable/notification_bg_low_normal: t=0x03 d=0x00000038 (s=0x0008 r=0x00)
+        resource 0x7f05003a com.codepocket.ide:drawable/notification_bg_low_pressed: t=0x03 d=0x00000039 (s=0x0008 r=0x00)
+        resource 0x7f05003b com.codepocket.ide:drawable/notification_bg_normal: t=0x03 d=0x0000003a (s=0x0008 r=0x00)
+        resource 0x7f05003c com.codepocket.ide:drawable/notification_bg_normal_pressed: t=0x03 d=0x0000003b (s=0x0008 r=0x00)
+        resource 0x7f050041 com.codepocket.ide:drawable/notify_panel_notification_icon_bg: t=0x03 d=0x0000003c (s=0x0008 r=0x00)
+      config hdpi:
+        resource 0x7f050039 com.codepocket.ide:drawable/notification_bg_low_normal: t=0x03 d=0x00000033 (s=0x0008 r=0x00)
+        resource 0x7f05003a com.codepocket.ide:drawable/notification_bg_low_pressed: t=0x03 d=0x00000034 (s=0x0008 r=0x00)
+        resource 0x7f05003b com.codepocket.ide:drawable/notification_bg_normal: t=0x03 d=0x00000035 (s=0x0008 r=0x00)
+        resource 0x7f05003c com.codepocket.ide:drawable/notification_bg_normal_pressed: t=0x03 d=0x00000036 (s=0x0008 r=0x00)
+        resource 0x7f050041 com.codepocket.ide:drawable/notify_panel_notification_icon_bg: t=0x03 d=0x00000037 (s=0x0008 r=0x00)
+      config xhdpi:
+        resource 0x7f050039 com.codepocket.ide:drawable/notification_bg_low_normal: t=0x03 d=0x0000003e (s=0x0008 r=0x00)
+        resource 0x7f05003a com.codepocket.ide:drawable/notification_bg_low_pressed: t=0x03 d=0x0000003f (s=0x0008 r=0x00)
+        resource 0x7f05003b com.codepocket.ide:drawable/notification_bg_normal: t=0x03 d=0x00000040 (s=0x0008 r=0x00)
+        resource 0x7f05003c com.codepocket.ide:drawable/notification_bg_normal_pressed: t=0x03 d=0x00000041 (s=0x0008 r=0x00)
+        resource 0x7f050041 com.codepocket.ide:drawable/notify_panel_notification_icon_bg: t=0x03 d=0x00000042 (s=0x0008 r=0x00)
+    type 5 configCount=1 entryCount=101
+      spec resource 0x7f060000 com.codepocket.ide:id/accessibility_action_clickable_span: flags=0x00000000
+      spec resource 0x7f060001 com.codepocket.ide:id/accessibility_custom_action_0: flags=0x00000000
+      spec resource 0x7f060002 com.codepocket.ide:id/accessibility_custom_action_1: flags=0x00000000
+      spec resource 0x7f060003 com.codepocket.ide:id/accessibility_custom_action_10: flags=0x00000000
+      spec resource 0x7f060004 com.codepocket.ide:id/accessibility_custom_action_11: flags=0x00000000
+      spec resource 0x7f060005 com.codepocket.ide:id/accessibility_custom_action_12: flags=0x00000000
+      spec resource 0x7f060006 com.codepocket.ide:id/accessibility_custom_action_13: flags=0x00000000
+      spec resource 0x7f060007 com.codepocket.ide:id/accessibility_custom_action_14: flags=0x00000000
+      spec resource 0x7f060008 com.codepocket.ide:id/accessibility_custom_action_15: flags=0x00000000
+      spec resource 0x7f060009 com.codepocket.ide:id/accessibility_custom_action_16: flags=0x00000000
+      spec resource 0x7f06000a com.codepocket.ide:id/accessibility_custom_action_17: flags=0x00000000
+      spec resource 0x7f06000b com.codepocket.ide:id/accessibility_custom_action_18: flags=0x00000000
+      spec resource 0x7f06000c com.codepocket.ide:id/accessibility_custom_action_19: flags=0x00000000
+      spec resource 0x7f06000d com.codepocket.ide:id/accessibility_custom_action_2: flags=0x00000000
+      spec resource 0x7f06000e com.codepocket.ide:id/accessibility_custom_action_20: flags=0x00000000
+      spec resource 0x7f06000f com.codepocket.ide:id/accessibility_custom_action_21: flags=0x00000000
+      spec resource 0x7f060010 com.codepocket.ide:id/accessibility_custom_action_22: flags=0x00000000
+      spec resource 0x7f060011 com.codepocket.ide:id/accessibility_custom_action_23: flags=0x00000000
+      spec resource 0x7f060012 com.codepocket.ide:id/accessibility_custom_action_24: flags=0x00000000
+      spec resource 0x7f060013 com.codepocket.ide:id/accessibility_custom_action_25: flags=0x00000000
+      spec resource 0x7f060014 com.codepocket.ide:id/accessibility_custom_action_26: flags=0x00000000
+      spec resource 0x7f060015 com.codepocket.ide:id/accessibility_custom_action_27: flags=0x00000000
+      spec resource 0x7f060016 com.codepocket.ide:id/accessibility_custom_action_28: flags=0x00000000
+      spec resource 0x7f060017 com.codepocket.ide:id/accessibility_custom_action_29: flags=0x00000000
+      spec resource 0x7f060018 com.codepocket.ide:id/accessibility_custom_action_3: flags=0x00000000
+      spec resource 0x7f060019 com.codepocket.ide:id/accessibility_custom_action_30: flags=0x00000000
+      spec resource 0x7f06001a com.codepocket.ide:id/accessibility_custom_action_31: flags=0x00000000
+      spec resource 0x7f06001b com.codepocket.ide:id/accessibility_custom_action_4: flags=0x00000000
+      spec resource 0x7f06001c com.codepocket.ide:id/accessibility_custom_action_5: flags=0x00000000
+      spec resource 0x7f06001d com.codepocket.ide:id/accessibility_custom_action_6: flags=0x00000000
+      spec resource 0x7f06001e com.codepocket.ide:id/accessibility_custom_action_7: flags=0x00000000
+      spec resource 0x7f06001f com.codepocket.ide:id/accessibility_custom_action_8: flags=0x00000000
+      spec resource 0x7f060020 com.codepocket.ide:id/accessibility_custom_action_9: flags=0x00000000
+      spec resource 0x7f060021 com.codepocket.ide:id/action_container: flags=0x00000000
+      spec resource 0x7f060022 com.codepocket.ide:id/action_divider: flags=0x00000000
+      spec resource 0x7f060023 com.codepocket.ide:id/action_image: flags=0x00000000
+      spec resource 0x7f060024 com.codepocket.ide:id/action_text: flags=0x00000000
+      spec resource 0x7f060025 com.codepocket.ide:id/actions: flags=0x00000000
+      spec resource 0x7f060026 com.codepocket.ide:id/async: flags=0x00000000
+      spec resource 0x7f060027 com.codepocket.ide:id/basic: flags=0x00000000
+      spec resource 0x7f060028 com.codepocket.ide:id/blocking: flags=0x00000000
+      spec resource 0x7f060029 com.codepocket.ide:id/bottom: flags=0x00000000
+      spec resource 0x7f06002a com.codepocket.ide:id/center: flags=0x00000000
+      spec resource 0x7f06002b com.codepocket.ide:id/chronometer: flags=0x00000000
+      spec resource 0x7f06002c com.codepocket.ide:id/diagnostic_container_message: flags=0x00000000
+      spec resource 0x7f06002d com.codepocket.ide:id/diagnostic_container_quickfix: flags=0x00000000
+      spec resource 0x7f06002e com.codepocket.ide:id/diagnostic_tooltip_brief_message: flags=0x00000000
+      spec resource 0x7f06002f com.codepocket.ide:id/diagnostic_tooltip_detailed_message: flags=0x00000000
+      spec resource 0x7f060030 com.codepocket.ide:id/diagnostic_tooltip_more_actions: flags=0x00000000
+      spec resource 0x7f060031 com.codepocket.ide:id/diagnostic_tooltip_preferred_action: flags=0x00000000
+      spec resource 0x7f060032 com.codepocket.ide:id/dialog_button: flags=0x00000000
+      spec resource 0x7f060033 com.codepocket.ide:id/fixed: flags=0x00000000
+      spec resource 0x7f060034 com.codepocket.ide:id/follow: flags=0x00000000
+      spec resource 0x7f060035 com.codepocket.ide:id/forever: flags=0x00000000
+      spec resource 0x7f060036 com.codepocket.ide:id/icon: flags=0x00000000
+      spec resource 0x7f060037 com.codepocket.ide:id/icon_group: flags=0x00000000
+      spec resource 0x7f060038 com.codepocket.ide:id/info: flags=0x00000000
+      spec resource 0x7f060039 com.codepocket.ide:id/italic: flags=0x00000000
+      spec resource 0x7f06003a com.codepocket.ide:id/left: flags=0x00000000
+      spec resource 0x7f06003b com.codepocket.ide:id/line1: flags=0x00000000
+      spec resource 0x7f06003c com.codepocket.ide:id/line3: flags=0x00000000
+      spec resource 0x7f06003d com.codepocket.ide:id/magnifier_image_view: flags=0x00000000
+      spec resource 0x7f06003e com.codepocket.ide:id/markwon_drawables_scheduler: flags=0x00000000
+      spec resource 0x7f06003f com.codepocket.ide:id/markwon_drawables_scheduler_last_text_hashcode: flags=0x00000000
+      spec resource 0x7f060040 com.codepocket.ide:id/normal: flags=0x00000000
+      spec resource 0x7f060041 com.codepocket.ide:id/notification_background: flags=0x00000000
+      spec resource 0x7f060042 com.codepocket.ide:id/notification_main_column: flags=0x00000000
+      spec resource 0x7f060043 com.codepocket.ide:id/notification_main_column_container: flags=0x00000000
+      spec resource 0x7f060044 com.codepocket.ide:id/off: flags=0x00000000
+      spec resource 0x7f060045 com.codepocket.ide:id/panel_btn_copy: flags=0x00000000
+      spec resource 0x7f060046 com.codepocket.ide:id/panel_btn_cut: flags=0x00000000
+      spec resource 0x7f060047 com.codepocket.ide:id/panel_btn_long_select: flags=0x00000000
+      spec resource 0x7f060048 com.codepocket.ide:id/panel_btn_paste: flags=0x00000000
+      spec resource 0x7f060049 com.codepocket.ide:id/panel_btn_select_all: flags=0x00000000
+      spec resource 0x7f06004a com.codepocket.ide:id/panel_hv: flags=0x00000000
+      spec resource 0x7f06004b com.codepocket.ide:id/panel_root: flags=0x00000000
+      spec resource 0x7f06004c com.codepocket.ide:id/result_item_desc: flags=0x00000000
+      spec resource 0x7f06004d com.codepocket.ide:id/result_item_image: flags=0x00000000
+      spec resource 0x7f06004e com.codepocket.ide:id/result_item_label: flags=0x00000000
+      spec resource 0x7f06004f com.codepocket.ide:id/right: flags=0x00000000
+      spec resource 0x7f060050 com.codepocket.ide:id/right_icon: flags=0x00000000
+      spec resource 0x7f060051 com.codepocket.ide:id/right_side: flags=0x00000000
+      spec resource 0x7f060052 com.codepocket.ide:id/settings_checkpoint: flags=0x00000000
+      spec resource 0x7f060053 com.codepocket.ide:id/standard: flags=0x00000000
+      spec resource 0x7f060054 com.codepocket.ide:id/tag_accessibility_actions: flags=0x00000000
+      spec resource 0x7f060055 com.codepocket.ide:id/tag_accessibility_clickable_spans: flags=0x00000000
+      spec resource 0x7f060056 com.codepocket.ide:id/tag_accessibility_heading: flags=0x00000000
+      spec resource 0x7f060057 com.codepocket.ide:id/tag_accessibility_pane_title: flags=0x00000000
+      spec resource 0x7f060058 com.codepocket.ide:id/tag_screen_reader_focusable: flags=0x00000000
+      spec resource 0x7f060059 com.codepocket.ide:id/tag_transition_group: flags=0x00000000
+      spec resource 0x7f06005a com.codepocket.ide:id/tag_unhandled_key_event_manager: flags=0x00000000
+      spec resource 0x7f06005b com.codepocket.ide:id/tag_unhandled_key_listeners: flags=0x00000000
+      spec resource 0x7f06005c com.codepocket.ide:id/text: flags=0x00000000
+      spec resource 0x7f06005d com.codepocket.ide:id/text2: flags=0x00000000
+      spec resource 0x7f06005e com.codepocket.ide:id/time: flags=0x00000000
+      spec resource 0x7f06005f com.codepocket.ide:id/title: flags=0x00000000
+      spec resource 0x7f060060 com.codepocket.ide:id/top: flags=0x00000000
+      spec resource 0x7f060061 com.codepocket.ide:id/workbench_key: flags=0x00000000
+      spec resource 0x7f060062 com.codepocket.ide:id/workbench_layout_motion: flags=0x00000000
+      spec resource 0x7f060063 com.codepocket.ide:id/workbench_motion: flags=0x00000000
+      spec resource 0x7f060064 com.codepocket.ide:id/workbench_surface_motion: flags=0x00000000
+      config (default):
+        resource 0x7f060000 com.codepocket.ide:id/accessibility_action_clickable_span: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060001 com.codepocket.ide:id/accessibility_custom_action_0: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060002 com.codepocket.ide:id/accessibility_custom_action_1: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060003 com.codepocket.ide:id/accessibility_custom_action_10: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060004 com.codepocket.ide:id/accessibility_custom_action_11: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060005 com.codepocket.ide:id/accessibility_custom_action_12: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060006 com.codepocket.ide:id/accessibility_custom_action_13: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060007 com.codepocket.ide:id/accessibility_custom_action_14: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060008 com.codepocket.ide:id/accessibility_custom_action_15: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060009 com.codepocket.ide:id/accessibility_custom_action_16: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06000a com.codepocket.ide:id/accessibility_custom_action_17: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06000b com.codepocket.ide:id/accessibility_custom_action_18: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06000c com.codepocket.ide:id/accessibility_custom_action_19: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06000d com.codepocket.ide:id/accessibility_custom_action_2: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06000e com.codepocket.ide:id/accessibility_custom_action_20: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06000f com.codepocket.ide:id/accessibility_custom_action_21: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060010 com.codepocket.ide:id/accessibility_custom_action_22: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060011 com.codepocket.ide:id/accessibility_custom_action_23: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060012 com.codepocket.ide:id/accessibility_custom_action_24: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060013 com.codepocket.ide:id/accessibility_custom_action_25: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060014 com.codepocket.ide:id/accessibility_custom_action_26: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060015 com.codepocket.ide:id/accessibility_custom_action_27: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060016 com.codepocket.ide:id/accessibility_custom_action_28: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060017 com.codepocket.ide:id/accessibility_custom_action_29: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060018 com.codepocket.ide:id/accessibility_custom_action_3: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060019 com.codepocket.ide:id/accessibility_custom_action_30: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06001a com.codepocket.ide:id/accessibility_custom_action_31: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06001b com.codepocket.ide:id/accessibility_custom_action_4: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06001c com.codepocket.ide:id/accessibility_custom_action_5: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06001d com.codepocket.ide:id/accessibility_custom_action_6: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06001e com.codepocket.ide:id/accessibility_custom_action_7: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06001f com.codepocket.ide:id/accessibility_custom_action_8: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060020 com.codepocket.ide:id/accessibility_custom_action_9: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060021 com.codepocket.ide:id/action_container: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060022 com.codepocket.ide:id/action_divider: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060023 com.codepocket.ide:id/action_image: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060024 com.codepocket.ide:id/action_text: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060025 com.codepocket.ide:id/actions: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060026 com.codepocket.ide:id/async: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060027 com.codepocket.ide:id/basic: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060028 com.codepocket.ide:id/blocking: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060029 com.codepocket.ide:id/bottom: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06002a com.codepocket.ide:id/center: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06002b com.codepocket.ide:id/chronometer: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06002c com.codepocket.ide:id/diagnostic_container_message: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06002d com.codepocket.ide:id/diagnostic_container_quickfix: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06002e com.codepocket.ide:id/diagnostic_tooltip_brief_message: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06002f com.codepocket.ide:id/diagnostic_tooltip_detailed_message: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060030 com.codepocket.ide:id/diagnostic_tooltip_more_actions: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060031 com.codepocket.ide:id/diagnostic_tooltip_preferred_action: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060032 com.codepocket.ide:id/dialog_button: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060033 com.codepocket.ide:id/fixed: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060034 com.codepocket.ide:id/follow: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060035 com.codepocket.ide:id/forever: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060036 com.codepocket.ide:id/icon: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060037 com.codepocket.ide:id/icon_group: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060038 com.codepocket.ide:id/info: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060039 com.codepocket.ide:id/italic: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06003a com.codepocket.ide:id/left: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06003b com.codepocket.ide:id/line1: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06003c com.codepocket.ide:id/line3: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06003d com.codepocket.ide:id/magnifier_image_view: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06003e com.codepocket.ide:id/markwon_drawables_scheduler: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06003f com.codepocket.ide:id/markwon_drawables_scheduler_last_text_hashcode: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060040 com.codepocket.ide:id/normal: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060041 com.codepocket.ide:id/notification_background: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060042 com.codepocket.ide:id/notification_main_column: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060043 com.codepocket.ide:id/notification_main_column_container: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060044 com.codepocket.ide:id/off: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060045 com.codepocket.ide:id/panel_btn_copy: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060046 com.codepocket.ide:id/panel_btn_cut: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060047 com.codepocket.ide:id/panel_btn_long_select: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060048 com.codepocket.ide:id/panel_btn_paste: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060049 com.codepocket.ide:id/panel_btn_select_all: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06004a com.codepocket.ide:id/panel_hv: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06004b com.codepocket.ide:id/panel_root: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06004c com.codepocket.ide:id/result_item_desc: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06004d com.codepocket.ide:id/result_item_image: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06004e com.codepocket.ide:id/result_item_label: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06004f com.codepocket.ide:id/right: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060050 com.codepocket.ide:id/right_icon: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060051 com.codepocket.ide:id/right_side: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060052 com.codepocket.ide:id/settings_checkpoint: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060053 com.codepocket.ide:id/standard: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060054 com.codepocket.ide:id/tag_accessibility_actions: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060055 com.codepocket.ide:id/tag_accessibility_clickable_spans: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060056 com.codepocket.ide:id/tag_accessibility_heading: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060057 com.codepocket.ide:id/tag_accessibility_pane_title: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060058 com.codepocket.ide:id/tag_screen_reader_focusable: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060059 com.codepocket.ide:id/tag_transition_group: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06005a com.codepocket.ide:id/tag_unhandled_key_event_manager: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06005b com.codepocket.ide:id/tag_unhandled_key_listeners: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06005c com.codepocket.ide:id/text: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06005d com.codepocket.ide:id/text2: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06005e com.codepocket.ide:id/time: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f06005f com.codepocket.ide:id/title: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060060 com.codepocket.ide:id/top: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060061 com.codepocket.ide:id/workbench_key: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060062 com.codepocket.ide:id/workbench_layout_motion: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060063 com.codepocket.ide:id/workbench_motion: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f060064 com.codepocket.ide:id/workbench_surface_motion: t=0x12 d=0x00000000 (s=0x0008 r=0x00)
+    type 6 configCount=1 entryCount=1
+      spec resource 0x7f070000 com.codepocket.ide:integer/status_bar_notification_info_maxnum: flags=0x00000000
+      config (default):
+        resource 0x7f070000 com.codepocket.ide:integer/status_bar_notification_info_maxnum: t=0x10 d=0x000003e7 (s=0x0008 r=0x00)
+    type 7 configCount=1 entryCount=11
+      spec resource 0x7f080000 com.codepocket.ide:layout/custom_dialog: flags=0x00000000
+      spec resource 0x7f080001 com.codepocket.ide:layout/default_completion_result_item: flags=0x00000000
+      spec resource 0x7f080002 com.codepocket.ide:layout/diagnostic_tooltip_window: flags=0x00000000
+      spec resource 0x7f080003 com.codepocket.ide:layout/magnifier_popup: flags=0x00000000
+      spec resource 0x7f080004 com.codepocket.ide:layout/notification_action: flags=0x00000000
+      spec resource 0x7f080005 com.codepocket.ide:layout/notification_action_tombstone: flags=0x00000000
+      spec resource 0x7f080006 com.codepocket.ide:layout/notification_template_custom_big: flags=0x00000000
+      spec resource 0x7f080007 com.codepocket.ide:layout/notification_template_icon_group: flags=0x00000000
+      spec resource 0x7f080008 com.codepocket.ide:layout/notification_template_part_chronometer: flags=0x00000000
+      spec resource 0x7f080009 com.codepocket.ide:layout/notification_template_part_time: flags=0x00000000
+      spec resource 0x7f08000a com.codepocket.ide:layout/text_compose_panel: flags=0x00000000
+      config (default):
+        resource 0x7f080000 com.codepocket.ide:layout/custom_dialog: t=0x03 d=0x00000088 (s=0x0008 r=0x00)
+        resource 0x7f080001 com.codepocket.ide:layout/default_completion_result_item: t=0x03 d=0x00000089 (s=0x0008 r=0x00)
+        resource 0x7f080002 com.codepocket.ide:layout/diagnostic_tooltip_window: t=0x03 d=0x0000008a (s=0x0008 r=0x00)
+        resource 0x7f080003 com.codepocket.ide:layout/magnifier_popup: t=0x03 d=0x0000008b (s=0x0008 r=0x00)
+        resource 0x7f080004 com.codepocket.ide:layout/notification_action: t=0x03 d=0x00000084 (s=0x0008 r=0x00)
+        resource 0x7f080005 com.codepocket.ide:layout/notification_action_tombstone: t=0x03 d=0x00000085 (s=0x0008 r=0x00)
+        resource 0x7f080006 com.codepocket.ide:layout/notification_template_custom_big: t=0x03 d=0x00000086 (s=0x0008 r=0x00)
+        resource 0x7f080007 com.codepocket.ide:layout/notification_template_icon_group: t=0x03 d=0x00000087 (s=0x0008 r=0x00)
+        resource 0x7f080008 com.codepocket.ide:layout/notification_template_part_chronometer: t=0x03 d=0x0000008c (s=0x0008 r=0x00)
+        resource 0x7f080009 com.codepocket.ide:layout/notification_template_part_time: t=0x03 d=0x0000008d (s=0x0008 r=0x00)
+        resource 0x7f08000a com.codepocket.ide:layout/text_compose_panel: t=0x03 d=0x0000008e (s=0x0008 r=0x00)
+    type 8 configCount=87 entryCount=146
+      spec resource 0x7f090000 com.codepocket.ide:string/assist_layout_pending: flags=0x00000000
+      spec resource 0x7f090001 com.codepocket.ide:string/completion_accessibility: flags=0x00000000
+      spec resource 0x7f090002 com.codepocket.ide:string/completion_close: flags=0x00000000
+      spec resource 0x7f090003 com.codepocket.ide:string/completion_cpp_semantic: flags=0x00000000
+      spec resource 0x7f090004 com.codepocket.ide:string/completion_detail: flags=0x00000000
+      spec resource 0x7f090005 com.codepocket.ide:string/completion_empty: flags=0x00000000
+      spec resource 0x7f090006 com.codepocket.ide:string/completion_item: flags=0x00000000
+      spec resource 0x7f090007 com.codepocket.ide:string/completion_key_help: flags=0x00000000
+      spec resource 0x7f090008 com.codepocket.ide:string/completion_lexical: flags=0x00000000
+      spec resource 0x7f090009 com.codepocket.ide:string/completion_members_pending: flags=0x00000000
+      spec resource 0x7f09000a com.codepocket.ide:string/completion_no_space: flags=0x00000000
+      spec resource 0x7f09000b com.codepocket.ide:string/completion_semantic: flags=0x00000000
+      spec resource 0x7f09000c com.codepocket.ide:string/completion_semantic_file: flags=0x00000000
+      spec resource 0x7f09000d com.codepocket.ide:string/copy_text: flags=0x00000000
+      spec resource 0x7f09000e com.codepocket.ide:string/editor_copy_diagnostic: flags=0x00000000
+      spec resource 0x7f09000f com.codepocket.ide:string/editor_diagnostic_changed: flags=0x00000000
+      spec resource 0x7f090010 com.codepocket.ide:string/editor_diagnostic_content: flags=0x00000000
+      spec resource 0x7f090011 com.codepocket.ide:string/editor_diagnostic_details: flags=0x00000000
+      spec resource 0x7f090012 com.codepocket.ide:string/editor_diagnostic_line: flags=0x00000000
+      spec resource 0x7f090013 com.codepocket.ide:string/editor_diagnostic_unverified: flags=0x00000000
+      spec resource 0x7f090014 com.codepocket.ide:string/editor_diagnostic_verified: flags=0x00000000
+      spec resource 0x7f090015 com.codepocket.ide:string/editor_document_changed: flags=0x00000000
+      spec resource 0x7f090016 com.codepocket.ide:string/editor_document_rejected: flags=0x00000000
+      spec resource 0x7f090017 com.codepocket.ide:string/editor_edit_composing: flags=0x00000000
+      spec resource 0x7f090018 com.codepocket.ide:string/editor_edit_invalid: flags=0x00000000
+      spec resource 0x7f090019 com.codepocket.ide:string/editor_edit_limit: flags=0x00000000
+      spec resource 0x7f09001a com.codepocket.ide:string/editor_edit_stale: flags=0x00000000
+      spec resource 0x7f09001b com.codepocket.ide:string/editor_font_larger: flags=0x00000000
+      spec resource 0x7f09001c com.codepocket.ide:string/editor_font_limit: flags=0x00000000
+      spec resource 0x7f09001d com.codepocket.ide:string/editor_font_size: flags=0x00000000
+      spec resource 0x7f09001e com.codepocket.ide:string/editor_font_smaller: flags=0x00000000
+      spec resource 0x7f09001f com.codepocket.ide:string/editor_font_title: flags=0x00000000
+      spec resource 0x7f090020 com.codepocket.ide:string/editor_font_touch_help: flags=0x00000000
+      spec resource 0x7f090021 com.codepocket.ide:string/editor_font_value: flags=0x00000000
+      spec resource 0x7f090022 com.codepocket.ide:string/editor_input_limit: flags=0x00000000
+      spec resource 0x7f090023 com.codepocket.ide:string/editor_last_tab: flags=0x00000000
+      spec resource 0x7f090024 com.codepocket.ide:string/editor_navigation_stale: flags=0x00000000
+      spec resource 0x7f090025 com.codepocket.ide:string/explorer_creation_hint: flags=0x00000000
+      spec resource 0x7f090026 com.codepocket.ide:string/file_operation_failed: flags=0x00000000
+      spec resource 0x7f090027 com.codepocket.ide:string/move_target_path: flags=0x00000000
+      spec resource 0x7f090028 com.codepocket.ide:string/panel_clear_input: flags=0x00000000
+      spec resource 0x7f090029 com.codepocket.ide:string/panel_close: flags=0x00000000
+      spec resource 0x7f09002a com.codepocket.ide:string/panel_larger: flags=0x00000000
+      spec resource 0x7f09002b com.codepocket.ide:string/panel_maximize: flags=0x00000000
+      spec resource 0x7f09002c com.codepocket.ide:string/panel_reset: flags=0x00000000
+      spec resource 0x7f09002d com.codepocket.ide:string/panel_resize_height: flags=0x00000000
+      spec resource 0x7f09002e com.codepocket.ide:string/panel_resize_width: flags=0x00000000
+      spec resource 0x7f09002f com.codepocket.ide:string/panel_restore: flags=0x00000000
+      spec resource 0x7f090030 com.codepocket.ide:string/panel_size_menu: flags=0x00000000
+      spec resource 0x7f090031 com.codepocket.ide:string/panel_smaller: flags=0x00000000
+      spec resource 0x7f090032 com.codepocket.ide:string/panel_title: flags=0x00000000
+      spec resource 0x7f090033 com.codepocket.ide:string/paste_text: flags=0x00000000
+      spec resource 0x7f090034 com.codepocket.ide:string/project_search_cancelled: flags=0x00000000
+      spec resource 0x7f090035 com.codepocket.ide:string/project_search_failed: flags=0x00000000
+      spec resource 0x7f090036 com.codepocket.ide:string/project_search_limited: flags=0x00000000
+      spec resource 0x7f090037 com.codepocket.ide:string/project_search_notice: flags=0x00000000
+      spec resource 0x7f090038 com.codepocket.ide:string/project_search_summary: flags=0x00000000
+      spec resource 0x7f090039 com.codepocket.ide:string/python_terminal_help: flags=0x00000000
+      spec resource 0x7f09003a com.codepocket.ide:string/search_current_file: flags=0x00000000
+      spec resource 0x7f09003b com.codepocket.ide:string/search_document: flags=0x00000000
+      spec resource 0x7f09003c com.codepocket.ide:string/search_replace_undo: flags=0x00000000
+      spec resource 0x7f09003d com.codepocket.ide:string/search_replaced_count: flags=0x00000000
+      spec resource 0x7f09003e com.codepocket.ide:string/search_type_to_find: flags=0x00000000
+      spec resource 0x7f09003f com.codepocket.ide:string/semantic_cpp_empty: flags=0x00000000
+      spec resource 0x7f090040 com.codepocket.ide:string/semantic_cpp_loading: flags=0x00000000
+      spec resource 0x7f090041 com.codepocket.ide:string/semantic_cpp_unavailable: flags=0x00000000
+      spec resource 0x7f090042 com.codepocket.ide:string/semantic_document_limit: flags=0x00000000
+      spec resource 0x7f090043 com.codepocket.ide:string/semantic_empty: flags=0x00000000
+      spec resource 0x7f090044 com.codepocket.ide:string/semantic_loading: flags=0x00000000
+      spec resource 0x7f090045 com.codepocket.ide:string/semantic_unavailable: flags=0x00000000
+      spec resource 0x7f090046 com.codepocket.ide:string/settings_cpp_mode: flags=0x00000000
+      spec resource 0x7f090047 com.codepocket.ide:string/settings_cpp_mode_help: flags=0x00000000
+      spec resource 0x7f090048 com.codepocket.ide:string/settings_python_mode: flags=0x00000000
+      spec resource 0x7f090049 com.codepocket.ide:string/settings_python_mode_help: flags=0x00000000
+      spec resource 0x7f09004a com.codepocket.ide:string/settings_run_modes: flags=0x00000000
+      spec resource 0x7f09004b com.codepocket.ide:string/settings_save_help: flags=0x00000000
+      spec resource 0x7f09004c com.codepocket.ide:string/shell_failure_close: flags=0x00000000
+      spec resource 0x7f09004d com.codepocket.ide:string/shell_failure_content: flags=0x00000000
+      spec resource 0x7f09004e com.codepocket.ide:string/shell_failure_copy: flags=0x00000000
+      spec resource 0x7f09004f com.codepocket.ide:string/shell_failure_title: flags=0x00000000
+      spec resource 0x7f090050 com.codepocket.ide:string/shell_help: flags=0x00000000
+      spec resource 0x7f090051 com.codepocket.ide:string/shell_session_caption: flags=0x00000000
+      spec resource 0x7f090052 com.codepocket.ide:string/shell_status_about: flags=0x00000000
+      spec resource 0x7f090053 com.codepocket.ide:string/shell_status_connecting_body: flags=0x00000000
+      spec resource 0x7f090054 com.codepocket.ide:string/shell_status_connecting_title: flags=0x00000000
+      spec resource 0x7f090055 com.codepocket.ide:string/shell_status_details: flags=0x00000000
+      spec resource 0x7f090056 com.codepocket.ide:string/shell_status_empty_body: flags=0x00000000
+      spec resource 0x7f090057 com.codepocket.ide:string/shell_status_empty_title: flags=0x00000000
+      spec resource 0x7f090058 com.codepocket.ide:string/shell_status_engine: flags=0x00000000
+      spec resource 0x7f090059 com.codepocket.ide:string/shell_status_failed_body: flags=0x00000000
+      spec resource 0x7f09005a com.codepocket.ide:string/shell_status_failed_title: flags=0x00000000
+      spec resource 0x7f09005b com.codepocket.ide:string/shell_status_heading: flags=0x00000000
+      spec resource 0x7f09005c com.codepocket.ide:string/shell_status_preparing: flags=0x00000000
+      spec resource 0x7f09005d com.codepocket.ide:string/shell_status_retry: flags=0x00000000
+      spec resource 0x7f09005e com.codepocket.ide:string/shell_status_start: flags=0x00000000
+      spec resource 0x7f09005f com.codepocket.ide:string/shortcuts_help: flags=0x00000000
+      spec resource 0x7f090060 com.codepocket.ide:string/signature_accessibility: flags=0x00000000
+      spec resource 0x7f090061 com.codepocket.ide:string/signature_close: flags=0x00000000
+      spec resource 0x7f090062 com.codepocket.ide:string/signature_cpp_notice: flags=0x00000000
+      spec resource 0x7f090063 com.codepocket.ide:string/signature_cpp_semantic_heading: flags=0x00000000
+      spec resource 0x7f090064 com.codepocket.ide:string/signature_cpp_semantic_notice: flags=0x00000000
+      spec resource 0x7f090065 com.codepocket.ide:string/signature_empty: flags=0x00000000
+      spec resource 0x7f090066 com.codepocket.ide:string/signature_heading: flags=0x00000000
+      spec resource 0x7f090067 com.codepocket.ide:string/signature_next: flags=0x00000000
+      spec resource 0x7f090068 com.codepocket.ide:string/signature_no_space: flags=0x00000000
+      spec resource 0x7f090069 com.codepocket.ide:string/signature_previous: flags=0x00000000
+      spec resource 0x7f09006a com.codepocket.ide:string/signature_python_notice: flags=0x00000000
+      spec resource 0x7f09006b com.codepocket.ide:string/signature_semantic_file_notice: flags=0x00000000
+      spec resource 0x7f09006c com.codepocket.ide:string/signature_semantic_heading: flags=0x00000000
+      spec resource 0x7f09006d com.codepocket.ide:string/signature_semantic_notice: flags=0x00000000
+      spec resource 0x7f09006e com.codepocket.ide:string/signature_setting: flags=0x00000000
+      spec resource 0x7f09006f com.codepocket.ide:string/signature_unmapped: flags=0x00000000
+      spec resource 0x7f090070 com.codepocket.ide:string/snippet_cancel: flags=0x00000000
+      spec resource 0x7f090071 com.codepocket.ide:string/snippet_cannot_insert: flags=0x00000000
+      spec resource 0x7f090072 com.codepocket.ide:string/snippet_finish: flags=0x00000000
+      spec resource 0x7f090073 com.codepocket.ide:string/snippet_line_help: flags=0x00000000
+      spec resource 0x7f090074 com.codepocket.ide:string/snippet_next: flags=0x00000000
+      spec resource 0x7f090075 com.codepocket.ide:string/snippet_previous: flags=0x00000000
+      spec resource 0x7f090076 com.codepocket.ide:string/snippet_progress: flags=0x00000000
+      spec resource 0x7f090077 com.codepocket.ide:string/snippet_title: flags=0x00000000
+      spec resource 0x7f090078 com.codepocket.ide:string/sora_editor_clip_text_length_too_large: flags=0x00000004
+      spec resource 0x7f090079 com.codepocket.ide:string/sora_editor_diagnostics_more_actions: flags=0x00000004
+      spec resource 0x7f09007a com.codepocket.ide:string/sora_editor_editor_formatting: flags=0x00000004
+      spec resource 0x7f09007b com.codepocket.ide:string/sora_editor_editor_search_busy: flags=0x00000004
+      spec resource 0x7f09007c com.codepocket.ide:string/sora_editor_editor_search_replacing: flags=0x00000004
+      spec resource 0x7f09007d com.codepocket.ide:string/sora_editor_last: flags=0x00000004
+      spec resource 0x7f09007e com.codepocket.ide:string/sora_editor_long_select: flags=0x00000004
+      spec resource 0x7f09007f com.codepocket.ide:string/sora_editor_more: flags=0x00000004
+      spec resource 0x7f090080 com.codepocket.ide:string/sora_editor_next: flags=0x00000004
+      spec resource 0x7f090081 com.codepocket.ide:string/sora_editor_replace: flags=0x00000004
+      spec resource 0x7f090082 com.codepocket.ide:string/sora_editor_replaceAll: flags=0x00000004
+      spec resource 0x7f090083 com.codepocket.ide:string/sora_editor_replacement: flags=0x00000004
+      spec resource 0x7f090084 com.codepocket.ide:string/sora_editor_text_to_search: flags=0x00000004
+      spec resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: flags=0x00000004
+      spec resource 0x7f090086 com.codepocket.ide:string/terminal_dock_bottom_description: flags=0x00000000
+      spec resource 0x7f090087 com.codepocket.ide:string/terminal_dock_controls: flags=0x00000000
+      spec resource 0x7f090088 com.codepocket.ide:string/terminal_dock_controls_description: flags=0x00000000
+      spec resource 0x7f090089 com.codepocket.ide:string/terminal_dock_copy_description: flags=0x00000000
+      spec resource 0x7f09008a com.codepocket.ide:string/terminal_dock_keyboard: flags=0x00000000
+      spec resource 0x7f09008b com.codepocket.ide:string/terminal_dock_keyboard_description: flags=0x00000000
+      spec resource 0x7f09008c com.codepocket.ide:string/text_selection_more: flags=0x00000000
+      spec resource 0x7f09008d com.codepocket.ide:string/workbench_breadcrumb: flags=0x00000000
+      spec resource 0x7f09008e com.codepocket.ide:string/workspace_brand: flags=0x00000000
+      spec resource 0x7f09008f com.codepocket.ide:string/workspace_loading: flags=0x00000000
+      spec resource 0x7f090090 com.codepocket.ide:string/workspace_recovery_preserved: flags=0x00000000
+      spec resource 0x7f090091 com.codepocket.ide:string/workspace_unavailable: flags=0x00000000
+      config (default):
+        resource 0x7f090000 com.codepocket.ide:string/assist_layout_pending: t=0x03 d=0x000000e5 (s=0x0008 r=0x00)
+        resource 0x7f090001 com.codepocket.ide:string/completion_accessibility: t=0x03 d=0x00000007 (s=0x0008 r=0x00)
+        resource 0x7f090002 com.codepocket.ide:string/completion_close: t=0x03 d=0x0000009f (s=0x0008 r=0x00)
+        resource 0x7f090003 com.codepocket.ide:string/completion_cpp_semantic: t=0x03 d=0x0000000b (s=0x0008 r=0x00)
+        resource 0x7f090004 com.codepocket.ide:string/completion_detail: t=0x03 d=0x00000003 (s=0x0008 r=0x00)
+        resource 0x7f090005 com.codepocket.ide:string/completion_empty: t=0x03 d=0x000000d6 (s=0x0008 r=0x00)
+        resource 0x7f090006 com.codepocket.ide:string/completion_item: t=0x03 d=0x00000002 (s=0x0008 r=0x00)
+        resource 0x7f090007 com.codepocket.ide:string/completion_key_help: t=0x03 d=0x00000099 (s=0x0008 r=0x00)
+        resource 0x7f090008 com.codepocket.ide:string/completion_lexical: t=0x03 d=0x000000a9 (s=0x0008 r=0x00)
+        resource 0x7f090009 com.codepocket.ide:string/completion_members_pending: t=0x03 d=0x000000ba (s=0x0008 r=0x00)
+        resource 0x7f09000a com.codepocket.ide:string/completion_no_space: t=0x03 d=0x0000009b (s=0x0008 r=0x00)
+        resource 0x7f09000b com.codepocket.ide:string/completion_semantic: t=0x03 d=0x00000022 (s=0x0008 r=0x00)
+        resource 0x7f09000c com.codepocket.ide:string/completion_semantic_file: t=0x03 d=0x00000005 (s=0x0008 r=0x00)
+        resource 0x7f09000d com.codepocket.ide:string/copy_text: t=0x03 d=0x00000010 (s=0x0008 r=0x00)
+        resource 0x7f09000e com.codepocket.ide:string/editor_copy_diagnostic: t=0x03 d=0x000000ad (s=0x0008 r=0x00)
+        resource 0x7f09000f com.codepocket.ide:string/editor_diagnostic_changed: t=0x03 d=0x000000d8 (s=0x0008 r=0x00)
+        resource 0x7f090010 com.codepocket.ide:string/editor_diagnostic_content: t=0x03 d=0x00000001 (s=0x0008 r=0x00)
+        resource 0x7f090011 com.codepocket.ide:string/editor_diagnostic_details: t=0x03 d=0x000000e8 (s=0x0008 r=0x00)
+        resource 0x7f090012 com.codepocket.ide:string/editor_diagnostic_line: t=0x03 d=0x000000f2 (s=0x0008 r=0x00)
+        resource 0x7f090013 com.codepocket.ide:string/editor_diagnostic_unverified: t=0x03 d=0x000000b2 (s=0x0008 r=0x00)
+        resource 0x7f090014 com.codepocket.ide:string/editor_diagnostic_verified: t=0x03 d=0x000000b1 (s=0x0008 r=0x00)
+        resource 0x7f090015 com.codepocket.ide:string/editor_document_changed: t=0x03 d=0x000000ea (s=0x0008 r=0x00)
+        resource 0x7f090016 com.codepocket.ide:string/editor_document_rejected: t=0x03 d=0x000000c5 (s=0x0008 r=0x00)
+        resource 0x7f090017 com.codepocket.ide:string/editor_edit_composing: t=0x03 d=0x000000e9 (s=0x0008 r=0x00)
+        resource 0x7f090018 com.codepocket.ide:string/editor_edit_invalid: t=0x03 d=0x000000c8 (s=0x0008 r=0x00)
+        resource 0x7f090019 com.codepocket.ide:string/editor_edit_limit: t=0x03 d=0x000000c9 (s=0x0008 r=0x00)
+        resource 0x7f09001a com.codepocket.ide:string/editor_edit_stale: t=0x03 d=0x000000c2 (s=0x0008 r=0x00)
+        resource 0x7f09001b com.codepocket.ide:string/editor_font_larger: t=0x03 d=0x000000c0 (s=0x0008 r=0x00)
+        resource 0x7f09001c com.codepocket.ide:string/editor_font_limit: t=0x03 d=0x00000097 (s=0x0008 r=0x00)
+        resource 0x7f09001d com.codepocket.ide:string/editor_font_size: t=0x03 d=0x00000098 (s=0x0008 r=0x00)
+        resource 0x7f09001e com.codepocket.ide:string/editor_font_smaller: t=0x03 d=0x000000e6 (s=0x0008 r=0x00)
+        resource 0x7f09001f com.codepocket.ide:string/editor_font_title: t=0x03 d=0x00000096 (s=0x0008 r=0x00)
+        resource 0x7f090020 com.codepocket.ide:string/editor_font_touch_help: t=0x03 d=0x000000da (s=0x0008 r=0x00)
+        resource 0x7f090021 com.codepocket.ide:string/editor_font_value: t=0x03 d=0x00000000 (s=0x0008 r=0x00)
+        resource 0x7f090022 com.codepocket.ide:string/editor_input_limit: t=0x03 d=0x000000ef (s=0x0008 r=0x00)
+        resource 0x7f090023 com.codepocket.ide:string/editor_last_tab: t=0x03 d=0x000000b0 (s=0x0008 r=0x00)
+        resource 0x7f090024 com.codepocket.ide:string/editor_navigation_stale: t=0x03 d=0x000000c1 (s=0x0008 r=0x00)
+        resource 0x7f090025 com.codepocket.ide:string/explorer_creation_hint: t=0x03 d=0x000000c4 (s=0x0008 r=0x00)
+        resource 0x7f090026 com.codepocket.ide:string/file_operation_failed: t=0x03 d=0x000000c3 (s=0x0008 r=0x00)
+        resource 0x7f090027 com.codepocket.ide:string/move_target_path: t=0x03 d=0x000000dd (s=0x0008 r=0x00)
+        resource 0x7f090028 com.codepocket.ide:string/panel_clear_input: t=0x03 d=0x000000d7 (s=0x0008 r=0x00)
+        resource 0x7f090029 com.codepocket.ide:string/panel_close: t=0x03 d=0x000000bf (s=0x0008 r=0x00)
+        resource 0x7f09002a com.codepocket.ide:string/panel_larger: t=0x03 d=0x000000aa (s=0x0008 r=0x00)
+        resource 0x7f09002b com.codepocket.ide:string/panel_maximize: t=0x03 d=0x000000c7 (s=0x0008 r=0x00)
+        resource 0x7f09002c com.codepocket.ide:string/panel_reset: t=0x03 d=0x000000b9 (s=0x0008 r=0x00)
+        resource 0x7f09002d com.codepocket.ide:string/panel_resize_height: t=0x03 d=0x000000ec (s=0x0008 r=0x00)
+        resource 0x7f09002e com.codepocket.ide:string/panel_resize_width: t=0x03 d=0x000000eb (s=0x0008 r=0x00)
+        resource 0x7f09002f com.codepocket.ide:string/panel_restore: t=0x03 d=0x000000b8 (s=0x0008 r=0x00)
+        resource 0x7f090030 com.codepocket.ide:string/panel_size_menu: t=0x03 d=0x000000df (s=0x0008 r=0x00)
+        resource 0x7f090031 com.codepocket.ide:string/panel_smaller: t=0x03 d=0x000000a2 (s=0x0008 r=0x00)
+        resource 0x7f090032 com.codepocket.ide:string/panel_title: t=0x03 d=0x000000de (s=0x0008 r=0x00)
+        resource 0x7f090033 com.codepocket.ide:string/paste_text: t=0x03 d=0x0000001c (s=0x0008 r=0x00)
+        resource 0x7f090034 com.codepocket.ide:string/project_search_cancelled: t=0x03 d=0x000000be (s=0x0008 r=0x00)
+        resource 0x7f090035 com.codepocket.ide:string/project_search_failed: t=0x03 d=0x000000bd (s=0x0008 r=0x00)
+        resource 0x7f090036 com.codepocket.ide:string/project_search_limited: t=0x03 d=0x000000f5 (s=0x0008 r=0x00)
+        resource 0x7f090037 com.codepocket.ide:string/project_search_notice: t=0x03 d=0x000000a8 (s=0x0008 r=0x00)
+        resource 0x7f090038 com.codepocket.ide:string/project_search_summary: t=0x03 d=0x000000bb (s=0x0008 r=0x00)
+        resource 0x7f090039 com.codepocket.ide:string/python_terminal_help: t=0x03 d=0x00000021 (s=0x0008 r=0x00)
+        resource 0x7f09003a com.codepocket.ide:string/search_current_file: t=0x03 d=0x000000b4 (s=0x0008 r=0x00)
+        resource 0x7f09003b com.codepocket.ide:string/search_document: t=0x03 d=0x000000b6 (s=0x0008 r=0x00)
+        resource 0x7f09003c com.codepocket.ide:string/search_replace_undo: t=0x03 d=0x00000004 (s=0x0008 r=0x00)
+        resource 0x7f09003d com.codepocket.ide:string/search_replaced_count: t=0x03 d=0x000000b3 (s=0x0008 r=0x00)
+        resource 0x7f09003e com.codepocket.ide:string/search_type_to_find: t=0x03 d=0x000000ee (s=0x0008 r=0x00)
+        resource 0x7f09003f com.codepocket.ide:string/semantic_cpp_empty: t=0x03 d=0x000000d4 (s=0x0008 r=0x00)
+        resource 0x7f090040 com.codepocket.ide:string/semantic_cpp_loading: t=0x03 d=0x000000ce (s=0x0008 r=0x00)
+        resource 0x7f090041 com.codepocket.ide:string/semantic_cpp_unavailable: t=0x03 d=0x0000000c (s=0x0008 r=0x00)
+        resource 0x7f090042 com.codepocket.ide:string/semantic_document_limit: t=0x03 d=0x000000b5 (s=0x0008 r=0x00)
+        resource 0x7f090043 com.codepocket.ide:string/semantic_empty: t=0x03 d=0x000000d5 (s=0x0008 r=0x00)
+        resource 0x7f090044 com.codepocket.ide:string/semantic_loading: t=0x03 d=0x000000cf (s=0x0008 r=0x00)
+        resource 0x7f090045 com.codepocket.ide:string/semantic_unavailable: t=0x03 d=0x00000023 (s=0x0008 r=0x00)
+        resource 0x7f090046 com.codepocket.ide:string/settings_cpp_mode: t=0x03 d=0x0000000e (s=0x0008 r=0x00)
+        resource 0x7f090047 com.codepocket.ide:string/settings_cpp_mode_help: t=0x03 d=0x00000095 (s=0x0008 r=0x00)
+        resource 0x7f090048 com.codepocket.ide:string/settings_python_mode: t=0x03 d=0x0000001e (s=0x0008 r=0x00)
+        resource 0x7f090049 com.codepocket.ide:string/settings_python_mode_help: t=0x03 d=0x000000a5 (s=0x0008 r=0x00)
+        resource 0x7f09004a com.codepocket.ide:string/settings_run_modes: t=0x03 d=0x000000f0 (s=0x0008 r=0x00)
+        resource 0x7f09004b com.codepocket.ide:string/settings_save_help: t=0x03 d=0x0000009d (s=0x0008 r=0x00)
+        resource 0x7f09004c com.codepocket.ide:string/shell_failure_close: t=0x03 d=0x0000009c (s=0x0008 r=0x00)
+        resource 0x7f09004d com.codepocket.ide:string/shell_failure_content: t=0x03 d=0x000000e3 (s=0x0008 r=0x00)
+        resource 0x7f09004e com.codepocket.ide:string/shell_failure_copy: t=0x03 d=0x000000ab (s=0x0008 r=0x00)
+        resource 0x7f09004f com.codepocket.ide:string/shell_failure_title: t=0x03 d=0x000000cc (s=0x0008 r=0x00)
+        resource 0x7f090050 com.codepocket.ide:string/shell_help: t=0x03 d=0x00000020 (s=0x0008 r=0x00)
+        resource 0x7f090051 com.codepocket.ide:string/shell_session_caption: t=0x03 d=0x00000090 (s=0x0008 r=0x00)
+        resource 0x7f090052 com.codepocket.ide:string/shell_status_about: t=0x03 d=0x000000e2 (s=0x0008 r=0x00)
+        resource 0x7f090053 com.codepocket.ide:string/shell_status_connecting_body: t=0x03 d=0x000000cd (s=0x0008 r=0x00)
+        resource 0x7f090054 com.codepocket.ide:string/shell_status_connecting_title: t=0x03 d=0x000000d2 (s=0x0008 r=0x00)
+        resource 0x7f090055 com.codepocket.ide:string/shell_status_details: t=0x03 d=0x000000f3 (s=0x0008 r=0x00)
+        resource 0x7f090056 com.codepocket.ide:string/shell_status_empty_body: t=0x03 d=0x000000a6 (s=0x0008 r=0x00)
+        resource 0x7f090057 com.codepocket.ide:string/shell_status_empty_title: t=0x03 d=0x000000cb (s=0x0008 r=0x00)
+        resource 0x7f090058 com.codepocket.ide:string/shell_status_engine: t=0x03 d=0x00000009 (s=0x0008 r=0x00)
+        resource 0x7f090059 com.codepocket.ide:string/shell_status_failed_body: t=0x03 d=0x000000ca (s=0x0008 r=0x00)
+        resource 0x7f09005a com.codepocket.ide:string/shell_status_failed_title: t=0x03 d=0x000000e0 (s=0x0008 r=0x00)
+        resource 0x7f09005b com.codepocket.ide:string/shell_status_heading: t=0x03 d=0x000000e1 (s=0x0008 r=0x00)
+        resource 0x7f09005c com.codepocket.ide:string/shell_status_preparing: t=0x03 d=0x000000d1 (s=0x0008 r=0x00)
+        resource 0x7f09005d com.codepocket.ide:string/shell_status_retry: t=0x03 d=0x000000f1 (s=0x0008 r=0x00)
+        resource 0x7f09005e com.codepocket.ide:string/shell_status_start: t=0x03 d=0x000000a4 (s=0x0008 r=0x00)
+        resource 0x7f09005f com.codepocket.ide:string/shortcuts_help: t=0x03 d=0x00000011 (s=0x0008 r=0x00)
+        resource 0x7f090060 com.codepocket.ide:string/signature_accessibility: t=0x03 d=0x00000008 (s=0x0008 r=0x00)
+        resource 0x7f090061 com.codepocket.ide:string/signature_close: t=0x03 d=0x0000009e (s=0x0008 r=0x00)
+        resource 0x7f090062 com.codepocket.ide:string/signature_cpp_notice: t=0x03 d=0x0000000d (s=0x0008 r=0x00)
+        resource 0x7f090063 com.codepocket.ide:string/signature_cpp_semantic_heading: t=0x03 d=0x0000000a (s=0x0008 r=0x00)
+        resource 0x7f090064 com.codepocket.ide:string/signature_cpp_semantic_notice: t=0x03 d=0x0000002a (s=0x0008 r=0x00)
+        resource 0x7f090065 com.codepocket.ide:string/signature_empty: t=0x03 d=0x000000b7 (s=0x0008 r=0x00)
+        resource 0x7f090066 com.codepocket.ide:string/signature_heading: t=0x03 d=0x000000a1 (s=0x0008 r=0x00)
+        resource 0x7f090067 com.codepocket.ide:string/signature_next: t=0x03 d=0x00000094 (s=0x0008 r=0x00)
+        resource 0x7f090068 com.codepocket.ide:string/signature_no_space: t=0x03 d=0x0000009a (s=0x0008 r=0x00)
+        resource 0x7f090069 com.codepocket.ide:string/signature_previous: t=0x03 d=0x00000092 (s=0x0008 r=0x00)
+        resource 0x7f09006a com.codepocket.ide:string/signature_python_notice: t=0x03 d=0x0000001d (s=0x0008 r=0x00)
+        resource 0x7f09006b com.codepocket.ide:string/signature_semantic_file_notice: t=0x03 d=0x00000015 (s=0x0008 r=0x00)
+        resource 0x7f09006c com.codepocket.ide:string/signature_semantic_heading: t=0x03 d=0x0000001f (s=0x0008 r=0x00)
+        resource 0x7f09006d com.codepocket.ide:string/signature_semantic_notice: t=0x03 d=0x00000014 (s=0x0008 r=0x00)
+        resource 0x7f09006e com.codepocket.ide:string/signature_setting: t=0x03 d=0x000000e7 (s=0x0008 r=0x00)
+        resource 0x7f09006f com.codepocket.ide:string/signature_unmapped: t=0x03 d=0x000000d3 (s=0x0008 r=0x00)
+        resource 0x7f090070 com.codepocket.ide:string/snippet_cancel: t=0x03 d=0x000000a3 (s=0x0008 r=0x00)
+        resource 0x7f090071 com.codepocket.ide:string/snippet_cannot_insert: t=0x03 d=0x000000dc (s=0x0008 r=0x00)
+        resource 0x7f090072 com.codepocket.ide:string/snippet_finish: t=0x03 d=0x000000e4 (s=0x0008 r=0x00)
+        resource 0x7f090073 com.codepocket.ide:string/snippet_line_help: t=0x03 d=0x000000a7 (s=0x0008 r=0x00)
+        resource 0x7f090074 com.codepocket.ide:string/snippet_next: t=0x03 d=0x00000093 (s=0x0008 r=0x00)
+        resource 0x7f090075 com.codepocket.ide:string/snippet_previous: t=0x03 d=0x00000091 (s=0x0008 r=0x00)
+        resource 0x7f090076 com.codepocket.ide:string/snippet_progress: t=0x03 d=0x000000db (s=0x0008 r=0x00)
+        resource 0x7f090077 com.codepocket.ide:string/snippet_title: t=0x03 d=0x000000a0 (s=0x0008 r=0x00)
+        resource 0x7f090078 com.codepocket.ide:string/sora_editor_clip_text_length_too_large: t=0x03 d=0x00000028 (s=0x0008 r=0x00)
+        resource 0x7f090079 com.codepocket.ide:string/sora_editor_diagnostics_more_actions: t=0x03 d=0x00000019 (s=0x0008 r=0x00)
+        resource 0x7f09007a com.codepocket.ide:string/sora_editor_editor_formatting: t=0x03 d=0x00000013 (s=0x0008 r=0x00)
+        resource 0x7f09007b com.codepocket.ide:string/sora_editor_editor_search_busy: t=0x03 d=0x00000012 (s=0x0008 r=0x00)
+        resource 0x7f09007c com.codepocket.ide:string/sora_editor_editor_search_replacing: t=0x03 d=0x00000027 (s=0x0008 r=0x00)
+        resource 0x7f09007d com.codepocket.ide:string/sora_editor_last: t=0x03 d=0x00000016 (s=0x0008 r=0x00)
+        resource 0x7f09007e com.codepocket.ide:string/sora_editor_long_select: t=0x03 d=0x00000017 (s=0x0008 r=0x00)
+        resource 0x7f09007f com.codepocket.ide:string/sora_editor_more: t=0x03 d=0x00000018 (s=0x0008 r=0x00)
+        resource 0x7f090080 com.codepocket.ide:string/sora_editor_next: t=0x03 d=0x0000001b (s=0x0008 r=0x00)
+        resource 0x7f090081 com.codepocket.ide:string/sora_editor_replace: t=0x03 d=0x00000024 (s=0x0008 r=0x00)
+        resource 0x7f090082 com.codepocket.ide:string/sora_editor_replaceAll: t=0x03 d=0x00000025 (s=0x0008 r=0x00)
+        resource 0x7f090083 com.codepocket.ide:string/sora_editor_replacement: t=0x03 d=0x00000026 (s=0x0008 r=0x00)
+        resource 0x7f090084 com.codepocket.ide:string/sora_editor_text_to_search: t=0x03 d=0x00000029 (s=0x0008 r=0x00)
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+        resource 0x7f090086 com.codepocket.ide:string/terminal_dock_bottom_description: t=0x03 d=0x000000d9 (s=0x0008 r=0x00)
+        resource 0x7f090087 com.codepocket.ide:string/terminal_dock_controls: t=0x03 d=0x000000bc (s=0x0008 r=0x00)
+        resource 0x7f090088 com.codepocket.ide:string/terminal_dock_controls_description: t=0x03 d=0x000000ae (s=0x0008 r=0x00)
+        resource 0x7f090089 com.codepocket.ide:string/terminal_dock_copy_description: t=0x03 d=0x000000ac (s=0x0008 r=0x00)
+        resource 0x7f09008a com.codepocket.ide:string/terminal_dock_keyboard: t=0x03 d=0x000000f4 (s=0x0008 r=0x00)
+        resource 0x7f09008b com.codepocket.ide:string/terminal_dock_keyboard_description: t=0x03 d=0x000000c6 (s=0x0008 r=0x00)
+        resource 0x7f09008c com.codepocket.ide:string/text_selection_more: t=0x03 d=0x0000001a (s=0x0008 r=0x00)
+        resource 0x7f09008d com.codepocket.ide:string/workbench_breadcrumb: t=0x03 d=0x00000006 (s=0x0008 r=0x00)
+        resource 0x7f09008e com.codepocket.ide:string/workspace_brand: t=0x03 d=0x0000000f (s=0x0008 r=0x00)
+        resource 0x7f09008f com.codepocket.ide:string/workspace_loading: t=0x03 d=0x000000d0 (s=0x0008 r=0x00)
+        resource 0x7f090090 com.codepocket.ide:string/workspace_recovery_preserved: t=0x03 d=0x000000ed (s=0x0008 r=0x00)
+        resource 0x7f090091 com.codepocket.ide:string/workspace_unavailable: t=0x03 d=0x000000af (s=0x0008 r=0x00)
+      config ca:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config da:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config fa:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ja:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ka:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config pa:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ta:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config nb:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config be:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config de:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ne:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000105 (s=0x0008 r=0x00)
+      config te:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config af:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config bg:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config th:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config zh:
+        resource 0x7f090078 com.codepocket.ide:string/sora_editor_clip_text_length_too_large: t=0x03 d=0x000000f9 (s=0x0008 r=0x00)
+        resource 0x7f090079 com.codepocket.ide:string/sora_editor_diagnostics_more_actions: t=0x03 d=0x000000fb (s=0x0008 r=0x00)
+        resource 0x7f09007a com.codepocket.ide:string/sora_editor_editor_formatting: t=0x03 d=0x00000101 (s=0x0008 r=0x00)
+        resource 0x7f09007b com.codepocket.ide:string/sora_editor_editor_search_busy: t=0x03 d=0x00000102 (s=0x0008 r=0x00)
+        resource 0x7f09007c com.codepocket.ide:string/sora_editor_editor_search_replacing: t=0x03 d=0x00000100 (s=0x0008 r=0x00)
+        resource 0x7f09007d com.codepocket.ide:string/sora_editor_last: t=0x03 d=0x000000f7 (s=0x0008 r=0x00)
+        resource 0x7f09007e com.codepocket.ide:string/sora_editor_long_select: t=0x03 d=0x00000103 (s=0x0008 r=0x00)
+        resource 0x7f09007f com.codepocket.ide:string/sora_editor_more: t=0x03 d=0x000000fa (s=0x0008 r=0x00)
+        resource 0x7f090080 com.codepocket.ide:string/sora_editor_next: t=0x03 d=0x000000f8 (s=0x0008 r=0x00)
+        resource 0x7f090081 com.codepocket.ide:string/sora_editor_replace: t=0x03 d=0x000000fc (s=0x0008 r=0x00)
+        resource 0x7f090082 com.codepocket.ide:string/sora_editor_replaceAll: t=0x03 d=0x000000fd (s=0x0008 r=0x00)
+        resource 0x7f090083 com.codepocket.ide:string/sora_editor_replacement: t=0x03 d=0x000000fe (s=0x0008 r=0x00)
+        resource 0x7f090084 com.codepocket.ide:string/sora_editor_text_to_search: t=0x03 d=0x000000ff (s=0x0008 r=0x00)
+      config fi:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config hi:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config si:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config vi:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config kk:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config mk:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config sk:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config uk:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config el:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config gl:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000104 (s=0x0008 r=0x00)
+      config ml:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config nl:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config pl:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config sl:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config tl:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config am:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config km:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config bn:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000107 (s=0x0008 r=0x00)
+      config in:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config kn:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config mn:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ko:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config lo:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ro:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config sq:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ar:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config fr:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config hr:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config mr:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000105 (s=0x0008 r=0x00)
+      config or:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config sr:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config b+sr+Latn:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config tr:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ur:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000106 (s=0x0008 r=0x00)
+      config as:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000107 (s=0x0008 r=0x00)
+      config bs:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config cs:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config es:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config is:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ms:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config et:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config it:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config lt:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config pt:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config eu:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config gu:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config hu:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ru:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000104 (s=0x0008 r=0x00)
+      config zu:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config lv:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config sv:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config iw:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config sw:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config hy:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config ky:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config my:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000108 (s=0x0008 r=0x00)
+      config az:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config uz:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config en-rCA:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config fr-rCA:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config en-rGB:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config en-rXC:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x00000109 (s=0x0008 r=0x00)
+      config zh-rHK:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config zh-rCN:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config en-rIN:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config pt-rBR:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config es-rUS:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config pt-rPT:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config en-rAU:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+      config zh-rTW:
+        resource 0x7f090085 com.codepocket.ide:string/status_bar_notification_info_overflow: t=0x03 d=0x000000f6 (s=0x0008 r=0x00)
+    type 9 configCount=1 entryCount=14
+      spec resource 0x7f0a0000 com.codepocket.ide:style/TextAppearance.Compat.Notification: flags=0x00000000
+      spec resource 0x7f0a0001 com.codepocket.ide:style/TextAppearance.Compat.Notification.Info: flags=0x00000000
+      spec resource 0x7f0a0002 com.codepocket.ide:style/TextAppearance.Compat.Notification.Line2: flags=0x00000000
+      spec resource 0x7f0a0003 com.codepocket.ide:style/TextAppearance.Compat.Notification.Time: flags=0x00000000
+      spec resource 0x7f0a0004 com.codepocket.ide:style/TextAppearance.Compat.Notification.Title: flags=0x00000000
+      spec resource 0x7f0a0005 com.codepocket.ide:style/Theme.CodePocket: flags=0x00000000
+      spec resource 0x7f0a0006 com.codepocket.ide:style/Theme.CodePocket.Light: flags=0x00000000
+      spec resource 0x7f0a0007 com.codepocket.ide:style/Widget.Compat.NotificationActionContainer: flags=0x00000000
+      spec resource 0x7f0a0008 com.codepocket.ide:style/Widget.Compat.NotificationActionText: flags=0x00000000
+      spec resource 0x7f0a0009 com.codepocket.ide:style/WorkbenchDrawerWindowMotion: flags=0x00000000
+      spec resource 0x7f0a000a com.codepocket.ide:style/WorkbenchEditor: flags=0x00000000
+      spec resource 0x7f0a000b com.codepocket.ide:style/WorkbenchWindowMotion: flags=0x00000000
+      spec resource 0x7f0a000c com.codepocket.ide:style/diagnostic_popup_animation: flags=0x00000000
+      spec resource 0x7f0a000d com.codepocket.ide:style/text_action_popup_animation: flags=0x00000000
+      config (default):
+        resource 0x7f0a0000 com.codepocket.ide:style/TextAppearance.Compat.Notification: <bag>
+        resource 0x7f0a0001 com.codepocket.ide:style/TextAppearance.Compat.Notification.Info: <bag>
+        resource 0x7f0a0002 com.codepocket.ide:style/TextAppearance.Compat.Notification.Line2: <bag>
+        resource 0x7f0a0003 com.codepocket.ide:style/TextAppearance.Compat.Notification.Time: <bag>
+        resource 0x7f0a0004 com.codepocket.ide:style/TextAppearance.Compat.Notification.Title: <bag>
+        resource 0x7f0a0005 com.codepocket.ide:style/Theme.CodePocket: <bag>
+        resource 0x7f0a0006 com.codepocket.ide:style/Theme.CodePocket.Light: <bag>
+        resource 0x7f0a0007 com.codepocket.ide:style/Widget.Compat.NotificationActionContainer: <bag>
+        resource 0x7f0a0008 com.codepocket.ide:style/Widget.Compat.NotificationActionText: <bag>
+        resource 0x7f0a0009 com.codepocket.ide:style/WorkbenchDrawerWindowMotion: <bag>
+        resource 0x7f0a000a com.codepocket.ide:style/WorkbenchEditor: <bag>
+        resource 0x7f0a000b com.codepocket.ide:style/WorkbenchWindowMotion: <bag>
+        resource 0x7f0a000c com.codepocket.ide:style/diagnostic_popup_animation: <bag>
+        resource 0x7f0a000d com.codepocket.ide:style/text_action_popup_animation: <bag>

@@ -75,8 +75,16 @@ class CompletionPopup(private val activity: Activity, private val editor: View,
     private val sourceHeading=TextView(activity).apply {
             setText(R.string.completion_lexical);setSingleLine();ellipsize=android.text.TextUtils.TruncateAt.END;contentDescription=activity.getString(R.string.completion_lexical); textSize = 11f; setTextColor(muted); setPadding(dp(8), 0, 0, 0)
     }
+    var onDocumentation:((CompletionItem,String)->Unit)?=null
+        set(value){field=value;documentationButton.visibility=if(value==null)View.GONE else View.VISIBLE}
+    private val documentationButton=com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),
+        com.codepocket.ide.ui.IdeIcon.INFO,"查看候选说明") {
+        val item=items.getOrNull(selectedIndex)
+        if(isShowing && item!=null && editorSurface.anchor()?.matches(document,revision,offset)==true)onDocumentation?.invoke(item,sourceHeading.text.toString())
+    }.apply{tag="completion-documentation";visibility=View.GONE}
     init {
         heading.addView(sourceHeading, LinearLayout.LayoutParams(0, dp(48), 1f))
+        heading.addView(documentationButton,LinearLayout.LayoutParams(dp(48),dp(48)))
         heading.addView(com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),com.codepocket.ide.ui.IdeIcon.CLOSE,
             activity.getString(R.string.completion_close)) { dismiss() }, LinearLayout.LayoutParams(dp(48),dp(48)))
         content.addView(heading); content.addView(list, LinearLayout.LayoutParams(-1, 0, 1f)); content.addView(details)

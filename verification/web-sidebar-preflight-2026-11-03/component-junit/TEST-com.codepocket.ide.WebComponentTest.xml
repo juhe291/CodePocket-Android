@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WebComponentTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T00:21:35" hostname="JUHE" time="3.062">
+  <properties/>
+  <testcase name="commonmarkParserPreservesActualLinkAndInlineCodeNodes" classname="com.codepocket.ide.WebComponentTest" time="2.604"/>
+  <testcase name="webkitCompatibilityPackageLookupUsesTheActualLibraryWithoutRequiringChromium" classname="com.codepocket.ide.WebComponentTest" time="0.103"/>
+  <testcase name="markdownCoreRendersActualNativeSpansWithoutAWebView" classname="com.codepocket.ide.WebComponentTest" time="0.355"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

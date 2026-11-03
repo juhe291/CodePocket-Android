@@ -65,8 +65,10 @@ def main():
                         help='Verify only pinned local Git additions against the formatting candidate; preserve original runtimes.')
     parser.add_argument('--allow-git-remote-update', action='store_true',
                         help='Verify only the remote Git Python additions against the fixed local Git candidate.')
+    parser.add_argument('--unchanged-git-remote-runtime', action='store_true',
+                        help='Require all 25 native libraries and all 20 Chaquopy assets to exactly match the fixed HTTPS Git candidate.')
     args = parser.parse_args()
-    assert sum((args.allow_runner_update,args.allow_formatting_update,args.allow_git_update,args.allow_git_remote_update))<=1
+    assert sum((args.allow_runner_update,args.allow_formatting_update,args.allow_git_update,args.allow_git_remote_update,args.unchanged_git_remote_runtime))<=1
     lock = json.loads((ROOT / 'app/cpp-runtime-lock.json').read_text())
     with zipfile.ZipFile(args.apk) as apk, zipfile.ZipFile(args.baseline) as baseline:
         assert apk.testzip() is None and len(apk.namelist()) == len(set(apk.namelist()))
@@ -148,6 +150,11 @@ def main():
         metadata_updates=[]
         formatting_update = None
         git_update = None
+        if args.unchanged_git_remote_runtime:
+            assert digest(args.baseline.read_bytes())=='c63e8df1d0f6b89df2f972fe2a58117c43a8fd7b0da982eb30c1e68571492c1c'
+            assert len(original_native)==25 and len(original_python)==20
+            assert set(original_native)=={name for name in apk.namelist() if name.startswith('lib/') and name.endswith('.so')}
+            assert set(original_python)=={name for name in apk.namelist() if name.startswith('assets/chaquopy/')}
         if args.allow_formatting_update:
             assert not args.allow_runner_update
             from verify_formatting_apk import verify_delta
@@ -175,7 +182,7 @@ def main():
                     apk.read('assets/chaquopy/app.imy'),baseline.read('assets/chaquopy/app.imy')))
                 continue
             assert digest(apk.read(name)) == digest(baseline.read(name)), 'Original runtime changed: ' + name
-        if not args.allow_formatting_update and not args.allow_git_update and not args.allow_git_remote_update:
+        if not args.allow_formatting_update and not args.allow_git_update and not args.allow_git_remote_update and not args.unchanged_git_remote_runtime:
             assert len(original_native) == 10 and len(original_python) == 20
     report = dict(apk_sha256=digest(args.apk.read_bytes()), apk_bytes=args.apk.stat().st_size,
         baseline_sha256=digest(args.baseline.read_bytes()), baseline_bytes=args.baseline.stat().st_size,

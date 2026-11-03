@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException
 internal class GitWorkbench(context:Context,private val client:GitClient):Closeable {
     constructor(context:Context):this(context,GitClient(AndroidSemanticTransport(context,GitOperationService::class.java)))
     private val app=context.applicationContext
-    private fun recovery(workspace:Workspace)=File(app.filesDir,"git-recovery/"+DocumentTree.digest(workspace.identity))
+    private fun recovery(workspace:Workspace)=File(app.filesDir.canonicalFile,"git-recovery/"+DocumentTree.digest(workspace.identity))
     fun perform(workspace:Workspace,action:String,fields:JSONObject=JSONObject(),expected:String?=null,
         saved:Map<String,String> = emptyMap(),cancelled:()->Boolean={false}):GitResponse {
         check(Looper.myLooper()!=Looper.getMainLooper()) { "Git操作必须在后台执行" }

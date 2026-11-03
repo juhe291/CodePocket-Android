@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CodeFormattingTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-03T01:29:17" hostname="JUHE" time="0.804">
+  <properties/>
+  <testcase name="cppUtf16CrLfSelectionAndReverseOrderedEditsAreValidated" classname="com.codepocket.ide.CodeFormattingTest" time="0.005"/>
+  <testcase name="responseMustMatchSourceEngineLimitsAndSelection" classname="com.codepocket.ide.CodeFormattingTest" time="0.008"/>
+  <testcase name="actualPythonClientUsesUnsavedSourceAndMapsUnicodeSelection" classname="com.codepocket.ide.CodeFormattingTest" time="0.231"/>
+  <testcase name="insertedCppWhitespaceStaysOutsideTheOriginalSelectedToken" classname="com.codepocket.ide.CodeFormattingTest" time="0.001"/>
+  <testcase name="largerFormattingFramesDoNotRelaxTheOriginalSemanticFrameLimit" classname="com.codepocket.ide.CodeFormattingTest" time="0.081"/>
+  <testcase name="malformedOverlappingSurrogateAndOverlargeEditsFailClosed" classname="com.codepocket.ide.CodeFormattingTest" time="0.006"/>
+  <testcase name="actualCppFormatterUsesPrivateStylePreservesIncludeOrderAndDoesNotWriteDraft" classname="com.codepocket.ide.CodeFormattingTest" time="0.471"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

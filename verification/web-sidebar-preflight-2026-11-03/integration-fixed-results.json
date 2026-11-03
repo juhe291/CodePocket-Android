@@ -1,0 +1,42 @@
+{
+  "tests": 14,
+  "stats": {
+    "BrowserPolicyTest": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "WebComponentTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "WebAuxiliaryBaselineTest": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "identities": [
+    "com.codepocket.ide.BrowserPolicyTest.bothSidebarsBudgetTheEditorAndMovingLeftReplacesThePrimaryBudget",
+    "com.codepocket.ide.BrowserPolicyTest.defaultSearchIsBingAndBaiduCanBeRestoredWithoutGoogleFallback",
+    "com.codepocket.ide.BrowserPolicyTest.webpageLinksCannotTurnFileJavascriptCredentialsOrUnknownSchemesIntoNavigation",
+    "com.codepocket.ide.BrowserPolicyTest.resizeValuesAreBoundedWithoutChangingTheSavedPreference",
+    "com.codepocket.ide.BrowserPolicyTest.typedHostAndExplicitHttpPreserveUnicodeEscapesAndLocalPorts",
+    "com.codepocket.ide.BrowserPolicyTest.passiveShrinkHidesAuxiliaryButExplicitFocusKeepsTheMeasuredWorkspace",
+    "com.codepocket.ide.WebComponentTest.commonmarkParserPreservesActualLinkAndInlineCodeNodes",
+    "com.codepocket.ide.WebComponentTest.webkitCompatibilityPackageLookupUsesTheActualLibraryWithoutRequiringChromium",
+    "com.codepocket.ide.WebComponentTest.markdownCoreRendersActualNativeSpansWithoutAWebView",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.addressSearchUsesBingForChineseAndCppKeywords",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.auxiliaryRemainsClosedAtFirstStartAndDoesNotCreateWebViewEarly",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.phoneOpenAndClosePreservesDirtyDocumentAndSavedBase",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.phoneRailHasTheActualWebEntryAndOpeningItKeepsTheRail",
+    "com.codepocket.ide.WebAuxiliaryBaselineTest.tabletOpensARealWebViewInTheRightAuxiliarySlot"
+  ],
+  "baseline_five_retained": true,
+  "android_chromium_executed": false,
+  "new_apk_built": false
+}

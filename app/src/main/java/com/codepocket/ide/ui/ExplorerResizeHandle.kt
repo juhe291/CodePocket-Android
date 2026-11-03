@@ -51,7 +51,11 @@ class ExplorerResizeHandle(context: Context) : View(context) {
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (isEnabled && keyCode in listOf(KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT)) {
-            begin(); drag(IdeControls.dp(context, if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) -24 else 24).toFloat()); finish(); return true
+            begin()
+            val step = IdeControls.dp(context, 24).toFloat()
+            // Round a positive distance before applying direction: dp(-24) truncates to -23 at mdpi.
+            drag(if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) -step else step)
+            finish(); return true
         }
         return super.onKeyDown(keyCode, event)
     }

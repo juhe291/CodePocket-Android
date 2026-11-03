@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.BrowserPolicyTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T00:21:34" hostname="JUHE" time="0.085">
+  <properties/>
+  <testcase name="bothSidebarsBudgetTheEditorAndMovingLeftReplacesThePrimaryBudget" classname="com.codepocket.ide.BrowserPolicyTest" time="0.01"/>
+  <testcase name="defaultSearchIsBingAndBaiduCanBeRestoredWithoutGoogleFallback" classname="com.codepocket.ide.BrowserPolicyTest" time="0.013"/>
+  <testcase name="webpageLinksCannotTurnFileJavascriptCredentialsOrUnknownSchemesIntoNavigation" classname="com.codepocket.ide.BrowserPolicyTest" time="0.034"/>
+  <testcase name="resizeValuesAreBoundedWithoutChangingTheSavedPreference" classname="com.codepocket.ide.BrowserPolicyTest" time="0.0"/>
+  <testcase name="typedHostAndExplicitHttpPreserveUnicodeEscapesAndLocalPorts" classname="com.codepocket.ide.BrowserPolicyTest" time="0.027"/>
+  <testcase name="passiveShrinkHidesAuxiliaryButExplicitFocusKeepsTheMeasuredWorkspace" classname="com.codepocket.ide.BrowserPolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

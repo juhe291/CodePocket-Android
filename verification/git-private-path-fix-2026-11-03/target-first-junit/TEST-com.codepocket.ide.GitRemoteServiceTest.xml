@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitRemoteServiceTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T01:48:42" hostname="JUHE" time="2.786">
+  <properties/>
+  <testcase name="privateServiceRunsRealPinnedConfigurationAndRejectsLocalGitOrOriginalWorkspaceRoots" classname="com.codepocket.ide.GitRemoteServiceTest" time="1.786"/>
+  <testcase name="networkDeadlineIs120SecondsAndAnExpiredPushRemainsUncertainUntilARealReport" classname="com.codepocket.ide.GitRemoteServiceTest" time="0.073"/>
+  <testcase name="cancellationReachesTheBackendAndItsLeaseProtectsTheSnapshotUntilReturn" classname="com.codepocket.ide.GitRemoteServiceTest" time="0.049"/>
+  <testcase name="pushWithoutMatchingPersistedIntentNeverCallsBackend" classname="com.codepocket.ide.GitRemoteServiceTest" time="0.039"/>
+  <testcase name="completedPushReportIsPersistedAndReturnedEvenWhenCancelArrivesBeforeTheReply" classname="com.codepocket.ide.GitRemoteServiceTest" time="0.07"/>
+  <testcase name="remoteStartupCleansOnlyItsDeadJobsAndLeavesLocalGitLeasesAlone" classname="com.codepocket.ide.GitRemoteServiceTest" time="0.063"/>
+  <testcase name="interruptionOrUnexpectedBackendErrorAfterPushEntryNeverClaimsNotSentOrLeaksItsMessage" classname="com.codepocket.ide.GitRemoteServiceTest" time="0.163"/>
+  <testcase name="busyRequestDoesNotCancelOrSupersedeAnActiveOperation" classname="com.codepocket.ide.GitRemoteServiceTest" time="0.543"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

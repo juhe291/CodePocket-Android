@@ -69,7 +69,7 @@ internal object GitProtocol {
 /** A lease keeps the UI from deleting a snapshot while the private service uses it. */
 internal object GitJobs {
     private val name=Regex("[a-f0-9-]{36}")
-    fun parent(context:Context)=File(context.cacheDir,"git-jobs").absoluteFile.also {
+    fun parent(context:Context)=File(context.cacheDir.canonicalFile,"git-jobs").absoluteFile.also {
         require(it==it.canonicalFile && (it.isDirectory || it.mkdirs() || it.isDirectory))
     }
     fun next(context:Context)=File(parent(context),UUID.randomUUID().toString())

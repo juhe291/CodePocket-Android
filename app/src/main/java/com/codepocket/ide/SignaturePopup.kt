@@ -48,6 +48,14 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
     private var variant = 0
     private var pendingScroll:Int?=null
     private val cycleControls=mutableListOf<View>()
+    var onDocumentation:((BuiltinSignature,Int,Int?)->Unit)?=null
+        set(value){field=value;documentationButton.visibility=if(value==null)View.GONE else View.VISIBLE}
+    private val documentationButton=com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),
+        com.codepocket.ide.ui.IdeIcon.INFO,"查看函数与参数说明") {
+        val match=result
+        if(isShowing && match!=null && editorSurface.anchor()?.matches(match.request.document,match.request.revision,match.request.caret)==true)
+            onDocumentation?.invoke(match.reference,variant,match.active(variant))
+    }.apply{tag="signature-documentation";visibility=View.GONE}
     private val popup = PopupWindow(content, 1, 1, false).apply {
         isOutsideTouchable = false; inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
         softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
@@ -64,6 +72,7 @@ class SignaturePopup(private val activity: Activity, private val editor: View,
     init {
         signature.addOnLayoutChangeListener { _,_,_,_,_,_,_,_,_ -> scroll.post{scrollToParameter()} }
         heading.addView(title, LinearLayout.LayoutParams(0, dp(48), 1f))
+        heading.addView(documentationButton,LinearLayout.LayoutParams(dp(48),dp(48)))
         fun control(icon:com.codepocket.ide.ui.IdeIcon,description:Int,action:()->Unit) {
             val button=com.codepocket.ide.ui.IdeControls.icon(activity,com.codepocket.ide.ui.DesignTokens.forContext(activity),icon,activity.getString(description),action)
             if(description!=R.string.signature_close)cycleControls.add(button)
