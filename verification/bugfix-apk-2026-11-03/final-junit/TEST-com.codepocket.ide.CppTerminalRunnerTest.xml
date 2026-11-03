@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppTerminalRunnerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T10:26:06" hostname="JUHE" time="0.46">
+  <properties/>
+  <testcase name="longUtf8PrefillAndInteractiveInputOnlyEnterThePrivateProgramWithBackpressure" classname="com.codepocket.ide.CppTerminalRunnerTest" time="0.227"/>
+  <testcase name="interruptedCoordinatorStillJoinsItsRelaysBeforeReleasingOwnership" classname="com.codepocket.ide.CppTerminalRunnerTest" time="0.006"/>
+  <testcase name="programDurationIsFrozenAtObservedExitBeforeOutputDrainAndRelayCleanup" classname="com.codepocket.ide.CppTerminalRunnerTest" time="0.005"/>
+  <testcase name="earlyExitCannotSendUnusedInputToTheShellAndStopsAllInputBeforeReturning" classname="com.codepocket.ide.CppTerminalRunnerTest" time="0.04"/>
+  <testcase name="fixedCaseNeverConsumesKeyboardInputOrSendsTerminalEofToTheProgram" classname="com.codepocket.ide.CppTerminalRunnerTest" time="0.004"/>
+  <testcase name="faultRecordIsDrainedAndResumedBeforeExitAndMalformedReportsAlsoReleaseTheChild" classname="com.codepocket.ide.CppTerminalRunnerTest" time="0.061"/>
+  <testcase name="realTerminalEofAndSizeChangesAreForwardedWithoutClosingTheOuterTerminal" classname="com.codepocket.ide.CppTerminalRunnerTest" time="0.029"/>
+  <testcase name="cancellationOutputLimitAndDisconnectReleaseOnlyTheOwnedChild" classname="com.codepocket.ide.CppTerminalRunnerTest" time="0.088"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

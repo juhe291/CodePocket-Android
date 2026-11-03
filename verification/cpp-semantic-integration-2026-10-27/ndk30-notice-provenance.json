@@ -1,0 +1,48 @@
+{
+  "url": "https://dl.google.com/android/repository/android-ndk-r30-linux.zip",
+  "https_byte_ranges": true,
+  "zip_crc_verified": true,
+  "full_archive_sha256_verified": false,
+  "notices": [
+    {
+      "name": "android-ndk-r30/NOTICE",
+      "method": 8,
+      "crc32": 3275927238,
+      "compressed": 43422,
+      "uncompressed": 493924,
+      "offset": 1503,
+      "file": "NDK-r30-NOTICE-0.txt",
+      "sha256": "a3c12eee897f63991da71464b690433a15d0d74a508ce0e275436279bdcaff58"
+    },
+    {
+      "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/NOTICE",
+      "method": 8,
+      "crc32": 1578516871,
+      "compressed": 7405,
+      "uncompressed": 130424,
+      "offset": 76539173,
+      "file": "NDK-r30-NOTICE-1.txt",
+      "sha256": "f96f763beb66a7ba7a667647fc64c0226ace875e590c831fdd9579ec1c1d91e1"
+    },
+    {
+      "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/sysroot/NOTICE",
+      "method": 8,
+      "crc32": 1133117359,
+      "compressed": 38161,
+      "uncompressed": 472407,
+      "offset": 76551895,
+      "file": "NDK-r30-NOTICE-2.txt",
+      "sha256": "0ed879a95b81b7d73beb4bc8ca5d1899ce5e3d65cedecbb9b642fc34d00005e8"
+    },
+    {
+      "name": "android-ndk-r30/NOTICE.toolchain",
+      "method": 8,
+      "crc32": 3843378478,
+      "compressed": 90365,
+      "uncompressed": 777125,
+      "offset": 736811763,
+      "file": "NDK-r30-NOTICE-3.txt",
+      "sha256": "6b8633011d874b75629180e60de13ebfd546a10e56dc7d0380a35f6609f30617"
+    }
+  ]
+}

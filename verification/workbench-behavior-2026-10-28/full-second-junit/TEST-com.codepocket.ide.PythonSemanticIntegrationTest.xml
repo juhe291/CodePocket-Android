@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.PythonSemanticIntegrationTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-29T18:20:38" hostname="JUHE" time="2.729">
+  <properties/>
+  <testcase name="aKeyboardChoiceIsNotReplacedByALateSemanticUpgrade" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.193"/>
+  <testcase name="changingAnotherUnsavedDraftRejectsItsLateSignature" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.163"/>
+  <testcase name="tabletSeveralUnsavedModulesReachRealMembersWithoutSavingAnyOriginal" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.306"/>
+  <testcase name="tabletListMemberAcceptsSavesAndUndoesThroughTheRealEditor" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.226"/>
+  <testcase name="phoneUnsavedCrossFileSignatureUsesTheActualSecondParameter" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.204"/>
+  <testcase name="anExactSnippetTriggerKeepsItsRealInsertionFieldsAndUndo" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.209"/>
+  <testcase name="tabletSafReadsTheLiveProviderInsteadOfItsOldMirrorAndRevocationFallsBack" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.335"/>
+  <testcase name="explicitOversizedMemberRequestExplainsItsLimitWithoutStartingTheBackend" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.164"/>
+  <testcase name="changingAnImportedDiskModuleWhileAnalyzingDiscardsTheOldMembers" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.139"/>
+  <testcase name="phoneLightLargeActualFunctionParametersKeepEditorSelection" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.162"/>
+  <testcase name="tabletLightProjectModuleUsesTheActualPrivateWorkspaceContext" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.15"/>
+  <testcase name="lateResponseCannotChangeTheNewFileOrReopenItsOldCandidateList" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.171"/>
+  <testcase name="failuresKeepLexicalResultsAndUnknownMembersRemainEmpty" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.161"/>
+  <testcase name="customPrintDefinitionReplacesTheCuratedReference" classname="com.codepocket.ide.PythonSemanticIntegrationTest" time="0.146"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

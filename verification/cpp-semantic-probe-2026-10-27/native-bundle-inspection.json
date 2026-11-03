@@ -1,0 +1,197 @@
+{
+  "real_elf_inputs": true,
+  "source_archives_gpg_verified": true,
+  "native_count": 9,
+  "raw_bytes": 219813944,
+  "probe_zip_bytes": 70112897,
+  "zip_is_not_an_apk": true,
+  "all_dependencies_resolved": true,
+  "existing_jni_libraries_untouched": true,
+  "alias_map": {
+    "libLLVM.so": "libcpA_.so",
+    "libc++_shared.so": "libcpB_______.so",
+    "libclang-cpp.so": "libcpC______.so",
+    "libffi.so": "libcpD.so",
+    "libiconv.so": "libcpE__.so",
+    "libxml2.so.16": "libcpF____.so",
+    "libz.so.1": "libcpG.so",
+    "libzstd.so.1": "libcpH___.so"
+  },
+  "files": [
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/clang/bin/clangd",
+      "source_sha256": "52df30a8ba834154f1cf3b6deb47b1c2663cba7c6bc45035b247483ba813337b",
+      "packaged_name": "libcodepocket_clangd.so",
+      "sha256": "b74b281229984a2f068a3a1c421b8b7e1cf0a86091bbde43dd3caefd929e1a74",
+      "bytes": 18662672,
+      "dynamic_string_edits": 4,
+      "needed": [
+        "libc.so",
+        "libcpC______.so",
+        "libcpA_.so",
+        "libcpB_______.so",
+        "libm.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ]
+    },
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/clang/lib/libclang-cpp.so",
+      "source_sha256": "1f2f35ec08f3e24ff23bfa6c0e1a8f2cd2c818fa2c772268b26aff123aacd4d4",
+      "packaged_name": "libcpC______.so",
+      "sha256": "c78ce173c4a3642098897e35f03587a1878ec7c137e68bb459e037e7da560d55",
+      "bytes": 62972824,
+      "dynamic_string_edits": 4,
+      "needed": [
+        "libc.so",
+        "libcpA_.so",
+        "libcpB_______.so",
+        "libm.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ]
+    },
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/libllvm/lib/libLLVM.so",
+      "source_sha256": "ae20f8a19dcd84740bb3b3c7cc5845ec44f5143cbf7dab44a64160a4b7f21fa0",
+      "packaged_name": "libcpA_.so",
+      "sha256": "0e8c200507532c0a6064a90306921e7e1b20079e2af8e190888c8e984464669e",
+      "bytes": 133597776,
+      "dynamic_string_edits": 7,
+      "needed": [
+        "libcpD.so",
+        "libdl.so",
+        "libc.so",
+        "libm.so",
+        "libcpG.so",
+        "libcpH___.so",
+        "libcpF____.so",
+        "libcpB_______.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ]
+    },
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/libffi/lib/libffi.so",
+      "source_sha256": "e118d741361c64015c074c5e1f24e42e44292d0d694ca3ba1e109205c10421f9",
+      "packaged_name": "libcpD.so",
+      "sha256": "4d36fd8dd8d8dd0257634211e6e679777faeeed92efdf16647a032afc8b6b7b0",
+      "bytes": 87128,
+      "dynamic_string_edits": 2,
+      "needed": [
+        "libc.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ]
+    },
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/zlib/lib/libz.so.1.3.2",
+      "source_sha256": "c47748ed4b6ca6a2ecd664bab04795f3493956ab1f5cddc4ba0efa737ef3b711",
+      "packaged_name": "libcpG.so",
+      "sha256": "949e05d707fd449b6382edd5e5dbb9991a28794f59b317ae621c92532b1d8e1d",
+      "bytes": 72880,
+      "dynamic_string_edits": 2,
+      "needed": [
+        "libc.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ]
+    },
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/zstd/lib/libzstd.so.1.5.7",
+      "source_sha256": "1677d5e828c1839f111f0261697c08f99a5e4e80434659ab88e5ff859a1374f7",
+      "packaged_name": "libcpH___.so",
+      "sha256": "fadacda4b719edab0857ed2c027aee28dcf90f795fa35e43bb3711bc9c4fc705",
+      "bytes": 820840,
+      "dynamic_string_edits": 2,
+      "needed": [
+        "libc.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 24,
+          "ndk": "r28c"
+        }
+      ]
+    },
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/libxml2/lib/libxml2.so.16.1.4",
+      "source_sha256": "ed8fca535487054960e6a4edb0b4a14c5efe6256710f3b2f0bf66f59343960e6",
+      "packaged_name": "libcpF____.so",
+      "sha256": "3cdbdec19f16ff3cd612cc445394f48238d717936e9f59fcfef8c0a3c7dd0e81",
+      "bytes": 1092824,
+      "dynamic_string_edits": 4,
+      "needed": [
+        "libm.so",
+        "libcpG.so",
+        "libcpE__.so",
+        "libdl.so",
+        "libc.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ]
+    },
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/libiconv/lib/libiconv.so",
+      "source_sha256": "aa51a75a69449e02f7712635148b280167dcbda9433f1d16de5c931432b05b01",
+      "packaged_name": "libcpE__.so",
+      "sha256": "ac9cd5e352fccdbe6989e20d59cf674417e63ef13ef17afd60e36b4a1864c80a",
+      "bytes": 1083304,
+      "dynamic_string_edits": 2,
+      "needed": [
+        "libc.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 24,
+          "ndk": "r29"
+        }
+      ]
+    },
+    {
+      "source": ".tools/cpp-semantic-probe/extracted/libc++/lib/libc++_shared.so",
+      "source_sha256": "05bef9d3901910c3ff8ab450b03bc8b28383d363a2290f2f7b9aed7331ea6ff7",
+      "packaged_name": "libcpB_______.so",
+      "sha256": "25bda017cca68e19d4808665f918b00366b8d295802613553841bd94c0190fc7",
+      "bytes": 1423696,
+      "dynamic_string_edits": 1,
+      "needed": [
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ],
+      "min_api_notes": [
+        {
+          "api": 21,
+          "ndk": "r28"
+        }
+      ]
+    }
+  ],
+  "android_execution": false,
+  "production_integrated": false
+}

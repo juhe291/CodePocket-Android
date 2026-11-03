@@ -1,0 +1,79 @@
+{
+  "apk_sha256": "c63e8df1d0f6b89df2f972fe2a58117c43a8fd7b0da982eb30c1e68571492c1c",
+  "baseline_sha256": "26ac0bec36f7a0a89108727452d1f96a8576086e5f9ee19d889987a568961075",
+  "tests": 82,
+  "counts": {
+    "git_workspace": 19,
+    "git_https": 12,
+    "git_remote": 31,
+    "code_formatting": 20
+  },
+  "failures": 0,
+  "errors": 0,
+  "actual_apk_bytecode_loaded": true,
+  "device_execution": false,
+  "modules_sha256": {
+    "git_workspace": "365a4ad0bda205cef0f07bd4136a674e3dcb6bf821c2ccb0ef49a86eb282b120",
+    "git_https": "a10fbc73b13deb65c13ea026eced9d4404a81ace91e73f9ef08587bf52fd5b79",
+    "git_remote": "692a49e6aec4648edd8dd249a08f9fff19941fa0951ede6638815d7b26bebe45",
+    "code_formatting": "50363c82a292167f45dda99deba416e654c78db5a2371440512ae7cc79184104"
+  },
+  "original_native_unchanged": [
+    "lib/arm64-v8a/libchaquopy_java.so",
+    "lib/arm64-v8a/libcodepocket_analysis.so",
+    "lib/arm64-v8a/libcodepocket_clang.so",
+    "lib/arm64-v8a/libcodepocket_clangd.so",
+    "lib/arm64-v8a/libcodepocket_cpp_runner.so",
+    "lib/arm64-v8a/libcodepocket_execute.so",
+    "lib/arm64-v8a/libcodepocket_lld.so",
+    "lib/arm64-v8a/libcodepocket_symbolizer.so",
+    "lib/arm64-v8a/libcpA_.so",
+    "lib/arm64-v8a/libcpB_______.so",
+    "lib/arm64-v8a/libcpC______.so",
+    "lib/arm64-v8a/libcpD.so",
+    "lib/arm64-v8a/libcpE__.so",
+    "lib/arm64-v8a/libcpF____.so",
+    "lib/arm64-v8a/libcpG.so",
+    "lib/arm64-v8a/libcpH___.so",
+    "lib/arm64-v8a/libcrypto_chaquopy.so",
+    "lib/arm64-v8a/libcrypto_python.so",
+    "lib/arm64-v8a/libpython3.13.so",
+    "lib/arm64-v8a/libpython3.so",
+    "lib/arm64-v8a/libsqlite3_chaquopy.so",
+    "lib/arm64-v8a/libsqlite3_python.so",
+    "lib/arm64-v8a/libssl_chaquopy.so",
+    "lib/arm64-v8a/libssl_python.so",
+    "lib/arm64-v8a/libtermux.so"
+  ],
+  "original_python_assets_unchanged": [
+    "assets/chaquopy/bootstrap-native/arm64-v8a/_bz2.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/_ctypes.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/_datetime.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/_lzma.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/_opcode.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/_random.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/_struct.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/binascii.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/java/chaquopy.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/math.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/mmap.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap-native/arm64-v8a/zlib.cpython-313-aarch64-linux-android.so",
+    "assets/chaquopy/bootstrap.imy",
+    "assets/chaquopy/cacert.pem",
+    "assets/chaquopy/requirements-arm64-v8a.imy",
+    "assets/chaquopy/requirements-common.imy",
+    "assets/chaquopy/stdlib-arm64-v8a.imy",
+    "assets/chaquopy/stdlib-common.imy"
+  ],
+  "approved_assets": [
+    "assets/chaquopy/app.imy",
+    "assets/chaquopy/build.json"
+  ],
+  "new_modules": [
+    "git_https",
+    "git_remote"
+  ],
+  "dependencies_byte_identical": true,
+  "pinned_wheel_hashes_verified": true,
+  "original_python_module_payloads_unchanged": true
+}

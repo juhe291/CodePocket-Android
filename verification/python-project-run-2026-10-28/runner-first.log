@@ -1,0 +1,10 @@
+test_draft_module_errors_report_the_executed_source_hash_and_real_file_line (test_project_run.TestPythonProjectRun.test_draft_module_errors_report_the_executed_source_hash_and_real_file_line) ... ok
+test_malformed_or_traversing_overlays_are_rejected_before_user_code (test_project_run.TestPythonProjectRun.test_malformed_or_traversing_overlays_are_rejected_before_user_code) ... ok
+test_package_relative_imports_and_resources_keep_the_original_project_root (test_project_run.TestPythonProjectRun.test_package_relative_imports_and_resources_keep_the_original_project_root) ... ok
+test_program_file_writes_and_new_module_imports_keep_the_existing_behavior (test_project_run.TestPythonProjectRun.test_program_file_writes_and_new_module_imports_keep_the_existing_behavior) ... ok
+test_unsaved_module_runs_without_saving_and_keeps_its_original_file_identity (test_project_run.TestPythonProjectRun.test_unsaved_module_runs_without_saving_and_keeps_its_original_file_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.384s
+
+OK

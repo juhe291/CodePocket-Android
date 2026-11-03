@@ -1,0 +1,134 @@
+[
+  {
+    "class": "com.codepocket.ide.CppBuildPlanTest",
+    "name": "actualMultiFileCommandsBuildAnAndroidSharedProgramWithThePinnedRuntime",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppBuildPlanTest",
+    "name": "successfulLinkWithoutMainIsRejectedBeforeRunningAndStaleSourcesNeverLaunch",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppBuildPlanTest",
+    "name": "leadingDashFilenameIsAnInputAfterTheOptionTerminator",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppBuildPlanTest",
+    "name": "actualBuilderRetainsCompilerLineAndMissingHelperLinkFailureThenBuildsTheWholeProject",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppBuildPlanTest",
+    "name": "traversalDuplicateEntriesHeaderEntryAndSourceOutputMixingAreRejected",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppBuildPlanTest",
+    "name": "currentFileAndProjectScopesKeepSeparateProgramsUsable",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppBuildSupportTest",
+    "name": "unknownTraversalAndOversizedArchivesCannotWriteOutsideOwnedDirectory",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppBuildSupportTest",
+    "name": "actualPreparedSupportMatchesAllFourPinnedFiles",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppCommandExecutorTest",
+    "name": "deadlineAndCombinedOutputBudgetAlwaysReleaseOwnership",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppCommandExecutorTest",
+    "name": "drainsBothPipesAfterExitAndRetainsNonzeroStatus",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppCommandExecutorTest",
+    "name": "cancelledBeforeLaunchCreatesNoChildAndLateCancellationClosesItsOwnChild",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppCommandExecutorTest",
+    "name": "nativeStatusDecoderKeepsRunningExitAndSignalSeparate",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppHeaderArchiveTest",
+    "name": "boundedExtractionPreservesActualHeaderText",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppHeaderArchiveTest",
+    "name": "duplicateEntriesCannotReplaceAnExistingPrivateFile",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppHeaderArchiveTest",
+    "name": "traversalUnexpectedPathsAndSizeOrCountMismatchesFailClosed",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppProjectContextTest",
+    "name": "activeTypingUsesStableUriAndNeverWritesItsSourceSnapshotOrOriginal",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppProjectContextTest",
+    "name": "additionsDeletionAndUnsafeConfigurationCannotBecomeStaleContext",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppProjectContextTest",
+    "name": "snapshotCacheRemainsBoundedAcrossHeaderVersionsAndRejectsTampering",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppProjectContextTest",
+    "name": "unsavedHeaderVersionsAndTheirRemovalChangeGenerationWithoutOverwritingFiles",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppRunSnapshotTest",
+    "name": "currentBufferAndHeaderDraftAreActualBuildInputsWithoutWritingOriginals",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppRunSnapshotTest",
+    "name": "projectConfigurationIsNeverCopiedOrExecutedAndHeaderCannotBeAnEntry",
+    "failed": false,
+    "skipped": false
+  },
+  {
+    "class": "com.codepocket.ide.CppRunSnapshotTest",
+    "name": "diskDraftAndSnapshotChangesInvalidateOnlyTheOwnedRunCopy",
+    "failed": false,
+    "skipped": false
+  }
+]

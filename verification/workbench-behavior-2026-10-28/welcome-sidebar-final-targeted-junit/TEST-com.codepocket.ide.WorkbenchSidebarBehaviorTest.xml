@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkbenchSidebarBehaviorTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-29T17:54:23" hostname="JUHE" time="1.376">
+  <properties/>
+  <testcase name="closingPhoneSearchDoesNotReopenASidebarOnWindowExpansion" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.181"/>
+  <testcase name="recreatedSearchDrawerRestoresItsQueryWithAPositiveWindowHeight" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.263"/>
+  <testcase name="queryAndEditorIdentitySurviveRehostingBetweenPhoneDrawerAndTabletSidebar" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.22"/>
+  <testcase name="drawerWindowAnimationNeverSlidesItsWholeSurfaceOverTheFixedActivityBar" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.105"/>
+  <testcase name="tabletSearchLivesInTheSidebarAndLeavesTheEditorBufferUntouched" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.172"/>
+  <testcase name="phoneSearchOpensInTheSameDrawerGeometryAsExplorer" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.19"/>
+  <testcase name="tabletSidebarUsesTheRealUnsavedWorkspaceSearchWorker" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.245"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import runpy,sys;runpy.run_path(sys.argv[1],run_name='isolated_fixture')
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\semantics-tmp\clean-ci-import-rq7lqu1m\verification\git-remote-preflight-2026-11-02\probe_https.py", line 38, in <module>
+    CACHE.mkdir(exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\semantics-tmp\\clean-ci-import-rq7lqu1m\\.tools\\git-remote-probe'

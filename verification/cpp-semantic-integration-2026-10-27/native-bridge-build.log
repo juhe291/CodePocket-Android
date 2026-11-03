@@ -1,0 +1,3 @@
+[arm64-v8a] Compile        : codepocket_analysis <= analysis_process.c
+[arm64-v8a] SharedLibrary  : libcodepocket_analysis.so
+[arm64-v8a] Install        : libcodepocket_analysis.so => C:\Users\q1684\Desktop\??????\CodePocket-Android/.tools/cpp-jni-build/libs/arm64-v8a/libcodepocket_analysis.so

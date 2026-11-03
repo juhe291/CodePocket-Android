@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainSafRecoveryIntegrationTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-26T02:07:11" hostname="JUHE" time="3.882">
+  <properties/>
+  <testcase name="invalidUtf8WorkspaceCannotReplaceInternalEditor" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.163"/>
+  <testcase name="runtimeDiagnosticInAnotherFileUsesExistingSwitchAndSaveProtection" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.144"/>
+  <testcase name="failedReadOfAnotherProviderFileDoesNotReplaceActiveTabOrHistory" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.251"/>
+  <testcase name="matchingCheckpointIsCleanAndDoesNotKeepStaleConflictHash" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.255"/>
+  <testcase name="actualPickerGrantLoadsOpaqueUrisAndSaveVerifiesRealProviderBytes" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.372"/>
+  <testcase name="runtimeLocationRejectsForeignWorkspaceAndEscapingFile" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.208"/>
+  <testcase name="revokedPermissionPreservesContentCheckpointAndBlocksWorkspaceSwitchUntilRetry" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.319"/>
+  <testcase name="mainRuntimeDiagnosticLocatesMatchingSourceByUtf16" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.153"/>
+  <testcase name="revokedWorkspaceCanSwitchWithDurableDraftAndRestoreAfterReauthorization" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.513"/>
+  <testcase name="readbackMismatchBlocksNavigationRetainsActualOriginalAndRecoveryDraft" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.374"/>
+  <testcase name="changedRuntimeSourceDoesNotMoveCaretOrClaimVerifiedLocation" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.197"/>
+  <testcase name="providerWriteDeniedDoesNotTruncateOriginalOrClearDraft" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.312"/>
+  <testcase name="pickerRejectsReadOnlyGrantBeforeReplacingCurrentWorkspace" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.122"/>
+  <testcase name="recreationRestoresDirtyProviderDraftAndRejectsNewExternalVersionOnSave" classname="com.codepocket.ide.MainSafRecoveryIntegrationTest" time="0.498"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

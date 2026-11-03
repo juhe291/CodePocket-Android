@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppSemanticProtocolTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-29T18:20:03" hostname="JUHE" time="0.013">
+  <properties/>
+  <testcase name="realSignaturesPreserveOverloadsAndActualSecondParameters" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.001"/>
+  <testcase name="updatedAndClosedHeaderFixturesDoNotResurrectPreviousDefinitions" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.0"/>
+  <testcase name="semanticSnippetStopsAreParsedAndUnsupportedGrammarFailsClosed" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.001"/>
+  <testcase name="malformedRangesSurrogatesExtraEditsAndWrongEnginesCannotProduceAnInsertion" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.001"/>
+  <testcase name="fuzzyIndexNamesOutsideTheTypedPrefixAreFilteredWithoutInventingAFallback" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.002"/>
+  <testcase name="unicodeCrLfOffsetsAndFinalStopKeepEmojiAndPlaceCaretInsideArguments" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.001"/>
+  <testcase name="actualDotArrowNamespaceAndAndroidStandardLibraryHaveRealKindsAndEdits" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.002"/>
+  <testcase name="clientSendsTheUnsavedUtf16SnapshotAndRejectsUnsupportedLanguages" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.005"/>
+  <testcase name="middleTokenConsumesItsSuffixAndUsesTheExistingRevisionGate" classname="com.codepocket.ide.CppSemanticProtocolTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

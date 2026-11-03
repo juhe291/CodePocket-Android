@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.ExplorerModifiedStateIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-26T09:03:16" hostname="JUHE" time="1.052">
+  <properties/>
+  <testcase name="tabletLightSaveConflictKeepsMarkerAndRealRetryClearsIt" classname="com.codepocket.ide.ExplorerModifiedStateIntegrationTest" time="0.251"/>
+  <testcase name="phoneLightLargeReopenedAndRecollapsedTreeKeepsLongFileState" classname="com.codepocket.ide.ExplorerModifiedStateIntegrationTest" time="0.416"/>
+  <testcase name="tabletTypingAndSavingKeepTreeGeometryAndOnlyDrawOneSmallMarker" classname="com.codepocket.ide.ExplorerModifiedStateIntegrationTest" time="0.385"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

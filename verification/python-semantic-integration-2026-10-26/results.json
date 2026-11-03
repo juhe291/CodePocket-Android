@@ -1,0 +1,82 @@
+{
+  "apk": "dist/CodePocket-python-semantics-2026-10-26-debug.apk",
+  "bytes": 32431159,
+  "sha256": "42866696f87dbd42651d910ebac1865f954c40f65fbf428618e339c8127a21d5",
+  "apk_size_delta_bytes": 5749966,
+  "junit": {
+    "tests": 772,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "targeted": {
+    "tests": 79,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "old_test_cases_preserved": 751,
+  "new_test_cases": 21,
+  "no_new_skips": true,
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 18
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 2,
+        "ClickableViewAccessibility": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "new_lint_warnings": [
+    {
+      "module": "app",
+      "id": "ClickableViewAccessibility",
+      "count": 1,
+      "messages": [
+        "`onTouch` lambda should call `View#performClick` when a click is detected"
+      ]
+    }
+  ],
+  "source_python_tests": 63,
+  "packaged_runtime_tests": 39,
+  "packaged_semantic_tests": 19,
+  "dependencies_from_actual_apk": true,
+  "dependency_bytecode_loaded": true,
+  "extract_packages": [
+    "jedi",
+    "parso"
+  ],
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "native_libraries_identical": 10,
+  "runner_and_diagnostics_payload_identical": true,
+  "old_apks_preserved": 87,
+  "signature": "passed",
+  "signer_sha256": "d58e4cd7c849ebcf3cf35fde35f1d201c2569bb9ef11f2b48a4ba80cacd10408",
+  "zip_crc": "passed",
+  "alignment_16kb": "passed",
+  "main_analysis_service_in_actual_apk": true,
+  "native_previews": 3,
+  "apk_build_invocations": 1,
+  "real_host_backend": true,
+  "host_main_transport": "Recorded real Jedi responses for Main/Sora; separate Messenger lifecycle tests",
+  "android_semantic_execution_verified": false,
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "first_scope": "Unsaved active file and standard library; saved internal project modules. Other unsaved buffers and fresh SAF project snapshots are P2-B."
+}

@@ -1,0 +1,52 @@
+{
+  "apk": "dist/CodePocket-cpp-startup-diagnostic-2026-10-28-debug.apk",
+  "bytes": 115421743,
+  "sha256": "7d6835f9b7adf28df9038d3f9a86ccc877fa843178e6c88e9836643ed93d5e5b",
+  "artifact_role": "diagnostic_candidate_not_all_tests_green",
+  "full_build_exit_success": false,
+  "junit": {
+    "tests": 884,
+    "passed": 878,
+    "failures": 5,
+    "errors": 0,
+    "skipped": 1
+  },
+  "previous_cases_preserved": 874,
+  "previous_case_regressions": {},
+  "new_skips": false,
+  "host_filesystem_failure": "com.codepocket.ide.CppRuntimePreparationTest.trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs",
+  "unfinished_python_tests": [
+    "com.codepocket.ide.PythonRunProviderTest.aProviderCycleAddedAfterOpeningIsRejectedAndOnlyTheOwnedJobIsRemoved",
+    "com.codepocket.ide.PythonRunProviderTest.deletedProviderFilesAreNotReadFromTheStaleMirror",
+    "com.codepocket.ide.PythonRunProviderTest.newModulesAndBinaryResourcesAppearWithoutReplacingTheEditorMirror",
+    "com.codepocket.ide.PythonRunProviderTest.providerFailureRemovesThePartialJobWithoutTouchingTheMirror"
+  ],
+  "terminal": {
+    "tests": 146,
+    "passed": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": {
+    "app": {
+      "Warning": 21
+    },
+    "editor-sora": {
+      "Warning": 1
+    }
+  },
+  "native_files_unchanged": 25,
+  "runtime_assets_unchanged": 48,
+  "historical_apks_preserved": 93,
+  "packaged_python_tests": 39,
+  "packaged_semantic_tests": 22,
+  "cpp_apk_static_check": true,
+  "semantic_first_attempt_host_temp_errors": 30,
+  "semantic_workspace_temp_retry_passed": true,
+  "previews_viewed": 1,
+  "editor_assist": "NO-SOURCE; contracts tested in app",
+  "android_device_execution": false,
+  "user_device_root_cause_confirmed": false,
+  "full_goal_complete": false
+}

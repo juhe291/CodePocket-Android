@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\prepare_cpp_runtime.py", line 152, in <module>
+    prepare(args)
+    ~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\prepare_cpp_runtime.py", line 102, in prepare
+    inspected = elf(source)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\cpp_runtime_elf.py", line 60, in elf
+    return dict(file=str(file.relative_to(ROOT)).replace('\\', '/'), bytes=len(data), sha256=hashlib.sha256(data).hexdigest(),
+                                                                                             ^^^^^^^
+NameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'?

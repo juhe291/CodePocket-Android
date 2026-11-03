@@ -1,0 +1,70 @@
+{
+  "apk": "dist/CodePocket-local-cpp-2026-10-27-debug.apk",
+  "bytes": 115421743,
+  "sha256": "07b06aa03f393d35e8bb88ebd6f7a0c51f5ad2749aa6e98090f2c54dedd2bd26",
+  "apk_size_delta_bytes": 1890069,
+  "junit": {
+    "tests": 855,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "targeted": {
+    "tests": 87,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "terminal": {
+    "tests": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "old_cases_preserved": 821,
+  "new_cases": 34,
+  "no_new_skips": true,
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 21
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "StaticFieldLeak": 1,
+        "UnusedResources": 4,
+        "ClickableViewAccessibility": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "python_source_tests": 66,
+  "actual_apk_semantic_tests": 22,
+  "cpp_native_files": 12,
+  "execution_images": 2,
+  "cpp_native_bytes": 225888200,
+  "build_support": {
+    "asset": "cpp-runtime/build-support.zip",
+    "sha256": "6034a512879edac6b39bc9b00613b583347aa00bab93b180b04a8676a9184e1a",
+    "bytes": 78357,
+    "entries": 4,
+    "uncompressed_bytes": 508046
+  },
+  "old_cpp_native_unchanged": 9,
+  "original_native_unchanged": 10,
+  "chaquopy_assets_unchanged": 20,
+  "old_apks_preserved": 90,
+  "previews_viewed": 7,
+  "android_execution": false,
+  "full_goal_complete": false
+}

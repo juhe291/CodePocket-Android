@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:44:01" hostname="JUHE" time="6.805">
+  <properties/>
+  <testcase name="tabletLightLicenseDetailsRemainCompleteSelectableAndScrollable" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="0.828"/>
+  <testcase name="explicitDiagnosticDetailsKeepCopyAndFullMessage" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="0.62"/>
+  <testcase name="phoneDraftPickerExportsExactSnapshotWithoutReplacingEditor" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="0.698"/>
+  <testcase name="phoneLandscapeLightWorkbench" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="0.591"/>
+  <testcase name="tabletPortraitDarkWorkbench" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="0.818"/>
+  <testcase name="phoneFontPreviewUsesActualSizeAndKeepsUndoBuffer" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="0.678"/>
+  <testcase name="tabletSearchRoutesRemainDistinctWithNoRepeatedTopEntry" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="1.129"/>
+  <testcase name="tabletLightWorkspaceKeepsRealChoicesAndPermissionCancel" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="0.718"/>
+  <testcase name="phoneLargeWorkbenchKeepsEditorSpace" classname="com.codepocket.ide.AuxiliarySurfaceIntegrationTest" time="0.724"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

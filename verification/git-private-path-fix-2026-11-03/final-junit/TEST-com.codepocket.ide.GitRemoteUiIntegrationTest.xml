@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitRemoteUiIntegrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T01:56:55" hostname="JUHE" time="45.521">
+  <properties/>
+  <testcase name="tabletFetchAndExplicitFastForwardReloadTheActualSoraDocument" classname="com.codepocket.ide.GitRemoteUiIntegrationTest" time="13.959"/>
+  <testcase name="recreationRetainsOnlyNonSecretRemoteFieldsAndDismissesCredentialInput" classname="com.codepocket.ide.GitRemoteUiIntegrationTest" time="0.537"/>
+  <testcase name="explicitNativePushConfirmsBothCommitsAndShowsTheDurableReceipt" classname="com.codepocket.ide.GitRemoteUiIntegrationTest" time="13.835"/>
+  <testcase name="phoneCloneUsesRemoteMenuTemporaryCredentialAndAnIndependentProject" classname="com.codepocket.ide.GitRemoteUiIntegrationTest" time="5.034"/>
+  <testcase name="lateNativeEditorInputAfterTlsCheckoutKeepsBothOriginalFileAndRecoveryDraft" classname="com.codepocket.ide.GitRemoteUiIntegrationTest" time="12.156"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

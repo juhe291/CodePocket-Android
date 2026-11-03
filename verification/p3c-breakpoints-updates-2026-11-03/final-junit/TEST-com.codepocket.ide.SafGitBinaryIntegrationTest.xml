@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.SafGitBinaryIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:40" hostname="JUHE" time="0.274">
+  <properties/>
+  <testcase name="realOpaqueDocumentStreamsKeepBinaryBytesAndTheOriginalOneMegabyteRunLimit" classname="com.codepocket.ide.SafGitBinaryIntegrationTest" time="0.111"/>
+  <testcase name="snapshotReadsLiveProviderBinaryMetadataAndDetectsARealSourceChange" classname="com.codepocket.ide.SafGitBinaryIntegrationTest" time="0.12"/>
+  <testcase name="readonlyBinarySaveIsRejectedBeforeOpeningOrTruncatingTheOriginal" classname="com.codepocket.ide.SafGitBinaryIntegrationTest" time="0.043"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

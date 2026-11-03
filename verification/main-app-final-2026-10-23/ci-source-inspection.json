@@ -1,0 +1,23 @@
+{
+  "workflow_sha256": "74270e55fde5b74869811d95441f91d19f1dc7587e43fb7405673bf53aa274dd",
+  "workflow_source_checks": [
+    ":terminal-emulator:testDebugUnitTest",
+    ":app:testDebugUnitTest",
+    ":app:lintDebug",
+    ":editor-sora:lintDebug",
+    ":app:assembleDebug",
+    "scripts/verify_apk.py",
+    "scripts/verify_shell_startup.py",
+    "scripts/verify_snippets.py",
+    "actions/upload-artifact@v4",
+    "path: app/build/outputs/apk/debug/app-debug.apk",
+    "if-no-files-found: error",
+    "platforms;android-35",
+    "build-tools;35.0.0",
+    "ndk;27.2.12479018"
+  ],
+  "only_main_manifest_activity": true,
+  "private_python_process": true,
+  "remote_actions_executed": false,
+  "source_review_only": true
+}

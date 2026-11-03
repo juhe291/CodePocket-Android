@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.AppUpdateUiIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:41:13" hostname="JUHE" time="10.01">
+  <properties/>
+  <testcase name="retryIsExplicitAndReusesTheSameReadOnlyDialog" classname="com.codepocket.ide.AppUpdateUiIntegrationTest" time="5.847"/>
+  <testcase name="tabletLightLargeNoReleaseIsNotReportedAsLatest" classname="com.codepocket.ide.AppUpdateUiIntegrationTest" time="1.242"/>
+  <testcase name="recreationCancelsTheRequestAndRestoresTheUnappliedSettingsWithoutCheckingAgain" classname="com.codepocket.ide.AppUpdateUiIntegrationTest" time="1.393"/>
+  <testcase name="closingAnInFlightCheckCancelsItAndKeepsSettingsOpen" classname="com.codepocket.ide.AppUpdateUiIntegrationTest" time="0.476"/>
+  <testcase name="aCurrentOrNewerInstalledVersionDoesNotOfferAnOlderApk" classname="com.codepocket.ide.AppUpdateUiIntegrationTest" time="0.393"/>
+  <testcase name="manualCheckKeepsTheRealSettingsDraftEditorAndTerminalOwner" classname="com.codepocket.ide.AppUpdateUiIntegrationTest" time="0.658"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

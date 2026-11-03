@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WebPanelBehaviorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T01:22:59" hostname="JUHE" time="1.764">
+  <properties/>
+  <testcase name="olderProviderPathKeepsNativeFileAndContentAccessDisabled" classname="com.codepocket.ide.WebPanelBehaviorTest" time="1.604"/>
+  <testcase name="longMarkdownFallsBackToTheEntireOriginalAndHidingDoesNotDestroyTheWebView" classname="com.codepocket.ide.WebPanelBehaviorTest" time="0.106"/>
+  <testcase name="subresourceHttpErrorsDoNotReplaceTheMainPageStatusAndPrivateSchemesStayBlocked" classname="com.codepocket.ide.WebPanelBehaviorTest" time="0.054"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -1,0 +1,2838 @@
+[
+  {
+    "id": "com.codepocket.ide.AppSettingsTest.independentThemesAndDisabledFeaturesSurviveRoundTrip",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AppSettingsTest.legacyThemeAndCorruptPreferencesRemainUsable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AppSettingsTest.motionCannotOverrideSystemDisabledAnimationOrPowerSaving",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.explicitDiagnosticDetailsKeepCopyAndFullMessage",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.phoneDraftPickerExportsExactSnapshotWithoutReplacingEditor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.phoneFontPreviewUsesActualSizeAndKeepsUndoBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.phoneLandscapeLightWorkbench",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.phoneLargeWorkbenchKeepsEditorSpace",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.tabletLightLicenseDetailsRemainCompleteSelectableAndScrollable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.tabletLightWorkspaceKeepsRealChoicesAndPermissionCancel",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.tabletPortraitDarkWorkbench",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.AuxiliarySurfaceIntegrationTest.tabletSearchRoutesRemainDistinctWithNoRepeatedTopEntry",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.automaticCandidatesAcceptPhysicalArrowsAndTabWithoutMovingCaret",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.automaticCompletionAndSignatureResumeAfterLayout",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.automaticRefreshCannotReplaceTheWaitingExplicitModeAndLatestShortcutWins",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.committedEnglishTypingAutomaticallyShowsRealCandidates",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.compactEditorStillShowsAtLeastOneUsableCandidate",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.configuredEnterAcceptsTheArrowSelectedCandidate",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.cppAutomaticArrowsChoosePrivateInsteadOfTheFirstPrintfItem",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.cppKeywordsAlsoAppearAndAcceptTab",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.ctrlEqualsAndMinusResizeOnlyCodeAndRememberTheSetting",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.enterStillCreatesNewlineByDefaultEvenAfterCandidateNavigation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.escapeCancelsTheWaitingRequestWithoutEditingOrReopening",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.explicitAndOffModesRemainAvailableAfterTheDefaultChanges",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.explicitCompletionWaitsForLayoutWhenAutomaticCompletionIsOff",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.explicitSignatureWaitsForLayoutWhenAutomaticHelpIsOff",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.fontZoomDoesNotDestroyTheNativeUndoHistory",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.fontZoomWaitsForCompositionAndIgnoresNonEditorFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.holdingArrowClampsAtListEdgesAndEscReturnsToCodeNavigation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.layoutStartingAfterCandidateCalculationAlsoKeepsTheExplicitRequest",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.layoutStartingAfterSignatureCalculationAlsoKeepsTheExplicitRequest",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.permanentlyBusyLayoutHasABoundedWaitAndCanBeRequestedAgain",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.phoneHiddenMenuZoomsCodeAndPreservesNativeHistoryAndSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.physicalTabAcceptsTheVisibleCandidate",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.replacingTheBufferOrChangingSelectionInvalidatesTheWaitingRequest",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.shiftedPlusNumpadAndRepeatedZoomRespectFontLimits",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.tabletAutomaticCandidatesAlsoRetainPhysicalArrows",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.tabletHiddenZoomRetainsInputFocusAndRespectsComposition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.tabletRealWordwrapReflowRetainsPhysicalCompletionAndSnippetFields",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.toolbarTabDoesNotModifyChineseComposition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.toolbarTabRetainsCandidatesUntilItsClickIsAccepted",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.touchingOutsideTheCandidateAndTabStillDismissesIt",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.unfinishedCompositionDoesNotRewriteOrOfferAStaleCandidate",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionInteractionTest.waitingRequestCannotStealInputFocusOrReopenAfterWindowFocusLoss",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.acceptingChosenCandidateDoesNotSilentlyUseFirstItem",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.acceptingInMiddleOfWordReplacesWholeTokenWithUtf16Offsets",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.allThreeArrowChoicesRemainConfigurableInCurrentSettings",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.candidatesAreNeverAppliedToChangedDocumentOrSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.completionPreferencesMigrateAndRoundTripWithoutChangingDefaults",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.keyboardDefaultsNavigateVisibleCandidatesAndKeepNewlineNative",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.languagesRemainSeparateAndLargeFilesKeepOnlyBuiltinFallback",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.legacyExplicitModeMigratesButOffAndOtherSettingsArePreserved",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.lexicalResultsDoNotPretendToResolveMembersOrLiteralContents",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.CompletionTest.placementFitsVisibleWindowAndFlipsAboveKeyboard",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ConfiguredEditingTest.configurableIndentationAndReverseSelectionsPreserveOtherLines",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ConfiguredEditingTest.keepingPanelWithImeIsAnExplicitChoiceAndDoesNotHideStdin",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ConfiguredEditingTest.newlineUsesConfiguredUnitAndRespectsIndependentSwitches",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.cyclicProviderTreeIsRejectedBeforeCreatingAnyChild",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.editsWriteToRealProviderAndNestedCrudKeepsOpaqueIds",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.externalChangesAndRestoredDraftBaseCannotBeOverwritten",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.matchingRecoveryCheckpointUsesCurrentProviderVersion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.partialProviderWritePreservesOriginalAndRevocationDoesNotWrite",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.pythonModuleReadFailureAbortsInsteadOfRunningAnEmptyPlaceholder",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.recoveryDoesNotAdoptAnExternalProvidersVersionForDifferentText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.runSnapshotContainsActualDataAndBinaryResourcesNotEditorPlaceholders",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DocumentTreeTest.traversalNamesCollisionsAndRecursiveMovesAreRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DraftRecoveryTest.alreadySavedCheckpointDoesNotCauseFalseConflictOnNextEdit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DraftRecoveryTest.noCheckpointStartsFromCurrentFileWithoutDirtyState",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DraftRecoveryTest.realExternalConflictKeepsDraftAndDoesNotOverwriteTheFile",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DraftRecoveryTest.unwrittenCheckpointStillSavesAgainstItsOriginalVersion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DraftStoreTest.diskRecoveryPreservesSourceIdentityUnicodeAndConflictBase",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DraftStoreTest.oversizedDraftDoesNotReplaceOriginal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.DraftStoreTest.staleSaveDoesNotDeleteNewerDraftAndReplaceFailureKeepsOldDraft",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.aResultMustMatchTheActualDocumentAndRevision",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.bracketsIgnoreStringsAndCommentsAndSelectedText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.cancelledQueuedRequestsDoNotRunTheLexer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.caretAndThemeReuseTokensButTextAndLanguageDoNot",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.caretSelectionLanguageThemeAndCompositionInvalidateDecorations",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.changedDocumentIsRejectedEvenWithoutANewRequest",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.closeDropsQueuedCallbacksAndPreventsNewWork",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.composingAndMissingDocumentsDoNotStartWorkAndCancelOlderResults",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.compositionEndIsDetectedWithoutChangingAnyTextOrCaret",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.denseShortCodeBoundsUiSpansButStillFindsBrackets",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.largeDocumentsFallBackWithoutCallingTheLexer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.lateResultDuringCompositionIsRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.lexicalAnalysisActuallyExecutesAwayFromTheRequestThread",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.longEscapedAndUnterminatedStringsKeepTheirBoundaries",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.longQuotedLiteralDoesNotOverflowTheLexerStack",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.pauseCancellationInvalidatesAnAlreadyComputedResult",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.queuedUiResultsCannotApplyAfterAYoungerRequest",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.recoverableAnalyzerFailureUsesPlainTextWithoutChangingTheBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.switchingToASameContentDocumentStillInvalidatesTheCache",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorAnalysisTest.tokensAndBracketPositionsUseUtf16Offsets",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.animatedDamageIncludesThePreviouslyDrawnCaretPixels",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.composingInputIsNativeAndNeverInterpolatesTheInsertionPoint",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.detachingTheActualEditorStopsItsBlinkWithoutCallingTheControllerManually",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.disablingAllMotionSnapsNavigationAndKeepsTheCaretVisible",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.disablingBlinkLeavesAnOpaqueCaretAndNoRepeatingAnimator",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.logicalCaretAndPopupAnchorUseTheSameActualLayoutCoordinates",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.losingFocusOrDetachingStopsAllAnimationCallbacks",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.movementCanBeDisabledIndependentlyOfSoftBlink",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.multilineEmojiAndScrolledCoordinatesStayAtNativeUtf16Offsets",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.nativeCursorAndInputConnectionStayEnabled",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.navigationChangesRealSelectionBeforeTheVisualMotionFinishes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.selectedTextHidesTheCustomCaretWithoutChangingSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.smoothBlinkHasIntermediateOpacityAndNeverChangesTextOrFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorCaretMotionTest.typingAnimatesOnlyTheVisibleCaretAndDoesNotDelayNativeText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.cppTypedParametersAndOrdinaryVariablesAreDistinct",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.emojiBeforeBracketsDoesNotShiftUtf16Ranges",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.malformedBracketsHaveBoundedClearlyLabelledLocalDiagnostics",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.mixedBracketsUseOneDepthStackWithMatchingPairColours",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.nestedTemplatesColourAnglesButComparisonsAndShiftsDoNot",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.rawCppLiteralsAndContinuedMacrosDoNotInventErrors",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.runtimeErrorsRequireExactSourceProofAndActualCodeErrorKind",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.spanAndTextBudgetsAlsoBoundNewDecorations",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.stringsCommentsAndPythonTripleQuotesAreOpaque",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.syntaxChecksCacheAcrossCaretAndThemeButNeverAcrossBuffersOrLanguages",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDecorationTest.variableParameterMemberConstantAndCustomTypeHintsDiffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.aTrailingNewlineHasARealEmptyFinalLine",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.compositionUnavailableAndChangedSelectionDoNotMoveTheCaret",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.editingAfterRunningRejectsTheOldLocationEvenAtTheSameLineCount",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.matchingRunSourceFindsTheActualErrorLine",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.missingImportedFileProofIsClearlyLineOnly",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.neighboringRootTraversalAndUnmappedFilesAreRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.outOfRangeErrorsNeverFallBackToTheLastLine",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.partialProofNeverClaimsAVerifiedRunVersion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.realInternalPathsResolveThroughTheWorkspaceBoundary",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.replacingAFileWithTheSameContentStillRejectsTheOldFileIdentity",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.safExecutionSnapshotPathsMapBackToNestedWorkspaceFiles",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDiagnosticsTest.unicodeAndCrlfDiagnosticOffsetsRemainUtf16",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.aCommitMayBeginTheNextStageWithoutLosingItsRequest",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.aDocumentAppearingOrDisappearingDuringTheReadIsRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.aFailedRealReadDoesNotCloseTheActiveTabOrInstallAnotherBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.aNewRequestSupersedesAnEarlierRequestForIdenticalContent",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.aRealBackgroundReadCannotReplaceCodeTypedWhileItWasPending",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.aSuccessfulHandoffCommitsExactlyOnce",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.anEditThenUndoStillInvalidatesTheEarlierRead",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.cancelAndCloseNeverRunDestructiveCallbacks",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.changedContentAtTheSameRevisionIsStillRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.compositionAtTheBeginningOrEndPreventsReplacement",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.missingDocumentStillChecksTheActivityEditEpoch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.movedCaretAndLatestStdinAreCapturedAtCommitInsteadOfDiscarded",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.rejectedRequestsCannotReplayAfterTheBufferReturnsToItsOldContent",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.requestsCannotBeCommittedByAnotherOwner",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.sameWorkspaceReloadKeepsInputAndIdentityUpdatedDuringPreparation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.startupAndOtherWorkspacesUseTheirPreparedState",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.startupWithNoLoadedDocumentCanCommitOnce",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.switchingFileOrWorkspaceInvalidatesTheSource",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.themeOrLanguagePreferenceDoesNotPretendTheCodeChanged",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorDocumentsTest.throwingCommitIsConsumedAndDoesNotRunAgain",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeaturesTest.completionHandlesCaretAndDocumentIdentifiers",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeaturesTest.indentationAtStartPartialIndentAndSelectionEndingOnNextLine",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeaturesTest.newlinePairsAndClosingBracketSkipping",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeaturesTest.pythonFloorDivisionIsNotAComment",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeaturesTest.stringsCommentsAndMultilineLiteralsAreNotCode",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeedbackUiTest.diagnosticPopupKeepsEditorFocusAndCopiesTheActualMessage",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeedbackUiTest.findAsYouTypeShowsCountAndReplaceNeedsOnlyOneClick",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeedbackUiTest.phoneDarkDecorationsAndSearchPreview",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeedbackUiTest.phoneLightDecorationsAndSearchPreview",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeedbackUiTest.queryTypingOptionsAndClosingNeverModifySource",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeedbackUiTest.queuedSearchResultsCannotSelectOrEditAnotherDocument",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeedbackUiTest.tabletDarkDecorationsAndSearchPreview",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFeedbackUiTest.tabletLightDecorationsAndSearchPreview",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFontKeysTest.mainAndNumpadKeysMapToSingleFontSteps",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorFontKeysTest.normalTypingAltGrAndSoftwareKeysDoNotBecomeZoom",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.aHiddenCaptureCanBeRestoredAfterTheEditorBecomesVisible",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.aLateRestoreCannotAffectAnotherFileOrWorkspace",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.aLaterCursorRevealWinsOverAnEarlierSessionRestore",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.aRejectedLayoutCallbackCannotReplayAfterTheViewBecomesVisible",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.aRepeatedLayoutCallbackCommitsAtMostOnce",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.cancellationAndClosingInvalidateQueuedCallbacks",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.compositionHiddenEditorAndDisposalDoNotReceiveDelayedScrolls",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.corruptNegativeCoordinatesAndStaleRequestsAreRejectedBeforeScheduling",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.editsAndSelectionChangesInvalidateDelayedScrolls",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.invalidLaterRequestDoesNotCancelAnAlreadyAcceptedRestore",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.literalFindProducesAValidSelectionButCannotOverrideANewCaret",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.nativeLayoutScrollClampingDoesNotInvalidateTheSavedViewport",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.reentrantRevealSurvivesAndAnOldCallbackCannotConsumeIt",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.restorationActuallyWaitsUntilTheScheduledLayoutCallback",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.savedSelectionClampsAndExpandsSurrogatesWithoutReversingDirection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.savedSelectionRespectsCompleteCrlf",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.selectionChecksDocumentRevisionTextAndOriginalSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.selectionDoesNotInterruptCompositionOrAnUnavailableDocument",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.selectionRejectsSplitEmojiCrlfAndOutOfBoundsWithoutClamping",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorNavigationTest.userInteractionInvalidatesEvenWhenTheCaretReturnsToTheSamePosition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSearchTest.backgroundResultsAreRejectedAfterSwitchEditOrExternalReload",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSearchTest.caseWholeWordsAndUnicodeOffsetsRemainAccurate",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSearchTest.lineOffsetsPreserveCrLfAndTheFinalEmptyLine",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSearchTest.literalSearchAndBidirectionalWrapDoNotInterpretRegex",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSearchTest.oversizedReplacementIsRejectedBeforeAllocatingOrChangingOriginal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSearchTest.replacementsRequireARealSelectionAndPreserveLiteralDollarAndSlashes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSessionsTest.corruptRecordsAreIgnoredAndReverseSelectionIsPreserved",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSessionsTest.deletionDoesNotResurrectInputAndConflictDoesNotChangeAnything",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSessionsTest.directoryRenameMovesStateWithoutChangingIdentityOrSibling",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSessionsTest.keyboardPolicyKeepsStdinReachableAndRestoresPanel",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSessionsTest.stdinIsSeparateForFilesAndWorkspacesAndSurvivesRestore",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.aKeyboardBoundaryMakesThePopupUseSpaceAboveTheCaret",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.aPartiallyClippedCaretLineDoesNotProduceAnAnchor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.anchorsMatchDocumentRevisionAndUtf16OffsetIndependentlyOfScroll",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.existingCompletionGeometryUsesTheSharedImplementation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.extremeScreenBoundsUseLongArithmetic",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.insufficientSpaceDoesNotCoverTheCaretOrKeyboard",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.invalidIdentityOffsetsAndEmptyVisibleAreasAreRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.invalidPopupBudgetsNeverProduceNegativeOrOverlappingRectangles",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.narrowPanesConstrainWidthAndHorizontalPosition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.negativeScreenCoordinatesRemainValidInAnOffsetWindow",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.nestedPaneClippingCannotExpandToTheWholeWindow",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.nonFiniteAndOverflowingLayoutCoordinatesAreRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.overflowingRootTranslationsCannotWrapIntoTheVisibleWindow",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.rightEdgeCaretClampsThePopupBackIntoThePane",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.rootRelativeClippingTranslatesToScreenBeforeWindowAndTextClipping",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.sampledPlacementsStayInsideThePaneAndClearTheEntireCaretLine",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.subpixelLayoutUsesConsistentPixelRounding",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorSurfaceTest.textPaddingAndTheSoraGutterAreOutsideTheUsableAnchorArea",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTabNavigationIntegrationTest.openingAndClosingLastTabKeepsCurrentFileVisible",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTabNavigationIntegrationTest.oversizedFilenameKeepsItsCloseTargetReachable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTabNavigationIntegrationTest.resizingExplorerRevealsCurrentTabWithoutRecreatingEditor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTabNavigationIntegrationTest.tabletLightLargeResizeRetainsCurrentDocumentAndRevealsClose",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTabNavigationIntegrationTest.typingAndSavingDoNotStealManualTabScrollButExplicitOpenReveals",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTabStabilityIntegrationTest.explicitIndentKeepsTabAndCloseCoordinates",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTabStabilityIntegrationTest.phoneTypingAndSavingKeepTabCoordinates",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTabStabilityIntegrationTest.tabletLightLargeLongNameKeepsCloseTargetAndFullPath",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.aCaretCannotSplitACrlfCreatedAtAnEditSeam",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.aSameContentNewRevisionAndAnExternalReloadBothInvalidateAnEdit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.completionOfAnAlreadyCompleteTokenOnlyMovesTheCaret",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.compositionAndMissingSelectionCannotBeOverwritten",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.crlfEditsAndSelectionsRespectBothCharacters",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.documentSwitchAndDisposalNeverDispatchAnEdit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.emojiCanBeReplacedWholeButCannotBeSplit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.exactLengthLimitAppliesButOverflowDoesNotReachTheNativeWidget",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.historyRestorationDoesNotExpandPairsOrIndentationAgain",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.historyUsesTheSameDocumentVersionSelectionAndCompositionGate",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.identicalSearchReplacementIsAcknowledgedWithoutChangingHistoryOrDirtyState",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.indentationNearTheWorkspaceLimitNeverDispatchesAnEdit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.malformedRangesAndSelectionsAreRejectedWithoutClamping",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.matchingTextWithANewSelectionDoesNotReplaceTheBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.multilineIndentAndUnindentPreserveCrlfAndTheExcludedLastLine",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.nativeTypingCorrectionsUseThePostTypingSnapshot",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.newSelectionCannotLandInsideAnInsertedOrExistingEmoji",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.noOpUnindentDoesNotMutateTextOrCreateAnUndoEntry",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.realLexicalCompletionCommitsExactlyOnce",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.realSnippetExpansionPassesValidationAndStaleExpansionNeverDispatches",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.replaceAllCanSurviveACaretMoveButNotAnotherEdit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.replaceSelectionRemainsTiedToTheSelectedMatch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.EditorTransactionsTest.unpairedSurrogatesCannotEnterThroughProgrammaticEdits",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FormSurfaceIntegrationTest.createAndRenameHaveSeparatePathAndInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FormSurfaceIntegrationTest.deleteShowsRealPathAndCancelDoesNotChangeFile",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FormSurfaceIntegrationTest.projectSearchRendersActualUnsavedResultsInTwoLevels",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FormSurfaceIntegrationTest.shortWindowMovePickerRetainsCancelAndDestination",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.configurationCheckpointKeepsTheExpandedTreeAndItsViewport",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.dialogWindowAnimationHonorsAppDisable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.explorerRestoreRejectsNegativeScrollAndBoundsItsConfigurationPayload",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.followingSystemThemeCapturesABoundedConfigurationTransitionWithoutKeepingAView",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.highResolutionTabletSnapshotsHaveABoundedPixelBudget",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.largeTreesSkipNativeReflowInsteadOfSchedulingHundredsOfAnimations",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.nativeContextMenuStillUsesTheRealMenuAndItsCommandCallback",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.panelBoundsTransitionDoesNotRelayoutItsContentOnEveryAnimationFrame",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.panelCloseUsesANonInteractiveOverlayAndHidesTheRealPaneImmediately",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.phoneAndNarrowTabletDrawersUseALeftTransitionAndRespectAppOff",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.reopeningCancelsTheOldClosingSnapshot",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.repeatedSnapshotsAndDetachReleaseThePreviousBitmap",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.settingsCancelDiscardsCursorChangesAndApplyPersistsThem",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.tabSelectionIndicatorMovesWithoutMovingTabsOrLosingTheirFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeCrossfadeRetainsFocusSelectionAndHasNoExtraViewOrTouchTarget",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeHandoverTransfersOnlyTheBitmapAndDoesNotKeepTheOldActivity",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeSnapshotIsDiscardedWhenTabletWindowChangesSize",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.FullWorkbenchMotionTest.treeCollapseCompletesAndCancellationClearsPendingPlatformTransitions",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.backPrioritizesTransientUiBeforeExit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.clearingOutputDoesNotEraseResultAndSurvivesRenderingSameRun",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.contextMenusAreShortAndDataActionsAreDistinct",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.dirtyStatusKeepsFailuresButDoesNotClaimTheCurrentBufferIsSaved",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.globalMenuStaysShortAndRecoversEveryHiddenNavigationControl",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.logicalCaretDoesNotDependOnWrappingOrInvalidNativeSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.pixelGeometryUsesDensityAndActuallyAvailableHeight",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.resizeUsesGestureStartAndRejectsInvalidInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.InteractionTest.shortWideWindowsKeepEditorAndOutputInASideSplit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.actualHardwareArrowChangesLogicalSelectionBeforeEightyMillisecondTransition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.actualSettingsApplySeparatelyControlsMovementAndBlinkWithoutReplacingTheBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.completionShowAlignsTheCaretEvenBeforeAnExtendedTweenCanFinish",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.mainLifecyclePauseReleasesCaretCallbacksAndResumeRetainsSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.phoneCompositionAndBackgroundFocusKeepTheCursorAndTerminalOwnershipAccurate",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.phoneMainImeCommitsImmediatelyAndUsesTheRequestedTypingAndBackspaceDuration",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.powerSavingBroadcastStopsAnimationsAndKeepsTheDocument",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.systemReducedAnimationSettingCancelsActualMainEditorAnimations",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainCaretMotionIntegrationTest.tabletLightWindowResizeKeepsPanelsSessionsAndCancelsOnlyTheCaretTransition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.actualMovePickerMovesOpenDirectoryAndKeepsItsBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.actualSettingsApplyKeepsTabletBufferHistoryAndTerminalSession",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.cancellingSettingsDiscardsOnlySettingsAndRetainsDirtyEditorAndPanel",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.deleteCancelNeverSavesOrChangesTheDirtyBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.deletingAnotherFilePreservesActiveContentSelectionAndHistory",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.deletingTheLastFileCreatesARealFallbackAndInvalidatesTheOldConnection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.dirtyActiveRenameKeepsStableIdentitySelectionUndoAndContinuedSaving",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.externalSaveConflictPreventsRenameAndPreservesRecoverableCode",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.failedThemeSaveReenablesTheFormAndKeepsItsUnappliedDraft",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.legacySidePreferenceSurvivesUnrelatedSettingsWithoutOfferingInactiveSwitch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.renameCollisionKeepsDialogContentsAndCanBeRetried",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.renamedDirectoryRebasesAllTabsInputsSelectionAndExplorerState",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.rotatingMainActivityRetainsUnappliedSettingsSearchAndDraft",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainFileSettingsIntegrationTest.settingsFormCannotChangeTheSubmittedDraftDuringActualAsyncSave",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainRunIntegrationTest.cppCtrlEnterRequiresThirdPartyConsentAndCancelNeverStartsTheNetwork",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainRunIntegrationTest.editDuringPendingSaveRunsOnlyTheNewestSavedRevision",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainRunIntegrationTest.emptyCodeIsRejectedBeforeAnyRunSessionIsStarted",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainRunIntegrationTest.f5SavesActualSoraBytesAndReportsMissingHostBridgeTruthfully",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainRunIntegrationTest.saveConflictBlocksF5WithoutStartingOrDiscardingRecoverableCode",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.actualPickerGrantLoadsOpaqueUrisAndSaveVerifiesRealProviderBytes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.changedRuntimeSourceDoesNotMoveCaretOrClaimVerifiedLocation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.failedReadOfAnotherProviderFileDoesNotReplaceActiveTabOrHistory",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.invalidUtf8WorkspaceCannotReplaceInternalEditor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.mainRuntimeDiagnosticLocatesMatchingSourceByUtf16",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.matchingCheckpointIsCleanAndDoesNotKeepStaleConflictHash",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.pickerRejectsReadOnlyGrantBeforeReplacingCurrentWorkspace",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.providerWriteDeniedDoesNotTruncateOriginalOrClearDraft",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.readbackMismatchBlocksNavigationRetainsActualOriginalAndRecoveryDraft",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.recreationRestoresDirtyProviderDraftAndRejectsNewExternalVersionOnSave",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.revokedPermissionPreservesContentCheckpointAndBlocksWorkspaceSwitchUntilRetry",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.revokedWorkspaceCanSwitchWithDurableDraftAndRestoreAfterReauthorization",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.runtimeDiagnosticInAnotherFileUsesExistingSwitchAndSaveProtection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSafRecoveryIntegrationTest.runtimeLocationRejectsForeignWorkspaceAndEscapingFile",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.LargeNarrowEditMenuKeepsFullShortcutsAndRealNavigation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.LargeSignatureKeepsReadableNoticeReferenceAndControls",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.actualBracketDiagnosticOpensReadOnlyHover",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.clearingDiagnosticsDismissesHoverWithoutEditing",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.compactLargeDiagnosticKeepsHoverWhenSpaceFits",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.dangerActionIsSeparatedOnBothSidesAndKeepsStableCommandIdentity",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.diagnosticHoverScrollsCompleteMessageAndCopiesWithoutEditing",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.emptyTerminalCloseMenuClosesPanelInsteadOfCreatingAnotherSession",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.fontGeometryChangeDismissesHoverWithoutEditing",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.gotoLineKeepsInvalidInputThenMovesToTheActualUtf16Offset",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.identicalDiagnosticRefreshKeepsHoverButNewMessageCloses",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.localizedCommandTitlesKeepStopAndNavigationIconsAndDangerState",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.menuDisabledRowsDoNotDispatchAndEscapeKeepsTheDocument",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.newFileValidationRetainsTheInputAndCurrentDocument",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.phoneLargeReplaceControlsStayReadableAndAllReplacementIsUndoable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.projectSearchIncludesUnsavedBufferThroughTheRealWorkspaceWorker",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.tabletLargeLightCompletionKeepsDetailsAndKeyboardAcceptance",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MainSurfaceIntegrationTest.unchangedGlobalLayoutKeepsHoverButCaretChangeDismisses",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MotionEnvironmentTest.cursorSettingsAreIndependentAndPersistWithoutChangingOtherPreferences",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MotionEnvironmentTest.eachSystemAnimationSwitchCanDisableAllAppMotion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MotionEnvironmentTest.observerStartsOnceAndReceivesActualSettingsChanges",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MotionEnvironmentTest.powerSavingSuppressesMotionAndBroadcastNotifiesTheOwner",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.MotionEnvironmentTest.stoppingUnregistersAndCanBeRepeated",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.NavigationSurfaceIntegrationTest.phoneFileDrawerKeepsReadableTreeAndFolderAction",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.NavigationSurfaceIntegrationTest.terminalMenuGroupsKeepSessionAndCopyAction",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.compactTerminalKeepsShortWindowsVisibleAtDifferentFontSizes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.corruptOrFuturePreferencesMigrateWithoutLosingOtherAxis",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.dockingUsesMeasuredWorkspaceWidthAndKeepsIndependentPreferences",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.draggingMovesInTheExpectedDirectionAndCannotEraseTheEditor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.hiddenEditorCaptureKeepsItsViewportWhileStdinSelectionStaysLive",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.hiddenMaximizedAndUnmeasuredPanelsDoNotAcceptResize",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.layoutInvariantsHoldAcrossWindowsImeAndRememberedSizes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.temporaryWindowClampsDoNotOverwriteSizeOrMaximizePreferences",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.terminalMinimumProtectsRowsWithImeAndRestoresSavedFraction",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.tinyInputWindowsKeepStdinReachableWithoutChangingRememberedMode",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.viewportRestoreNeverMovesAnotherFileOrNewlyChangedSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.visibilityAndImeRulesRespectExplicitMaximizeAndStdin",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PanelLayoutTest.visibleTerminalUsesFullPaneWhenLargeFontCannotFitSplit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PopupMotionTest.actualCompletionUpdatesDoNotReplayEntranceOrTakeEditorFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PopupMotionTest.actualSignatureUpdatesDoNotReplayEntranceAndDismissCancelsIt",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PopupMotionTest.anotherDocumentStillGetsItsOwnEntranceAfterRapidDismiss",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PopupMotionTest.completionDismissCanReopenImmediatelyWithoutAStaleExitHidingIt",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PopupMotionTest.disabledMotionHasNoNativeExitTransition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PopupMotionTest.inputReferenceDescribesTheRealInteractiveTerminal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.PopupMotionTest.rapidTypingReopenDoesNotFadeTheSameDocumentAgain",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ProjectSearchTest.cancellationBeforeQueuedWorkIsNotReset",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ProjectSearchTest.caseSensitivityAndFileFilteringAreExplicit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ProjectSearchTest.failedReadIsCountedWhileOtherResultsSurvive",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ProjectSearchTest.nestedFilesAndCrLfHaveRealSourcePositions",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ProjectSearchTest.resultLimitStopsInsideAFileAndZeroDoesNotSearch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ProjectSearchTest.unsavedCurrentBufferIsSearchedWithoutWritingToDisk",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.IME affects geometry but not category",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.bottom first panel strategy",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.explorer resize within valid range",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.explorer respects user width within bounds",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.insufficient height hides sidebar",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.medium tall window displays primary sidebar",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.narrow width shows overlay explorer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.panel prefers bottom by default",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.status bar handles empty fields",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.status bar layout formats correctly",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.wide width provides full features",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ResponsiveLayoutTest.workspace layout policy explorer calculations",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.RunControlTest.cancelledRequestCannotAttachOrStartAnotherNetworkOperation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.RunControlTest.cancellingDisconnectsOnlyItsOwnActiveConnection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.RunControlTest.duplicateRunsAndLateResultsAfterStopAreRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.RunControlTest.httpFailuresAreServiceErrorsAndOfflineIsNetworkError",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SettingsSurfaceVisualTest.narrowLargeRunDetailsWrapAndRemainReachable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SettingsSurfaceVisualTest.phoneCategoryAndEditorPage",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SettingsSurfaceVisualTest.phoneLargeSearchKeepsEveryControlReadable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SettingsSurfaceVisualTest.tabletLightHasNavigationAndContentLayers",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedAssistContractTest.actualTemplatesKeepCustomIndentationCrlfAndUnicodeAcrossTheSharedBoundary",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedAssistContractTest.appOptionsAndStandaloneOptionsProduceTheSameCandidatesAndEdits",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedAssistContractTest.appPersistenceRemainsVersionNineAndKeepsNonEditorPreferences",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedAssistContractTest.defaultStandalonePolicyStillNavigatesVisibleCandidatesAndPreservesEnter",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedTextEditsTest.existingTextIsNotNormalizedOrRejectedByAnUnrelatedEdit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedTextEditsTest.lengthBudgetIsCheckedBeforeDispatch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedTextEditsTest.replacementValidityAndSelectionSeamsUseSharedRules",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedTextEditsTest.sameTextAndSelectionKeepTheirOriginalResultCategories",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedTextEditsTest.sharedRestorationMatchesProductionForBothSelectionDirections",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SharedTextEditsTest.validationDoesNotRequireToStringOrSubSequence",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.activeStdinGetsCompactInputWithoutConsumingHeaderAndOutputTwice",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.allLegacyActionsAndNewCommandsHaveRealTouchSurfaces",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.busyWorkspaceBlocksCommandsButCannotBlockStoppingARun",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.compositionBlocksEditingCommandsAndNativeHistory",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.editorOnlyCommandsCannotStealStdinFocusOrModifySource",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.everyNarrowToolbarHasAReachableMenuWithinBudget",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.normalPhoneHasTouchSizedExplorerRunMenuAndElasticSingleLineTitleBudget",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.panelToolbarNeverOverflowsAndKeepsHiddenActionsInItsMenu",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.presetIsCollapsedByDefaultAndEditorFocusDoesNotReopenIt",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.resizeDegradesControlsToMenuWithoutDependingOnOrientationOrFontWidth",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.savedStdinFocusRevealsItsInputOnlyWhenPanelIsOpen",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.savingOrRunningKeepsDestructiveWorkspaceSwitchesOutOfMenu",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.shellTextColorsMeetNormalTextContrastInBothThemes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.snippetHintOccupiesSpaceOnlyForAnActiveSessionWithRoom",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.ShellUiTest.unloadedBufferCannotRunExportOrMutateFiles",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.activeRangesCoverTheDisplayedParameterOnly",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.bracketsStringsAndCommentsDoNotAddOuterArguments",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.cancelledRequestsStopAndManyCompletedCallsDoNotLeakOldContext",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.caretInsideLiteralOrCommentDeclinesIncludingUnclosedEnds",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.escapeDoesNotStealSoftKeyboardOrCompositionOrModifiedEvents",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.incompleteCallsWorkButSelectionsLimitsAndMismatchesDecline",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.innerKnownCallWinsAndClosingItRestoresOuterCall",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.keywordsAndMarkersNeverBecomeFakePositionalParameters",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.memberCallsAndDeclarationsDoNotClaimBuiltinSemantics",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.positionalAndVariadicParametersAreDifferent",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.referenceFormsAreNotResolvedAsTypesOrOverloads",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.referenceKeepsLanguagesSourcesAndSimplifiedFormsExplicit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.resultsAreBoundToTheExactBufferRevisionAndSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.signatureSettingUpgradesDefaultsAndRoundTripsIndependently",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.unsupportedGrammarDeclinesInsteadOfCountingTheWrongComma",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SignatureHelpTest.utf16CrLfAndMultipleLinesKeepExactOpenOffset",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.automaticPairEditUsesTheSamePlaceholderRangeInsteadOfBreakingIt",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.catalogueAndCompletionKeepTemplatesSeparateFromLanguageNames",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.completionInsertionChecksIdentityRevisionSelectionAndCapacityForRealBody",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.compositionStyleReplacementsCanGrowShrinkAndDeleteAField",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.editsOutsideActiveStopOrAnotherBufferEndNavigationOnly",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.expansionUsesIndentPreferencesAndPreservesCrLfUtf16Coordinates",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.fieldReplacementMovesLaterStopsAndFinalOffsetByUtf16Delta",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.generatedDefaultsExposeActualModelOutputForHostCompilerSmoke",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.navigationHandlesEmptyStopsReverseAndFinalCaretWithoutEditing",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.oneRangeReplacementPreservesUnrelatedSourceAndRejectsAmbiguousContexts",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.ordinaryCompletionInsideAFieldKeepsTheNextTabStopAndClosingText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SnippetTest.tabAndEscapeNeverInterceptCompositionSoftKeyboardOrHandledCompletion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.composingReplacementAtLimitKeepsTheActualPreeditAndThenCommits",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.compositionRangeOutsideTheSelectionIsReadFromTheRealConnection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.decorationsKeepSelectionDirtyStateRevisionAndActualUndoHistory",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.delayedViewportAndBackgroundSelectionNeverStealTerminalOrInputFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.emojiPasteIsRejectedAsAWholeAndNativeClipboardAndAccessibilityAreBounded",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.exactlyAtLimitRejectsFurtherTypingButAllowsSelectionReplacementAndDeletion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.externalConflictKeepsDirtyTextAndPreventsTabSwitch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.generationAwareInputConnectionCannotEditTheNextDocumentOrEndItsBatch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.genuineDraftIoFailureStillReportsThatTheNewCheckpointWasNotWritten",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.invalidOverlayIsRejectedBeforeChangingDiagnosticsOrBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.literalReplaceUsesTheSameMainBufferAndOneUndoTransaction",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.mixedBracketsAndLexicalRolesAreDrawnInTheMainEditor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.modernImeOverloadsAndReplaceTextRespectTheSameLimit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.nativeIndentDuplicateAndInsertionDoNotPartiallyChangeAnOverBudgetOperation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.nativeOversizedPasteDoesNotOverwriteTheFileOrClaimAnUnwrittenRecoveryDraft",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.normalMainEntryLoadsTheExistingWorkspaceIntoTheMatureEditor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.obsoleteDecorationsCannotSurviveTypingTabSwitchOrComposition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.olderAndroidComposingRangeUsesTheSamePublicContract",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.oversizedHighlightFallbackClearsRolesButKeepsStatusAndAllowsEditing",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.phoneDarkPythonTokensKeepTheExistingLoadedTheme",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.phoneLightPythonTokensUseRestrainedLoadedTheme",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.physicalSaveWritesActualProjectBytesAndClearsOnlyMatchingDraft",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.realDiagnosticRegionsAndLineNavigationUseTheCurrentDocumentVersion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.realMouseCtrlDragCannotCopySelectionPastTheLimitButStillCopiesWhenItFits",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.staleEditAndChineseCompositionCannotRewriteTheCurrentBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.switchingTabsSavesOldBufferAndRestoresSelectionWithoutCrossFileUndo",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.syntaxThemeAndFontApplyKeepTheSameTabletBufferAndTerminal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.syntaxThemeRoundTripKeepsBufferUndoAndSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.tabletAutomaticExtrasAtTheBoundaryKeepRawTextAndGlobalSettings",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.tabletLightCppTokensUseRestrainedLoadedTheme",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.tabletUsesTheSameEditorWithStartupTerminalAndExistingSession",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.SoraWorkbenchIntegrationTest.textMateReanalysisAndStyleRefreshKeepTheLexicalLayer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.StartupNativeGraphicsTest.allIconsInflateAndDrawWithAndroidNativePathParser",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.StartupNativeGraphicsTest.phoneDarkCompletesActualStartup",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.StartupNativeGraphicsTest.phoneLightCompletesActualStartup",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.StartupNativeGraphicsTest.runIconInflatesAndDrawsWithAndroidNativePathParser",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.StartupNativeGraphicsTest.tabletDarkCompletesActualStartup",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.StartupNativeGraphicsTest.tabletLightCompletesActualStartup",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.StartupNativeGraphicsTest.terminalIconInflatesAndDrawsWithAndroidNativePathParser",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TabletAnimationLayoutTest.densityAndImeResizeDoNotDependOnPortraitOrLandscape",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TabletAnimationLayoutTest.fixedColumnsUseTallMediumWindowsAndRailAlwaysRemains",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TabletAnimationLayoutTest.launchBoundariesUseNet600By480WindowAndTabletStartsAt35Percent",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TabletAnimationLayoutTest.rotationAndSplitScreenDoNotOverwriteTheCurrentPanelChoiceOrFraction",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TabletAnimationLayoutTest.zeroSizeAndImeDoNotConsumeTheStartupDecision",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TaskTranscriptTest.actualResultKeepsBothStreamsAndExitInformation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TaskTranscriptTest.ansiAndUnicodeOutputArePassedAsDataRatherThanCommands",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TaskTranscriptTest.clearingDisplayDoesNotMutateExecutorResult",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TaskTranscriptTest.taskDoesNotAdvertiseUnimplementedInteractiveInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.closeButtonCancelsSafelyAndThenClosesOnlyTheCurrentSession",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.compactModePreservesTopLevelNavigationAndOverflowWithoutSessionRow",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.largeFontUsesTwoRowsEvenOnWideWindow",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.nativePhoneDarkPreview",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.nativePhoneLightPreview",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.nativeTabletDarkPreview",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.nativeTabletLightPreview",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.phoneKeepsSessionAndCloseActionInASecondWellSizedRow",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalChromeDesignTest.tabletCombinesNavigationAndSessionIntoOneRowAndRestoresOnResize",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalDockIntegrationTest.narrowPhoneKeepsEveryTerminalActionInsidePanel",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalDockIntegrationTest.resizingAndControlToggleKeepSessionBufferAndPreference",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalDockIntegrationTest.tabletLargeLightKeepsEveryTerminalActionReadable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalDockIntegrationTest.veryNarrowDockScrollsToExistingActionsWithoutReplacingSession",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalFocusStateTest.terminalFocusSurvivesSavedSessionAndBoundsWithoutChangingOtherState",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalIdeKeysTest.additionalModifiersDoNotAccidentallyLaunchIdeActions",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalIdeKeysTest.copyStopEofAndTerminalEditingKeysAreNeverStolen",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalIdeKeysTest.ideSaveOpenCreateAndExplorerWorkFromTerminal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPaletteTest.changingThemeKeepsActualEmulatorTranscriptAndCursor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPaletteTest.coloredPromptKeepsZeroWidthDelimitersAndBothIntegrationMarkers",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPaletteTest.everyPaletteHasSixteenAnsiColorsAndFollowingLightUsesLightBackground",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPanelFocusTest.activityMotionPolicyCanChangeBlinkWithoutResettingTerminalFontOrInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPanelFocusTest.animationSwitchKeepsTheActualTerminalRendererAndFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPanelFocusTest.closingPanelIntentionallyReturnsFocusToEditor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPanelFocusTest.cppPrefillFocusIsPreservedDuringViewportRestore",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPanelFocusTest.explicitCodeNavigationCanStillFocusEditorAfterPanelRestore",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPanelFocusTest.maximizeFromEditorStillLeavesHiddenEditorAndRestoreCanFocusIt",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPanelFocusTest.maximizingKeepsActualTerminalFocusAndEditorSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalPanelFocusTest.restoringEditorViewportMustNotStealTerminalInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalRunClockTest.executionBudgetAccumulatesAcrossMultipleInputs",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalRunClockTest.removedPythonModeDoesNotDiscardOtherLegacySettings",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalRunClockTest.replayCannotResetInputDeadline",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalRunClockTest.startupHasIndependentBound",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalRunClockTest.waitingDoesNotSpendExecutionTime",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalStatusPresentationTest.backgroundFailureDoesNotStealTheCodeInputFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalStatusPresentationTest.detailsAreScrollableSelectableAndCopyTheCompleteSavedRecord",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalStatusPresentationTest.embeddedFailureShowsFriendlyActionsAndKeepsTheFullPrivateLog",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalStatusPresentationTest.retryUsesOneExistingRuntimeAndPreparingStatePreventsDuplicateLaunch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalStatusPresentationTest.shortLargeFontCardScrollsRatherThanClippingTheActionTargets",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.changingSessionWhileEditingCodeDoesNotStealEditorFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.choosingExistingSessionTransfersTerminalFocusWithoutFocusingCode",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.choosingUnstartedSessionKeepsInputAwayFromEditorWithoutDelayedFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.completedTaskDoesNotOverrideProblemsSelectionOrReopenPanel",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.cppCloudInputRemainsClearlySeparateFromPythonTerminalInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.firstOutputRefreshDoesNotConsumeTheTabletLaunchDecision",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.historicalOutputSelectionKeepsRealShellAndCannotReplayResults",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.noShellShowsOnlyCreateHintNotAnotherRunConsole",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.pythonNeverDisplaysLegacyPrefillControls",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.repeatedTerminalShortcutRevealsSameSessionAndPaneWithoutTogglingClosed",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.topLevelContainsTerminalAndProblemsWithOneEmbeddedShell",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.TerminalWorkbenchViewTest.visitingProblemsAndReturningKeepsSelectedShellAndView",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.collapsedRootAndSelectedRootRoundTripWithoutForcedExpansion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.commandMenuFitsNarrowActualWindowAndRetainsCommandIds",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.dismissedSettingsNeverReopenThroughConfigurationCheckpoint",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.explorerPresentationStateRejectsTraversalAndBoundsPayload",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.failedSettingsApplyKeepsDraftAndAllowsRetry",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.fileTypesUseDistinctLocalIconsAndRestrainedColors",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.floatingImeDoesNotCollapsePanelButDockedImeCan",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.oldSettingsGetFollowingTerminalThemeAndNewThemePersists",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.settingsDraftCancellationNeverWritesPreferences",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.settingsDraftSurvivesSearchAndRecreationWithoutWritingPreferences",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.settingsSearchFindsHiddenCategoryAndApplySubmitsDraftOnly",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.settingsSplitUsesActualWidthAndHeightBoundary",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.tabletSettingsKeepsSevenCategoriesAndShowsOnlySelectedPage",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.terminalPaletteMenuExposesAllFiveThemesWithOneSelected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.UiRedesignTest.terminalToolbarEntryRemainsAvailableWithoutCreatingSessionOrRequestingIme",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WandboxEngineTest.compileErrorHasLine",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WandboxEngineTest.malformedServiceResponseIsRejected",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WandboxEngineTest.runtimeExitAndSignalDifferFromCompilation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WandboxEngineTest.successMayWriteToStderr",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchFieldStyleTest.focusedOutlineAndLargeFontTargetsWorkInBothThemes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchFieldStyleTest.sharedFieldStyleKeepsNativeImeSelectionAndComposition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.cancellingAPendingCloseSettlesItsVisibility",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.cancellingTheWorkbenchAlsoFinishesNestedChevronRotation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.candidateUpdatesDoNotRestartTheEntrance",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.disabledAndNonFiniteMotionNeverLeaveTranslatedOrInvisibleContent",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.disablingMotionDuringPopupEntranceRestoresOpacityImmediately",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.leavingTheWindowCancelsAndSettlesThePendingDecoration",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.rapidRepeatedOpenCloseEndsAtTheLastRequestedState",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.reopenDuringHideCannotBeHiddenByTheOldEndCallback",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.systemAnimatorDisableSkipsEntranceAndRotation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchMotionTest.transientFadeWithoutHidePreservesVisibilityAndInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchPathStatusIntegrationTest.errorWordInFilenameNeverMakesAnOlderSaveDescribeTheNewBuffer",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchPathStatusIntegrationTest.normalPathKeepsCompactHeightAndFullExplanation",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchPathStatusIntegrationTest.phoneLargePathAndFooterDoNotClipText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchPathStatusIntegrationTest.phoneLargeRealSaveConflictShowsFailureAndRetainsBufferAndDraft",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchPathStatusIntegrationTest.tabletLightLargePathAndFooterDoNotClipText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.mobileMenuHasCategoriesInsteadOfLongCommandList",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phoneLandscapeDark",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phonePortraitDark",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phonePortraitLight",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.sidebarTogglesDoNotRecreateEditorOrCloseFiles",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.tabletLandscapeDark",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.tabletPortraitLight",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.terminalMaximizeRestoreKeepsRailFilesAndEditor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.actualTabRefreshKeepsFocusedNameAcrossDirtyAndActiveChanges",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.actualTreeToggleKeepsFolderRowAndDoesNotLoseExpandedState",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.actualWorkbenchCancellationSettlesNestedRowsAndKeepsEditorFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.addingRowsDoesNotTakeFocusFromAnEditorOutsideTheList",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.chevronCanBeSettledWithoutChangingRowCoordinates",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.deepTreeKeepsRoomForLongNamesAndFullAccessiblePath",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.duplicateKeysAreRejectedBeforeChangingTheVisibleList",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.expandingAndCollapsingKeepTheExistingRowAndItsFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.largeFontTreeRowsGrowAndKeepATouchTargetInBothThemes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.legacyNavigationUsesSelectedFileParentAsCreationTarget",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.listRefreshPreservesTheScrollContainerAndItsPosition",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.projectRootReallyCollapsesAndReopensWithoutChangingActiveDocument",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.removingAnAnimatedRowCancelsItsCallbacks",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.reorderedSurvivorsRetainIdentityAndKeyboardFocus",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.revealAndCreationExpandAllNecessaryAncestors",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.rootCollapseSurvivesCheckpointAndKeepsDescendantExpansion",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.selectingFolderUpdatesCreationTargetAndDoesNotOpenItAsCode",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchViewsTest.tabHasSeparateOpenAndCloseTouchActionsAndSingleLineName",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.configurationRecreationKeepsTheChosenPanelFileAndCaret",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.height479DoesNotTriggerTabletStartup",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.net600By480StartsThePanelWithoutFixedColumns",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.phoneApi28LargeSettingsRetainsBodyAndAnchoredButtons",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.phoneLargeFontLongFilenameAndLastFolderStillCollapseAndReopen",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.shortWideWindowKeepsUsableEditorAndTerminal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.tabletLightLargeFontSettingsAndTerminalStatusAreReadable",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.terminalShortcutOpensAndFocusesWithoutTogglingClosingOrRequestingIme",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.width599LaunchesThePhoneWorkbench",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.width839UsesMediumSidebarAndStartupPanel",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkbenchWindowIntegrationTest.width840UsesFixedColumnsAndStartupPanel",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceStartupIntegrationTest.phoneDarkLoadingBecomesTheRealWorkspace",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceStartupIntegrationTest.phoneLargeFailurePreservesDraftAndOpensActualInternalProject",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceStartupIntegrationTest.tabletLightLoadingBecomesTheRealWorkspace",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceTest.failedReplacementKeepsOldContentAndCleansTemporary",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceTest.invalidUtf8AndBinaryAreRejectedAndBomIsAccepted",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceTest.nestedCreateRenameMoveAndReadWrite",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceTest.oversizedReadAndWritePreserveOriginal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceTest.rejectsBadNamesConflictsAndRecursiveMove",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceTest.rejectsLinksDuringRecursiveDeletion",
+    "status": "skipped"
+  },
+  {
+    "id": "com.codepocket.ide.WorkspaceTest.rejectsTraversalAbsoluteAndSiblingPaths",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiBoundaryTest.clearResetsStyleAndPendingSequence",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiBoundaryTest.excessiveEscapeParametersDoNotRetainUnboundedPendingInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiBoundaryTest.independentStyleResetsPreserveOtherAttributes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiBoundaryTest.splitColorSequenceWaitsWithoutShowingControlBytes",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiBoundaryTest.unsupportedCsiDoesNotConsumeFollowingMessage",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiParserTest.parseBoldText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiParserTest.parseMixedText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiParserTest.parseMultipleStyles",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiParserTest.parseRedText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiParserTest.parseResetCode",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiParserTest.parseSimpleText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.AnsiParserTest.unsupportedCsiPreservesFollowingPrintableText",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.bridge.BridgeCommandTest.installedApkPathAndProtocolAreExplicit",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.bridge.BridgeCommandTest.pathsWithQuotesRemainSingleQuotedData",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.bridge.BridgeCommandTest.rejectsInvalidAddress",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.bridge.BridgeCommandTest.rejectsInvalidToken",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.bridge.BridgeCommandTest.rejectsNewlineInjection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellFailureLogTest.missingRecordIsExplicitRatherThanInventingOldCrashEvidence",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellFailureLogTest.oversizedUnicodeFailureRemainsBounded",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellFailureLogTest.readDoesNotLoadAnOversizedFileEntirely",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellFailureLogTest.savesActualCauseAndOverwritesOlderFailure",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.androidPathDoesNotClaimPythonOrCompilerCommands",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.defaultHomeAndTempArePrivate",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.exportActualRunStartedMarkerForHostShellExecution",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.inheritedArtEnvironmentSurvivesNativeClearenv",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.internalWorkspaceIsActualInitialDirectory",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.noSourceOrUserPathIsInterpolatedAsShellCode",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.rejectsHomePathOccupiedByFile",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.rejectsMissingRequestedDirectory",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.rejectsOutsideInitialDirectory",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.rejectsSiblingWithSamePrefix",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.runtimeAllowlistKeepsPrivatePathsAndDoesNotInheritArbitrarySettings",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.sessionsHaveIndependentStartupFiles",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellLaunchPlanTest.startupFileOverridesSystemPromptAndIsPassedAsEnv",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellRunInputTest.actualStartAndPromptMarkersHandleEditingRedrawBeforeBridgeLaunch",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellRunInputTest.clearedOrReplacedRunCannotReceivePreviousPromptReturn",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellRunInputTest.interactiveInputAndEofReachRealTerminal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellRunInputTest.oldOwnerCannotClearNewRunAndConcurrentLaunchIsRefused",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellRunInputTest.returnedPromptNeedsDispatchedCommandAndKernelForegroundAndIsOnceOnly",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellRunInputTest.startupAndCloudBlockInputButStillAcceptStop",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellSessionRegistryTest.endingOneSessionLeavesOtherRuntimeAlone",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellSessionRegistryTest.recreatingUiUsesTheSameSessionCatalog",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellSessionRegistryTest.reopenAfterFinishDoesNotReuseShutdownExecutor",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellSessionRegistryTest.switchingProjectsPreservesOldCwdAndNewShellGetsCurrentProject",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.actualEmulatorOutputDoesNotSnapBrowsingHistoryToBottom",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.clearDisplayUsesEmulatorNotProgramStdin",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.closingSessionDeletesOnlyItsStartupFile",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.currentFailureIsOneFailedStateAndReadableWithoutUsb",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.failedSessionDeletesStartupFile",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.firstSessionCreatesTerminalViewWithoutCrashing",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.lateFailureFromPreviousSessionCannotCloseReplacement",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.realTerminalExposesTextInputAndKeyboardButton",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.repeatedNotificationsReuseTerminalAndSession",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.reproducesLegacyTypefaceBeforeTextSizeCrash",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.restoringFocusTargetsActualTerminalWithoutShowingKeyboard",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest.switchingPaneKeepsHistoryOffsetWithoutHoldingOldView",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.actualImeCompositionAndEnterReachOnlyTheReadySessionQueue",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.closedConnectionDropsCompositionAndCannotCommitLater",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.disposedPaneRejectsLateImeAndExplicitControlShortcut",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.focusLostBeforeCompositionFinishesDoesNotWriteToTerminal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.hiddenHostCannotStealImeEvenDuringRunning",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.hiddenHostRejectsLateImeTextAndControlKeys",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.newerConnectionInvalidatesPreviousBufferOnSameView",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.refocusingDoesNotReviveOldCompositionConnection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.replacementSessionCannotReceivePreviousInputConnection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.runningAndWaitingTapUsesSameActualTerminal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.startupKeyboardButtonIsNotSilentlyIgnored",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.ShellTerminalTouchTest.startupTapRequestsKeyboardWithoutAllowingProcessInput",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalCatalogTest.endingBackgroundSessionDoesNotChangeActiveTask",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalCatalogTest.endingSelectedSessionChoosesNeighbourWithoutRemovingOthers",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalCatalogTest.invalidRenameLeavesOriginalTitleAndIdentityUntouched",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalCatalogTest.oldMenuIdentityCannotSelectOrRemoveReplacement",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalCatalogTest.sessionIdentitiesAreStableAcrossRenameAndSelection",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalCatalogTest.sessionLimitDoesNotReplaceOrDropExistingEntries",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalCatalogTest.snapshotListDoesNotChangeDuringMenuInteraction",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalControlsClickTest.controlsAndEachShortcutAreSafeBeforeAProcessStarts",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalControlsClickTest.controlsAndEachShortcutAreSafeWithAnAttachedTerminal",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalKeyboardTest.cancellationAndLateGatePreventHiddenPaneFromOpeningIme",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalKeyboardTest.clearsHiddenStateOnlyForExplicitRequestAndRetainsResize",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalKeyboardTest.expiredWindowRequestDoesNotShowOnLaterResume",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalKeyboardTest.explicitRequestSwitchesFocusThenShowsImeOnNextTurn",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalKeyboardTest.focusChangeOrDetachCancelsWindowWait",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalKeyboardTest.focusLostBeforeDeferredRequestDoesNotStealKeyboardBack",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalKeyboardTest.startupGateKeepsEditorFocusAndDoesNotRequestIme",
+    "status": "passed"
+  },
+  {
+    "id": "com.codepocket.ide.terminal.shell.TerminalKeyboardTest.waitsForWindowFocusAfterMenuDismissAndRunsOnlyOnce",
+    "status": "passed"
+  }
+]

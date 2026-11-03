@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainFileSettingsIntegrationTest" tests="14" skipped="0" failures="1" errors="0" timestamp="2026-10-29T17:50:14" hostname="JUHE" time="4.534">
+  <properties/>
+  <testcase name="deletingAnotherFilePreservesActiveContentSelectionAndHistory" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.374"/>
+  <testcase name="legacySidePreferenceSurvivesUnrelatedSettingsWithoutOfferingInactiveSwitch" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.395"/>
+  <testcase name="renameCollisionKeepsDialogContentsAndCanBeRetried" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.223"/>
+  <testcase name="actualMovePickerMovesOpenDirectoryAndKeepsItsBuffer" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.299"/>
+  <testcase name="dirtyActiveRenameKeepsStableIdentitySelectionUndoAndContinuedSaving" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.263"/>
+  <testcase name="deletingTheLastFileCreatesARealFallbackAndInvalidatesTheOldConnection" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.238">
+    <failure message="org.junit.ComparisonFailure: expected:&lt;[main.cpp]&gt; but was:&lt;[]&gt;" type="org.junit.ComparisonFailure">org.junit.ComparisonFailure: expected:&lt;[main.cpp]&gt; but was:&lt;[]&gt;
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.codepocket.ide.MainFileSettingsIntegrationTest.deletingTheLastFileCreatesARealFallbackAndInvalidatesTheOldConnection(MainFileSettingsIntegrationTest.kt:131)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="failedThemeSaveReenablesTheFormAndKeepsItsUnappliedDraft" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.369"/>
+  <testcase name="rotatingMainActivityRetainsUnappliedSettingsSearchAndDraft" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.485"/>
+  <testcase name="actualSettingsApplyKeepsTabletBufferHistoryAndTerminalSession" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.329"/>
+  <testcase name="externalSaveConflictPreventsRenameAndPreservesRecoverableCode" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.269"/>
+  <testcase name="renamedDirectoryRebasesAllTabsInputsSelectionAndExplorerState" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.496"/>
+  <testcase name="settingsFormCannotChangeTheSubmittedDraftDuringActualAsyncSave" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.391"/>
+  <testcase name="cancellingSettingsDiscardsOnlySettingsAndRetainsDirtyEditorAndPanel" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.212"/>
+  <testcase name="deleteCancelNeverSavesOrChangesTheDirtyBuffer" classname="com.codepocket.ide.MainFileSettingsIntegrationTest" time="0.191"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

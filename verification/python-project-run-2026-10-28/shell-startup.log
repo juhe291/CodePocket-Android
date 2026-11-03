@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_shell_startup.py", line 79, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_shell_startup.py", line 45, in main
+    old = subprocess.run([shell, "-c", command, "test", system.as_posix()], env=dict(env, PS1=prompt.decode()),
+                         capture_output=True, timeout=10, check=True)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['C:\\Program Files\\Git\\bin\\bash.exe', '-c', '. "$1"; printf "%s\\n" "$PS1"; printf "hello\\n"', 'test', 'C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/.tools/semantics-tmp/codepocket-shell-tfeme5fk/system rc.sh']' returned non-zero exit status 3221225794.

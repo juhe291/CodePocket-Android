@@ -1,0 +1,25 @@
+{
+  "browser": "### Error\nTimeoutError: locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.run-modes-preview') to be visible\u001b[22m\n\n",
+  "large_font": {
+    "tests": 4,
+    "failures": 1,
+    "cases": [
+      {
+        "name": "phoneCategoryAndEditorPage",
+        "failure": null
+      },
+      {
+        "name": "phoneLargeSearchKeepsEveryControlReadable",
+        "failure": null
+      },
+      {
+        "name": "tabletLightHasNavigationAndContentLayers",
+        "failure": null
+      },
+      {
+        "name": "narrowLargeRunDetailsWrapAndRemainReachable",
+        "failure": "java.lang.AssertionError"
+      }
+    ]
+  }
+}

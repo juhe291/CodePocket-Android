@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.SoraWorkbenchIntegrationTest" tests="32" skipped="0" failures="0" errors="0" timestamp="2026-10-29T18:13:39" hostname="JUHE" time="14.363">
+  <properties/>
+  <testcase name="staleEditAndChineseCompositionCannotRewriteTheCurrentBuffer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.16"/>
+  <testcase name="obsoleteDecorationsCannotSurviveTypingTabSwitchOrComposition" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.158"/>
+  <testcase name="oversizedHighlightFallbackClearsRolesButKeepsStatusAndAllowsEditing" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.185"/>
+  <testcase name="nativeOversizedPasteDoesNotOverwriteTheFileOrClaimAnUnwrittenRecoveryDraft" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.144"/>
+  <testcase name="syntaxThemeAndFontApplyKeepTheSameTabletBufferAndTerminal" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.185"/>
+  <testcase name="textMateReanalysisAndStyleRefreshKeepTheLexicalLayer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.183"/>
+  <testcase name="emojiPasteIsRejectedAsAWholeAndNativeClipboardAndAccessibilityAreBounded" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.355"/>
+  <testcase name="physicalSaveWritesActualProjectBytesAndClearsOnlyMatchingDraft" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.173"/>
+  <testcase name="genuineDraftIoFailureStillReportsThatTheNewCheckpointWasNotWritten" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.211"/>
+  <testcase name="generationAwareInputConnectionCannotEditTheNextDocumentOrEndItsBatch" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.221"/>
+  <testcase name="mixedBracketsAndLexicalRolesAreDrawnInTheMainEditor" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.157"/>
+  <testcase name="phoneLightPythonTokensUseRestrainedLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.219"/>
+  <testcase name="compositionRangeOutsideTheSelectionIsReadFromTheRealConnection" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.449"/>
+  <testcase name="nativeIndentDuplicateAndInsertionDoNotPartiallyChangeAnOverBudgetOperation" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.29"/>
+  <testcase name="phoneDarkPythonTokensKeepTheExistingLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.196"/>
+  <testcase name="realDiagnosticRegionsAndLineNavigationUseTheCurrentDocumentVersion" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.138"/>
+  <testcase name="exactlyAtLimitRejectsFurtherTypingButAllowsSelectionReplacementAndDeletion" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.394"/>
+  <testcase name="syntaxThemeRoundTripKeepsBufferUndoAndSelection" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.2"/>
+  <testcase name="tabletLightCppTokensUseRestrainedLoadedTheme" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.238"/>
+  <testcase name="externalConflictKeepsDirtyTextAndPreventsTabSwitch" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.168"/>
+  <testcase name="literalReplaceUsesTheSameMainBufferAndOneUndoTransaction" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.134"/>
+  <testcase name="tabletUsesTheSameEditorWithStartupTerminalAndExistingSession" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.148"/>
+  <testcase name="tabletAutomaticExtrasAtTheBoundaryKeepRawTextAndGlobalSettings" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.764"/>
+  <testcase name="realMouseCtrlDragCannotCopySelectionPastTheLimitButStillCopiesWhenItFits" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="1.301"/>
+  <testcase name="composingReplacementAtLimitKeepsTheActualPreeditAndThenCommits" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.375"/>
+  <testcase name="delayedViewportAndBackgroundSelectionNeverStealTerminalOrInputFocus" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.138"/>
+  <testcase name="normalMainEntryLoadsTheExistingWorkspaceIntoTheMatureEditor" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.11"/>
+  <testcase name="decorationsKeepSelectionDirtyStateRevisionAndActualUndoHistory" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.13"/>
+  <testcase name="switchingTabsSavesOldBufferAndRestoresSelectionWithoutCrossFileUndo" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.191"/>
+  <testcase name="olderAndroidComposingRangeUsesTheSamePublicContract" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="6.074"/>
+  <testcase name="modernImeOverloadsAndReplaceTextRespectTheSameLimit" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.46"/>
+  <testcase name="invalidOverlayIsRejectedBeforeChangingDiagnosticsOrBuffer" classname="com.codepocket.ide.SoraWorkbenchIntegrationTest" time="0.113"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

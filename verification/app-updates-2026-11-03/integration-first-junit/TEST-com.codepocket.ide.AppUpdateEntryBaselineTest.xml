@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.AppUpdateEntryBaselineTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:03:12" hostname="JUHE" time="7.91">
+  <properties/>
+  <testcase name="helpDisplaysTheActualInstalledVersion" classname="com.codepocket.ide.AppUpdateEntryBaselineTest" time="7.298"/>
+  <testcase name="helpProvidesExactlyOneEnabledCheckUpdateAction" classname="com.codepocket.ide.AppUpdateEntryBaselineTest" time="0.612"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -1,0 +1,994 @@
+test_active_parameter_uses_real_signature (test_semantics.SemanticsTests.test_active_parameter_uses_real_signature) ... ERROR
+test_completed_tokens_do_not_offer_noop_edits (test_semantics.SemanticsTests.test_completed_tokens_do_not_offer_noop_edits) ... ERROR
+test_concurrent_callers_use_serial_backend (test_semantics.SemanticsTests.test_concurrent_callers_use_serial_backend) ... ERROR
+test_cross_file_is_static_and_top_level_not_executed (test_semantics.SemanticsTests.test_cross_file_is_static_and_top_level_not_executed) ... ERROR
+test_cross_file_is_static_and_top_level_not_executed (test_semantics.SemanticsTests.test_cross_file_is_static_and_top_level_not_executed) ... ERROR
+test_current_file_mode_does_not_import_saf_mirror (test_semantics.SemanticsTests.test_current_file_mode_does_not_import_saf_mirror) ... ERROR
+test_current_file_mode_does_not_import_saf_mirror (test_semantics.SemanticsTests.test_current_file_mode_does_not_import_saf_mirror) ... ERROR
+test_embedded_environment_does_not_spawn_python (test_semantics.SemanticsTests.test_embedded_environment_does_not_spawn_python) ... ERROR
+test_incomplete_syntax_returns_no_fabricated_names (test_semantics.SemanticsTests.test_incomplete_syntax_returns_no_fabricated_names) ... ERROR
+test_instance_members_and_actual_function_kind (test_semantics.SemanticsTests.test_instance_members_and_actual_function_kind) ... ERROR
+test_keyword_parameter_and_custom_shadowing (test_semantics.SemanticsTests.test_keyword_parameter_and_custom_shadowing) ... ERROR
+test_limits_and_path_escape (test_semantics.SemanticsTests.test_limits_and_path_escape) ... ERROR
+test_project_configuration_is_not_loaded (test_semantics.SemanticsTests.test_project_configuration_is_not_loaded) ... ERROR
+test_project_configuration_is_not_loaded (test_semantics.SemanticsTests.test_project_configuration_is_not_loaded) ... ERROR
+test_rejects_split_surrogate_and_out_of_bounds (test_semantics.SemanticsTests.test_rejects_split_surrogate_and_out_of_bounds) ... ERROR
+test_removed_or_renamed_module_does_not_survive_the_next_snapshot (test_semantics.SemanticsTests.test_removed_or_renamed_module_does_not_survive_the_next_snapshot) ... ERROR
+test_removed_or_renamed_module_does_not_survive_the_next_snapshot (test_semantics.SemanticsTests.test_removed_or_renamed_module_does_not_survive_the_next_snapshot) ... ERROR
+test_saved_module_change_is_not_served_from_old_parse_cache (test_semantics.SemanticsTests.test_saved_module_change_is_not_served_from_old_parse_cache) ... ERROR
+test_saved_module_change_is_not_served_from_old_parse_cache (test_semantics.SemanticsTests.test_saved_module_change_is_not_served_from_old_parse_cache) ... ERROR
+test_scope_hides_other_function_local (test_semantics.SemanticsTests.test_scope_hides_other_function_local) ... ERROR
+test_signature_bracket_is_utf16_with_emoji_and_crlf (test_semantics.SemanticsTests.test_signature_bracket_is_utf16_with_emoji_and_crlf) ... ERROR
+test_snapshot_package_relative_imports_and_type_stub (test_semantics.SemanticsTests.test_snapshot_package_relative_imports_and_type_stub) ... ERROR
+test_snapshot_package_relative_imports_and_type_stub (test_semantics.SemanticsTests.test_snapshot_package_relative_imports_and_type_stub) ... ERROR
+test_standard_library_members (test_semantics.SemanticsTests.test_standard_library_members) ... ERROR
+test_transitive_project_snapshot_and_signature_use_all_unsaved_modules (test_semantics.SemanticsTests.test_transitive_project_snapshot_and_signature_use_all_unsaved_modules) ... ERROR
+test_transitive_project_snapshot_and_signature_use_all_unsaved_modules (test_semantics.SemanticsTests.test_transitive_project_snapshot_and_signature_use_all_unsaved_modules) ... ERROR
+test_unicode_identifier (test_semantics.SemanticsTests.test_unicode_identifier) ... ERROR
+test_unsaved_snapshot_and_exact_middle_token_replacement (test_semantics.SemanticsTests.test_unsaved_snapshot_and_exact_middle_token_replacement) ... ERROR
+test_unsaved_snapshot_and_exact_middle_token_replacement (test_semantics.SemanticsTests.test_unsaved_snapshot_and_exact_middle_token_replacement) ... ERROR
+test_utf16_emoji_chinese_and_crlf (test_semantics.SemanticsTests.test_utf16_emoji_chinese_and_crlf) ... ERROR
+
+======================================================================
+ERROR: test_active_parameter_uses_real_signature (test_semantics.SemanticsTests.test_active_parameter_uses_real_signature)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-hye3w_5x'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-hye3w_5x'
+
+======================================================================
+ERROR: test_completed_tokens_do_not_offer_noop_edits (test_semantics.SemanticsTests.test_completed_tokens_do_not_offer_noop_edits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-da1t9782'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-da1t9782'
+
+======================================================================
+ERROR: test_concurrent_callers_use_serial_backend (test_semantics.SemanticsTests.test_concurrent_callers_use_serial_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-ewqnmhm4'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-ewqnmhm4'
+
+======================================================================
+ERROR: test_cross_file_is_static_and_top_level_not_executed (test_semantics.SemanticsTests.test_cross_file_is_static_and_top_level_not_executed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 51, in test_cross_file_is_static_and_top_level_not_executed
+    (self.root / "sibling.py").write_text("from pathlib import Path\nPath(" + repr(str(marker)) + ").write_text('bad')\nclass Token:\n    def run(self): pass\n")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 555, in write_text
+    return PathBase.write_text(self, data, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_abc.py", line 651, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-b7v7wmpj\\sibling.py'
+
+======================================================================
+ERROR: test_cross_file_is_static_and_top_level_not_executed (test_semantics.SemanticsTests.test_cross_file_is_static_and_top_level_not_executed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-b7v7wmpj'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-b7v7wmpj'
+
+======================================================================
+ERROR: test_current_file_mode_does_not_import_saf_mirror (test_semantics.SemanticsTests.test_current_file_mode_does_not_import_saf_mirror)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 94, in test_current_file_mode_does_not_import_saf_mirror
+    (self.root / "sibling.py").write_text("class Token:\n    def run(self): pass\n")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 555, in write_text
+    return PathBase.write_text(self, data, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_abc.py", line 651, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-y7dw6fmx\\sibling.py'
+
+======================================================================
+ERROR: test_current_file_mode_does_not_import_saf_mirror (test_semantics.SemanticsTests.test_current_file_mode_does_not_import_saf_mirror)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-y7dw6fmx'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-y7dw6fmx'
+
+======================================================================
+ERROR: test_embedded_environment_does_not_spawn_python (test_semantics.SemanticsTests.test_embedded_environment_does_not_spawn_python)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-q7vn8xub'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-q7vn8xub'
+
+======================================================================
+ERROR: test_incomplete_syntax_returns_no_fabricated_names (test_semantics.SemanticsTests.test_incomplete_syntax_returns_no_fabricated_names)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-o5blahqk'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-o5blahqk'
+
+======================================================================
+ERROR: test_instance_members_and_actual_function_kind (test_semantics.SemanticsTests.test_instance_members_and_actual_function_kind)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-kqk_3rab'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-kqk_3rab'
+
+======================================================================
+ERROR: test_keyword_parameter_and_custom_shadowing (test_semantics.SemanticsTests.test_keyword_parameter_and_custom_shadowing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-htjxj_ks'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-htjxj_ks'
+
+======================================================================
+ERROR: test_limits_and_path_escape (test_semantics.SemanticsTests.test_limits_and_path_escape)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-360h1_ce'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-360h1_ce'
+
+======================================================================
+ERROR: test_project_configuration_is_not_loaded (test_semantics.SemanticsTests.test_project_configuration_is_not_loaded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 89, in test_project_configuration_is_not_loaded
+    folder = self.root / ".jedi"; folder.mkdir()
+                                  ~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-uedxs4qb\\.jedi'
+
+======================================================================
+ERROR: test_project_configuration_is_not_loaded (test_semantics.SemanticsTests.test_project_configuration_is_not_loaded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-uedxs4qb'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-uedxs4qb'
+
+======================================================================
+ERROR: test_rejects_split_surrogate_and_out_of_bounds (test_semantics.SemanticsTests.test_rejects_split_surrogate_and_out_of_bounds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-uasaeemm'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-uasaeemm'
+
+======================================================================
+ERROR: test_removed_or_renamed_module_does_not_survive_the_next_snapshot (test_semantics.SemanticsTests.test_removed_or_renamed_module_does_not_survive_the_next_snapshot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 144, in test_removed_or_renamed_module_does_not_survive_the_next_snapshot
+    module.write_text("payload='text'\n", encoding="utf-8")
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 555, in write_text
+    return PathBase.write_text(self, data, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_abc.py", line 651, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-zszbs91x\\model.py'
+
+======================================================================
+ERROR: test_removed_or_renamed_module_does_not_survive_the_next_snapshot (test_semantics.SemanticsTests.test_removed_or_renamed_module_does_not_survive_the_next_snapshot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-zszbs91x'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-zszbs91x'
+
+======================================================================
+ERROR: test_saved_module_change_is_not_served_from_old_parse_cache (test_semantics.SemanticsTests.test_saved_module_change_is_not_served_from_old_parse_cache)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 99, in test_saved_module_change_is_not_served_from_old_parse_cache
+    module.write_text("class Token:\n    def run(self): pass\n")
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 555, in write_text
+    return PathBase.write_text(self, data, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_abc.py", line 651, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-n7n44p3d\\sibling.py'
+
+======================================================================
+ERROR: test_saved_module_change_is_not_served_from_old_parse_cache (test_semantics.SemanticsTests.test_saved_module_change_is_not_served_from_old_parse_cache)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-n7n44p3d'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-n7n44p3d'
+
+======================================================================
+ERROR: test_scope_hides_other_function_local (test_semantics.SemanticsTests.test_scope_hides_other_function_local)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-5c26hbqy'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-5c26hbqy'
+
+======================================================================
+ERROR: test_signature_bracket_is_utf16_with_emoji_and_crlf (test_semantics.SemanticsTests.test_signature_bracket_is_utf16_with_emoji_and_crlf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-qk1bjlu9'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-qk1bjlu9'
+
+======================================================================
+ERROR: test_snapshot_package_relative_imports_and_type_stub (test_semantics.SemanticsTests.test_snapshot_package_relative_imports_and_type_stub)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 136, in test_snapshot_package_relative_imports_and_type_stub
+    package = self.root / "pkg"; package.mkdir()
+                                 ~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-rfnbwzx7\\pkg'
+
+======================================================================
+ERROR: test_snapshot_package_relative_imports_and_type_stub (test_semantics.SemanticsTests.test_snapshot_package_relative_imports_and_type_stub)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-rfnbwzx7'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-rfnbwzx7'
+
+======================================================================
+ERROR: test_standard_library_members (test_semantics.SemanticsTests.test_standard_library_members)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-l6tgzmdg'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-l6tgzmdg'
+
+======================================================================
+ERROR: test_transitive_project_snapshot_and_signature_use_all_unsaved_modules (test_semantics.SemanticsTests.test_transitive_project_snapshot_and_signature_use_all_unsaved_modules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 126, in test_transitive_project_snapshot_and_signature_use_all_unsaved_modules
+    (self.root / "model.py").write_text("payload='😀中文'\ndef combine(left: int, right: str): pass\n", encoding="utf-8")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 555, in write_text
+    return PathBase.write_text(self, data, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_abc.py", line 651, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-_2oaktre\\model.py'
+
+======================================================================
+ERROR: test_transitive_project_snapshot_and_signature_use_all_unsaved_modules (test_semantics.SemanticsTests.test_transitive_project_snapshot_and_signature_use_all_unsaved_modules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-_2oaktre'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-_2oaktre'
+
+======================================================================
+ERROR: test_unicode_identifier (test_semantics.SemanticsTests.test_unicode_identifier)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-_pi1tfg1'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-_pi1tfg1'
+
+======================================================================
+ERROR: test_unsaved_snapshot_and_exact_middle_token_replacement (test_semantics.SemanticsTests.test_unsaved_snapshot_and_exact_middle_token_replacement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 42, in test_unsaved_snapshot_and_exact_middle_token_replacement
+    disk = self.root / "main.py"; disk.write_text("value = 1\n")
+                                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 555, in write_text
+    return PathBase.write_text(self, data, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_abc.py", line 651, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-xew2t2ix\\main.py'
+
+======================================================================
+ERROR: test_unsaved_snapshot_and_exact_middle_token_replacement (test_semantics.SemanticsTests.test_unsaved_snapshot_and_exact_middle_token_replacement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-xew2t2ix'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-xew2t2ix'
+
+======================================================================
+ERROR: test_utf16_emoji_chinese_and_crlf (test_semantics.SemanticsTests.test_utf16_emoji_chinese_and_crlf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-zguew0d6'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_semantics.py", line 19, in tearDown
+    self.temp.cleanup()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{10c6686b-0a02-4b1e-afe2-dfde591f253d}\\AC\\Temp\\codepocket-semantic-zguew0d6'
+
+----------------------------------------------------------------------
+Ran 22 tests in 6.346s
+
+FAILED (errors=30)
+{
+  "apk_sha256": "47923b5fbd7c1f90c18c8c00beb6d87e8b37fe2e92c99fd29bc1245fe3325139",
+  "backend_bytecode_sha256": "0a591a0e8b4ecfa223ae031cd13e29ac6a687c0e7e9a437116184bede4156fd3",
+  "tests": 22,
+  "failures": 0,
+  "errors": 30,
+  "jedi": "0.20.1",
+  "parso": "0.8.7",
+  "dependencies_from_actual_apk": true,
+  "dependency_bytecode_loaded": true,
+  "filesystem_packages_verified": true,
+  "device_execution": false
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.PythonRunProviderTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-02T06:22:22" hostname="JUHE" time="0.081">
+  <properties/>
+  <testcase name="newModulesAndBinaryResourcesAppearWithoutReplacingTheEditorMirror" classname="com.codepocket.ide.PythonRunProviderTest" time="0.022"/>
+  <testcase name="deletedProviderFilesAreNotReadFromTheStaleMirror" classname="com.codepocket.ide.PythonRunProviderTest" time="0.018"/>
+  <testcase name="aProviderCycleAddedAfterOpeningIsRejectedAndOnlyTheOwnedJobIsRemoved" classname="com.codepocket.ide.PythonRunProviderTest" time="0.011"/>
+  <testcase name="providerFailureRemovesThePartialJobWithoutTouchingTheMirror" classname="com.codepocket.ide.PythonRunProviderTest" time="0.018"/>
+  <testcase name="anExistingDestinationIsNeverOverwrittenOrDeleted" classname="com.codepocket.ide.PythonRunProviderTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

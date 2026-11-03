@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitRemoteJournalTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-11-02T15:21:18" hostname="JUHE" time="8.714">
+  <properties/>
+  <testcase name="recoveryScopeAndUnknownJournalVersionsCannotPublishOrDeleteAnything" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.055"/>
+  <testcase name="unrelatedConcurrentFileIsKeptWhileKnownOwnChangesRollBack" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.202"/>
+  <testcase name="safeFastForwardPublishesBinaryAddModifyDeleteAndBothFileDirectoryTransitions" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.24"/>
+  <testcase name="failedFinalRefWriteRestoresKnownOwnBodiesDirectoriesIndexAndDeletedBinary" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.29"/>
+  <testcase name="unknownPartialBytesDuringRecreationAreRetainedInsteadOfReplaced" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.193"/>
+  <testcase name="sameBytesWithForeignProviderIdentityAreNotOverwritten" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.156"/>
+  <testcase name="staleOriginalIsRejectedWithoutAnyWriteOrJournal" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.03"/>
+  <testcase name="restartReleasesOnlyItsRecordedRemoteLocksAndKeepsTheCommittedFiles" classname="com.codepocket.ide.GitRemoteJournalTest" time="1.709"/>
+  <testcase name="unacknowledgedDeletionStaysUncertainAndKeepsTheDeletedOriginalBackup" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.121"/>
+  <testcase name="aSecondStoreCannotRecoverWhileRemotePublicationOwnsTheJournal" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.319"/>
+  <testcase name="unknownNewFilePartialIsNotRemovedDuringRollback" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.125"/>
+  <testcase name="foreignReplacementOfRecordedRemoteLockPreservesItAndTheRecoveryBackup" classname="com.codepocket.ide.GitRemoteJournalTest" time="1.577"/>
+  <testcase name="knownDeletedFileRecreationCanResumeAfterItsRestoreWriteWasInterrupted" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.202"/>
+  <testcase name="unknownPartialSourceKeepsBeforeAfterCurrentBytesAndBlocksLegacyPublication" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.161"/>
+  <testcase name="providerChangedCreationNameKeepsItsUnknownEntryAndRecoveryRecord" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.116"/>
+  <testcase name="actualCloneUsesStandardRemoteAndPackedRefsLocksUntilObjectsBodiesAndRefsAreVerified" classname="com.codepocket.ide.GitRemoteJournalTest" time="1.593"/>
+  <testcase name="restartedStoreFinishesAnInterruptedKnownRollback" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.272"/>
+  <testcase name="latePrivateSnapshotMutationOrCorruptBackupNeverWritesOriginals" classname="com.codepocket.ide.GitRemoteJournalTest" time="0.084"/>
+  <testcase name="actualEngineCloneFetchFastForwardAndConfigurePublishThroughOpaqueBinaryProvider" classname="com.codepocket.ide.GitRemoteJournalTest" time="1.268"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

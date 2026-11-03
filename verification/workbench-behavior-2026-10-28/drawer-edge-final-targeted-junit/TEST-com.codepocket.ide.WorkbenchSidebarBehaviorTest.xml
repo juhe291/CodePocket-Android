@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkbenchSidebarBehaviorTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-30T02:16:36" hostname="JUHE" time="14.184">
+  <properties/>
+  <testcase name="closingPhoneSearchDoesNotReopenASidebarOnWindowExpansion" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="9.48"/>
+  <testcase name="recreatedSearchDrawerRestoresItsQueryWithAPositiveWindowHeight" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="1.134"/>
+  <testcase name="backClosesTheSearchSidebarWithoutOpeningExplorerOrReplacingTheEditor" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.626"/>
+  <testcase name="queryAndEditorIdentitySurviveRehostingBetweenPhoneDrawerAndTabletSidebar" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.646"/>
+  <testcase name="drawerWindowAnimationNeverSlidesItsWholeSurfaceOverTheFixedActivityBar" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.414"/>
+  <testcase name="tabletSearchLivesInTheSidebarAndLeavesTheEditorBufferUntouched" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.432"/>
+  <testcase name="phoneSearchOpensInTheSameDrawerGeometryAsExplorer" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.578"/>
+  <testcase name="tabletSidebarUsesTheRealUnsavedWorkspaceSearchWorker" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.541"/>
+  <testcase name="outgoingTabletExplorerSnapshotStaysToTheRightOfTheActivityRail" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.331"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

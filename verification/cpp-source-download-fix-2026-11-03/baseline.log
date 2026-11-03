@@ -1,0 +1,53 @@
+test_a_digest_failure_is_fatal_instead_of_trying_another_source (test_cpp_runtime_download.CppRuntimeDownloadTests.test_a_digest_failure_is_fatal_instead_of_trying_another_source) ... ERROR
+test_an_unreachable_source_uses_the_explicit_alternate_with_the_same_digest (test_cpp_runtime_download.CppRuntimeDownloadTests.test_an_unreachable_source_uses_the_explicit_alternate_with_the_same_digest) ... ERROR
+test_corrupt_cache_is_never_accepted_or_silently_replaced (test_cpp_runtime_download.CppRuntimeDownloadTests.test_corrupt_cache_is_never_accepted_or_silently_replaced) ... ok
+test_default_source_keeps_the_existing_lock_repository (test_cpp_runtime_download.CppRuntimeDownloadTests.test_default_source_keeps_the_existing_lock_repository) ... ok
+test_download_is_promoted_only_after_the_original_digest_matches (test_cpp_runtime_download.CppRuntimeDownloadTests.test_download_is_promoted_only_after_the_original_digest_matches) ... ok
+test_exhausted_sources_preserve_the_network_error_without_promoting_a_cache_entry (test_cpp_runtime_download.CppRuntimeDownloadTests.test_exhausted_sources_preserve_the_network_error_without_promoting_a_cache_entry) ... ERROR
+test_existing_fallback_is_verified_without_network (test_cpp_runtime_download.CppRuntimeDownloadTests.test_existing_fallback_is_verified_without_network) ... ok
+test_missing_cache_without_fetch_does_not_contact_a_source (test_cpp_runtime_download.CppRuntimeDownloadTests.test_missing_cache_without_fetch_does_not_contact_a_source) ... ok
+test_pinned_iconv_source_prefers_gnu_upstream_and_keeps_the_original_mirror (test_cpp_runtime_download.CppRuntimeDownloadTests.test_pinned_iconv_source_prefers_gnu_upstream_and_keeps_the_original_mirror) ... ERROR
+test_primary_source_changes_only_the_download_origin (test_cpp_runtime_download.CppRuntimeDownloadTests.test_primary_source_changes_only_the_download_origin) ... ok
+test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) ... ok
+test_valid_cache_stays_offline_even_with_fetch_enabled (test_cpp_runtime_download.CppRuntimeDownloadTests.test_valid_cache_stays_offline_even_with_fetch_enabled) ... ok
+test_wrong_download_digest_cannot_produce_a_valid_cached_package (test_cpp_runtime_download.CppRuntimeDownloadTests.test_wrong_download_digest_cannot_produce_a_valid_cached_package) ... ok
+
+======================================================================
+ERROR: test_a_digest_failure_is_fatal_instead_of_trying_another_source (test_cpp_runtime_download.CppRuntimeDownloadTests.test_a_digest_failure_is_fatal_instead_of_trying_another_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 80, in test_a_digest_failure_is_fatal_instead_of_trying_another_source
+    runtime.obtain('source.tgz',self.digest,self.url,True,alternate_urls=('https://example.invalid/alternate',))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: obtain() got an unexpected keyword argument 'alternate_urls'
+
+======================================================================
+ERROR: test_an_unreachable_source_uses_the_explicit_alternate_with_the_same_digest (test_cpp_runtime_download.CppRuntimeDownloadTests.test_an_unreachable_source_uses_the_explicit_alternate_with_the_same_digest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 73, in test_an_unreachable_source_uses_the_explicit_alternate_with_the_same_digest
+    target=runtime.obtain('source.tgz',self.digest,self.url,True,alternate_urls=(alternate,))
+TypeError: obtain() got an unexpected keyword argument 'alternate_urls'
+
+======================================================================
+ERROR: test_exhausted_sources_preserve_the_network_error_without_promoting_a_cache_entry (test_cpp_runtime_download.CppRuntimeDownloadTests.test_exhausted_sources_preserve_the_network_error_without_promoting_a_cache_entry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 85, in test_exhausted_sources_preserve_the_network_error_without_promoting_a_cache_entry
+    runtime.obtain('source.tgz',self.digest,self.url,True,alternate_urls=('https://example.invalid/alternate',))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: obtain() got an unexpected keyword argument 'alternate_urls'
+
+======================================================================
+ERROR: test_pinned_iconv_source_prefers_gnu_upstream_and_keeps_the_original_mirror (test_cpp_runtime_download.CppRuntimeDownloadTests.test_pinned_iconv_source_prefers_gnu_upstream_and_keeps_the_original_mirror)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 66, in test_pinned_iconv_source_prefers_gnu_upstream_and_keeps_the_original_mirror
+    self.assertEqual(('https://ftp.gnu.org/gnu/libiconv/libiconv-1.19.tar.gz',original['url']),runtime.source_urls(original))
+                                                                                               ^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'prepare_cpp_runtime' has no attribute 'source_urls'
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.048s
+
+FAILED (errors=4)

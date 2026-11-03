@@ -1,0 +1,134 @@
+[
+  {
+    "groupId": "com.chaquo.python",
+    "artifactId": "com.chaquo.python.gradle.plugin",
+    "version": "17.1.0",
+    "licenses": [
+      {
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "evidence": "license-metadata/com.chaquo.python-com.chaquo.python.gradle.plugin-17.1.0.pom"
+  },
+  {
+    "groupId": "com.chaquo.python",
+    "artifactId": "gradle",
+    "version": "17.1.0",
+    "licenses": [
+      {
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "evidence": "license-metadata/com.chaquo.python-gradle-17.1.0.pom"
+  },
+  {
+    "groupId": "com.chaquo.python",
+    "artifactId": "target",
+    "version": "3.13.16-0",
+    "licenses": [
+      {
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "evidence": "license-metadata/com.chaquo.python-target-3.13.16-0.pom"
+  },
+  {
+    "groupId": "com.chaquo.python.runtime",
+    "artifactId": "bootstrap",
+    "version": "17.1.0",
+    "licenses": [
+      {
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "evidence": "license-metadata/com.chaquo.python.runtime-bootstrap-17.1.0.pom"
+  },
+  {
+    "groupId": "com.chaquo.python.runtime",
+    "artifactId": "chaquopy",
+    "version": "17.1.0",
+    "licenses": [
+      {
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "evidence": "license-metadata/com.chaquo.python.runtime-chaquopy-17.1.0.pom"
+  },
+  {
+    "groupId": "com.chaquo.python.runtime",
+    "artifactId": "chaquopy_java",
+    "version": "17.1.0",
+    "licenses": [
+      {
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "evidence": "license-metadata/com.chaquo.python.runtime-chaquopy_java-17.1.0.pom"
+  },
+  {
+    "groupId": "com.chaquo.python.runtime",
+    "artifactId": "libchaquopy_java",
+    "version": "17.1.0",
+    "licenses": [
+      {
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "evidence": "license-metadata/com.chaquo.python.runtime-libchaquopy_java-17.1.0.pom"
+  },
+  {
+    "groupId": "org.jetbrains.kotlin",
+    "artifactId": "kotlin-stdlib",
+    "version": "1.9.25",
+    "licenses": [
+      {
+        "name": "The Apache License, Version 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+      }
+    ],
+    "evidence": "license-metadata/org.jetbrains.kotlin-kotlin-stdlib-1.9.25.pom"
+  },
+  {
+    "groupId": "org.jetbrains",
+    "artifactId": "annotations",
+    "version": "13.0",
+    "licenses": [
+      {
+        "name": "The Apache Software License, Version 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+      }
+    ],
+    "evidence": "license-metadata/org.jetbrains-annotations-13.0.pom"
+  },
+  {
+    "groupId": "junit",
+    "artifactId": "junit",
+    "version": "4.13.2",
+    "licenses": [
+      {
+        "name": "Eclipse Public License 1.0",
+        "url": "http://www.eclipse.org/legal/epl-v10.html"
+      }
+    ],
+    "evidence": "license-metadata/junit-junit-4.13.2.pom"
+  },
+  {
+    "groupId": "org.json",
+    "artifactId": "json",
+    "version": "20240303",
+    "licenses": [
+      {
+        "name": "Public Domain",
+        "url": "https://github.com/stleary/JSON-java/blob/master/LICENSE"
+      }
+    ],
+    "evidence": "license-metadata/org.json-json-20240303.pom"
+  }
+]

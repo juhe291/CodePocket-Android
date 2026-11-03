@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitPrivatePathRegressionTest" tests="11" skipped="0" failures="1" errors="0" timestamp="2026-11-03T01:47:35" hostname="JUHE" time="50.451">
+  <properties/>
+  <testcase name="actualLocalGitStatusAndInitializationKeepTheOriginalSource" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="4.329"/>
+  <testcase name="pushReceiptLedgerUsesTheSameCanonicalPrivateBoundary" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.055"/>
+  <testcase name="unavailableCloneListStillAllowsTheRealWorkspacePickerAndKeepsItsSentinel" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="4.158"/>
+  <testcase name="projectPickerCanListCreateAndReopenAManagedCloneUnderTheTrustedAlias" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.07"/>
+  <testcase name="temporaryCredentialsUseTheTrustedNoBackupAliasWithoutCreatingAKey" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.044"/>
+  <testcase name="actualRemoteSnapshotAlsoUsesTheCanonicalRecoveryAndJobRoots" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="40.094">
+    <failure message="java.lang.AssertionError: GitRemoteRun(reply=GitRemoteReply(state=null, remote=null, error=network, plan=null, pushHead=null, outcome=null), storageError=null, detail=null, draftPaths=[], receipt=null, published=false, sourceFiles={keep.py=GitFileVersion(sha256=418ccd821b3fb517d9b08ae663c0593c44b966344bf2219082e56e6627382906, size=21, executable=true)})" type="java.lang.AssertionError">java.lang.AssertionError: GitRemoteRun(reply=GitRemoteReply(state=null, remote=null, error=network, plan=null, pushHead=null, outcome=null), storageError=null, detail=null, draftPaths=[], receipt=null, published=false, sourceFiles={keep.py=GitFileVersion(sha256=418ccd821b3fb517d9b08ae663c0593c44b966344bf2219082e56e6627382906, size=21, executable=true)})
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.codepocket.ide.GitPrivatePathRegressionTest.actualRemoteSnapshotAlsoUsesTheCanonicalRecoveryAndJobRoots(GitPrivatePathRegressionTest.kt:101)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: java.util.concurrent.RejectedExecutionException: Task com.codepocket.ide.GitRemoteService$$Lambda$570/0x0000024298c5fd90@5ebaaeea rejected from java.util.concurrent.ThreadPoolExecutor@32ce21ae[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 1]
+		at java.base/java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2065)
+		at java.base/java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:833)
+		at java.base/java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1365)
+		at java.base/java.util.concurrent.Executors$DelegatedExecutorService.execute(Executors.java:721)
+		at com.codepocket.ide.GitRemoteService.start(GitRemoteService.kt:54)
+		at com.codepocket.ide.GitRemoteService.messenger$lambda$1(GitRemoteService.kt:34)
+		at android.os.Handler.dispatchMessage(Handler.java:102)
+		at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+		at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+		at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+		at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+		at org.robolectric.shadows.ShadowPausedLooper.idleIfPaused(ShadowPausedLooper.java:177)
+		at org.robolectric.android.controller.ServiceController.destroy(ServiceController.java:72)
+		at com.codepocket.ide.HostRemoteGit$Channel.close(HostRemoteGit.kt:80)
+		at com.codepocket.ide.GitRemoteClient.close(GitRemoteProtocol.kt:134)
+		at com.codepocket.ide.GitRemoteWorkbench.close(GitRemoteWorkbench.kt:109)
+		at kotlin.io.CloseableKt.closeFinally(Closeable.kt:49)
+		at com.codepocket.ide.GitPrivatePathRegressionTest.actualRemoteSnapshotAlsoUsesTheCanonicalRecoveryAndJobRoots(GitPrivatePathRegressionTest.kt:100)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		... 14 more
+</failure>
+  </testcase>
+  <testcase name="unavailableCredentialStorageShowsAnErrorAndKeepsTheDirtyEditor" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.635"/>
+  <testcase name="localJobsRoundTripTheirStrictRootGuardAndCleanupThroughTheAlias" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.043"/>
+  <testcase name="realInternalProjectHeadingOpensTheWorkspacePickerWithoutCrashing" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.478"/>
+  <testcase name="realSourceControlMoreButtonOpensWithoutTheDeviceVaultConstructorCrash" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.494"/>
+  <testcase name="remoteJobsRoundTripTheirStrictRootGuardAndCleanupThroughTheAlias" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

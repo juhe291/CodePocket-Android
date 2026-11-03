@@ -1,0 +1,124 @@
+{
+  "cases": [
+    {
+      "name": "no-final-newline",
+      "input_sha256": "6b5db5c9d6372c766407025a278ad8532a748a451d57ad6c8b0d812f3e6a87e2",
+      "stdout": "13\n",
+      "stderr": "diagnostic\n",
+      "passed": true
+    },
+    {
+      "name": "empty-eof",
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "0\n",
+      "stderr": "diagnostic\n",
+      "passed": true
+    },
+    {
+      "name": "multiline",
+      "input_sha256": "14c5e74c4b96ccef41cd94db73a9ec3348038ac094feca4fd897cecffa07cdae",
+      "stdout": "6\n",
+      "stderr": "diagnostic\n",
+      "passed": true
+    },
+    {
+      "name": "original-entry-preserved",
+      "passed": true
+    },
+    {
+      "name": "missing-input-rejected",
+      "passed": true
+    }
+  ],
+  "commands": [
+    {
+      "args": [
+        "C:\\mingw64\\bin\\gcc.exe",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\app\\src\\main\\jni\\cpp_runner.c",
+        "-o",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-runner.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\app\\src\\main\\jni\\cpp_runner.c: In function 'main':\nC:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\app\\src\\main\\jni\\cpp_runner.c:63:34: warning: cast between incompatible function types from 'FARPROC' {aka 'long long int (*)()'} to 'int (*)(int,  char **)' [-Wcast-function-type]\n   63 |     int (*entry)(int, char **) = (int (*)(int, char **))GetProcAddress(library, \"main\");\n      |                                  ^\n"
+    },
+    {
+      "args": [
+        "C:\\mingw64\\bin\\g++.exe",
+        "-std=c++17",
+        "-shared",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\program.cpp",
+        "-o",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-program.dll",
+        "-Wl,--export-all-symbols"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-runner.exe",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-program.dll",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\no-final-newline.stdin",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\no-final-newline.stdout",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\no-final-newline.stderr"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-runner.exe",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-program.dll",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\empty-eof.stdin",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\empty-eof.stdout",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\empty-eof.stderr"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-runner.exe",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-program.dll",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\multiline.stdin",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\multiline.stdout",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\multiline.stderr"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-runner.exe",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-program.dll"
+      ],
+      "exit": 0,
+      "stdout": "17\r\n",
+      "stderr": "diagnostic\r\n"
+    },
+    {
+      "args": [
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-runner.exe",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\case-program.dll",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\missing-input",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\no-final-newline.stdout",
+        "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\test-case-host\\no-final-newline.stderr"
+      ],
+      "exit": 125,
+      "stdout": "",
+      "stderr": "CodePocket: cannot open owned case streams\r\n"
+    }
+  ],
+  "runner_source_sha256": "fc704228c14eadc42f96cc3528dd298f11b8591c8130a91a6a75f99c694004e0",
+  "actual_production_runner_source": true,
+  "android_execution": false,
+  "android_ownership_and_limits_executed": false
+}

@@ -1,0 +1,97 @@
+{
+  "apk": "dist\\CodePocket-path-status-2026-10-24-debug.apk",
+  "bytes": 26671942,
+  "sha256": "7e16ce088a9a87ff24e544a15caa04d9f5f959460880e6715160a79277cad715",
+  "junit": {
+    "tests": 709,
+    "failures": 0,
+    "skipped": 1,
+    "errors": 0
+  },
+  "failures": [],
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 16
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "old_apks_preserved": 78,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "assemble": "Debug tests, Lint, packageDebug and assembleDebug succeeded",
+  "signature": "passed",
+  "alignment_16kb": "passed",
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false,
+  "baseline_test_cases_retained": 704,
+  "new_test_cases": 5,
+  "packaged_theme_matches_source": true,
+  "minimum_light_token_contrast": 4.889,
+  "browser": {
+    "cases": 264,
+    "checks": 38,
+    "paletteChecks": 20,
+    "scenes": 33,
+    "devices": 4,
+    "themes": 2,
+    "errors": [],
+    "failures": [],
+    "androidDeviceVerified": false
+  },
+  "signer_sha256": "d58e4cd7c849ebcf3cf35fde35f1d201c2569bb9ef11f2b48a4ba80cacd10408",
+  "no_new_skips": true,
+  "final_build": "Full main app tests and Lint successful; packageDebug actually executed in full-build.log",
+  "baseline": {
+    "tests": 4,
+    "failures": 4,
+    "cases": [
+      {
+        "name": "tabletLightLargePathAndFooterDoNotClipText",
+        "failure": "java.lang.AssertionError: 内部项目 › 学习项目  ›  练习  ›  long_solution_name_long_solution_name_long_solution_name_long_solution_name_long_solution_name_long_solution_name_.py: text height=33, available=24"
+      },
+      {
+        "name": "normalPathKeepsCompactHeightAndFullExplanation",
+        "failure": "java.lang.NullPointerException: Cannot invoke \"Object.toString()\" because the return value of \"android.widget.TextView.getContentDescription()\" is null"
+      },
+      {
+        "name": "phoneLargeRealSaveConflictShowsFailureAndRetainsBufferAndDraft",
+        "failure": "org.junit.ComparisonFailure: expected:<[保存失败]> but was:<[未保存]>"
+      },
+      {
+        "name": "phoneLargePathAndFooterDoNotClipText",
+        "failure": "java.lang.AssertionError: 内部项目 › 学习项目  ›  练习  ›  long_solution_name_long_solution_name_long_solution_name_long_solution_name_long_solution_name_long_solution_name_.py: text height=33, available=24"
+      }
+    ]
+  },
+  "targeted": "Five actual Main/Sora cases; genuine external file conflict, draft retention and retry success verified, including a filename containing the error keyword.",
+  "save_logic_changed": false,
+  "production_changed": [
+    "MainActivity.kt (breadcrumb height and complete explanation)",
+    "ui/StatusBar.kt (visible status priority and adaptive detail width)"
+  ],
+  "browser_first": "Initial 264 scene checks and 36 interactions passed, but visual review showed the design preview did not reveal its active tab after resizing. Added a viewport-width observer and resize/marker-order assertions; reran all browser checks.",
+  "original_status_model": "InteractionState still derives its secondary text from keywords. Visible summaries guard older success messages for error-word filenames; structured severity remains future work.",
+  "prior_single_import_failure": "Unconfirmed and not reproduced; no production Python changes in this batch"
+}

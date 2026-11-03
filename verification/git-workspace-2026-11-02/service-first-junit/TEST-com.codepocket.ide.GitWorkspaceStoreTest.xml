@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitWorkspaceStoreTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-11-02T07:24:26" hostname="JUHE" time="5.527">
+  <properties/>
+  <testcase name="laterWriteFailureRollsBackKnownOwnIndexBytesAndLeavesSourceUntouched" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.114"/>
+  <testcase name="committedCleanupCanResumeWhenItsPrivateArtifactFolderIsAlreadyGone" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.067"/>
+  <testcase name="staleWorkspaceRejectsPublicationBeforeAnyProviderWrites" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.022"/>
+  <testcase name="publishesOnlyExactMetadataAndKeepsRefsAfterObjectsAndIndex" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.2"/>
+  <testcase name="anotherStoreCannotRecoverAnActivePublicationOnTheSameJournal" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.194"/>
+  <testcase name="aNewStoreCanRecoverKnownOwnWritesAfterAnInterruptedRollback" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.085"/>
+  <testcase name="staleProviderContentOrMetadataFailsBeforePublishingAnything" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.008"/>
+  <testcase name="changedMetadataIsExactAndWorkingFileChangesAreRejected" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.028"/>
+  <testcase name="privateFilesystemAdapterWritesExactBinaryBytesAndDoesNotLeaveTemporaryFiles" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.022"/>
+  <testcase name="gitMetadataIsNotLoadedAsEditorTextOrCopiedIntoAnExternalRun" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="4.567"/>
+  <testcase name="changedImmutableObjectsOrConfigurationAreRejectedBeforeWriting" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.065"/>
+  <testcase name="failedCaptureDeletesOnlyItsOwnedJobAndKeepsOtherFiles" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.022"/>
+  <testcase name="freshBinaryProviderSnapshotNeverUsesTheOldEditorMirrorOrTextWriter" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.061"/>
+  <testcase name="unknownPartialOrConcurrentMetadataIsNeverOverwrittenDuringRecovery" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.061"/>
+  <testcase name="cyclesAndDuplicateIdsAreRejectedWithoutMutatingProvider" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

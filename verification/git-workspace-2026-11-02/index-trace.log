@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\python\git_workspace.py", line 206, in diff
+    entry = repo.open_index(config=repo.get_config()).get(tree_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Index' object has no attribute 'get'

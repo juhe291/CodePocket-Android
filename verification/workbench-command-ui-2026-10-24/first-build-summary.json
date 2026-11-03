@@ -1,0 +1,12 @@
+{
+  "counts": {
+    "passed": 688,
+    "failed": 1,
+    "skipped": 1
+  },
+  "failures": [
+    "com.codepocket.ide.MainFileSettingsIntegrationTest.actualMovePickerMovesOpenDirectoryAndKeepsItsBuffer"
+  ],
+  "cause": "Shortcut layout added a wrapper around no-shortcut labels; existing move-picker regression clicks the original direct parent.",
+  "resolution": "Preserved original direct-label structure for no-shortcut rows; move-picker assertions and filesystem transaction unchanged."
+}

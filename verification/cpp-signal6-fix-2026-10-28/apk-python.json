@@ -1,0 +1,25 @@
+{
+  "apk": "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+  "size_bytes": 115421743,
+  "sha256": "7e8959a94c8a5cff06a76abdf217c9ce95e4e5dbf1ca08566de38d7b2ca48503",
+  "zip_crc_passed": true,
+  "abis": [
+    "arm64-v8a"
+  ],
+  "python_archives_checked": [
+    "assets/chaquopy/app.imy",
+    "assets/chaquopy/bootstrap.imy",
+    "assets/chaquopy/requirements-arm64-v8a.imy",
+    "assets/chaquopy/requirements-common.imy",
+    "assets/chaquopy/stdlib-arm64-v8a.imy",
+    "assets/chaquopy/stdlib-common.imy"
+  ],
+  "bundled_runner": "runner.pyc",
+  "bundled_runner_tests": 38,
+  "bundled_project_tests": 9,
+  "bundled_diagnostics_tests": 10,
+  "bundled_total_tests": 48,
+  "test_failures": 0,
+  "test_errors": 0,
+  "device_execution": false
+}

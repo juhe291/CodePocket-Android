@@ -1,0 +1,42 @@
+{
+  "totals": {
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.TestCasesDialogTest.compactWindowKeepsButtonsAccessibleAndScrollsTheEditor",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.TestCasesDialogTest.editorCheckpointRestoresWhitespaceUnicodeRuleAndValidationDoesNotDismissIt",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.TestCasesDialogTest.tabletUsesBoundedWidthAndDeletingACasePreservesItsHistory",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.TestCasesDialogTest.failedAtomicSaveKeepsTheInputsAndCanBeRetriedWithoutDuplicatingTheCase",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.TestCasesDialogTest.historyKeepsDeletedCaseSnapshotsAndReaderCopiesExactActualTextWithTruncationNotice",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.TestCasesDialogTest.lightTabletEditorUsesTheCurrentPaletteAndKeepsItsFormOnRefresh",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.TestCasesDialogTest.foreignFileCheckpointCannotAttachItsFormToTheCurrentFile",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.TestCasesDialogTest.phoneTouchCreatesAnExactCaseAndSecondaryMenuRunsTheSelectedImmutableSnapshot",
+      "status": "passed"
+    }
+  ]
+}

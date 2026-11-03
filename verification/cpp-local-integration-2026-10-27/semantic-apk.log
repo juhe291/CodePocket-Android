@@ -1,0 +1,40 @@
+test_active_parameter_uses_real_signature (test_semantics.SemanticsTests.test_active_parameter_uses_real_signature) ... ok
+test_completed_tokens_do_not_offer_noop_edits (test_semantics.SemanticsTests.test_completed_tokens_do_not_offer_noop_edits) ... ok
+test_concurrent_callers_use_serial_backend (test_semantics.SemanticsTests.test_concurrent_callers_use_serial_backend) ... ok
+test_cross_file_is_static_and_top_level_not_executed (test_semantics.SemanticsTests.test_cross_file_is_static_and_top_level_not_executed) ... ok
+test_current_file_mode_does_not_import_saf_mirror (test_semantics.SemanticsTests.test_current_file_mode_does_not_import_saf_mirror) ... ok
+test_embedded_environment_does_not_spawn_python (test_semantics.SemanticsTests.test_embedded_environment_does_not_spawn_python) ... ok
+test_incomplete_syntax_returns_no_fabricated_names (test_semantics.SemanticsTests.test_incomplete_syntax_returns_no_fabricated_names) ... ok
+test_instance_members_and_actual_function_kind (test_semantics.SemanticsTests.test_instance_members_and_actual_function_kind) ... ok
+test_keyword_parameter_and_custom_shadowing (test_semantics.SemanticsTests.test_keyword_parameter_and_custom_shadowing) ... ok
+test_limits_and_path_escape (test_semantics.SemanticsTests.test_limits_and_path_escape) ... ok
+test_project_configuration_is_not_loaded (test_semantics.SemanticsTests.test_project_configuration_is_not_loaded) ... ok
+test_rejects_split_surrogate_and_out_of_bounds (test_semantics.SemanticsTests.test_rejects_split_surrogate_and_out_of_bounds) ... ok
+test_removed_or_renamed_module_does_not_survive_the_next_snapshot (test_semantics.SemanticsTests.test_removed_or_renamed_module_does_not_survive_the_next_snapshot) ... ok
+test_saved_module_change_is_not_served_from_old_parse_cache (test_semantics.SemanticsTests.test_saved_module_change_is_not_served_from_old_parse_cache) ... ok
+test_scope_hides_other_function_local (test_semantics.SemanticsTests.test_scope_hides_other_function_local) ... ok
+test_signature_bracket_is_utf16_with_emoji_and_crlf (test_semantics.SemanticsTests.test_signature_bracket_is_utf16_with_emoji_and_crlf) ... ok
+test_snapshot_package_relative_imports_and_type_stub (test_semantics.SemanticsTests.test_snapshot_package_relative_imports_and_type_stub) ... ok
+test_standard_library_members (test_semantics.SemanticsTests.test_standard_library_members) ... ok
+test_transitive_project_snapshot_and_signature_use_all_unsaved_modules (test_semantics.SemanticsTests.test_transitive_project_snapshot_and_signature_use_all_unsaved_modules) ... ok
+test_unicode_identifier (test_semantics.SemanticsTests.test_unicode_identifier) ... ok
+test_unsaved_snapshot_and_exact_middle_token_replacement (test_semantics.SemanticsTests.test_unsaved_snapshot_and_exact_middle_token_replacement) ... ok
+test_utf16_emoji_chinese_and_crlf (test_semantics.SemanticsTests.test_utf16_emoji_chinese_and_crlf) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 12.318s
+
+OK
+{
+  "apk_sha256": "07b06aa03f393d35e8bb88ebd6f7a0c51f5ad2749aa6e98090f2c54dedd2bd26",
+  "backend_bytecode_sha256": "07483499869adeda1cba3610d374013de10d4756e15c41bcdc15fd5b01a4d48e",
+  "tests": 22,
+  "failures": 0,
+  "errors": 0,
+  "jedi": "0.20.1",
+  "parso": "0.8.7",
+  "dependencies_from_actual_apk": true,
+  "dependency_bytecode_loaded": true,
+  "filesystem_packages_verified": true,
+  "device_execution": false
+}

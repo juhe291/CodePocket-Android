@@ -1,0 +1,26 @@
+{
+  "tests": 1138,
+  "counts": {
+    "passed": 1136,
+    "failure": 1,
+    "skipped": 1
+  },
+  "previous_identities_retained": 1109,
+  "new_tests": 29,
+  "new_failed": [],
+  "failures": [
+    {
+      "id": "com.codepocket.ide.CppRuntimePreparationTest.trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs",
+      "status": "failure"
+    }
+  ],
+  "lint": {
+    "app": {
+      "Warning": 30
+    },
+    "editor-sora": {
+      "Warning": 1
+    },
+    "workspace-core": {}
+  }
+}

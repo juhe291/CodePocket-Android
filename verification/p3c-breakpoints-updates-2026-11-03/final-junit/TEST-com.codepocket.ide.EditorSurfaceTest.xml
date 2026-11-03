@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorSurfaceTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:45:21" hostname="JUHE" time="0.005">
+  <properties/>
+  <testcase name="negativeScreenCoordinatesRemainValidInAnOffsetWindow" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="existingCompletionGeometryUsesTheSharedImplementation" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="subpixelLayoutUsesConsistentPixelRounding" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="anchorsMatchDocumentRevisionAndUtf16OffsetIndependentlyOfScroll" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="overflowingRootTranslationsCannotWrapIntoTheVisibleWindow" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="narrowPanesConstrainWidthAndHorizontalPosition" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="insufficientSpaceDoesNotCoverTheCaretOrKeyboard" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="rootRelativeClippingTranslatesToScreenBeforeWindowAndTextClipping" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="extremeScreenBoundsUseLongArithmetic" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="nonFiniteAndOverflowingLayoutCoordinatesAreRejected" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="invalidIdentityOffsetsAndEmptyVisibleAreasAreRejected" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="nestedPaneClippingCannotExpandToTheWholeWindow" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="sampledPlacementsStayInsideThePaneAndClearTheEntireCaretLine" classname="com.codepocket.ide.EditorSurfaceTest" time="0.002"/>
+  <testcase name="invalidPopupBudgetsNeverProduceNegativeOrOverlappingRectangles" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="aPartiallyClippedCaretLineDoesNotProduceAnAnchor" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="textPaddingAndTheSoraGutterAreOutsideTheUsableAnchorArea" classname="com.codepocket.ide.EditorSurfaceTest" time="0.001"/>
+  <testcase name="rightEdgeCaretClampsThePopupBackIntoThePane" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <testcase name="aKeyboardBoundaryMakesThePopupUseSpaceAboveTheCaret" classname="com.codepocket.ide.EditorSurfaceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

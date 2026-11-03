@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.TerminalPanelFocusTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:35:07" hostname="JUHE" time="3.686">
+  <properties/>
+  <testcase name="animationSwitchKeepsTheActualTerminalRendererAndFocus" classname="com.codepocket.ide.TerminalPanelFocusTest" time="0.407"/>
+  <testcase name="explicitCodeNavigationCanStillFocusEditorAfterPanelRestore" classname="com.codepocket.ide.TerminalPanelFocusTest" time="0.249"/>
+  <testcase name="restoringEditorViewportMustNotStealTerminalInput" classname="com.codepocket.ide.TerminalPanelFocusTest" time="0.307"/>
+  <testcase name="cppPrefillFocusIsPreservedDuringViewportRestore" classname="com.codepocket.ide.TerminalPanelFocusTest" time="0.337"/>
+  <testcase name="closingPanelIntentionallyReturnsFocusToEditor" classname="com.codepocket.ide.TerminalPanelFocusTest" time="0.415"/>
+  <testcase name="maximizeFromEditorStillLeavesHiddenEditorAndRestoreCanFocusIt" classname="com.codepocket.ide.TerminalPanelFocusTest" time="0.666"/>
+  <testcase name="maximizingKeepsActualTerminalFocusAndEditorSelection" classname="com.codepocket.ide.TerminalPanelFocusTest" time="0.702"/>
+  <testcase name="activityMotionPolicyCanChangeBlinkWithoutResettingTerminalFontOrInput" classname="com.codepocket.ide.TerminalPanelFocusTest" time="0.603"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

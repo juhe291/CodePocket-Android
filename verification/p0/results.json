@@ -1,0 +1,89 @@
+{
+  "checkedAt": "2026-10-15T20:24:50.8842124+08:00",
+  "junit": [
+    {
+      "name": "com.codepocket.ide.DocumentTreeTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codepocket.ide.DraftStoreTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codepocket.ide.EditorFeaturesTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codepocket.ide.EditorSessionsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codepocket.ide.RunControlTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codepocket.ide.WandboxEngineTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codepocket.ide.WorkspaceTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    }
+  ],
+  "totalTests": 35.0,
+  "skipped": 1.0,
+  "failures": 0.0,
+  "errors": 0.0,
+  "lintErrors": 0,
+  "lintWarnings": 14,
+  "lintById": [
+    {
+      "id": "ChromeOsAbiSupport",
+      "count": 1
+    },
+    {
+      "id": "DataExtractionRules",
+      "count": 1
+    },
+    {
+      "id": "OldTargetApi",
+      "count": 1
+    },
+    {
+      "id": "SetTextI18n",
+      "count": 11
+    }
+  ],
+  "deviceExecution": false,
+  "androidServiceDeclared": true,
+  "lastFullBuildLog": "build-06-snapshot-final.log",
+  "lastFullBuildSeconds": 51,
+  "wandbox": {
+    "started": "2026-10-15T20:26:02.0136301+08:00",
+    "finished": "2026-10-15T20:26:25.6841662+08:00",
+    "exitCode": 0,
+    "scope": "Three built-in micro programs only; no project files uploaded",
+    "deviceExecution": false
+  }
+}

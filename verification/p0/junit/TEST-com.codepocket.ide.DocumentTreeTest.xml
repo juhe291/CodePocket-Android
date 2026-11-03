@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.DocumentTreeTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-15T12:22:20" hostname="JUHE" time="0.175">
+  <properties/>
+  <testcase name="pythonModuleReadFailureAbortsInsteadOfRunningAnEmptyPlaceholder" classname="com.codepocket.ide.DocumentTreeTest" time="0.08"/>
+  <testcase name="traversalNamesCollisionsAndRecursiveMovesAreRejected" classname="com.codepocket.ide.DocumentTreeTest" time="0.009"/>
+  <testcase name="partialProviderWritePreservesOriginalAndRevocationDoesNotWrite" classname="com.codepocket.ide.DocumentTreeTest" time="0.033"/>
+  <testcase name="runSnapshotContainsActualDataAndBinaryResourcesNotEditorPlaceholders" classname="com.codepocket.ide.DocumentTreeTest" time="0.018"/>
+  <testcase name="externalChangesAndRestoredDraftBaseCannotBeOverwritten" classname="com.codepocket.ide.DocumentTreeTest" time="0.013"/>
+  <testcase name="cyclicProviderTreeIsRejectedBeforeCreatingAnyChild" classname="com.codepocket.ide.DocumentTreeTest" time="0.004"/>
+  <testcase name="editsWriteToRealProviderAndNestedCrudKeepsOpaqueIds" classname="com.codepocket.ide.DocumentTreeTest" time="0.017"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,18 @@
+{
+  "baseline": "63657ca",
+  "added": [
+    {
+      "id": "UnusedResources",
+      "message": "The resource `R.string.editor_last_tab` appears to be unused",
+      "count": 1
+    }
+  ],
+  "removed": [
+    {
+      "id": "SetTextI18n",
+      "message": "Do not concatenate text displayed with `setText`. Use resource string with placeholders.",
+      "count": 1
+    }
+  ],
+  "new_nonblocking_issue": "UnusedResources: editor_last_tab retained after replacing forced sample fallback with welcome"
+}

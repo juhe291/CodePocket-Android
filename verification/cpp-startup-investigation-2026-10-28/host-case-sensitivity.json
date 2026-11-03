@@ -1,0 +1,5 @@
+{
+  "case_sensitive": false,
+  "two_distinct_android_header_names_collide_on_this_host": true,
+  "android_device_execution": false
+}

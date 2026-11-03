@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorFeedbackUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-28T05:47:39" hostname="JUHE" time="1.52">
+  <properties/>
+  <testcase name="queryTypingOptionsAndClosingNeverModifySource" classname="com.codepocket.ide.EditorFeedbackUiTest" time="0.096"/>
+  <testcase name="tabletDarkDecorationsAndSearchPreview" classname="com.codepocket.ide.EditorFeedbackUiTest" time="0.411"/>
+  <testcase name="findAsYouTypeShowsCountAndReplaceNeedsOnlyOneClick" classname="com.codepocket.ide.EditorFeedbackUiTest" time="0.103"/>
+  <testcase name="phoneLightDecorationsAndSearchPreview" classname="com.codepocket.ide.EditorFeedbackUiTest" time="0.233"/>
+  <testcase name="tabletLightDecorationsAndSearchPreview" classname="com.codepocket.ide.EditorFeedbackUiTest" time="0.366"/>
+  <testcase name="diagnosticPopupKeepsEditorFocusAndCopiesTheActualMessage" classname="com.codepocket.ide.EditorFeedbackUiTest" time="0.052"/>
+  <testcase name="phoneDarkDecorationsAndSearchPreview" classname="com.codepocket.ide.EditorFeedbackUiTest" time="0.198"/>
+  <testcase name="queuedSearchResultsCannotSelectOrEditAnotherDocument" classname="com.codepocket.ide.EditorFeedbackUiTest" time="0.059"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

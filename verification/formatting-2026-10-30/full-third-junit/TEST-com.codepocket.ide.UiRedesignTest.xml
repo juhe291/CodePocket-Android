@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.UiRedesignTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-30T14:05:06" hostname="JUHE" time="0.95">
+  <properties/>
+  <testcase name="terminalToolbarEntryRemainsAvailableWithoutCreatingSessionOrRequestingIme" classname="com.codepocket.ide.UiRedesignTest" time="0.039"/>
+  <testcase name="settingsDraftSurvivesSearchAndRecreationWithoutWritingPreferences" classname="com.codepocket.ide.UiRedesignTest" time="0.17"/>
+  <testcase name="settingsDraftCancellationNeverWritesPreferences" classname="com.codepocket.ide.UiRedesignTest" time="0.098"/>
+  <testcase name="explorerPresentationStateRejectsTraversalAndBoundsPayload" classname="com.codepocket.ide.UiRedesignTest" time="0.024"/>
+  <testcase name="dismissedSettingsNeverReopenThroughConfigurationCheckpoint" classname="com.codepocket.ide.UiRedesignTest" time="0.075"/>
+  <testcase name="collapsedRootAndSelectedRootRoundTripWithoutForcedExpansion" classname="com.codepocket.ide.UiRedesignTest" time="0.017"/>
+  <testcase name="settingsSearchFindsHiddenCategoryAndApplySubmitsDraftOnly" classname="com.codepocket.ide.UiRedesignTest" time="0.12"/>
+  <testcase name="floatingImeDoesNotCollapsePanelButDockedImeCan" classname="com.codepocket.ide.UiRedesignTest" time="0.019"/>
+  <testcase name="terminalPaletteMenuExposesAllFiveThemesWithOneSelected" classname="com.codepocket.ide.UiRedesignTest" time="0.04"/>
+  <testcase name="tabletSettingsKeepsSevenCategoriesAndShowsOnlySelectedPage" classname="com.codepocket.ide.UiRedesignTest" time="0.07"/>
+  <testcase name="failedSettingsApplyKeepsDraftAndAllowsRetry" classname="com.codepocket.ide.UiRedesignTest" time="0.187"/>
+  <testcase name="oldSettingsGetFollowingTerminalThemeAndNewThemePersists" classname="com.codepocket.ide.UiRedesignTest" time="0.021"/>
+  <testcase name="settingsSplitUsesActualWidthAndHeightBoundary" classname="com.codepocket.ide.UiRedesignTest" time="0.017"/>
+  <testcase name="fileTypesUseDistinctLocalIconsAndRestrainedColors" classname="com.codepocket.ide.UiRedesignTest" time="0.015"/>
+  <testcase name="commandMenuFitsNarrowActualWindowAndRetainsCommandIds" classname="com.codepocket.ide.UiRedesignTest" time="0.037"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

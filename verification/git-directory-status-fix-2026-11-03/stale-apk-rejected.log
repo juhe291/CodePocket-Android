@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_git_status_apk.py", line 86, in <module>
+    if __name__=='__main__':sys.exit(main())
+                                     ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_git_status_apk.py", line 51, in main
+    delta=verify_delta(apk,old)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_git_status_apk.py", line 36, in verify_delta
+    compiled_source(current.read('git_workspace.pyc'),(ROOT/'app/src/main/python/git_workspace.py').read_bytes())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_formatting_apk.py", line 37, in compiled_source
+    assert code == compile(source, code.co_filename, 'exec'), 'Bundled bytecode differs from approved source'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Bundled bytecode differs from approved source

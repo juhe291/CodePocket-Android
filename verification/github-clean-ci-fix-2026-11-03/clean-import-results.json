@@ -1,0 +1,12 @@
+[
+  {
+    "label": "before",
+    "exit": 1,
+    "cache_created": false
+  },
+  {
+    "label": "fixed",
+    "exit": 0,
+    "cache_created": true
+  }
+]

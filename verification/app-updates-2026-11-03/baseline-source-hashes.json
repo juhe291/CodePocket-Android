@@ -1,0 +1,6 @@
+{
+  "app/build.gradle.kts": "82e8a1978e8e02d34af955db2e1fac1833c54ac0baa92db07492407e1d16bb24",
+  "app/src/main/java/com/codepocket/ide/SettingsDialog.kt": "853890a7583d110bcd417910d52028fa8bb33ea8842ef1e61de067b2b812a112",
+  "app/src/main/java/com/codepocket/ide/MainActivity.kt": "44789407a7227cc0ceb148512c859287c96370e00cc04acb0294cd321593417c",
+  "app/src/main/java/com/codepocket/ide/ui/ReadOnlyDetails.kt": "58f03279a4c76949352b71454913316e68c8c66b5c1ee8016875bea388da6e6c"
+}

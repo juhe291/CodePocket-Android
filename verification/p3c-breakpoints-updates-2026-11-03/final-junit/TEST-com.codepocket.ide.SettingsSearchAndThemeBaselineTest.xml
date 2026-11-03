@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.SettingsSearchAndThemeBaselineTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:53" hostname="JUHE" time="0.837">
+  <properties/>
+  <testcase name="spacedChineseWordsMatchEveryTermAndKeepOriginalStableOrder" classname="com.codepocket.ide.SettingsSearchAndThemeBaselineTest" time="0.164"/>
+  <testcase name="cppAndLocalTermsFindBothRealBackendAndScopeWithoutDuplicateRows" classname="com.codepocket.ide.SettingsSearchAndThemeBaselineTest" time="0.114"/>
+  <testcase name="searchingOperatingAndRestoringKeepTheSameUnappliedDraft" classname="com.codepocket.ide.SettingsSearchAndThemeBaselineTest" time="0.218"/>
+  <testcase name="aValidSavedCustomSyntaxThemeSurvivesTheExistingSettingsRoundTrip" classname="com.codepocket.ide.SettingsSearchAndThemeBaselineTest" time="0.101"/>
+  <testcase name="customSyntaxIsAppendedWithoutChangingTheThreeExistingEnumIdentities" classname="com.codepocket.ide.SettingsSearchAndThemeBaselineTest" time="0.098"/>
+  <testcase name="englishAliasesAndFullWidthWhitespaceFindTheSameRealSetting" classname="com.codepocket.ide.SettingsSearchAndThemeBaselineTest" time="0.141"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -1,0 +1,604 @@
+Compiled from "LineBreakLayout.java"
+public class io.github.rosemoe.sora.widget.layout.LineBreakLayout extends io.github.rosemoe.sora.widget.layout.AbstractLayout {
+  private final java.util.concurrent.atomic.AtomicInteger reuseCount;
+
+  private io.github.rosemoe.sora.util.BlockIntList widthMaintainer;
+
+  private io.github.rosemoe.sora.graphics.SingleCharacterWidths measurer;
+
+  public io.github.rosemoe.sora.widget.layout.LineBreakLayout(io.github.rosemoe.sora.widget.CodeEditor, io.github.rosemoe.sora.text.Content);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #1                  // Method io/github/rosemoe/sora/widget/layout/AbstractLayout."<init>":(Lio/github/rosemoe/sora/widget/CodeEditor;Lio/github/rosemoe/sora/text/Content;)V
+       6: aload_0
+       7: new           #7                  // class java/util/concurrent/atomic/AtomicInteger
+      10: dup
+      11: iconst_0
+      12: invokespecial #9                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":(I)V
+      15: putfield      #12                 // Field reuseCount:Ljava/util/concurrent/atomic/AtomicInteger;
+      18: aload_0
+      19: new           #18                 // class io/github/rosemoe/sora/graphics/SingleCharacterWidths
+      22: dup
+      23: aload_1
+      24: invokevirtual #20                 // Method io/github/rosemoe/sora/widget/CodeEditor.getTabWidth:()I
+      27: invokespecial #26                 // Method io/github/rosemoe/sora/graphics/SingleCharacterWidths."<init>":(I)V
+      30: putfield      #27                 // Field measurer:Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;
+      33: aload_0
+      34: getfield      #27                 // Field measurer:Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;
+      37: aload_1
+      38: invokevirtual #31                 // Method io/github/rosemoe/sora/widget/CodeEditor.isRenderFunctionCharacters:()Z
+      41: invokevirtual #35                 // Method io/github/rosemoe/sora/graphics/SingleCharacterWidths.setHandleFunctionCharacters:(Z)V
+      44: aload_0
+      45: new           #39                 // class io/github/rosemoe/sora/util/BlockIntList
+      48: dup
+      49: invokespecial #41                 // Method io/github/rosemoe/sora/util/BlockIntList."<init>":()V
+      52: putfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      55: aload_0
+      56: aload_0
+      57: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      60: invokevirtual #48                 // Method measureAllLines:(Lio/github/rosemoe/sora/util/BlockIntList;)V
+      63: return
+
+  private void measureAllLines(io.github.rosemoe.sora.util.BlockIntList);
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       4: ifnonnull     8
+       7: return
+       8: new           #56                 // class io/github/rosemoe/sora/graphics/Paint
+      11: dup
+      12: aload_0
+      13: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      16: invokevirtual #31                 // Method io/github/rosemoe/sora/widget/CodeEditor.isRenderFunctionCharacters:()Z
+      19: invokespecial #62                 // Method io/github/rosemoe/sora/graphics/Paint."<init>":(Z)V
+      22: astore_2
+      23: aload_2
+      24: aload_0
+      25: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      28: invokevirtual #64                 // Method io/github/rosemoe/sora/widget/CodeEditor.getTextPaint:()Lio/github/rosemoe/sora/graphics/Paint;
+      31: invokevirtual #68                 // Method io/github/rosemoe/sora/graphics/Paint.set:(Landroid/graphics/Paint;)V
+      34: aload_2
+      35: invokevirtual #72                 // Method io/github/rosemoe/sora/graphics/Paint.onAttributeUpdate:()V
+      38: aload_0
+      39: getfield      #12                 // Field reuseCount:Ljava/util/concurrent/atomic/AtomicInteger;
+      42: invokevirtual #75                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+      45: istore_3
+      46: aload_0
+      47: getfield      #27                 // Field measurer:Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;
+      50: astore        4
+      52: new           #78                 // class io/github/rosemoe/sora/widget/layout/AbstractLayout$TaskMonitor
+      55: dup
+      56: iconst_1
+      57: aload_0
+      58: iload_3
+      59: invokedynamic #80,  0             // InvokeDynamic #0:onCompleted:(Lio/github/rosemoe/sora/widget/layout/LineBreakLayout;I)Lio/github/rosemoe/sora/widget/layout/AbstractLayout$TaskMonitor$Callback;
+      64: invokespecial #84                 // Method io/github/rosemoe/sora/widget/layout/AbstractLayout$TaskMonitor."<init>":(ILio/github/rosemoe/sora/widget/layout/AbstractLayout$TaskMonitor$Callback;)V
+      67: astore        5
+      69: new           #87                 // class io/github/rosemoe/sora/widget/layout/LineBreakLayout$1
+      72: dup
+      73: aload_0
+      74: aload         5
+      76: aload_1
+      77: aload         4
+      79: aload_2
+      80: iload_3
+      81: invokespecial #89                 // Method io/github/rosemoe/sora/widget/layout/LineBreakLayout$1."<init>":(Lio/github/rosemoe/sora/widget/layout/LineBreakLayout;Lio/github/rosemoe/sora/widget/layout/AbstractLayout$TaskMonitor;Lio/github/rosemoe/sora/util/BlockIntList;Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;Lio/github/rosemoe/sora/graphics/Paint;I)V
+      84: astore        6
+      86: aload_0
+      87: aload         6
+      89: invokevirtual #92                 // Method submitTask:(Lio/github/rosemoe/sora/widget/layout/AbstractLayout$LayoutTask;)V
+      92: return
+
+  private int measureLine(int);
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       4: iload_1
+       5: invokevirtual #96                 // Method io/github/rosemoe/sora/text/Content.getLine:(I)Lio/github/rosemoe/sora/text/ContentLine;
+       8: astore_2
+       9: aload_0
+      10: getfield      #27                 // Field measurer:Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;
+      13: aload_2
+      14: iconst_0
+      15: aload_2
+      16: invokevirtual #102                // Method io/github/rosemoe/sora/text/ContentLine.length:()I
+      19: aload_0
+      20: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      23: invokevirtual #64                 // Method io/github/rosemoe/sora/widget/CodeEditor.getTextPaint:()Lio/github/rosemoe/sora/graphics/Paint;
+      26: invokevirtual #107                // Method io/github/rosemoe/sora/graphics/SingleCharacterWidths.measureText:(Ljava/lang/CharSequence;IILio/github/rosemoe/sora/graphics/Paint;)F
+      29: f2i
+      30: ireturn
+
+  private int measureRegion(int, int, int);
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       4: iload_1
+       5: invokevirtual #96                 // Method io/github/rosemoe/sora/text/Content.getLine:(I)Lio/github/rosemoe/sora/text/ContentLine;
+       8: astore        4
+      10: aload_0
+      11: getfield      #27                 // Field measurer:Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;
+      14: aload         4
+      16: iload_2
+      17: iload_3
+      18: aload_0
+      19: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      22: invokevirtual #64                 // Method io/github/rosemoe/sora/widget/CodeEditor.getTextPaint:()Lio/github/rosemoe/sora/graphics/Paint;
+      25: invokevirtual #107                // Method io/github/rosemoe/sora/graphics/SingleCharacterWidths.measureText:(Ljava/lang/CharSequence;IILio/github/rosemoe/sora/graphics/Paint;)F
+      28: f2i
+      29: ireturn
+
+  public io.github.rosemoe.sora.widget.layout.RowIterator obtainRowIterator(int, android.util.SparseArray<io.github.rosemoe.sora.text.ContentLine>);
+    Code:
+       0: new           #111                // class io/github/rosemoe/sora/widget/layout/LineBreakLayout$LineBreakLayoutRowItr
+       3: dup
+       4: aload_0
+       5: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       8: iload_1
+       9: aload_2
+      10: invokespecial #113                // Method io/github/rosemoe/sora/widget/layout/LineBreakLayout$LineBreakLayoutRowItr."<init>":(Lio/github/rosemoe/sora/text/Content;ILandroid/util/SparseArray;)V
+      13: areturn
+
+  public int getRowCount();
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       4: invokevirtual #116                // Method io/github/rosemoe/sora/text/Content.getLineCount:()I
+       7: ireturn
+
+  public void beforeReplace(io.github.rosemoe.sora.text.Content);
+    Code:
+       0: return
+
+  public void afterInsert(io.github.rosemoe.sora.text.Content, int, int, int, int, java.lang.CharSequence);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: iload_3
+       4: iload         4
+       6: iload         5
+       8: aload         6
+      10: invokespecial #119                // Method io/github/rosemoe/sora/widget/layout/AbstractLayout.afterInsert:(Lio/github/rosemoe/sora/text/Content;IIIILjava/lang/CharSequence;)V
+      13: iload_2
+      14: istore        7
+      16: iload         7
+      18: iload         4
+      20: if_icmpgt     107
+      23: iload         7
+      25: iload_2
+      26: if_icmpne     86
+      29: iload         4
+      31: iload_2
+      32: if_icmpne     67
+      35: aload_0
+      36: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      39: iload         7
+      41: aload_0
+      42: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      45: iload         7
+      47: invokevirtual #123                // Method io/github/rosemoe/sora/util/BlockIntList.get:(I)I
+      50: aload_0
+      51: iload         7
+      53: iload_3
+      54: iload         5
+      56: invokevirtual #126                // Method measureRegion:(III)I
+      59: iadd
+      60: invokevirtual #130                // Method io/github/rosemoe/sora/util/BlockIntList.set:(II)I
+      63: pop
+      64: goto          101
+      67: aload_0
+      68: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      71: iload         7
+      73: aload_0
+      74: iload         7
+      76: invokevirtual #133                // Method measureLine:(I)I
+      79: invokevirtual #130                // Method io/github/rosemoe/sora/util/BlockIntList.set:(II)I
+      82: pop
+      83: goto          101
+      86: aload_0
+      87: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      90: iload         7
+      92: aload_0
+      93: iload         7
+      95: invokevirtual #133                // Method measureLine:(I)I
+      98: invokevirtual #136                // Method io/github/rosemoe/sora/util/BlockIntList.add:(II)V
+     101: iinc          7, 1
+     104: goto          16
+     107: return
+
+  public void afterDelete(io.github.rosemoe.sora.text.Content, int, int, int, int, java.lang.CharSequence);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: iload_3
+       4: iload         4
+       6: iload         5
+       8: aload         6
+      10: invokespecial #140                // Method io/github/rosemoe/sora/widget/layout/AbstractLayout.afterDelete:(Lio/github/rosemoe/sora/text/Content;IIIILjava/lang/CharSequence;)V
+      13: iload_2
+      14: iload         4
+      16: if_icmpge     33
+      19: aload_0
+      20: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      23: iload_2
+      24: iconst_1
+      25: iadd
+      26: iload         4
+      28: iconst_1
+      29: iadd
+      30: invokevirtual #143                // Method io/github/rosemoe/sora/util/BlockIntList.removeRange:(II)V
+      33: iload_2
+      34: iload         4
+      36: if_icmpne     82
+      39: aload_0
+      40: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      43: iload_2
+      44: aload_0
+      45: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      48: iload_2
+      49: invokevirtual #123                // Method io/github/rosemoe/sora/util/BlockIntList.get:(I)I
+      52: aload_0
+      53: getfield      #27                 // Field measurer:Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;
+      56: aload         6
+      58: iconst_0
+      59: iload         5
+      61: iload_3
+      62: isub
+      63: aload_0
+      64: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      67: invokevirtual #64                 // Method io/github/rosemoe/sora/widget/CodeEditor.getTextPaint:()Lio/github/rosemoe/sora/graphics/Paint;
+      70: invokevirtual #107                // Method io/github/rosemoe/sora/graphics/SingleCharacterWidths.measureText:(Ljava/lang/CharSequence;IILio/github/rosemoe/sora/graphics/Paint;)F
+      73: f2i
+      74: isub
+      75: invokevirtual #130                // Method io/github/rosemoe/sora/util/BlockIntList.set:(II)I
+      78: pop
+      79: goto          96
+      82: aload_0
+      83: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      86: iload_2
+      87: aload_0
+      88: iload_2
+      89: invokevirtual #133                // Method measureLine:(I)I
+      92: invokevirtual #130                // Method io/github/rosemoe/sora/util/BlockIntList.set:(II)I
+      95: pop
+      96: return
+
+  public io.github.rosemoe.sora.widget.layout.Row getRowAt(int);
+    Code:
+       0: new           #146                // class io/github/rosemoe/sora/widget/layout/Row
+       3: dup
+       4: invokespecial #148                // Method io/github/rosemoe/sora/widget/layout/Row."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: iload_1
+      10: putfield      #149                // Field io/github/rosemoe/sora/widget/layout/Row.lineIndex:I
+      13: aload_2
+      14: iconst_0
+      15: putfield      #153                // Field io/github/rosemoe/sora/widget/layout/Row.startColumn:I
+      18: aload_2
+      19: iconst_1
+      20: putfield      #156                // Field io/github/rosemoe/sora/widget/layout/Row.isLeadingRow:Z
+      23: aload_2
+      24: aload_0
+      25: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+      28: iload_1
+      29: invokevirtual #160                // Method io/github/rosemoe/sora/text/Content.getColumnCount:(I)I
+      32: putfield      #163                // Field io/github/rosemoe/sora/widget/layout/Row.endColumn:I
+      35: aload_2
+      36: areturn
+
+  public int getRowIndexForPosition(int);
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+       4: invokevirtual #166                // Method io/github/rosemoe/sora/widget/CodeEditor.getText:()Lio/github/rosemoe/sora/text/Content;
+       7: invokevirtual #170                // Method io/github/rosemoe/sora/text/Content.getIndexer:()Lio/github/rosemoe/sora/text/Indexer;
+      10: iload_1
+      11: invokeinterface #174,  2          // InterfaceMethod io/github/rosemoe/sora/text/Indexer.getCharPosition:(I)Lio/github/rosemoe/sora/text/CharPosition;
+      16: getfield      #180                // Field io/github/rosemoe/sora/text/CharPosition.line:I
+      19: ireturn
+
+  public void destroyLayout();
+    Code:
+       0: aload_0
+       1: invokespecial #185                // Method io/github/rosemoe/sora/widget/layout/AbstractLayout.destroyLayout:()V
+       4: aload_0
+       5: aconst_null
+       6: putfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+       9: return
+
+  public int getLineNumberForRow(int);
+    Code:
+       0: iconst_0
+       1: iload_1
+       2: aload_0
+       3: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       6: invokevirtual #116                // Method io/github/rosemoe/sora/text/Content.getLineCount:()I
+       9: iconst_1
+      10: isub
+      11: invokestatic  #188                // Method java/lang/Math.min:(II)I
+      14: invokestatic  #193                // Method java/lang/Math.max:(II)I
+      17: ireturn
+
+  public int getLayoutWidth();
+    Code:
+       0: aload_0
+       1: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+       4: invokevirtual #196                // Method io/github/rosemoe/sora/util/BlockIntList.size:()I
+       7: ifne          15
+      10: ldc           #201                // int 214748364
+      12: goto          22
+      15: aload_0
+      16: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      19: invokevirtual #202                // Method io/github/rosemoe/sora/util/BlockIntList.getMax:()I
+      22: ireturn
+
+  public int getLayoutHeight();
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       4: invokevirtual #116                // Method io/github/rosemoe/sora/text/Content.getLineCount:()I
+       7: aload_0
+       8: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      11: invokevirtual #205                // Method io/github/rosemoe/sora/widget/CodeEditor.getRowHeight:()I
+      14: imul
+      15: ireturn
+
+  public long getCharPositionForLayoutOffset(float, float);
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       4: invokevirtual #116                // Method io/github/rosemoe/sora/text/Content.getLineCount:()I
+       7: istore_3
+       8: iload_3
+       9: iconst_1
+      10: isub
+      11: fload_2
+      12: aload_0
+      13: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      16: invokevirtual #205                // Method io/github/rosemoe/sora/widget/CodeEditor.getRowHeight:()I
+      19: i2f
+      20: fdiv
+      21: f2i
+      22: iconst_0
+      23: invokestatic  #193                // Method java/lang/Math.max:(II)I
+      26: invokestatic  #188                // Method java/lang/Math.min:(II)I
+      29: istore        4
+      31: getstatic     #208                // Field BidiLayout:Lio/github/rosemoe/sora/widget/layout/BidiLayoutHelper;
+      34: aload_0
+      35: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      38: aload_0
+      39: aload_0
+      40: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+      43: iload         4
+      45: iconst_0
+      46: aload_0
+      47: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+      50: iload         4
+      52: invokevirtual #160                // Method io/github/rosemoe/sora/text/Content.getColumnCount:(I)I
+      55: fload_1
+      56: invokevirtual #212                // Method io/github/rosemoe/sora/widget/layout/BidiLayoutHelper.horizontalIndex:(Lio/github/rosemoe/sora/widget/CodeEditor;Lio/github/rosemoe/sora/widget/layout/AbstractLayout;Lio/github/rosemoe/sora/text/Content;IIIF)I
+      59: istore        5
+      61: iload         4
+      63: iload         5
+      65: invokestatic  #218                // Method io/github/rosemoe/sora/util/IntPair.pack:(II)J
+      68: lreturn
+
+  public float[] getCharLayoutOffset(int, int, float[]);
+    Code:
+       0: aload_3
+       1: ifnull        10
+       4: aload_3
+       5: arraylength
+       6: iconst_2
+       7: if_icmpge     14
+      10: iconst_2
+      11: newarray       float
+      13: astore_3
+      14: aload_3
+      15: iconst_0
+      16: aload_0
+      17: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      20: iload_1
+      21: invokevirtual #224                // Method io/github/rosemoe/sora/widget/CodeEditor.getRowBottom:(I)I
+      24: i2f
+      25: fastore
+      26: aload_3
+      27: iconst_1
+      28: getstatic     #208                // Field BidiLayout:Lio/github/rosemoe/sora/widget/layout/BidiLayoutHelper;
+      31: aload_0
+      32: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      35: aload_0
+      36: aload_0
+      37: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+      40: iload_1
+      41: iconst_0
+      42: aload_0
+      43: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+      46: iload_1
+      47: invokevirtual #160                // Method io/github/rosemoe/sora/text/Content.getColumnCount:(I)I
+      50: iload_2
+      51: invokevirtual #227                // Method io/github/rosemoe/sora/widget/layout/BidiLayoutHelper.horizontalOffset:(Lio/github/rosemoe/sora/widget/CodeEditor;Lio/github/rosemoe/sora/widget/layout/AbstractLayout;Lio/github/rosemoe/sora/text/Content;IIII)F
+      54: fastore
+      55: aload_3
+      56: areturn
+
+  public int getRowCountForLine(int);
+    Code:
+       0: iconst_1
+       1: ireturn
+
+  public long getDownPosition(int, int);
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       4: invokevirtual #116                // Method io/github/rosemoe/sora/text/Content.getLineCount:()I
+       7: istore_3
+       8: iload_1
+       9: iconst_1
+      10: iadd
+      11: iload_3
+      12: if_icmplt     28
+      15: iload_1
+      16: aload_0
+      17: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+      20: iload_1
+      21: invokevirtual #160                // Method io/github/rosemoe/sora/text/Content.getColumnCount:(I)I
+      24: invokestatic  #218                // Method io/github/rosemoe/sora/util/IntPair.pack:(II)J
+      27: lreturn
+      28: aload_0
+      29: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+      32: iload_1
+      33: iconst_1
+      34: iadd
+      35: invokevirtual #160                // Method io/github/rosemoe/sora/text/Content.getColumnCount:(I)I
+      38: istore        4
+      40: iload_2
+      41: iload         4
+      43: if_icmple     49
+      46: iload         4
+      48: istore_2
+      49: iload_1
+      50: iconst_1
+      51: iadd
+      52: iload_2
+      53: invokestatic  #218                // Method io/github/rosemoe/sora/util/IntPair.pack:(II)J
+      56: lreturn
+
+  public long getUpPosition(int, int);
+    Code:
+       0: iload_1
+       1: iconst_1
+       2: isub
+       3: ifge          12
+       6: iconst_0
+       7: iconst_0
+       8: invokestatic  #218                // Method io/github/rosemoe/sora/util/IntPair.pack:(II)J
+      11: lreturn
+      12: aload_0
+      13: getfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+      16: iload_1
+      17: iconst_1
+      18: isub
+      19: invokevirtual #160                // Method io/github/rosemoe/sora/text/Content.getColumnCount:(I)I
+      22: istore_3
+      23: iload_2
+      24: iload_3
+      25: if_icmple     30
+      28: iload_3
+      29: istore_2
+      30: iload_1
+      31: iconst_1
+      32: isub
+      33: iload_2
+      34: invokestatic  #218                // Method io/github/rosemoe/sora/util/IntPair.pack:(II)J
+      37: lreturn
+
+  public void reuse(io.github.rosemoe.sora.text.Content);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #52                 // Field text:Lio/github/rosemoe/sora/text/Content;
+       5: aload_0
+       6: getfield      #12                 // Field reuseCount:Ljava/util/concurrent/atomic/AtomicInteger;
+       9: invokevirtual #231                // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+      12: pop
+      13: aload_0
+      14: new           #18                 // class io/github/rosemoe/sora/graphics/SingleCharacterWidths
+      17: dup
+      18: aload_0
+      19: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      22: invokevirtual #20                 // Method io/github/rosemoe/sora/widget/CodeEditor.getTabWidth:()I
+      25: invokespecial #26                 // Method io/github/rosemoe/sora/graphics/SingleCharacterWidths."<init>":(I)V
+      28: putfield      #27                 // Field measurer:Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;
+      31: aload_0
+      32: getfield      #27                 // Field measurer:Lio/github/rosemoe/sora/graphics/SingleCharacterWidths;
+      35: aload_0
+      36: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+      39: invokevirtual #31                 // Method io/github/rosemoe/sora/widget/CodeEditor.isRenderFunctionCharacters:()Z
+      42: invokevirtual #35                 // Method io/github/rosemoe/sora/graphics/SingleCharacterWidths.setHandleFunctionCharacters:(Z)V
+      45: aload_0
+      46: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      49: getfield      #234                // Field io/github/rosemoe/sora/util/BlockIntList.lock:Ljava/util/concurrent/locks/Lock;
+      52: ldc2_w        #238                // long 5l
+      55: getstatic     #240                // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      58: invokeinterface #246,  4          // InterfaceMethod java/util/concurrent/locks/Lock.tryLock:(JLjava/util/concurrent/TimeUnit;)Z
+      63: ifeq          96
+      66: aload_0
+      67: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      70: getfield      #234                // Field io/github/rosemoe/sora/util/BlockIntList.lock:Ljava/util/concurrent/locks/Lock;
+      73: invokeinterface #252,  1          // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      78: aload_0
+      79: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      82: invokevirtual #255                // Method io/github/rosemoe/sora/util/BlockIntList.clear:()V
+      85: aload_0
+      86: aload_0
+      87: getfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+      90: invokevirtual #48                 // Method measureAllLines:(Lio/github/rosemoe/sora/util/BlockIntList;)V
+      93: goto          112
+      96: aload_0
+      97: aload_0
+      98: new           #39                 // class io/github/rosemoe/sora/util/BlockIntList
+     101: dup
+     102: invokespecial #41                 // Method io/github/rosemoe/sora/util/BlockIntList."<init>":()V
+     105: dup_x1
+     106: putfield      #44                 // Field widthMaintainer:Lio/github/rosemoe/sora/util/BlockIntList;
+     109: invokevirtual #48                 // Method measureAllLines:(Lio/github/rosemoe/sora/util/BlockIntList;)V
+     112: goto          128
+     115: astore_2
+     116: new           #260                // class java/lang/RuntimeException
+     119: dup
+     120: ldc_w         #262                // String Unable to wait for lock
+     123: aload_2
+     124: invokespecial #264                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     127: athrow
+     128: return
+    Exception table:
+       from    to  target type
+          45   112   115   Class java/lang/InterruptedException
+
+  private void lambda$measureAllLines$1(int, java.lang.Object[], int);
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+       4: astore        4
+       6: aload         4
+       8: ifnull        15
+      11: iload_3
+      12: ifle          16
+      15: return
+      16: aload         4
+      18: aload_0
+      19: aload         4
+      21: iload_1
+      22: invokedynamic #267,  0            // InvokeDynamic #1:run:(Lio/github/rosemoe/sora/widget/layout/LineBreakLayout;Lio/github/rosemoe/sora/widget/CodeEditor;I)Ljava/lang/Runnable;
+      27: invokevirtual #271                // Method io/github/rosemoe/sora/widget/CodeEditor.postInLifecycle:(Ljava/lang/Runnable;)Z
+      30: pop
+      31: return
+
+  private void lambda$measureAllLines$0(io.github.rosemoe.sora.widget.CodeEditor, int);
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field editor:Lio/github/rosemoe/sora/widget/CodeEditor;
+       4: aload_1
+       5: if_acmpne     19
+       8: iload_2
+       9: aload_0
+      10: getfield      #12                 // Field reuseCount:Ljava/util/concurrent/atomic/AtomicInteger;
+      13: invokevirtual #75                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+      16: if_icmpeq     20
+      19: return
+      20: aload_1
+      21: iconst_0
+      22: invokevirtual #275                // Method io/github/rosemoe/sora/widget/CodeEditor.setLayoutBusy:(Z)V
+      25: aload_1
+      26: invokevirtual #278                // Method io/github/rosemoe/sora/widget/CodeEditor.getEventHandler:()Lio/github/rosemoe/sora/widget/EditorTouchEventHandler;
+      29: fconst_0
+      30: fconst_0
+      31: invokevirtual #282                // Method io/github/rosemoe/sora/widget/EditorTouchEventHandler.scrollBy:(FF)V
+      34: return
+}

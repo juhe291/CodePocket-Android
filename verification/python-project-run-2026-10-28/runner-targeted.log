@@ -1,0 +1,35 @@
+test_draft_module_errors_report_the_executed_source_hash_and_real_file_line (test_project_run.TestPythonProjectRun.test_draft_module_errors_report_the_executed_source_hash_and_real_file_line) ... ok
+test_draft_traceback_and_inspection_use_draft_lines_then_restore_linecache (test_project_run.TestPythonProjectRun.test_draft_traceback_and_inspection_use_draft_lines_then_restore_linecache) ... ok
+test_malformed_or_traversing_overlays_are_rejected_before_user_code (test_project_run.TestPythonProjectRun.test_malformed_or_traversing_overlays_are_rejected_before_user_code) ... ok
+test_only_actual_compiled_code_proves_a_helper_diagnostic_hash (test_project_run.TestPythonProjectRun.test_only_actual_compiled_code_proves_a_helper_diagnostic_hash) ... FAIL
+test_overlay_limits_and_duplicate_keys_fail_before_program_side_effects (test_project_run.TestPythonProjectRun.test_overlay_limits_and_duplicate_keys_fail_before_program_side_effects) ... ok
+test_package_relative_imports_and_resources_keep_the_original_project_root (test_project_run.TestPythonProjectRun.test_package_relative_imports_and_resources_keep_the_original_project_root) ... ok
+test_program_file_writes_and_new_module_imports_keep_the_existing_behavior (test_project_run.TestPythonProjectRun.test_program_file_writes_and_new_module_imports_keep_the_existing_behavior) ... ok
+test_terminal_channel_reads_drafts_and_releases_only_its_duplicate_descriptors (test_project_run.TestPythonProjectRun.test_terminal_channel_reads_drafts_and_releases_only_its_duplicate_descriptors) ... FAIL
+test_unsaved_module_runs_without_saving_and_keeps_its_original_file_identity (test_project_run.TestPythonProjectRun.test_unsaved_module_runs_without_saving_and_keeps_its_original_file_identity) ... ok
+
+======================================================================
+FAIL: test_only_actual_compiled_code_proves_a_helper_diagnostic_hash (test_project_run.TestPythonProjectRun.test_only_actual_compiled_code_proves_a_helper_diagnostic_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_project_run.py", line 84, in test_only_actual_compiled_code_proves_a_helper_diagnostic_hash
+    self.assertEqual(result['error_source_hash'],hashlib.sha256(text.encode()).hexdigest());self.assertEqual(result['error_line'],2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'bc0b32b1983c87c29b7b686635f16a9bec1be84d5cdac2c59efa90681546999a' != '590259ea0b96873757fb58f61becb64f8f9f9e58a2dcb74b793b81fd06562796'
+- bc0b32b1983c87c29b7b686635f16a9bec1be84d5cdac2c59efa90681546999a
++ 590259ea0b96873757fb58f61becb64f8f9f9e58a2dcb74b793b81fd06562796
+
+
+======================================================================
+FAIL: test_terminal_channel_reads_drafts_and_releases_only_its_duplicate_descriptors (test_project_run.TestPythonProjectRun.test_terminal_channel_reads_drafts_and_releases_only_its_duplicate_descriptors)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_project_run.py", line 114, in test_terminal_channel_reads_drafts_and_releases_only_its_duplicate_descriptors
+    outgoing.seek(0);self.assertEqual(outgoing.read(),b'42\n')
+                     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'42\r\n' != b'42\n'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.619s
+
+FAILED (failures=2)

@@ -1,0 +1,84 @@
+{
+  "apk": "dist/CodePocket-explorer-state-2026-10-26-debug.apk",
+  "bytes": 26672258,
+  "sha256": "fc2a52ef330e4769b0a826b1db213c1935bd55a823d7a754e258e690f27c2d86",
+  "junit": {
+    "tests": 717,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 16
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "browser": {
+    "cases": 272,
+    "checks": 48,
+    "paletteChecks": 20,
+    "scenes": 34,
+    "devices": 4,
+    "themes": 2,
+    "errors": [],
+    "failures": [],
+    "androidDeviceVerified": false
+  },
+  "baseline_tests": 3,
+  "baseline_failures": 3,
+  "baseline_test_cases_retained": 714,
+  "new_test_cases": 3,
+  "no_new_skips": true,
+  "metrics": {
+    "changedPixels": 36,
+    "widthPx": 6,
+    "heightPx": 6,
+    "rowHeightPx": 48,
+    "scrollBefore": 24,
+    "scrollAfter": 24
+  },
+  "old_apks_preserved": 80,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "signature": "passed",
+  "signer_sha256": "d58e4cd7c849ebcf3cf35fde35f1d201c2569bb9ef11f2b48a4ba80cacd10408",
+  "alignment_16kb": "passed",
+  "zip_crc": "passed",
+  "packaged_theme_matches_source": true,
+  "final_build": "Full main app tests, app/Sora Lint and assembleDebug succeeded.",
+  "final_package_task_executed": false,
+  "batch_package_task_executed": true,
+  "production_changed": [
+    "ui/ExplorerRow.kt: fixed marker slot, passive drawing and complete modified description",
+    "MainActivity.kt: bind current known dirty state and update retained visible rows alongside tab state"
+  ],
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false,
+  "host_boundary": "Real Main/Sora Views, InputConnection and actual disk conflict/retry under Robolectric. No installed Android keyboard or live Android PTY process claim.",
+  "scope": "Display the existing active-document unsaved state in retained Explorer rows; no new runtime or file-save behavior. Inactive recovery drafts are not scanned on the UI thread.",
+  "prior_single_import_failure": "Previously unconfirmed and not reproduced; production Python is unchanged.",
+  "prior_host_focus_observation": "Passive tablet height transition remains recorded in the compact-captions phase; not fixed or device-verified in this batch."
+}

@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CompletionInteractionTest" tests="32" skipped="0" failures="20" errors="0" timestamp="2026-10-26T09:51:04" hostname="JUHE" time="7.783">
+  <properties/>
+  <testcase name="explicitSignatureWaitsForLayoutWhenAutomaticHelpIsOff" classname="com.codepocket.ide.CompletionInteractionTest" time="0.37">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.explicitSignatureWaitsForLayoutWhenAutomaticHelpIsOff(CompletionInteractionTest.kt:365)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="shiftedPlusNumpadAndRepeatedZoomRespectFontLimits" classname="com.codepocket.ide.CompletionInteractionTest" time="0.431"/>
+  <testcase name="automaticCompletionAndSignatureResumeAfterLayout" classname="com.codepocket.ide.CompletionInteractionTest" time="0.245">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at org.robolectric.shadows.ShadowPausedLooper.idleFor(ShadowPausedLooper.java:113)
+	at org.robolectric.shadows.ShadowLooper.idleFor(ShadowLooper.java:223)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:66)
+	at com.codepocket.ide.CompletionInteractionTest.automaticCompletionAndSignatureResumeAfterLayout(CompletionInteractionTest.kt:372)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="tabletHiddenZoomRetainsInputFocusAndRespectsComposition" classname="com.codepocket.ide.CompletionInteractionTest" time="0.526"/>
+  <testcase name="escapeCancelsTheWaitingRequestWithoutEditingOrReopening" classname="com.codepocket.ide.CompletionInteractionTest" time="0.272"/>
+  <testcase name="permanentlyBusyLayoutHasABoundedWaitAndCanBeRequestedAgain" classname="com.codepocket.ide.CompletionInteractionTest" time="0.303">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at org.robolectric.shadows.ShadowPausedLooper.idleFor(ShadowPausedLooper.java:113)
+	at org.robolectric.shadows.ShadowLooper.idleFor(ShadowLooper.java:223)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:66)
+	at com.codepocket.ide.CompletionInteractionTest.permanentlyBusyLayoutHasABoundedWaitAndCanBeRequestedAgain(CompletionInteractionTest.kt:442)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="enterStillCreatesNewlineByDefaultEvenAfterCandidateNavigation" classname="com.codepocket.ide.CompletionInteractionTest" time="0.227">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.multiplePythonCandidates(CompletionInteractionTest.kt:151)
+	at com.codepocket.ide.CompletionInteractionTest.enterStillCreatesNewlineByDefaultEvenAfterCandidateNavigation(CompletionInteractionTest.kt:179)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="automaticCandidatesAcceptPhysicalArrowsAndTabWithoutMovingCaret" classname="com.codepocket.ide.CompletionInteractionTest" time="0.3">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.multiplePythonCandidates(CompletionInteractionTest.kt:151)
+	at com.codepocket.ide.CompletionInteractionTest.automaticCandidatesAcceptPhysicalArrowsAndTabWithoutMovingCaret(CompletionInteractionTest.kt:155)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="committedEnglishTypingAutomaticallyShowsRealCandidates" classname="com.codepocket.ide.CompletionInteractionTest" time="0.214">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.typePrefix(CompletionInteractionTest.kt:64)
+	at com.codepocket.ide.CompletionInteractionTest.committedEnglishTypingAutomaticallyShowsRealCandidates(CompletionInteractionTest.kt:84)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="cppAutomaticArrowsChoosePrivateInsteadOfTheFirstPrintfItem" classname="com.codepocket.ide.CompletionInteractionTest" time="0.339"/>
+  <testcase name="waitingRequestCannotStealInputFocusOrReopenAfterWindowFocusLoss" classname="com.codepocket.ide.CompletionInteractionTest" time="0.268"/>
+  <testcase name="ctrlEqualsAndMinusResizeOnlyCodeAndRememberTheSetting" classname="com.codepocket.ide.CompletionInteractionTest" time="0.217"/>
+  <testcase name="fontZoomDoesNotDestroyTheNativeUndoHistory" classname="com.codepocket.ide.CompletionInteractionTest" time="0.173"/>
+  <testcase name="unfinishedCompositionDoesNotRewriteOrOfferAStaleCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.208">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.unfinishedCompositionDoesNotRewriteOrOfferAStaleCandidate(CompletionInteractionTest.kt:140)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="configuredEnterAcceptsTheArrowSelectedCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.182">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.multiplePythonCandidates(CompletionInteractionTest.kt:151)
+	at com.codepocket.ide.CompletionInteractionTest.configuredEnterAcceptsTheArrowSelectedCandidate(CompletionInteractionTest.kt:184)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="physicalTabAcceptsTheVisibleCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.197">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.typePrefix(CompletionInteractionTest.kt:64)
+	at com.codepocket.ide.CompletionInteractionTest.physicalTabAcceptsTheVisibleCandidate(CompletionInteractionTest.kt:87)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="compactEditorStillShowsAtLeastOneUsableCandidate" classname="com.codepocket.ide.CompletionInteractionTest" time="0.151">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.typePrefix(CompletionInteractionTest.kt:64)
+	at com.codepocket.ide.CompletionInteractionTest.compactEditorStillShowsAtLeastOneUsableCandidate(CompletionInteractionTest.kt:93)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="cppKeywordsAlsoAppearAndAcceptTab" classname="com.codepocket.ide.CompletionInteractionTest" time="0.238"/>
+  <testcase name="touchingOutsideTheCandidateAndTabStillDismissesIt" classname="com.codepocket.ide.CompletionInteractionTest" time="0.172">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.typePrefix(CompletionInteractionTest.kt:64)
+	at com.codepocket.ide.CompletionInteractionTest.touchingOutsideTheCandidateAndTabStillDismissesIt(CompletionInteractionTest.kt:112)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="replacingTheBufferOrChangingSelectionInvalidatesTheWaitingRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.223"/>
+  <testcase name="tabletAutomaticCandidatesAlsoRetainPhysicalArrows" classname="com.codepocket.ide.CompletionInteractionTest" time="0.201">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.multiplePythonCandidates(CompletionInteractionTest.kt:151)
+	at com.codepocket.ide.CompletionInteractionTest.tabletAutomaticCandidatesAlsoRetainPhysicalArrows(CompletionInteractionTest.kt:164)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="layoutStartingAfterCandidateCalculationAlsoKeepsTheExplicitRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.181">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.layoutStartingAfterCandidateCalculationAlsoKeepsTheExplicitRequest(CompletionInteractionTest.kt:383)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="explicitCompletionWaitsForLayoutWhenAutomaticCompletionIsOff" classname="com.codepocket.ide.CompletionInteractionTest" time="0.171">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.explicitCompletionWaitsForLayoutWhenAutomaticCompletionIsOff(CompletionInteractionTest.kt:357)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="automaticRefreshCannotReplaceTheWaitingExplicitModeAndLatestShortcutWins" classname="com.codepocket.ide.CompletionInteractionTest" time="0.227">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.automaticRefreshCannotReplaceTheWaitingExplicitModeAndLatestShortcutWins(CompletionInteractionTest.kt:429)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="layoutStartingAfterSignatureCalculationAlsoKeepsTheExplicitRequest" classname="com.codepocket.ide.CompletionInteractionTest" time="0.228">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.layoutStartingAfterSignatureCalculationAlsoKeepsTheExplicitRequest(CompletionInteractionTest.kt:390)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="explicitAndOffModesRemainAvailableAfterTheDefaultChanges" classname="com.codepocket.ide.CompletionInteractionTest" time="0.226">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.multiplePythonCandidates(CompletionInteractionTest.kt:151)
+	at com.codepocket.ide.CompletionInteractionTest.explicitAndOffModesRemainAvailableAfterTheDefaultChanges(CompletionInteractionTest.kt:189)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="tabletRealWordwrapReflowRetainsPhysicalCompletionAndSnippetFields" classname="com.codepocket.ide.CompletionInteractionTest" time="0.25">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.tabletRealWordwrapReflowRetainsPhysicalCompletionAndSnippetFields(CompletionInteractionTest.kt:451)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="holdingArrowClampsAtListEdgesAndEscReturnsToCodeNavigation" classname="com.codepocket.ide.CompletionInteractionTest" time="0.207">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.holdingArrowClampsAtListEdgesAndEscReturnsToCodeNavigation(CompletionInteractionTest.kt:169)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="fontZoomWaitsForCompositionAndIgnoresNonEditorFocus" classname="com.codepocket.ide.CompletionInteractionTest" time="0.201"/>
+  <testcase name="toolbarTabRetainsCandidatesUntilItsClickIsAccepted" classname="com.codepocket.ide.CompletionInteractionTest" time="0.185">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected, parameter name
+	at com.codepocket.ide.AndroidSemanticTransport$Connection.onServiceConnected(PythonSemanticClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:958)
+	at android.os.Handler.dispatchMessage(Handler.java:99)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at com.codepocket.ide.CompletionInteractionTest.settle(CompletionInteractionTest.kt:69)
+	at com.codepocket.ide.CompletionInteractionTest.typePrefix(CompletionInteractionTest.kt:64)
+	at com.codepocket.ide.CompletionInteractionTest.toolbarTabRetainsCandidatesUntilItsClickIsAccepted(CompletionInteractionTest.kt:96)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="toolbarTabDoesNotModifyChineseComposition" classname="com.codepocket.ide.CompletionInteractionTest" time="0.162"/>
+  <testcase name="phoneHiddenMenuZoomsCodeAndPreservesNativeHistoryAndSelection" classname="com.codepocket.ide.CompletionInteractionTest" time="0.287"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

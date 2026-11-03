@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkspacePickerIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:54:42" hostname="JUHE" time="3.324">
+  <properties/>
+  <testcase name="phoneLightLargeDraftChoicesKeepFullPathsAndCancelPreservesRecovery" classname="com.codepocket.ide.WorkspacePickerIntegrationTest" time="0.554"/>
+  <testcase name="tabletMoveEmptyTargetsDoNotReserveABlankPanelOrAllowTheSource" classname="com.codepocket.ide.WorkspacePickerIntegrationTest" time="0.475"/>
+  <testcase name="tabletLightDraftsDistinguishSameNamesAndExportTheChosenSnapshot" classname="com.codepocket.ide.WorkspacePickerIntegrationTest" time="0.535"/>
+  <testcase name="phoneLightLargeMoveShowsTheFullTargetAndPreservesTheSavedBuffer" classname="com.codepocket.ide.WorkspacePickerIntegrationTest" time="0.679"/>
+  <testcase name="phoneLightLargeRecentChoicesKeepNamesSeparateAndPermissionCancelIsSafe" classname="com.codepocket.ide.WorkspacePickerIntegrationTest" time="0.581"/>
+  <testcase name="tabletWorkspaceShowsCurrentStorageAndCancelKeepsTheEditor" classname="com.codepocket.ide.WorkspacePickerIntegrationTest" time="0.5"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

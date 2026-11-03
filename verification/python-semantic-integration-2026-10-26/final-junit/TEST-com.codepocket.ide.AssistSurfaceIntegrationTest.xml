@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.AssistSurfaceIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-26T10:14:26" hostname="JUHE" time="11.46">
+  <properties/>
+  <testcase name="phoneLightLargeMultipleReferencesRemainNavigableAndVisiblyScrollable" classname="com.codepocket.ide.AssistSurfaceIntegrationTest" time="8.359"/>
+  <testcase name="phoneLightLargeActiveSnippetShowsItsLanguageAndTouchNavigationDoesNotEdit" classname="com.codepocket.ide.AssistSurfaceIntegrationTest" time="1.23"/>
+  <testcase name="tabletCompletionSeparatesRealCandidateKindsAndKeepsArrowTabInsertion" classname="com.codepocket.ide.AssistSurfaceIntegrationTest" time="0.648"/>
+  <testcase name="phoneLargeSingleSignatureHidesRedundantCycleButtonsAndKeepsTheEditor" classname="com.codepocket.ide.AssistSurfaceIntegrationTest" time="0.389"/>
+  <testcase name="phoneLightLargeCompletionKeepsTheNameAndFitsItsKindWhenThereIsRoom" classname="com.codepocket.ide.AssistSurfaceIntegrationTest" time="0.336"/>
+  <testcase name="tabletSnippetTriggerAndExplanationRemainSeparateWithRealInsertionNavigationAndUndo" classname="com.codepocket.ide.AssistSurfaceIntegrationTest" time="0.498"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

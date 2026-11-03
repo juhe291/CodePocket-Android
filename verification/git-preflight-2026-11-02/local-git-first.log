@@ -1,0 +1,15 @@
+test_approved_config_does_not_execute_repository_filter_or_hook (__main__.LocalGitProbe.test_approved_config_does_not_execute_repository_filter_or_hook) ... ok
+test_fixed_pure_wheel_import_and_no_native_extension (__main__.LocalGitProbe.test_fixed_pure_wheel_import_and_no_native_extension) ... ok
+test_index_lock_failure_preserves_index_head_and_working_file (__main__.LocalGitProbe.test_index_lock_failure_preserves_index_head_and_working_file) ... ok
+test_initial_commit_is_readable_by_standard_git (__main__.LocalGitProbe.test_initial_commit_is_readable_by_standard_git) ... ok
+test_no_verify_alone_still_calls_post_commit_hook (__main__.LocalGitProbe.test_no_verify_alone_still_calls_post_commit_hook) ... ok
+test_staged_unstaged_untracked_deleted_and_ignore (__main__.LocalGitProbe.test_staged_unstaged_untracked_deleted_and_ignore) ... ok
+test_standard_git_packed_history_is_read_and_extended (__main__.LocalGitProbe.test_standard_git_packed_history_is_read_and_extended) ... ok
+test_unicode_path_crlf_and_binary_blob_bytes_are_exact (__main__.LocalGitProbe.test_unicode_path_crlf_and_binary_blob_bytes_are_exact) ... ok
+test_unstage_and_deletion_commit_preserve_working_text (__main__.LocalGitProbe.test_unstage_and_deletion_commit_preserve_working_text) ... ok
+test_unstaged_and_staged_diffs_come_from_actual_index_and_tree (__main__.LocalGitProbe.test_unstaged_and_staged_diffs_come_from_actual_index_and_tree) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.000s
+
+OK

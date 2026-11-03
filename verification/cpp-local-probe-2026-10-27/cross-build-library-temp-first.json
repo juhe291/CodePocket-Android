@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\android-sdk\\ndk\\27.2.12479018\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe",
+    "--target=aarch64-linux-android24",
+    "-Wl,-z,max-page-size=16384",
+    "-std=c++17",
+    "-fPIC",
+    "-shared",
+    "-nostdlib++",
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\verification\\cpp-local-probe-2026-10-27\\fixtures\\main.cpp",
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\verification\\cpp-local-probe-2026-10-27\\fixtures\\helper.cpp",
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-runtime\\jni\\arm64-v8a\\libcpB_______.so",
+    "-Wl,--no-undefined",
+    "-Wl,-soname,program.so",
+    "-o",
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-probe\\android-build\\program.so"
+  ],
+  "cwd": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-probe\\android-build",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "error: unable to rename temporary 'C:/Users/q1684/AppData/Local/Packages/sandbox.{69ca11f5-44a3-4588-91c7-4da456b9d91f}/AC/Temp/main-088e80-ca1d7bec.o.tmp' to output file 'C:/Users/q1684/AppData/Local/Packages/sandbox.{69ca11f5-44a3-4588-91c7-4da456b9d91f}/AC/Temp/main-088e80.o': 'Permission denied'\n1 error generated.\nerror: unable to rename temporary 'C:/Users/q1684/AppData/Local/Packages/sandbox.{69ca11f5-44a3-4588-91c7-4da456b9d91f}/AC/Temp/helper-cdbf72-e7c05912.o.tmp' to output file 'C:/Users/q1684/AppData/Local/Packages/sandbox.{69ca11f5-44a3-4588-91c7-4da456b9d91f}/AC/Temp/helper-cdbf72.o': 'Permission denied'\n1 error generated.\n"
+}

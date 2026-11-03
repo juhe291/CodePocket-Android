@@ -1,0 +1,342 @@
+[
+  {
+    "name": "CodePocket-animations-debug.apk",
+    "sha256": "0bc57db2be96e4c7c4766d7c6b0dcd870a8b0d4fc7fd57293c81a4565265ff0e"
+  },
+  {
+    "name": "CodePocket-assist-batch-2026-10-26-debug.apk",
+    "sha256": "3521f180bf05f1c08c6d8f4008e224ca492e8bcb8d656605d802933a0430fef9"
+  },
+  {
+    "name": "CodePocket-audit-2026-10-24-debug.apk",
+    "sha256": "f6d5e91a24620c83623e0acf0382b120ea3fbb7bbc9cab12c6f91af92ba2442d"
+  },
+  {
+    "name": "CodePocket-command-ui-2026-10-24-debug.apk",
+    "sha256": "af69918df7ebc135d056d84a34b7f21b668793308f90eacd5cb98a277ffec307"
+  },
+  {
+    "name": "CodePocket-command-ui-final-2026-10-24-debug.apk",
+    "sha256": "cba7aabc1f54893c232484fb4b4181188e433b4e325e6576bcd1c3166af64f37"
+  },
+  {
+    "name": "CodePocket-compact-captions-2026-10-26-debug.apk",
+    "sha256": "2770b1a2a690aa163c66666694d347fd5262e4648622d0660d85843a60274e88"
+  },
+  {
+    "name": "CodePocket-context-batch-2026-10-26-debug.apk",
+    "sha256": "a612bf2841c9f27d8f8f9f97f0ba1cf27f999ccf3c19f5c2e3584fb3d595137f"
+  },
+  {
+    "name": "CodePocket-diagnostic-state-2026-10-24-debug.apk",
+    "sha256": "b456003d577113e21a8003ceb7cdbc91b9a8b7e7da6e52476bbbb3a829a8e31c"
+  },
+  {
+    "name": "CodePocket-diagnostics-2026-10-24-debug.apk",
+    "sha256": "5362045872bafe76f6adbc92b03a67d4e044be5a72c255cc5f7c92558774a14e"
+  },
+  {
+    "name": "CodePocket-editor-analysis-debug.apk",
+    "sha256": "3ee15564b1bd745d786cde8af8318f5b04ba80c602204504029a3d0f7bb1001c"
+  },
+  {
+    "name": "CodePocket-editor-documents-debug.apk",
+    "sha256": "7d38f8d3c32c9802879670e787390a793065b870789f2093703379d213a46fe4"
+  },
+  {
+    "name": "CodePocket-editor-feedback-2026-10-20-debug.apk",
+    "sha256": "c3499b07d0c21c4c7391afc0b8376bbf1764e486e80aeaea12136d009c4e0e2f"
+  },
+  {
+    "name": "CodePocket-editor-native-debug.apk",
+    "sha256": "7408f728e5ada1a0b07208d314ea15b31e73cfa06b506e6d8f33cebf7c0ec4a2"
+  },
+  {
+    "name": "CodePocket-editor-navigation-debug.apk",
+    "sha256": "32141df155167f58c2c7837c56ecb4c7a2f325510d42c3813c4633d050baca9f"
+  },
+  {
+    "name": "CodePocket-editor-sora-assistance-2026-10-21-debug.apk",
+    "sha256": "3447e6017667e17bcdd2f91bd029dabdd0129a0be35a6f46126c64a2c8219381"
+  },
+  {
+    "name": "CodePocket-editor-sora-documents-2026-10-21-debug.apk",
+    "sha256": "5377762e7b77a98e9ee5521c4af231ce55c67d95b7118bb05067db6ca5b31487"
+  },
+  {
+    "name": "CodePocket-editor-sora-languages-debug.apk",
+    "sha256": "b80071918c11b2eb6706a8f4415f5ef5b1b1e61f80a3468e80a54384677ecb28"
+  },
+  {
+    "name": "CodePocket-editor-sora-navigation-2026-10-21-debug.apk",
+    "sha256": "d0234b8be2e2006cc3fe68042ba84aa6af274a53351510b8ff28e9fc52a4fdda"
+  },
+  {
+    "name": "CodePocket-editor-sora-transactions-debug.apk",
+    "sha256": "cf5064df34b52cd1f841c714448c598f186142f0796f48291b2b61af009199a2"
+  },
+  {
+    "name": "CodePocket-editor-surface-debug.apk",
+    "sha256": "0a8c53bc85b83c586a92b640b824d21b19ded88eea0a6b9613671c657b7f3fb9"
+  },
+  {
+    "name": "CodePocket-editor-transactions-debug.apk",
+    "sha256": "6c84eda6c3bc92966af33b732ec10750050d74fe8304444fdb291465bab48689"
+  },
+  {
+    "name": "CodePocket-explorer-state-2026-10-26-debug.apk",
+    "sha256": "fc2a52ef330e4769b0a826b1db213c1935bd55a823d7a754e258e690f27c2d86"
+  },
+  {
+    "name": "CodePocket-forms-2026-10-24-debug.apk",
+    "sha256": "9b399c17da7d26e281c2d502bc35706031d860bb18ac737dc5ddd12911099102"
+  },
+  {
+    "name": "CodePocket-heading-polish-2026-10-24-debug.apk",
+    "sha256": "4fedb4c0cad96a0392e410b56c12a5764b7917ba6181992b2e932eeb0efc37ec"
+  },
+  {
+    "name": "CodePocket-keyboard-navigation-zoom-2026-10-20-debug.apk",
+    "sha256": "81aad63883f0b90338a1090f30ed62dfb07015483011d66b3525c453fddc2236"
+  },
+  {
+    "name": "CodePocket-light-theme-2026-10-24-debug.apk",
+    "sha256": "503cf409b467fa908b0739dc6d7005932c38747bdc7188927141cbfbb8feb8e5"
+  },
+  {
+    "name": "CodePocket-live-terminal-debug.apk",
+    "sha256": "b01843b3bce932605053fd905496e017a32068aaba2b32538531ab8ed60acafc"
+  },
+  {
+    "name": "CodePocket-main-assist-readiness-2026-10-23-debug.apk",
+    "sha256": "c6fb80798c96f43ffe620f3b603114119dbe1f51af12b5b9d37e8ca1449d31e3"
+  },
+  {
+    "name": "CodePocket-main-caret-motion-2026-10-23-debug.apk",
+    "sha256": "af511fd8b888d5a2fe83758fc584b020cf8d7fe20b90cc74d8b971bc08ee3f8c"
+  },
+  {
+    "name": "CodePocket-main-caret-polish-2026-10-23-debug.apk",
+    "sha256": "5db547f67b1e602ac5bfc96553afdb80e9911a06d0c8aeb7b9318b85e339f2e5"
+  },
+  {
+    "name": "CodePocket-main-editor-feedback-2026-10-22-debug.apk",
+    "sha256": "32aaea1d56055de4e6ad91211bc24a06e5155f53099abaf3840838260aaa96da"
+  },
+  {
+    "name": "CodePocket-main-file-settings-2026-10-23-debug.apk",
+    "sha256": "a1e2c8bd8f962d5af9901062890ab80274741d499cc14b760b70dfc2c869c3d8"
+  },
+  {
+    "name": "CodePocket-main-input-limit-2026-10-22-debug.apk",
+    "sha256": "e632e3e9fb2ae9341f100d36019f2d999029ee4f93f18ff4560aebfb69fa17f7"
+  },
+  {
+    "name": "CodePocket-main-integrated-2026-10-23-debug.apk",
+    "sha256": "30395c3a2e7323f1f3fc23309391a9ee5930ca29b62954689763b46fa99e0d30"
+  },
+  {
+    "name": "CodePocket-main-saf-recovery-2026-10-23-debug.apk",
+    "sha256": "a1e2c8bd8f962d5af9901062890ab80274741d499cc14b760b70dfc2c869c3d8"
+  },
+  {
+    "name": "CodePocket-main-sora-integration-2026-10-21-debug.apk",
+    "sha256": "b044f10519aa5937a74377438aa82ed8c0df9b63341a04469d1075a0c974bcd9"
+  },
+  {
+    "name": "CodePocket-main-surfaces-2026-10-23-debug.apk",
+    "sha256": "30395c3a2e7323f1f3fc23309391a9ee5930ca29b62954689763b46fa99e0d30"
+  },
+  {
+    "name": "CodePocket-main-window-ui-2026-10-23-debug.apk",
+    "sha256": "f6bf4bccafa695a77863645226db5c1f54478ad45ba177362abf044debf5d137"
+  },
+  {
+    "name": "CodePocket-menu-context-2026-10-26-debug.apk",
+    "sha256": "bc25c79c4b03153b46486d518b3ab5f96bac4ce089270497777dd5b0e7850f7f"
+  },
+  {
+    "name": "CodePocket-native-terminal-debug.apk",
+    "sha256": "def9ba82b438445276bda980a79dbe616c424fb833e150d117854f6b3224ab98"
+  },
+  {
+    "name": "CodePocket-navigation-2026-10-24-debug.apk",
+    "sha256": "b7f3e57a80412c38cb4fa1a0b5d2b822fdf5cd11a8357af6ca0c4bef1d4da502"
+  },
+  {
+    "name": "CodePocket-P0-debug.apk",
+    "sha256": "0fcec1617a9bfff419239530b8a77d941b77e5c5e6636b8d9fcb957486d3af46"
+  },
+  {
+    "name": "CodePocket-P0-followup-debug.apk",
+    "sha256": "13090539bac96eb31ba1085f139753534b7a32ada6adb3f076f11cb6d49b7c1c"
+  },
+  {
+    "name": "CodePocket-P0-resume-2026-10-16-debug.apk",
+    "sha256": "04f9be7a951a0ecf370e96e190810a9a8a2339b531c7219d32fde7b2779af83b"
+  },
+  {
+    "name": "CodePocket-P1-completion-debug.apk",
+    "sha256": "00ffbf0a5918e3e3960cfae4b2e9b46fa02f98a6880e2855058824d41c798024"
+  },
+  {
+    "name": "CodePocket-P1-panel-debug.apk",
+    "sha256": "0e995cdd58ef57ef66d6f23bc9299ccbe3f29eacc7e9d69c4c6e6851d144cba8"
+  },
+  {
+    "name": "CodePocket-P1-settings-search-debug.apk",
+    "sha256": "29dff4a9771cc325d68a056a49e61b0f61e8de18a684e2f73e1f4e9386a7dc6c"
+  },
+  {
+    "name": "CodePocket-P1-signatures-debug.apk",
+    "sha256": "c3fd49ba556eb76e259d8c71f53333b76f9b0a77623ffbff747a69a1529db638"
+  },
+  {
+    "name": "CodePocket-P1-snippets-debug.apk",
+    "sha256": "c285ced69595ba4f3537bcecadb20e04f7df3a805433da84f655ebe9e839ed1f"
+  },
+  {
+    "name": "CodePocket-P1A-shell-debug.apk",
+    "sha256": "44773506fbf7937d176e8eae3e4bb23a6fedd84c81fc59fbf6f46d7c2ac23ea9"
+  },
+  {
+    "name": "CodePocket-P1B-responsive-debug.apk",
+    "sha256": "ff404d3066eb9af5314cc171b479621425fd6a7e67791548c18dab384ff1e661"
+  },
+  {
+    "name": "CodePocket-P1C-animations-search-debug.apk",
+    "sha256": "a9ba6a7e81177d0755bed17adb227af6ffd52a9c00f9b8c270925801ede12b4b"
+  },
+  {
+    "name": "CodePocket-path-status-2026-10-24-debug.apk",
+    "sha256": "7e16ce088a9a87ff24e544a15caa04d9f5f959460880e6715160a79277cad715"
+  },
+  {
+    "name": "CodePocket-pickers-batch-2026-10-26-debug.apk",
+    "sha256": "3e58cb50f4a028ba12d308f4245990ab1d95ee3b4055d5c01f749803c3aeb271"
+  },
+  {
+    "name": "CodePocket-search-entry-2026-10-24-debug.apk",
+    "sha256": "3c150a6147dd4b53a2b9fe7e402067132335ecf6939827dd8f520f8072cb4319"
+  },
+  {
+    "name": "CodePocket-settings-consistency-2026-10-24-debug.apk",
+    "sha256": "3ee6045cbe4a9b0f81aa30f2fa66e92842860126be59569975bd5fbdee6d7c26"
+  },
+  {
+    "name": "CodePocket-shell-crash-fixed-debug.apk",
+    "sha256": "96cd81703e515190afb16aed4e03ad1e72368edf5581c846cde3c985e055c8a3"
+  },
+  {
+    "name": "CodePocket-Sora-assistance-2026-10-21-lab-debug.apk",
+    "sha256": "69cbb32af41b557ef84a84c8d02d69407feee4af91b38ea14c27127b6546aec7"
+  },
+  {
+    "name": "CodePocket-Sora-documents-2026-10-21-lab-debug.apk",
+    "sha256": "797e21a64e1d76489cedc02573ade3d8ddbcc6b5f93cff06c0447b1969b76252"
+  },
+  {
+    "name": "CodePocket-Sora-editor-lab-debug.apk",
+    "sha256": "15ad39d0969a186b8f67582bbbc9cb798e86b93480604cf78afb1a27e4e44e01"
+  },
+  {
+    "name": "CodePocket-Sora-languages-lab-debug.apk",
+    "sha256": "223ce8377a129553bf464b6e59b3cb10b1e8d1248f167d527c7c67b9ed95541a"
+  },
+  {
+    "name": "CodePocket-Sora-navigation-2026-10-21-lab-debug.apk",
+    "sha256": "a4f435b4633a7c5af2de6a260c613d7c3e2aaad9f42d33be494eeaf7b55c1c07"
+  },
+  {
+    "name": "CodePocket-Sora-surface-lab-debug.apk",
+    "sha256": "8944ece94e994acb25ea44ab5b536c1be9bea885b6da83fc133c99f653fa9d21"
+  },
+  {
+    "name": "CodePocket-Sora-transactions-lab-debug.apk",
+    "sha256": "73e17c28ed44dd920fb511128b5fb5a5d4f6f8783e27abe58a04a2046a3e9aee"
+  },
+  {
+    "name": "CodePocket-stage0-2026-10-15-debug.apk",
+    "sha256": "d85e032b975a9f779fe79b34be39fa680e0b19bf8ed85ea7326b24178f93a824"
+  },
+  {
+    "name": "CodePocket-startup-ui-2026-10-24-debug.apk",
+    "sha256": "312e55c0f7e8b26bb4b689d5b735bf317838b11e885c7ed0245adc528e7491d2"
+  },
+  {
+    "name": "CodePocket-surfaces-2026-10-24-debug.apk",
+    "sha256": "660d168660ffd1f13b9edb1f0834982f0653e8d94c1b01dcc8cb196d32c75edb"
+  },
+  {
+    "name": "CodePocket-tab-navigation-2026-10-24-debug.apk",
+    "sha256": "316e3da3da283c77ab3fb98e7ecf82c21d5981437f1ca303df9483d29d2a6b74"
+  },
+  {
+    "name": "CodePocket-tab-stability-2026-10-24-debug.apk",
+    "sha256": "26ae755de1e4bc167c9fc1570bfc137c06c69471c7162dbfe85b94131cc97712"
+  },
+  {
+    "name": "CodePocket-terminal-dock-2026-10-24-debug.apk",
+    "sha256": "c872f0c1e21501191040b7e06cad9cc014ca5977cf007e77a4bafed46eb40d1d"
+  },
+  {
+    "name": "CodePocket-terminal-focus-debug.apk",
+    "sha256": "06057a8ce583bfca62e2f10d55254d73fec259eb71ea4503edff0d259875772c"
+  },
+  {
+    "name": "CodePocket-terminal-polish-2026-10-20-debug.apk",
+    "sha256": "94fe4856bf09d57d4f791c7667e85c3f6ed76c4b42f579fb3762dcca2205a55c"
+  },
+  {
+    "name": "CodePocket-terminal-prompt-ime-debug.apk",
+    "sha256": "22ff560ab19c4f3b56e005497e68c81c5d57dd49d3791978fb135ca4bbf84109"
+  },
+  {
+    "name": "CodePocket-terminal-running-input-debug.apk",
+    "sha256": "ae4faaf4fdca1955cd9fb5fbb1fc559be01797907b78d0e139c27dfb66508978"
+  },
+  {
+    "name": "CodePocket-terminal-startup-debug.apk",
+    "sha256": "45b938879b7fa15d1ee636c044c7007924ac876a64922a8ec1a0e530a8a59e76"
+  },
+  {
+    "name": "CodePocket-terminal-workflow-debug.apk",
+    "sha256": "7b3c0419ec05901b4502cde75a16b76a4d511d493b7bd879c9559861368e95ed"
+  },
+  {
+    "name": "CodePocket-touch-font-zoom-2026-10-20-debug.apk",
+    "sha256": "b865c99d12d17ce9a5a450cdce635ac67ec5189f5c068f7a84af8a998f8eb2c0"
+  },
+  {
+    "name": "CodePocket-UI-audit-baseline-debug.apk",
+    "sha256": "130eef58299f62aca33fb8c4f090f2706a5ff1bf164df3cee8e00fd687f4d2f7"
+  },
+  {
+    "name": "CodePocket-ui-complete-2026-10-20-debug.apk",
+    "sha256": "f07346856373dea64e9dad2f1cfa899753ebb0b1c4c284b5ac8dcbb194af7873"
+  },
+  {
+    "name": "CodePocket-UI-redesign-debug.apk",
+    "sha256": "1d6fbba6653d46499a957973194eccadeed948972207d75e9e7a2bbd296fee42"
+  },
+  {
+    "name": "CodePocket-UI-resume-debug.apk",
+    "sha256": "65cea4b23f29d0664a0046f67e2354090bd379ccd878a16171e2d4233588765a"
+  },
+  {
+    "name": "CodePocket-ui-startup-fixed-2026-10-20-debug.apk",
+    "sha256": "f86ccfbd546e38024f1649eced0fa5afbe23f564fb6bb7fa4936b6ac85d451d4"
+  },
+  {
+    "name": "CodePocket-v0.2-debug.apk",
+    "sha256": "3f7c3d72cfa1c11b581149f5138bc28f01678ff3a04810d867848ea0c1b6899e"
+  },
+  {
+    "name": "CodePocket-workbench-2026-10-24-debug.apk",
+    "sha256": "9c7ab785ed6317eaf1c7a84950c0d84cb0c48eab71886ffac02db878b2664179"
+  },
+  {
+    "name": "CodePocket-workbench-motion-debug.apk",
+    "sha256": "000f5996fc21f0b1595781c76d7f2ae7ccf01fc78bd16da05690eabfd4102225"
+  }
+]

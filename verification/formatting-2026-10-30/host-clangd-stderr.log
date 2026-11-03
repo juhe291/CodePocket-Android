@@ -1,0 +1,325 @@
+\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\spacing.cpp"
+V[10:59:42.797] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:42.798] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name spacing.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\spacing.cpp"
+V[10:59:42.799] Building first preamble for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\spacing.cpp version 1
+I[10:59:42.819] Built preamble of size 271996 for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\spacing.cpp version 1 in 0.02 seconds
+V[10:59:42.820] indexed preamble AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\spacing.cpp version 1:
+  symbol slab: 0 symbols, 128 bytes
+  ref slab: 0 symbols, 0 refs, 136 bytes
+  relations slab: 0 relations, 24 bytes
+E[10:59:42.931] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:42.934] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\spacing.cpp version 1:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 1 symbols, 1 refs, 4256 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:42.934] Build dynamic index for main-file symbols with estimated memory usage of 11536 bytes
+I[10:59:42.934] --> textDocument/publishDiagnostics
+V[10:59:42.934] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":0},"start":{"character":9,"line":0}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":22,"line":1},"start":{"character":19,"line":1}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/spacing.cpp","version":1}}
+
+V[10:59:50.321] <<< {"jsonrpc":"2.0","method":"textDocument/didChange","params":{"contentChanges":[{"text":"#include <iostream>\nint main() {\n    int x = 3;\n    std::cout << x + 4 << \"\\n\";\n    return 0;\n}\n"}],"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/spacing.cpp","version":2}}}
+
+I[10:59:50.321] <-- textDocument/didChange
+V[10:59:50.322] <<< {"id":3,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/spacing.cpp"}}}
+
+I[10:59:50.322] <-- textDocument/formatting(3)
+I[10:59:50.325] --> reply:textDocument/formatting(3) 3 ms
+V[10:59:50.325] >>> {"id":3,"jsonrpc":"2.0","result":[]}
+
+V[10:59:50.328] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"#include \"z.h\"\n#include \"a.h\"\n#include <iostream>\nint main(){std::cout<<answer<<\"\\n\";}\n","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/include_order.cpp","version":1}}}
+
+I[10:59:50.328] <-- textDocument/didOpen
+V[10:59:50.328] <<< {"id":4,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/include_order.cpp"}}}
+
+I[10:59:50.328] <-- textDocument/formatting(4)
+I[10:59:50.328] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp
+I[10:59:50.328] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\include_order.cpp"
+I[10:59:50.331] --> reply:textDocument/formatting(4) 2 ms
+V[10:59:50.331] >>> {"id":4,"jsonrpc":"2.0","result":[{"newText":" ","range":{"end":{"character":10,"line":3},"start":{"character":10,"line":3}}},{"newText":" ","range":{"end":{"character":11,"line":3},"start":{"character":11,"line":3}}},{"newText":" ","range":{"end":{"character":20,"line":3},"start":{"character":20,"line":3}}},{"newText":" ","range":{"end":{"character":22,"line":3},"start":{"character":22,"line":3}}},{"newText":" ","range":{"end":{"character":28,"line":3},"start":{"character":28,"line":3}}},{"newText":" ","range":{"end":{"character":30,"line":3},"start":{"character":30,"line":3}}},{"newText":" ","range":{"end":{"character":35,"line":3},"start":{"character":35,"line":3}}}]}
+
+V[10:59:50.364] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:50.365] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name include_order.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\include_order.cpp"
+V[10:59:50.365] Building first preamble for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp version 1
+I[10:59:50.380] Built preamble of size 273132 for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp version 1 in 0.01 seconds
+V[10:59:50.381] indexed preamble AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp version 1:
+  symbol slab: 2 symbols, 4688 bytes
+  ref slab: 0 symbols, 0 refs, 136 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:50.381] Build dynamic index for header symbols with estimated memory usage of 15416 bytes
+I[10:59:50.439] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\spacing.cpp
+I[10:59:50.439] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\spacing.cpp version 2 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\spacing.cpp"
+E[10:59:50.467] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:50.469] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp version 1:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 1 symbols, 1 refs, 4256 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:50.469] Build dynamic index for main-file symbols with estimated memory usage of 20280 bytes
+I[10:59:50.469] --> textDocument/publishDiagnostics
+V[10:59:50.469] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":2},"start":{"character":9,"line":2}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":14,"line":3},"start":{"character":11,"line":3}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/include_order.cpp","version":1}}
+
+V[10:59:50.472] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:50.473] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name spacing.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\spacing.cpp"
+V[10:59:50.476] Reusing preamble version 1 for version 2 of C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\spacing.cpp
+E[10:59:50.549] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:50.552] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\spacing.cpp version 2:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 1 symbols, 1 refs, 4256 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:50.552] Build dynamic index for main-file symbols with estimated memory usage of 20280 bytes
+I[10:59:50.552] --> textDocument/publishDiagnostics
+V[10:59:50.552] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":0},"start":{"character":9,"line":0}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":7,"line":3},"start":{"character":4,"line":3}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/spacing.cpp","version":2}}
+
+V[10:59:52.601] <<< {"jsonrpc":"2.0","method":"textDocument/didChange","params":{"contentChanges":[{"text":"#include \"z.h\"\n#include \"a.h\"\n#include <iostream>\nint main() { std::cout << answer << \"\\n\"; }\n"}],"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/include_order.cpp","version":2}}}
+
+I[10:59:52.601] <-- textDocument/didChange
+V[10:59:52.601] <<< {"id":5,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/include_order.cpp"}}}
+
+I[10:59:52.601] <-- textDocument/formatting(5)
+I[10:59:52.606] --> reply:textDocument/formatting(5) 4 ms
+V[10:59:52.606] >>> {"id":5,"jsonrpc":"2.0","result":[]}
+
+V[10:59:52.608] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"#include <iostream>\n// 中文 😀 comment stays\nint main(){const char* text=R\"(  raw\n   body 😀中文)\";std::cout<<text<<\"\\n\";}\n","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/unicode_raw.cpp","version":1}}}
+
+I[10:59:52.608] <-- textDocument/didOpen
+V[10:59:52.608] <<< {"id":6,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/unicode_raw.cpp"}}}
+
+I[10:59:52.608] <-- textDocument/formatting(6)
+I[10:59:52.609] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp
+I[10:59:52.609] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\unicode_raw.cpp"
+I[10:59:52.617] --> reply:textDocument/formatting(6) 8 ms
+V[10:59:52.617] >>> {"id":6,"jsonrpc":"2.0","result":[{"newText":" ","range":{"end":{"character":10,"line":2},"start":{"character":10,"line":2}}},{"newText":"\n    ","range":{"end":{"character":11,"line":2},"start":{"character":11,"line":2}}},{"newText":" ","range":{"end":{"character":21,"line":2},"start":{"character":21,"line":2}}},{"newText":"","range":{"end":{"character":23,"line":2},"start":{"character":22,"line":2}}},{"newText":" ","range":{"end":{"character":27,"line":2},"start":{"character":27,"line":2}}},{"newText":" ","range":{"end":{"character":28,"line":2},"start":{"character":28,"line":2}}},{"newText":"\n    ","range":{"end":{"character":15,"line":3},"start":{"character":15,"line":3}}},{"newText":" ","range":{"end":{"character":24,"line":3},"start":{"character":24,"line":3}}},{"newText":" ","range":{"end":{"character":26,"line":3},"start":{"character":26,"line":3}}},{"newText":" ","range":{"end":{"character":30,"line":3},"start":{"character":30,"line":3}}},{"newText":" ","range":{"end":{"character":32,"line":3},"start":{"character":32,"line":3}}},{"newText":"\n","range":{"end":{"character":37,"line":3},"start":{"character":37,"line":3}}}]}
+
+V[10:59:52.656] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:52.657] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name unicode_raw.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\unicode_raw.cpp"
+V[10:59:52.657] Building first preamble for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp version 1
+I[10:59:52.675] Built preamble of size 272008 for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp version 1 in 0.02 seconds
+V[10:59:52.675] indexed preamble AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp version 1:
+  symbol slab: 0 symbols, 128 bytes
+  ref slab: 0 symbols, 0 refs, 136 bytes
+  relations slab: 0 relations, 24 bytes
+I[10:59:52.700] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp
+I[10:59:52.700] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp version 2 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\include_order.cpp"
+V[10:59:52.741] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:52.742] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name include_order.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\include_order.cpp"
+V[10:59:52.745] Reusing preamble version 1 for version 2 of C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp
+E[10:59:52.772] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:52.775] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp version 1:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 1 symbols, 1 refs, 4256 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:52.775] Build dynamic index for main-file symbols with estimated memory usage of 29024 bytes
+I[10:59:52.775] --> textDocument/publishDiagnostics
+V[10:59:52.775] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":0},"start":{"character":9,"line":0}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":18,"line":3},"start":{"character":15,"line":3}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/unicode_raw.cpp","version":1}}
+
+E[10:59:52.839] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:52.845] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\include_order.cpp version 2:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 1 symbols, 1 refs, 4256 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:52.845] Build dynamic index for main-file symbols with estimated memory usage of 29024 bytes
+I[10:59:52.845] --> textDocument/publishDiagnostics
+V[10:59:52.845] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":2},"start":{"character":9,"line":2}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":16,"line":3},"start":{"character":13,"line":3}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/include_order.cpp","version":2}}
+
+V[10:59:54.868] <<< {"jsonrpc":"2.0","method":"textDocument/didChange","params":{"contentChanges":[{"text":"#include <iostream>\n// 中文 😀 comment stays\nint main() {\n    const char *text = R\"(  raw\n   body 😀中文)\";\n    std::cout << text << \"\\n\";\n}\n"}],"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/unicode_raw.cpp","version":2}}}
+
+I[10:59:54.868] <-- textDocument/didChange
+V[10:59:54.868] <<< {"id":7,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/unicode_raw.cpp"}}}
+
+I[10:59:54.868] <-- textDocument/formatting(7)
+I[10:59:54.872] --> reply:textDocument/formatting(7) 3 ms
+V[10:59:54.872] >>> {"id":7,"jsonrpc":"2.0","result":[]}
+
+V[10:59:54.874] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"#include <iostream>\n#define VALUE(x) \\\n+ ((x)+1)\nint main(){std::cout<<VALUE(4)<<\"\\n\";}\n","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/macro.cpp","version":1}}}
+
+I[10:59:54.874] <-- textDocument/didOpen
+V[10:59:54.875] <<< {"id":8,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/macro.cpp"}}}
+
+I[10:59:54.875] <-- textDocument/formatting(8)
+I[10:59:54.877] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp
+I[10:59:54.877] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\macro.cpp"
+I[10:59:54.882] --> reply:textDocument/formatting(8) 6 ms
+V[10:59:54.882] >>> {"id":8,"jsonrpc":"2.0","result":[{"newText":" ","range":{"end":{"character":0,"line":2},"start":{"character":16,"line":1}}},{"newText":"","range":{"end":{"character":2,"line":2},"start":{"character":1,"line":2}}},{"newText":" ","range":{"end":{"character":6,"line":2},"start":{"character":6,"line":2}}},{"newText":" ","range":{"end":{"character":7,"line":2},"start":{"character":7,"line":2}}},{"newText":" ","range":{"end":{"character":10,"line":3},"start":{"character":10,"line":3}}},{"newText":" ","range":{"end":{"character":11,"line":3},"start":{"character":11,"line":3}}},{"newText":" ","range":{"end":{"character":20,"line":3},"start":{"character":20,"line":3}}},{"newText":" ","range":{"end":{"character":22,"line":3},"start":{"character":22,"line":3}}},{"newText":" ","range":{"end":{"character":30,"line":3},"start":{"character":30,"line":3}}},{"newText":" ","range":{"end":{"character":32,"line":3},"start":{"character":32,"line":3}}},{"newText":" ","range":{"end":{"character":37,"line":3},"start":{"character":37,"line":3}}}]}
+
+V[10:59:54.910] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:54.911] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name macro.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\macro.cpp"
+V[10:59:54.911] Building first preamble for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 1
+I[10:59:54.927] Built preamble of size 272152 for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 1 in 0.01 seconds
+V[10:59:54.928] indexed preamble AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 1:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 0 symbols, 0 refs, 136 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:54.928] Build dynamic index for header symbols with estimated memory usage of 20052 bytes
+I[10:59:54.980] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp
+I[10:59:54.980] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp version 2 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\unicode_raw.cpp"
+V[10:59:55.022] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+E[10:59:55.022] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:55.023] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name unicode_raw.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\unicode_raw.cpp"
+V[10:59:55.026] Reusing preamble version 1 for version 2 of C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp
+V[10:59:55.026] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 1:
+  symbol slab: 2 symbols, 4688 bytes
+  ref slab: 2 symbols, 3 refs, 4280 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:55.026] Build dynamic index for main-file symbols with estimated memory usage of 38320 bytes
+I[10:59:55.026] --> textDocument/publishDiagnostics
+V[10:59:55.026] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":0},"start":{"character":9,"line":0}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":14,"line":3},"start":{"character":11,"line":3}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/macro.cpp","version":1}}
+
+E[10:59:55.119] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:55.121] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\unicode_raw.cpp version 2:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 1 symbols, 1 refs, 4256 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:55.121] Build dynamic index for main-file symbols with estimated memory usage of 38320 bytes
+I[10:59:55.121] --> textDocument/publishDiagnostics
+V[10:59:55.121] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":0},"start":{"character":9,"line":0}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":7,"line":5},"start":{"character":4,"line":5}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/unicode_raw.cpp","version":2}}
+
+V[10:59:57.025] <<< {"jsonrpc":"2.0","method":"textDocument/didChange","params":{"contentChanges":[{"text":"#include <iostream>\n#define VALUE(x) +((x) + 1)\nint main() { std::cout << VALUE(4) << \"\\n\"; }\n"}],"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/macro.cpp","version":2}}}
+
+I[10:59:57.025] <-- textDocument/didChange
+V[10:59:57.026] <<< {"id":9,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/macro.cpp"}}}
+
+I[10:59:57.026] <-- textDocument/formatting(9)
+I[10:59:57.032] --> reply:textDocument/formatting(9) 6 ms
+V[10:59:57.032] >>> {"id":9,"jsonrpc":"2.0","result":[]}
+
+V[10:59:57.035] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"#include <iostream>\r\nint main(){std::cout<<u8\"😀中文\"<<\"\\n\";}\r\n","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/crlf.cpp","version":1}}}
+
+I[10:59:57.035] <-- textDocument/didOpen
+V[10:59:57.035] <<< {"id":10,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/crlf.cpp"}}}
+
+I[10:59:57.035] <-- textDocument/formatting(10)
+I[10:59:57.035] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\crlf.cpp
+I[10:59:57.035] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\crlf.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\crlf.cpp"
+I[10:59:57.039] --> reply:textDocument/formatting(10) 3 ms
+V[10:59:57.039] >>> {"id":10,"jsonrpc":"2.0","result":[{"newText":" ","range":{"end":{"character":10,"line":1},"start":{"character":10,"line":1}}},{"newText":" ","range":{"end":{"character":11,"line":1},"start":{"character":11,"line":1}}},{"newText":" ","range":{"end":{"character":20,"line":1},"start":{"character":20,"line":1}}},{"newText":" ","range":{"end":{"character":22,"line":1},"start":{"character":22,"line":1}}},{"newText":" ","range":{"end":{"character":30,"line":1},"start":{"character":30,"line":1}}},{"newText":" ","range":{"end":{"character":32,"line":1},"start":{"character":32,"line":1}}},{"newText":" ","range":{"end":{"character":37,"line":1},"start":{"character":37,"line":1}}}]}
+
+V[10:59:57.067] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:57.068] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name crlf.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\crlf.cpp"
+V[10:59:57.068] Building first preamble for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\crlf.cpp version 1
+I[10:59:57.081] Built preamble of size 271992 for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\crlf.cpp version 1 in 0.01 seconds
+V[10:59:57.081] indexed preamble AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\crlf.cpp version 1:
+  symbol slab: 0 symbols, 128 bytes
+  ref slab: 0 symbols, 0 refs, 136 bytes
+  relations slab: 0 relations, 24 bytes
+I[10:59:57.135] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp
+I[10:59:57.135] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 2 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\macro.cpp"
+E[10:59:57.160] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:57.162] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\crlf.cpp version 1:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 1 symbols, 1 refs, 4256 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:57.162] Build dynamic index for main-file symbols with estimated memory usage of 47064 bytes
+I[10:59:57.162] --> textDocument/publishDiagnostics
+V[10:59:57.162] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":0},"start":{"character":9,"line":0}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":14,"line":1},"start":{"character":11,"line":1}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/crlf.cpp","version":1}}
+
+V[10:59:57.169] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:57.170] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name macro.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\macro.cpp"
+V[10:59:57.172] Rebuilding invalidated preamble for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 2 (previous was version 1)
+I[10:59:57.183] Built preamble of size 272152 for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 2 in 0.01 seconds
+V[10:59:57.183] indexed preamble AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 2:
+  symbol slab: 1 symbols, 4456 bytes
+  ref slab: 0 symbols, 0 refs, 136 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:57.185] Build dynamic index for header symbols with estimated memory usage of 20052 bytes
+E[10:59:57.243] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:57.246] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 2:
+  symbol slab: 2 symbols, 4688 bytes
+  ref slab: 3 symbols, 3 refs, 4304 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:57.246] Build dynamic index for main-file symbols with estimated memory usage of 47088 bytes
+I[10:59:57.246] --> textDocument/publishDiagnostics
+V[10:59:57.246] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":0},"start":{"character":9,"line":0}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":16,"line":2},"start":{"character":13,"line":2}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/macro.cpp","version":2}}
+
+E[10:59:57.326] IncludeCleaner: Failed to get an entry for resolved path '' from include <iostream> : no such file or directory
+V[10:59:57.329] indexed file AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\macro.cpp version 2:
+  symbol slab: 2 symbols, 4688 bytes
+  ref slab: 2 symbols, 3 refs, 4280 bytes
+  relations slab: 0 relations, 24 bytes
+V[10:59:57.329] Build dynamic index for main-file symbols with estimated memory usage of 47064 bytes
+I[10:59:57.329] --> textDocument/publishDiagnostics
+V[10:59:57.329] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"code":"pp_file_not_found","message":"'iostream' file not found","range":{"end":{"character":19,"line":0},"start":{"character":9,"line":0}},"severity":1,"source":"clang"},{"code":"undeclared_var_use","message":"Use of undeclared identifier 'std'","range":{"end":{"character":16,"line":2},"start":{"character":13,"line":2}},"severity":1,"source":"clang"}],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/macro.cpp","version":2}}
+
+V[10:59:59.119] <<< {"jsonrpc":"2.0","method":"textDocument/didChange","params":{"contentChanges":[{"text":"#include <iostream>\r\nint main() { std::cout << u8\"😀中文\" << \"\\n\"; }\r\n"}],"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/crlf.cpp","version":2}}}
+
+I[10:59:59.119] <-- textDocument/didChange
+V[10:59:59.119] <<< {"id":11,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/crlf.cpp"}}}
+
+I[10:59:59.119] <-- textDocument/formatting(11)
+I[10:59:59.125] --> reply:textDocument/formatting(11) 5 ms
+V[10:59:59.125] >>> {"id":11,"jsonrpc":"2.0","result":[]}
+
+V[10:59:59.128] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"void sample(){\nif(true){\nint value=1;\n}\n}\n","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/indent-2-False.cpp","version":1}}}
+
+I[10:59:59.128] <-- textDocument/didOpen
+V[10:59:59.128] <<< {"id":12,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":2},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/indent-2-False.cpp"}}}
+
+I[10:59:59.128] <-- textDocument/formatting(12)
+I[10:59:59.128] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\indent-2-False.cpp
+I[10:59:59.128] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\indent-2-False.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\indent-2-False.cpp"
+I[10:59:59.131] --> reply:textDocument/formatting(12) 2 ms
+V[10:59:59.131] >>> {"id":12,"jsonrpc":"2.0","result":[{"newText":" ","range":{"end":{"character":13,"line":0},"start":{"character":13,"line":0}}},{"newText":"\n  ","range":{"end":{"character":0,"line":1},"start":{"character":14,"line":0}}},{"newText":" ","range":{"end":{"character":2,"line":1},"start":{"character":2,"line":1}}},{"newText":" ","range":{"end":{"character":8,"line":1},"start":{"character":8,"line":1}}},{"newText":"\n    ","range":{"end":{"character":0,"line":2},"start":{"character":9,"line":1}}},{"newText":" ","range":{"end":{"character":9,"line":2},"start":{"character":9,"line":2}}},{"newText":" ","range":{"end":{"character":10,"line":2},"start":{"character":10,"line":2}}},{"newText":"\n  ","range":{"end":{"character":0,"line":3},"start":{"character":12,"line":2}}}]}
+
+V[10:59:59.134] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"void sample(){\nif(true){\nint value=1;\n}\n}\n","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/indent-8-False.cpp","version":1}}}
+
+I[10:59:59.134] <-- textDocument/didOpen
+V[10:59:59.134] <<< {"id":13,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":true,"tabSize":8},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/indent-8-False.cpp"}}}
+
+I[10:59:59.134] <-- textDocument/formatting(13)
+I[10:59:59.134] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\indent-8-False.cpp
+I[10:59:59.134] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\indent-8-False.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\indent-8-False.cpp"
+I[10:59:59.139] --> reply:textDocument/formatting(13) 4 ms
+V[10:59:59.139] >>> {"id":13,"jsonrpc":"2.0","result":[{"newText":" ","range":{"end":{"character":13,"line":0},"start":{"character":13,"line":0}}},{"newText":"\n        ","range":{"end":{"character":0,"line":1},"start":{"character":14,"line":0}}},{"newText":" ","range":{"end":{"character":2,"line":1},"start":{"character":2,"line":1}}},{"newText":" ","range":{"end":{"character":8,"line":1},"start":{"character":8,"line":1}}},{"newText":"\n                ","range":{"end":{"character":0,"line":2},"start":{"character":9,"line":1}}},{"newText":" ","range":{"end":{"character":9,"line":2},"start":{"character":9,"line":2}}},{"newText":" ","range":{"end":{"character":10,"line":2},"start":{"character":10,"line":2}}},{"newText":"\n        ","range":{"end":{"character":0,"line":3},"start":{"character":12,"line":2}}}]}
+
+V[10:59:59.143] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"void sample(){\nif(true){\nint value=1;\n}\n}\n","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/indent-4-True.cpp","version":1}}}
+
+I[10:59:59.143] <-- textDocument/didOpen
+V[10:59:59.143] <<< {"id":14,"jsonrpc":"2.0","method":"textDocument/formatting","params":{"options":{"insertSpaces":false,"tabSize":4},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/formatting-probe/cpp/indent-4-True.cpp"}}}
+
+I[10:59:59.143] <-- textDocument/formatting(14)
+I[10:59:59.146] --> reply:textDocument/formatting(14) 2 ms
+V[10:59:59.146] >>> {"id":14,"jsonrpc":"2.0","result":[{"newText":" ","range":{"end":{"character":13,"line":0},"start":{"character":13,"line":0}}},{"newText":"\n\t","range":{"end":{"character":0,"line":1},"start":{"character":14,"line":0}}},{"newText":" ","range":{"end":{"character":2,"line":1},"start":{"character":2,"line":1}}},{"newText":" ","range":{"end":{"character":8,"line":1},"start":{"character":8,"line":1}}},{"newText":"\n\t\t","range":{"end":{"character":0,"line":2},"start":{"character":9,"line":1}}},{"newText":" ","range":{"end":{"character":9,"line":2},"start":{"character":9,"line":2}}},{"newText":" ","range":{"end":{"character":10,"line":2},"start":{"character":10,"line":2}}},{"newText":"\n\t","range":{"end":{"character":0,"line":3},"start":{"character":12,"line":2}}}]}
+
+V[10:59:59.146] <<< {"id":15,"jsonrpc":"2.0","method":"shutdown","params":null}
+
+I[10:59:59.146] <-- shutdown(15)
+I[10:59:59.146] --> reply:shutdown(15) 0 ms
+V[10:59:59.146] >>> {"id":15,"jsonrpc":"2.0","result":null}
+
+V[10:59:59.146] <<< {"jsonrpc":"2.0","method":"exit","params":null}
+
+I[10:59:59.146] <-- exit
+I[10:59:59.146] LSP finished, exiting with status 0
+V[10:59:59.163] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:59.164] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name indent-2-False.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\indent-2-False.cpp"
+I[10:59:59.164] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\indent-4-True.cpp
+I[10:59:59.164] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\indent-4-True.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\indent-4-True.cpp"
+V[10:59:59.166] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:59.166] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name indent-8-False.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\indent-8-False.cpp"
+I[10:59:59.166] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\crlf.cpp
+I[10:59:59.167] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp\crlf.cpp version 2 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\formatting-probe\cpp]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 -nostdinc -nostdinc++ "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\crlf.cpp"
+V[10:59:59.194] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:59.195] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name indent-4-True.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\indent-4-True.cpp"
+V[10:59:59.199] Ignored diagnostic. argument unused during compilation: '-nostdinc++'
+V[10:59:59.199] Driver produced command: cc1 -cc1 -triple x86_64-pc-windows-msvc19.44.35220 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name crlf.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -relaxed-aliasing -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -fms-volatile -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp" -nostdsysteminc -nobuiltininc -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host\\clangd_21.1.8\\lib\\clang\\21" -std=c++17 -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fms-extensions -fms-compatibility -fms-compatibility-version=19.44.35220 -fskip-odr-check-in-gmf -fdelayed-template-parsing -fcxx-exceptions -fexceptions -no-round-trip-args -faddrsig -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\formatting-probe\\cpp\\crlf.cpp"

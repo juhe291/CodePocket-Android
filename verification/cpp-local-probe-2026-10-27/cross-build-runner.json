@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\android-sdk\\ndk\\27.2.12479018\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe",
+    "--target=aarch64-linux-android24",
+    "-Wl,-z,max-page-size=16384",
+    "-fPIE",
+    "-pie",
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\verification\\cpp-local-probe-2026-10-27\\fixtures\\runner.c",
+    "-ldl",
+    "-o",
+    "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-probe\\android-build\\libcodepocket_cpp_runner.so"
+  ],
+  "cwd": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-probe\\android-build",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

@@ -1,0 +1,15 @@
+dot: PASS (38 ms)
+arrow: PASS (31 ms)
+namespace: PASS (30 ms)
+vector: PASS (687 ms)
+unicode_crlf: PASS (715 ms)
+middle: PASS (31 ms)
+signature: PASS (27 ms)
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-semantic-probe-2026-10-27\probe-lsp.py", line 170, in <module>
+    if __name__ == '__main__': main()
+                               ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-semantic-probe-2026-10-27\probe-lsp.py", line 151, in main
+    if tag == 'overload': assert len(signatures) == 2, response
+                                 ^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'id': 9, 'jsonrpc': '2.0', 'result': {'activeParameter': 1, 'activeSignature': 0, 'signatures': [{'label': 'solve(int left, int right) -> void', 'parameters': [{'label': [6, 14]}, {'label': [16, 25]}]}]}}

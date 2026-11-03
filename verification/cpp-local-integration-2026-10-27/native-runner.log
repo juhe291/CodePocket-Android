@@ -1,0 +1,3 @@
+Android NDK: C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android/app/src/main/jni/Android.mk:codepocket_cpp_runner: LOCAL_MODULE_FILENAME should not include file extensions    
+C:/Users/q1684/Desktop/安卓端编译器/CodePocket-Android/.tools/android-sdk/ndk/27.2.12479018/build/../build/core/build-executable.mk:27: *** Android NDK: Aborting    .  Stop.
+Android NDK: C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android/app/src/main/jni/Android.mk:codepocket_cpp_runner: LOCAL_MODULE_FILENAME must not contain a file extension    

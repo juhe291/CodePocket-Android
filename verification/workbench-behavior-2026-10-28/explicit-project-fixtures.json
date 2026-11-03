@@ -1,0 +1,130 @@
+[
+  {
+    "file": "AssistSurfaceIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "AuxiliarySurfaceIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "CompactCaptionsIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "CompletionInteractionTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "ContextBatchIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "CppHeaderInteractionTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "CppSemanticIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "EditorTabNavigationIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "EditorTabStabilityIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "ExplorerModifiedStateIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "FormSurfaceIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "MainCaretMotionIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "MainCaseIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "MainFileSettingsIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "MainRunIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "MainSafRecoveryIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "MainSurfaceIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "MenuHierarchyIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "NavigationSurfaceIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "PythonSemanticIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "ReadOnlyDetailsIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "SettingsChromeIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "SoraWorkbenchIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "StartupNativeGraphicsTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "TerminalChromeDesignTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "TerminalDockIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "WorkbenchPathStatusIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "WorkbenchSidebarBehaviorTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "WorkbenchStructureIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "WorkbenchWindowIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "WorkspacePickerIntegrationTest.kt",
+    "fixtures": 1
+  },
+  {
+    "file": "WorkspaceStartupIntegrationTest.kt",
+    "fixtures": 1
+  }
+]

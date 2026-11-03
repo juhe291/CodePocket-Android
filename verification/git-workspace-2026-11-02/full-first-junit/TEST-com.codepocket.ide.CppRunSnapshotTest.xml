@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppRunSnapshotTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:32:18" hostname="JUHE" time="0.292">
+  <properties/>
+  <testcase name="currentBufferAndHeaderDraftAreActualBuildInputsWithoutWritingOriginals" classname="com.codepocket.ide.CppRunSnapshotTest" time="0.076"/>
+  <testcase name="projectConfigurationIsNeverCopiedOrExecutedAndHeaderCannotBeAnEntry" classname="com.codepocket.ide.CppRunSnapshotTest" time="0.049"/>
+  <testcase name="executionServiceCanReopenOnlyAnUnusedCanonicalJobUnderItsOwnParent" classname="com.codepocket.ide.CppRunSnapshotTest" time="0.055"/>
+  <testcase name="diskDraftAndSnapshotChangesInvalidateOnlyTheOwnedRunCopy" classname="com.codepocket.ide.CppRunSnapshotTest" time="0.112"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

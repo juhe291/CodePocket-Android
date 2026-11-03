@@ -1,0 +1,12 @@
+{
+  "counts": {
+    "passed": 691,
+    "failed": 1,
+    "skipped": 1
+  },
+  "failures": [
+    "com.codepocket.ide.TerminalDockIntegrationTest.resizingAndControlToggleKeepSessionBufferAndPreference"
+  ],
+  "cause": "New resize fixture updated Configuration but not actual display; width remained 411dp, so explicit 280dp assertion failed.",
+  "resolution": "Changed primary display through ShadowDisplayManager then recreated Activity; retained actual width=280dp and buffer/session/file ID/preference assertions."
+}

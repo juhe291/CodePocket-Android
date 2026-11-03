@@ -1,0 +1,150 @@
+{
+  "totals": {
+    "tests": 35,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.configurationCheckpointKeepsTheExpandedTreeAndItsViewport",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.tabSelectionIndicatorMovesWithoutMovingTabsOrLosingTheirFocus",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeCrossfadeRetainsFocusSelectionAndHasNoExtraViewOrTouchTarget",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.explorerRestoreRejectsNegativeScrollAndBoundsItsConfigurationPayload",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeHandoverTransfersOnlyTheBitmapAndDoesNotKeepTheOldActivity",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.nativeContextMenuStillUsesTheRealMenuAndItsCommandCallback",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.repeatedSnapshotsAndDetachReleaseThePreviousBitmap",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.highResolutionTabletSnapshotsHaveABoundedPixelBudget",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.reopeningCancelsTheOldClosingSnapshot",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.settingsCancelDiscardsCursorChangesAndApplyPersistsThem",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.treeCollapseCompletesAndCancellationClearsPendingPlatformTransitions",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.followingSystemThemeCapturesABoundedConfigurationTransitionWithoutKeepingAView",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.dialogWindowAnimationHonorsAppDisable",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.largeTreesSkipNativeReflowInsteadOfSchedulingHundredsOfAnimations",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.phoneAndNarrowTabletDrawersUseALeftTransitionAndRespectAppOff",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.panelCloseUsesANonInteractiveOverlayAndHidesTheRealPaneImmediately",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.themeSnapshotIsDiscardedWhenTabletWindowChangesSize",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FullWorkbenchMotionTest.panelBoundsTransitionDoesNotRelayoutItsContentOnEveryAnimationFrame",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.closingPhoneSearchDoesNotReopenASidebarOnWindowExpansion",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.recreatedSearchDrawerRestoresItsQueryWithAPositiveWindowHeight",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.backClosesTheSearchSidebarWithoutOpeningExplorerOrReplacingTheEditor",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.queryAndEditorIdentitySurviveRehostingBetweenPhoneDrawerAndTabletSidebar",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.drawerWindowAnimationNeverSlidesItsWholeSurfaceOverTheFixedActivityBar",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.tabletSearchLivesInTheSidebarAndLeavesTheEditorBufferUntouched",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.phoneSearchOpensInTheSameDrawerGeometryAsExplorer",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.tabletSidebarUsesTheRealUnsavedWorkspaceSearchWorker",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.outgoingTabletExplorerSnapshotStaysToTheRightOfTheActivityRail",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.terminalMaximizeRestoreKeepsRailFilesAndEditor",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.sidebarTogglesDoNotRecreateEditorOrCloseFiles",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phonePortraitDark",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phoneLandscapeDark",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phonePortraitLight",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.mobileMenuHasCategoriesInsteadOfLongCommandList",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.tabletLandscapeDark",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.tabletPortraitLight",
+      "status": "passed"
+    }
+  ]
+}

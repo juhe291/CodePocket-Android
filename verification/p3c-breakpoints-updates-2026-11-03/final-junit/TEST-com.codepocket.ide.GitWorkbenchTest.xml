@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitWorkbenchTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:50:51" hostname="JUHE" time="22.123">
+  <properties/>
+  <testcase name="actualInternalCaptureStageCommitAndReadOnlyDiffUseTheSameRealRepository" classname="com.codepocket.ide.GitWorkbenchTest" time="9.757"/>
+  <testcase name="staleUiSnapshotAndChangedSavedBytesCannotStageOrOverwriteAnotherVersion" classname="com.codepocket.ide.GitWorkbenchTest" time="6.338"/>
+  <testcase name="protocolRejectsWrongEngineUnsafePathsDuplicateEntriesAndMalformedTypes" classname="com.codepocket.ide.GitWorkbenchTest" time="0.039"/>
+  <testcase name="cancelledResultNeverPublishesThePrivateServiceMutation" classname="com.codepocket.ide.GitWorkbenchTest" time="1.171"/>
+  <testcase name="actualSafGatewayPublishesBinaryIndexObjectsAndRefsWithoutChangingSourceText" classname="com.codepocket.ide.GitWorkbenchTest" time="4.818"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

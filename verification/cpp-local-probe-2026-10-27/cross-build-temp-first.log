@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-local-probe-2026-10-27\cross-build.py", line 69, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-local-probe-2026-10-27\cross-build.py", line 49, in main
+    run([compiler,*common,'-std=c++17','-fPIC','-shared','-nostdlib++',fixtures/'main.cpp',fixtures/'helper.cpp',
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        library,'-Wl,--no-undefined','-Wl,-soname,program.so','-o',android/'program.so'],android,'cross-build-library')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-local-probe-2026-10-27\cross-build.py", line 22, in run
+    assert result.returncode == 0, (tag, result.returncode, result.stderr[:2000])
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('cross-build-library', 1, "error: unable to rename temporary 'C:/Users/q1684/AppData/Local/Packages/sandbox.{69ca11f5-44a3-4588-91c7-4da456b9d91f}/AC/Temp/main-088e80-ca1d7bec.o.tmp' to output file 'C:/Users/q1684/AppData/Local/Packages/sandbox.{69ca11f5-44a3-4588-91c7-4da456b9d91f}/AC/Temp/main-088e80.o': 'Permission denied'\n1 error generated.\nerror: unable to rename temporary 'C:/Users/q1684/AppData/Local/Packages/sandbox.{69ca11f5-44a3-4588-91c7-4da456b9d91f}/AC/Temp/helper-cdbf72-e7c05912.o.tmp' to output file 'C:/Users/q1684/AppData/Local/Packages/sandbox.{69ca11f5-44a3-4588-91c7-4da456b9d91f}/AC/Temp/helper-cdbf72.o': 'Permission denied'\n1 error generated.\n")

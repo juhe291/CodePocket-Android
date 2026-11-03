@@ -1,0 +1,18 @@
+{
+  "totals": {
+    "tests": 2,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.CppRuntimePreparationTest.anExistingPrivateFileIsNeverOverwrittenByRuntimePreparation",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CppRuntimePreparationTest.trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs",
+      "status": "failure"
+    }
+  ]
+}

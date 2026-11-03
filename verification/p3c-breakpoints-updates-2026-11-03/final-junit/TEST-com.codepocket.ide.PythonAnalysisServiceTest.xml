@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.PythonAnalysisServiceTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:19" hostname="JUHE" time="0.462">
+  <properties/>
+  <testcase name="cancellationWithoutARequestDoesNotStartPythonOrCreateAQueue" classname="com.codepocket.ide.PythonAnalysisServiceTest" time="0.045"/>
+  <testcase name="nullBinderFailsWithoutCrashingOrWaitingForTheAnalysisDeadline" classname="com.codepocket.ide.PythonAnalysisServiceTest" time="0.088"/>
+  <testcase name="closingAnInFlightBindingReleasesItsWaitingWorker" classname="com.codepocket.ide.PythonAnalysisServiceTest" time="0.065"/>
+  <testcase name="closedTransportNeverBindsOrStartsAnAnalysisProcess" classname="com.codepocket.ide.PythonAnalysisServiceTest" time="0.055"/>
+  <testcase name="manifestSeparatesPrivateAnalysisFromRealExecution" classname="com.codepocket.ide.PythonAnalysisServiceTest" time="0.04"/>
+  <testcase name="lateDisconnectFromAnOldBindingCannotReleaseANewRequest" classname="com.codepocket.ide.PythonAnalysisServiceTest" time="0.169"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

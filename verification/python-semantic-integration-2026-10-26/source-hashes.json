@@ -1,0 +1,10 @@
+{
+  "app/build.gradle.kts": "6a7b906d69e5721fd49793f047d4945637128f28d1370e2d7a5e7462d06f503b",
+  "app/src/main/AndroidManifest.xml": "68c607302f71c2a5c3bd262351694a80f471bf111204264b4e47f8eaeb651f79",
+  "app/src/main/python/semantics.py": "8e14f91bd9acb23c9d2839361adbc88ae05aac999e9a86a7cb6a6c6a956494c9",
+  "app/src/main/java/com/codepocket/ide/PythonSemanticClient.kt": "1871633f9a4122e08895cd1e020b817417508f6493b9f7e79fe03e30e6376b39",
+  "app/src/main/java/com/codepocket/ide/PythonAnalysisService.kt": "9dbc9b2c52baf91fe707e37082116f2b12c0891b5a4445fe1dea776f3afabf8a",
+  "app/src/main/java/com/codepocket/ide/MainActivity.kt": "d83e05de5fa7132c6659e63bf881d960d2b6db0d3a110545ca301653f3974cc6",
+  "editor-assist/src/main/kotlin/com/codepocket/ide/CompletionModel.kt": "ed6a055a9ab8e243375f7cb5cce6e41d3adf500d5c6fe15996f0f7788e75ee60",
+  "editor-assist/src/main/kotlin/com/codepocket/ide/SignatureHelp.kt": "7231052901cae3bd34b8677c3e932de1916a87eb598d8299c04b6cadfc4f68b8"
+}

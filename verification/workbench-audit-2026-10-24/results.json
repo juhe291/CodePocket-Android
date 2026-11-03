@@ -1,0 +1,51 @@
+{
+  "apk": "dist\\CodePocket-audit-2026-10-24-debug.apk",
+  "bytes": 26714492,
+  "sha256": "f6d5e91a24620c83623e0acf0382b120ea3fbb7bbc9cab12c6f91af92ba2442d",
+  "junit": {
+    "tests": 674,
+    "failures": 2,
+    "skipped": 1,
+    "errors": 0
+  },
+  "failures": [
+    "com.codepocket.ide.MainSurfaceIntegrationTest.tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing",
+    "com.codepocket.ide.MainSurfaceIntegrationTest.diagnosticHoverScrollsCompleteMessageAndCopiesWithoutEditing"
+  ],
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 17
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 1,
+        "SetTextI18n": 13
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "old_apks_preserved": 65,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "assemble": "packageDebug and assembleDebug executed; aggregate command failed due two recorded diagnostic UI tests",
+  "signature": "passed",
+  "alignment_16kb": "passed",
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false
+}

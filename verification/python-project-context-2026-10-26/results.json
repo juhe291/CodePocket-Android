@@ -1,0 +1,53 @@
+{
+  "apk": "dist/CodePocket-python-project-context-2026-10-26-debug.apk",
+  "bytes": 32750879,
+  "sha256": "836042a759ba9d80ac85a0e5647da1e2e45f6bc550fa5b0c76da2f62d5fb3c5c",
+  "apk_size_delta_bytes": 319720,
+  "junit": {
+    "tests": 794,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "targeted": {
+    "tests": 132,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "old_test_cases_preserved": 772,
+  "new_test_cases": 22,
+  "no_new_skips": true,
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 18
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 2,
+        "ClickableViewAccessibility": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "python_source_tests": 66,
+  "actual_apk_semantic_tests": 22,
+  "old_apks_preserved": 88,
+  "native_libraries_unchanged": 10,
+  "chaquopy_assets_byte_identical": 20,
+  "new_context_classes_packaged": true,
+  "device_execution": false,
+  "native_previews_viewed": 3,
+  "full_goal_complete": false
+}

@@ -1,0 +1,536 @@
+2026-11-03T05:24:30.7424132Z Current runner version: '2.338.2'
+2026-11-03T05:24:30.7444633Z ##[group]Runner Image Provisioner
+2026-11-03T05:24:30.7445328Z Hosted Compute Agent
+2026-11-03T05:24:30.7445797Z Version: 20261021.618
+2026-11-03T05:24:30.7446415Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-03T05:24:30.7447049Z Build Date: 2026-10-21T00:45:21Z
+2026-11-03T05:24:30.7447651Z Worker ID: {69822123-524a-4f5d-a2ee-1561e7923699}
+2026-11-03T05:24:30.7448242Z Region: mexicocentral
+2026-11-03T05:24:30.7448708Z Cloud: Azure
+2026-11-03T05:24:30.7449234Z ##[endgroup]
+2026-11-03T05:24:30.7450626Z ##[group]Operating System
+2026-11-03T05:24:30.7451203Z Ubuntu
+2026-11-03T05:24:30.7451655Z 26.04.1
+2026-11-03T05:24:30.7452084Z LTS
+2026-11-03T05:24:30.7452584Z ##[endgroup]
+2026-11-03T05:24:30.7453049Z ##[group]Runner Image
+2026-11-03T05:24:30.7453597Z Image: ubuntu-26.04
+2026-11-03T05:24:30.7454078Z Version: 20261025.179.1
+2026-11-03T05:24:30.7455150Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261025.179/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-03T05:24:30.7456397Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261025.179
+2026-11-03T05:24:30.7457193Z ##[endgroup]
+2026-11-03T05:24:30.7458069Z ##[group]GITHUB_TOKEN Permissions
+2026-11-03T05:24:30.7459704Z Contents: read
+2026-11-03T05:24:30.7460350Z Metadata: read
+2026-11-03T05:24:30.7460831Z ##[endgroup]
+2026-11-03T05:24:30.7462567Z Secret source: Actions
+2026-11-03T05:24:30.7463341Z Cache mode: write
+2026-11-03T05:24:30.7464010Z Prepare workflow directory
+2026-11-03T05:24:30.7725578Z Prepare all required actions
+2026-11-03T05:24:30.7764132Z Getting action download info
+2026-11-03T05:24:31.1091729Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-03T05:24:31.2354694Z Download action repository 'actions/setup-java@v4' (SHA:cf277c60eb25467037889841efdb72551f06f6c3)
+2026-11-03T05:24:31.9961706Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-03T05:24:32.0861599Z Download action repository 'gradle/actions@v4' (SHA:ed408507eac070d1f99cc633dbcf757c94c7933a)
+2026-11-03T05:24:33.4236551Z Download action repository 'android-actions/setup-android@v3' (SHA:9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407)
+2026-11-03T05:24:33.8658989Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-03T05:24:34.0844037Z Complete job name: build
+2026-11-03T05:24:34.1589566Z ##[group]Run actions/checkout@v4
+2026-11-03T05:24:34.1590198Z with:
+2026-11-03T05:24:34.1590408Z   repository: juhe291/CodePocket-Android
+2026-11-03T05:24:34.1592682Z   token: ***
+2026-11-03T05:24:34.1592860Z   ssh-strict: true
+2026-11-03T05:24:34.1593044Z   ssh-user: git
+2026-11-03T05:24:34.1593227Z   persist-credentials: true
+2026-11-03T05:24:34.1593437Z   clean: true
+2026-11-03T05:24:34.1593622Z   sparse-checkout-cone-mode: true
+2026-11-03T05:24:34.1593839Z   fetch-depth: 1
+2026-11-03T05:24:34.1594015Z   fetch-tags: false
+2026-11-03T05:24:34.1594207Z   show-progress: true
+2026-11-03T05:24:34.1594381Z   lfs: false
+2026-11-03T05:24:34.1594538Z   submodules: false
+2026-11-03T05:24:34.1594708Z   set-safe-directory: true
+2026-11-03T05:24:34.1594913Z   allow-unsafe-pr-checkout: false
+2026-11-03T05:24:34.1595422Z ##[endgroup]
+2026-11-03T05:24:34.3470671Z Syncing repository: juhe291/CodePocket-Android
+2026-11-03T05:24:34.3472180Z ##[group]Getting Git version info
+2026-11-03T05:24:34.3472712Z Working directory is '/home/runner/work/CodePocket-Android/CodePocket-Android'
+2026-11-03T05:24:34.3473256Z [command]/usr/bin/git version
+2026-11-03T05:24:34.3473600Z git version 2.56.0
+2026-11-03T05:24:34.3495112Z ##[endgroup]
+2026-11-03T05:24:34.3500281Z Temporarily overriding HOME='/home/runner/work/_temp/e45d786a-249b-4fc9-bfb3-99be7d9c30be' before making global git config changes
+2026-11-03T05:24:34.3501443Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T05:24:34.3504030Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/CodePocket-Android/CodePocket-Android
+2026-11-03T05:24:34.3554138Z Deleting the contents of '/home/runner/work/CodePocket-Android/CodePocket-Android'
+2026-11-03T05:24:34.3556785Z ##[group]Initializing the repository
+2026-11-03T05:24:34.3561325Z [command]/usr/bin/git init /home/runner/work/CodePocket-Android/CodePocket-Android
+2026-11-03T05:24:34.3631602Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-03T05:24:34.3632419Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-03T05:24:34.3633130Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-03T05:24:34.3633601Z hint: call:
+2026-11-03T05:24:34.3633928Z hint:
+2026-11-03T05:24:34.3634330Z hint: 	git config --global init.defaultBranch <name>
+2026-11-03T05:24:34.3634769Z hint:
+2026-11-03T05:24:34.3635211Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-03T05:24:34.3635826Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-03T05:24:34.3636265Z hint:
+2026-11-03T05:24:34.3636607Z hint: 	git branch -m <name>
+2026-11-03T05:24:34.3636801Z hint:
+2026-11-03T05:24:34.3637063Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-03T05:24:34.3642444Z Initialized empty Git repository in /home/runner/work/CodePocket-Android/CodePocket-Android/.git/
+2026-11-03T05:24:34.3651714Z [command]/usr/bin/git remote add origin https://github.com/juhe291/CodePocket-Android
+2026-11-03T05:24:34.3690945Z ##[endgroup]
+2026-11-03T05:24:34.3691469Z ##[group]Disabling automatic garbage collection
+2026-11-03T05:24:34.3694872Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-03T05:24:34.3723853Z ##[endgroup]
+2026-11-03T05:24:34.3724341Z ##[group]Setting up auth
+2026-11-03T05:24:34.3729866Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T05:24:34.3760101Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T05:24:34.4111571Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T05:24:34.4152015Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T05:24:34.4395470Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T05:24:34.4423747Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T05:24:34.4650132Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-03T05:24:34.4683799Z ##[endgroup]
+2026-11-03T05:24:34.4684319Z ##[group]Fetching the repository
+2026-11-03T05:24:34.4691638Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +1948720947f6d77f82adb823eb010a64658e4c34:refs/remotes/origin/master
+2026-11-03T05:24:37.7001005Z From https://github.com/juhe291/CodePocket-Android
+2026-11-03T05:24:37.7001710Z  * [new ref]         1948720947f6d77f82adb823eb010a64658e4c34 -> origin/master
+2026-11-03T05:24:37.7003499Z ##[endgroup]
+2026-11-03T05:24:37.7004142Z ##[group]Determining the checkout info
+2026-11-03T05:24:37.7014962Z ##[endgroup]
+2026-11-03T05:24:37.7015561Z [command]/usr/bin/git sparse-checkout disable
+2026-11-03T05:24:37.7052308Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-03T05:24:37.7081059Z ##[group]Checking out the ref
+2026-11-03T05:24:37.7082051Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2026-11-03T05:24:39.0653383Z Updating files:   5% (439/8608)
+2026-11-03T05:24:39.0726375Z Updating files:   6% (517/8608)
+2026-11-03T05:24:39.0844008Z Updating files:   7% (603/8608)
+2026-11-03T05:24:39.0953968Z Updating files:   8% (689/8608)
+2026-11-03T05:24:39.1063705Z Updating files:   9% (775/8608)
+2026-11-03T05:24:39.1214856Z Updating files:  10% (861/8608)
+2026-11-03T05:24:39.1423865Z Updating files:  11% (947/8608)
+2026-11-03T05:24:39.1544005Z Updating files:  12% (1033/8608)
+2026-11-03T05:24:39.1578465Z Updating files:  13% (1120/8608)
+2026-11-03T05:24:39.1632745Z Updating files:  14% (1206/8608)
+2026-11-03T05:24:39.1665226Z Updating files:  15% (1292/8608)
+2026-11-03T05:24:39.1695321Z Updating files:  16% (1378/8608)
+2026-11-03T05:24:39.1745584Z Updating files:  17% (1464/8608)
+2026-11-03T05:24:39.1770271Z Updating files:  18% (1550/8608)
+2026-11-03T05:24:39.1805141Z Updating files:  19% (1636/8608)
+2026-11-03T05:24:39.1838606Z Updating files:  20% (1722/8608)
+2026-11-03T05:24:39.1861848Z Updating files:  21% (1808/8608)
+2026-11-03T05:24:39.1885994Z Updating files:  22% (1894/8608)
+2026-11-03T05:24:39.1909298Z Updating files:  23% (1980/8608)
+2026-11-03T05:24:39.1945996Z Updating files:  24% (2066/8608)
+2026-11-03T05:24:39.1976406Z Updating files:  25% (2152/8608)
+2026-11-03T05:24:39.2009818Z Updating files:  26% (2239/8608)
+2026-11-03T05:24:39.2031205Z Updating files:  27% (2325/8608)
+2026-11-03T05:24:39.2053368Z Updating files:  28% (2411/8608)
+2026-11-03T05:24:39.2074522Z Updating files:  29% (2497/8608)
+2026-11-03T05:24:39.2122214Z Updating files:  30% (2583/8608)
+2026-11-03T05:24:39.2168096Z Updating files:  31% (2669/8608)
+2026-11-03T05:24:39.2211626Z Updating files:  32% (2755/8608)
+2026-11-03T05:24:39.2233462Z Updating files:  33% (2841/8608)
+2026-11-03T05:24:39.2264440Z Updating files:  34% (2927/8608)
+2026-11-03T05:24:39.2286860Z Updating files:  35% (3013/8608)
+2026-11-03T05:24:39.2312527Z Updating files:  36% (3099/8608)
+2026-11-03T05:24:39.2339737Z Updating files:  37% (3185/8608)
+2026-11-03T05:24:39.2362727Z Updating files:  38% (3272/8608)
+2026-11-03T05:24:39.2385542Z Updating files:  39% (3358/8608)
+2026-11-03T05:24:39.2409841Z Updating files:  40% (3444/8608)
+2026-11-03T05:24:39.2431446Z Updating files:  41% (3530/8608)
+2026-11-03T05:24:39.2463543Z Updating files:  42% (3616/8608)
+2026-11-03T05:24:39.2514802Z Updating files:  43% (3702/8608)
+2026-11-03T05:24:39.2536610Z Updating files:  44% (3788/8608)
+2026-11-03T05:24:39.2559263Z Updating files:  45% (3874/8608)
+2026-11-03T05:24:39.2586947Z Updating files:  46% (3960/8608)
+2026-11-03T05:24:39.2610199Z Updating files:  47% (4046/8608)
+2026-11-03T05:24:39.2641923Z Updating files:  48% (4132/8608)
+2026-11-03T05:24:39.2682133Z Updating files:  49% (4218/8608)
+2026-11-03T05:24:39.2722602Z Updating files:  50% (4304/8608)
+2026-11-03T05:24:39.2747674Z Updating files:  51% (4391/8608)
+2026-11-03T05:24:39.2772497Z Updating files:  52% (4477/8608)
+2026-11-03T05:24:39.2794136Z Updating files:  53% (4563/8608)
+2026-11-03T05:24:39.2820799Z Updating files:  54% (4649/8608)
+2026-11-03T05:24:39.2866715Z Updating files:  55% (4735/8608)
+2026-11-03T05:24:39.3002319Z Updating files:  56% (4821/8608)
+2026-11-03T05:24:39.3025887Z Updating files:  57% (4907/8608)
+2026-11-03T05:24:39.3050556Z Updating files:  58% (4993/8608)
+2026-11-03T05:24:39.3082908Z Updating files:  59% (5079/8608)
+2026-11-03T05:24:39.3104162Z Updating files:  60% (5165/8608)
+2026-11-03T05:24:39.3125622Z Updating files:  61% (5251/8608)
+2026-11-03T05:24:39.3151253Z Updating files:  62% (5337/8608)
+2026-11-03T05:24:39.3172643Z Updating files:  63% (5424/8608)
+2026-11-03T05:24:39.3194972Z Updating files:  64% (5510/8608)
+2026-11-03T05:24:39.3217310Z Updating files:  65% (5596/8608)
+2026-11-03T05:24:39.3249236Z Updating files:  66% (5682/8608)
+2026-11-03T05:24:39.3271626Z Updating files:  67% (5768/8608)
+2026-11-03T05:24:39.3303007Z Updating files:  68% (5854/8608)
+2026-11-03T05:24:39.3324000Z Updating files:  69% (5940/8608)
+2026-11-03T05:24:39.3351024Z Updating files:  70% (6026/8608)
+2026-11-03T05:24:39.3373487Z Updating files:  71% (6112/8608)
+2026-11-03T05:24:39.3397921Z Updating files:  72% (6198/8608)
+2026-11-03T05:24:39.3419253Z Updating files:  73% (6284/8608)
+2026-11-03T05:24:39.3441753Z Updating files:  74% (6370/8608)
+2026-11-03T05:24:39.3463265Z Updating files:  75% (6456/8608)
+2026-11-03T05:24:39.3494329Z Updating files:  76% (6543/8608)
+2026-11-03T05:24:39.3521246Z Updating files:  77% (6629/8608)
+2026-11-03T05:24:39.3542542Z Updating files:  78% (6715/8608)
+2026-11-03T05:24:39.3576839Z Updating files:  79% (6801/8608)
+2026-11-03T05:24:39.3617441Z Updating files:  80% (6887/8608)
+2026-11-03T05:24:39.3650445Z Updating files:  81% (6973/8608)
+2026-11-03T05:24:39.3682500Z Updating files:  82% (7059/8608)
+2026-11-03T05:24:39.3708406Z Updating files:  83% (7145/8608)
+2026-11-03T05:24:39.3730478Z Updating files:  84% (7231/8608)
+2026-11-03T05:24:39.3752025Z Updating files:  85% (7317/8608)
+2026-11-03T05:24:39.3775422Z Updating files:  86% (7403/8608)
+2026-11-03T05:24:39.3796948Z Updating files:  87% (7489/8608)
+2026-11-03T05:24:39.3829758Z Updating files:  88% (7576/8608)
+2026-11-03T05:24:39.3859404Z Updating files:  89% (7662/8608)
+2026-11-03T05:24:39.3885672Z Updating files:  90% (7748/8608)
+2026-11-03T05:24:39.3925460Z Updating files:  91% (7834/8608)
+2026-11-03T05:24:39.3947603Z Updating files:  92% (7920/8608)
+2026-11-03T05:24:39.4008774Z Updating files:  93% (8006/8608)
+2026-11-03T05:24:39.4035893Z Updating files:  94% (8092/8608)
+2026-11-03T05:24:39.4060892Z Updating files:  95% (8178/8608)
+2026-11-03T05:24:39.4094050Z Updating files:  96% (8264/8608)
+2026-11-03T05:24:39.4116293Z Updating files:  97% (8350/8608)
+2026-11-03T05:24:39.4154851Z Updating files:  98% (8436/8608)
+2026-11-03T05:24:39.4184256Z Updating files:  99% (8522/8608)
+2026-11-03T05:24:39.4184773Z Updating files: 100% (8608/8608)
+2026-11-03T05:24:39.4185108Z Updating files: 100% (8608/8608), done.
+2026-11-03T05:24:39.4265361Z Reset branch 'master'
+2026-11-03T05:24:39.4269774Z branch 'master' set up to track 'origin/master'.
+2026-11-03T05:24:39.4375505Z ##[endgroup]
+2026-11-03T05:24:39.4423812Z [command]/usr/bin/git log -1 --format=%H
+2026-11-03T05:24:39.4445342Z 1948720947f6d77f82adb823eb010a64658e4c34
+2026-11-03T05:24:39.4710100Z ##[group]Run actions/setup-java@v4
+2026-11-03T05:24:39.4710467Z with:
+2026-11-03T05:24:39.4710840Z   distribution: temurin
+2026-11-03T05:24:39.4711159Z   java-version: 17
+2026-11-03T05:24:39.4711455Z   java-package: jdk
+2026-11-03T05:24:39.4711759Z   check-latest: false
+2026-11-03T05:24:39.4712033Z   server-id: github
+2026-11-03T05:24:39.4712379Z   server-username: GITHUB_ACTOR
+2026-11-03T05:24:39.4738483Z   server-password: GITHUB_TOKEN
+2026-11-03T05:24:39.4738732Z   overwrite-settings: true
+2026-11-03T05:24:39.4738939Z   job-status: success
+2026-11-03T05:24:39.4741291Z   token: ***
+2026-11-03T05:24:39.4741481Z ##[endgroup]
+2026-11-03T05:24:39.6097520Z ##[warning]setup-java v4 is deprecated and will no longer receive updates. Please migrate to actions/setup-java@v5.
+2026-11-03T05:24:39.6103059Z ##[group]Installed distributions
+2026-11-03T05:24:39.6125052Z Resolved Java 17.0.21+9 from tool-cache
+2026-11-03T05:24:39.6125469Z Setting Java 17.0.21+9 as the default
+2026-11-03T05:24:39.6132580Z (node:2167) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T05:24:39.6133117Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T05:24:39.6135573Z Creating toolchains.xml for JDK version 17 from temurin
+2026-11-03T05:24:39.6187745Z Writing to /home/runner/.m2/toolchains.xml
+2026-11-03T05:24:39.6188065Z
+2026-11-03T05:24:39.6188190Z Java configuration:
+2026-11-03T05:24:39.6188472Z   Distribution: temurin
+2026-11-03T05:24:39.6188739Z   Version: 17.0.21+9
+2026-11-03T05:24:39.6189122Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:24:39.6189461Z
+2026-11-03T05:24:39.6189882Z ##[endgroup]
+2026-11-03T05:24:39.6205496Z Creating settings.xml with server-id: github
+2026-11-03T05:24:39.6232319Z Writing to /home/runner/.m2/settings.xml
+2026-11-03T05:24:39.6393157Z ##[group]Run actions/setup-python@v5
+2026-11-03T05:24:39.6393554Z with:
+2026-11-03T05:24:39.6393730Z   python-version: 3.13
+2026-11-03T05:24:39.6393924Z   check-latest: false
+2026-11-03T05:24:39.6396140Z   token: ***
+2026-11-03T05:24:39.6396334Z   update-environment: true
+2026-11-03T05:24:39.6396540Z   allow-prereleases: false
+2026-11-03T05:24:39.6396735Z   freethreaded: false
+2026-11-03T05:24:39.6396902Z env:
+2026-11-03T05:24:39.6397157Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:24:39.6397538Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:24:39.6397835Z ##[endgroup]
+2026-11-03T05:24:39.7455322Z ##[group]Installed versions
+2026-11-03T05:24:39.7574116Z (node:2179) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T05:24:39.7574895Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T05:24:39.7575436Z Successfully set up CPython (3.13.17)
+2026-11-03T05:24:39.7576029Z ##[endgroup]
+2026-11-03T05:24:39.7695180Z ##[group]Run python -m pip install --require-hashes -r app/requirements.txt
+2026-11-03T05:24:39.7695721Z [36;1mpython -m pip install --require-hashes -r app/requirements.txt[0m
+2026-11-03T05:24:39.7805266Z shell: /usr/bin/bash -e {0}
+2026-11-03T05:24:39.7805495Z env:
+2026-11-03T05:24:39.7805756Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:24:39.7806361Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:24:39.7807124Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:24:39.7807786Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib/pkgconfig
+2026-11-03T05:24:39.7808377Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:24:39.7808876Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:24:39.7809367Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:24:39.7810106Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib
+2026-11-03T05:24:39.7810540Z ##[endgroup]
+2026-11-03T05:24:42.7009362Z Collecting jedi==0.20.1 (from -r app/requirements.txt (line 2))
+2026-11-03T05:24:42.7221700Z   Downloading jedi-0.20.1-py2.py3-none-any.whl (4.9 MB)
+2026-11-03T05:24:42.7802493Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 94.9 MB/s  0:00:00
+2026-11-03T05:24:42.8240245Z Collecting parso==0.8.7 (from -r app/requirements.txt (line 3))
+2026-11-03T05:24:42.8268027Z   Downloading parso-0.8.7-py2.py3-none-any.whl (107 kB)
+2026-11-03T05:24:42.8933868Z Collecting autopep8==2.3.2 (from -r app/requirements.txt (line 4))
+2026-11-03T05:24:42.9048427Z   Downloading autopep8-2.3.2-py2.py3-none-any.whl (45 kB)
+2026-11-03T05:24:42.9184493Z Collecting pycodestyle==2.14.0 (from -r app/requirements.txt (line 5))
+2026-11-03T05:24:42.9230777Z   Downloading pycodestyle-2.14.0-py2.py3-none-any.whl (31 kB)
+2026-11-03T05:24:43.0270525Z Collecting dulwich==1.2.20 (from -r app/requirements.txt (line 6))
+2026-11-03T05:24:43.0310975Z   Downloading dulwich-1.2.20-py3-none-any.whl (758 kB)
+2026-11-03T05:24:43.0374918Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 758.6/758.6 kB 120.0 MB/s  0:00:00
+2026-11-03T05:24:43.0663110Z Collecting urllib3==2.8.0 (from -r app/requirements.txt (line 7))
+2026-11-03T05:24:43.0690114Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-11-03T05:24:43.2262347Z Installing collected packages: urllib3, pycodestyle, parso, jedi, dulwich, autopep8
+2026-11-03T05:24:44.6344722Z
+2026-11-03T05:24:44.6356211Z Successfully installed autopep8-2.3.2 dulwich-1.2.20 jedi-0.20.1 parso-0.8.7 pycodestyle-2.14.0 urllib3-2.8.0
+2026-11-03T05:24:44.6363232Z
+2026-11-03T05:24:44.6363591Z [notice] A new release of pip is available: 26.2.2 -> 26.3
+2026-11-03T05:24:44.6363941Z [notice] To update, run: pip install --upgrade pip
+2026-11-03T05:24:44.6830972Z ##[group]Run python -m unittest discover -s tests -v
+2026-11-03T05:24:44.6831328Z [36;1mpython -m unittest discover -s tests -v[0m
+2026-11-03T05:24:44.6858349Z shell: /usr/bin/bash -e {0}
+2026-11-03T05:24:44.6858562Z env:
+2026-11-03T05:24:44.6858812Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:24:44.6859218Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:24:44.6859578Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:24:44.6860062Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib/pkgconfig
+2026-11-03T05:24:44.6860411Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:24:44.6860721Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:24:44.6861027Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:24:44.6861326Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib
+2026-11-03T05:24:44.6861623Z ##[endgroup]
+2026-11-03T05:24:45.8773000Z test_block_indentation_follows_two_four_and_eight_spaces (test_code_formatting.CodeFormattingTests.test_block_indentation_follows_two_four_and_eight_spaces) ... ok
+2026-11-03T05:24:45.8806631Z test_crlf_and_utf16_selection_inside_a_unicode_literal_are_preserved (test_code_formatting.CodeFormattingTests.test_crlf_and_utf16_selection_inside_a_unicode_literal_are_preserved) ... ok
+2026-11-03T05:24:45.8841117Z test_does_not_reorganize_imports_or_rewrite_equality (test_code_formatting.CodeFormattingTests.test_does_not_reorganize_imports_or_rewrite_equality) ... ok
+2026-11-03T05:24:45.8858527Z test_empty_source_has_no_phantom_newline (test_code_formatting.CodeFormattingTests.test_empty_source_has_no_phantom_newline) ... ok
+2026-11-03T05:24:45.8924259Z test_format_off_keeps_the_explicitly_disabled_body (test_code_formatting.CodeFormattingTests.test_format_off_keeps_the_explicitly_disabled_body) ... ok
+2026-11-03T05:24:45.8927481Z test_formatter_exception_returns_no_partial_output (test_code_formatting.CodeFormattingTests.test_formatter_exception_returns_no_partial_output) ... ok
+2026-11-03T05:24:45.9343503Z test_idempotence_for_both_spaces_and_tabs (test_code_formatting.CodeFormattingTests.test_idempotence_for_both_spaces_and_tabs) ... ok
+2026-11-03T05:24:45.9463703Z test_modern_python_syntax_uses_the_python313_parser (test_code_formatting.CodeFormattingTests.test_modern_python_syntax_uses_the_python313_parser) ... ok
+2026-11-03T05:24:45.9506413Z test_never_executes_top_level_code_reads_project_config_or_writes_source (test_code_formatting.CodeFormattingTests.test_never_executes_top_level_code_reads_project_config_or_writes_source) ... ok
+2026-11-03T05:24:45.9841584Z test_preserves_raw_bytes_strings_and_comment_words (test_code_formatting.CodeFormattingTests.test_preserves_raw_bytes_strings_and_comment_words) ... ok
+2026-11-03T05:24:45.9842858Z test_rejects_invalid_payload_types_controls_and_options (test_code_formatting.CodeFormattingTests.test_rejects_invalid_payload_types_controls_and_options) ... ok
+2026-11-03T05:24:45.9844345Z test_rejects_mid_surrogate_positions_and_out_of_range_selections (test_code_formatting.CodeFormattingTests.test_rejects_mid_surrogate_positions_and_out_of_range_selections) ... ok
+2026-11-03T05:24:45.9922237Z test_selection_end_excludes_new_whitespace_before_the_next_token (test_code_formatting.CodeFormattingTests.test_selection_end_excludes_new_whitespace_before_the_next_token) ... ok
+2026-11-03T05:24:45.9927721Z test_semantic_or_literal_rewrites_are_rejected (test_code_formatting.CodeFormattingTests.test_semantic_or_literal_rewrites_are_rejected) ... ok
+2026-11-03T05:24:45.9980496Z test_source_and_expanded_result_limits_are_separate (test_code_formatting.CodeFormattingTests.test_source_and_expanded_result_limits_are_separate) ... ok
+2026-11-03T05:24:45.9981367Z test_syntax_errors_return_no_partial_formatted_text (test_code_formatting.CodeFormattingTests.test_syntax_errors_return_no_partial_formatted_text) ... ok
+2026-11-03T05:24:46.0033281Z test_tabs_keep_continuation_alignment_and_multiline_literal_content (test_code_formatting.CodeFormattingTests.test_tabs_keep_continuation_alignment_and_multiline_literal_content) ... ok
+2026-11-03T05:24:46.0068003Z test_type_ignore_line_positions_do_not_cause_a_false_semantic_change (test_code_formatting.CodeFormattingTests.test_type_ignore_line_positions_do_not_cause_a_false_semantic_change) ... ok
+2026-11-03T05:24:46.0069453Z test_unknown_dependency_version_is_not_silently_accepted (test_code_formatting.CodeFormattingTests.test_unknown_dependency_version_is_not_silently_accepted) ... ok
+2026-11-03T05:24:46.0113957Z test_uses_the_actual_fixed_distributions (test_code_formatting.CodeFormattingTests.test_uses_the_actual_fixed_distributions) ... ok
+2026-11-03T05:24:46.0115166Z test_chinese_and_crlf_line_offsets (test_diagnostics.TestSyntaxDiagnostics.test_chinese_and_crlf_line_offsets) ... ok
+2026-11-03T05:24:46.0116559Z test_emoji_before_error_uses_utf16_not_codepoint_offsets (test_diagnostics.TestSyntaxDiagnostics.test_emoji_before_error_uses_utf16_not_codepoint_offsets) ... ok
+2026-11-03T05:24:46.0117976Z test_eof_error_and_empty_code_are_safe (test_diagnostics.TestSyntaxDiagnostics.test_eof_error_and_empty_code_are_safe) ... ok
+2026-11-03T05:24:46.0119269Z test_imports_and_file_writes_are_not_executed (test_diagnostics.TestSyntaxDiagnostics.test_imports_and_file_writes_are_not_executed) ... ok
+2026-11-03T05:24:46.0120725Z test_infinite_loop_is_only_compiled (test_diagnostics.TestSyntaxDiagnostics.test_infinite_loop_is_only_compiled) ... ok
+2026-11-03T05:24:46.0122021Z test_large_documents_have_explicit_fallback (test_diagnostics.TestSyntaxDiagnostics.test_large_documents_have_explicit_fallback) ... ok
+2026-11-03T05:24:46.0123488Z test_missing_colon_and_indentation_use_real_parser_messages (test_diagnostics.TestSyntaxDiagnostics.test_missing_colon_and_indentation_use_real_parser_messages) ... ok
+2026-11-03T05:24:46.0125083Z test_unknown_names_are_not_fabricated_as_syntax_errors (test_diagnostics.TestSyntaxDiagnostics.test_unknown_names_are_not_fabricated_as_syntax_errors) ... ok
+2026-11-03T05:24:46.0126552Z test_valid_nested_brackets_and_formatted_strings (test_diagnostics.TestSyntaxDiagnostics.test_valid_nested_brackets_and_formatted_strings) ... ok
+2026-11-03T05:24:46.0128200Z test_valid_program_is_not_executed (test_diagnostics.TestSyntaxDiagnostics.test_valid_program_is_not_executed) ... ok
+2026-11-03T05:24:46.0129408Z test_git_https (unittest.loader._FailedTest.test_git_https) ... ERROR
+2026-11-03T05:24:46.0130595Z test_git_remote (unittest.loader._FailedTest.test_git_remote) ... ERROR
+2026-11-03T05:24:46.0227796Z test_absent_repository_is_distinct_from_a_clean_repository_and_initializes_explicitly (test_git_workspace.GitWorkspaceTests.test_absent_repository_is_distinct_from_a_clean_repository_and_initializes_explicitly) ... ok
+2026-11-03T05:24:46.0589102Z test_binary_unicode_and_crlf_are_preserved_and_untracked_diff_is_real (test_git_workspace.GitWorkspaceTests.test_binary_unicode_and_crlf_are_preserved_and_untracked_diff_is_real) ... ok
+2026-11-03T05:24:46.1150618Z test_custom_filter_is_not_silently_staged_as_plain_bytes (test_git_workspace.GitWorkspaceTests.test_custom_filter_is_not_silently_staged_as_plain_bytes) ... ok
+2026-11-03T05:24:46.2214010Z test_existing_packed_history_is_supported_by_the_production_backend (test_git_workspace.GitWorkspaceTests.test_existing_packed_history_is_supported_by_the_production_backend) ... ok
+2026-11-03T05:24:46.2765835Z test_filemode_false_preserves_an_existing_executable_index_entry_when_staging (test_git_workspace.GitWorkspaceTests.test_filemode_false_preserves_an_existing_executable_index_entry_when_staging) ... FAIL
+2026-11-03T05:24:46.3027311Z test_gitdir_files_and_alternate_objects_cannot_escape_the_snapshot (test_git_workspace.GitWorkspaceTests.test_gitdir_files_and_alternate_objects_cannot_escape_the_snapshot) ... ok
+2026-11-03T05:24:46.3375794Z test_history_preview_reports_truncation_and_commit_details_keep_full_unicode_message (test_git_workspace.GitWorkspaceTests.test_history_preview_reports_truncation_and_commit_details_keep_full_unicode_message) ... ok
+2026-11-03T05:24:46.3488804Z test_ignored_files_are_hidden_and_cannot_be_accidentally_staged (test_git_workspace.GitWorkspaceTests.test_ignored_files_are_hidden_and_cannot_be_accidentally_staged) ... ok
+2026-11-03T05:24:46.3824627Z test_index_lock_returns_a_specific_error_and_keeps_original_state (test_git_workspace.GitWorkspaceTests.test_index_lock_returns_a_specific_error_and_keeps_original_state) ... ok
+2026-11-03T05:24:46.4415928Z test_invalid_identity_or_empty_staging_does_not_create_a_commit (test_git_workspace.GitWorkspaceTests.test_invalid_identity_or_empty_staging_does_not_create_a_commit) ... ok
+2026-11-03T05:24:46.4517479Z test_missing_precondition_and_unknown_operation_cannot_write (test_git_workspace.GitWorkspaceTests.test_missing_precondition_and_unknown_operation_cannot_write) ... ok
+2026-11-03T05:24:46.5047020Z test_parent_absolute_and_git_metadata_paths_are_rejected (test_git_workspace.GitWorkspaceTests.test_parent_absolute_and_git_metadata_paths_are_rejected) ... ok
+2026-11-03T05:24:46.5662921Z test_provider_without_mode_support_keeps_index_modes_without_rewriting_git_config (test_git_workspace.GitWorkspaceTests.test_provider_without_mode_support_keeps_index_modes_without_rewriting_git_config) ... ok
+2026-11-03T05:24:46.6345762Z test_read_only_status_diff_history_and_details_leave_all_bytes_unchanged (test_git_workspace.GitWorkspaceTests.test_read_only_status_diff_history_and_details_leave_all_bytes_unchanged) ... ok
+2026-11-03T05:24:46.6740907Z test_real_stage_commit_history_and_standard_git_interoperate (test_git_workspace.GitWorkspaceTests.test_real_stage_commit_history_and_standard_git_interoperate) ... ok
+2026-11-03T05:24:46.7410197Z test_repository_hooks_are_disabled_and_external_configuration_is_rejected (test_git_workspace.GitWorkspaceTests.test_repository_hooks_are_disabled_and_external_configuration_is_rejected) ... ok
+2026-11-03T05:24:46.7907117Z test_staged_and_working_diff_remain_separate (test_git_workspace.GitWorkspaceTests.test_staged_and_working_diff_remain_separate) ... ok
+2026-11-03T05:24:46.8420849Z test_staging_and_unstaging_do_not_save_or_rewrite_working_files (test_git_workspace.GitWorkspaceTests.test_staging_and_unstaging_do_not_save_or_rewrite_working_files) ... ok
+2026-11-03T05:24:46.8763770Z test_stale_snapshot_prevents_index_or_head_mutation (test_git_workspace.GitWorkspaceTests.test_stale_snapshot_prevents_index_or_head_mutation) ... ok
+2026-11-03T05:24:46.9133869Z test_draft_module_errors_report_the_executed_source_hash_and_real_file_line (test_project_run.TestPythonProjectRun.test_draft_module_errors_report_the_executed_source_hash_and_real_file_line) ... ok
+2026-11-03T05:24:46.9312160Z test_draft_traceback_and_inspection_use_draft_lines_then_restore_linecache (test_project_run.TestPythonProjectRun.test_draft_traceback_and_inspection_use_draft_lines_then_restore_linecache) ... ok
+2026-11-03T05:24:46.9324333Z test_malformed_or_traversing_overlays_are_rejected_before_user_code (test_project_run.TestPythonProjectRun.test_malformed_or_traversing_overlays_are_rejected_before_user_code) ... ok
+2026-11-03T05:24:47.0089426Z test_only_actual_compiled_code_proves_a_helper_diagnostic_hash (test_project_run.TestPythonProjectRun.test_only_actual_compiled_code_proves_a_helper_diagnostic_hash) ... ok
+2026-11-03T05:24:47.0194698Z test_overlay_limits_and_duplicate_keys_fail_before_program_side_effects (test_project_run.TestPythonProjectRun.test_overlay_limits_and_duplicate_keys_fail_before_program_side_effects) ... ok
+2026-11-03T05:24:47.0373995Z test_package_relative_imports_and_resources_keep_the_original_project_root (test_project_run.TestPythonProjectRun.test_package_relative_imports_and_resources_keep_the_original_project_root) ... ok
+2026-11-03T05:24:47.0543560Z test_program_file_writes_and_new_module_imports_keep_the_existing_behavior (test_project_run.TestPythonProjectRun.test_program_file_writes_and_new_module_imports_keep_the_existing_behavior) ... ok
+2026-11-03T05:24:47.0719661Z test_terminal_channel_reads_drafts_and_releases_only_its_duplicate_descriptors (test_project_run.TestPythonProjectRun.test_terminal_channel_reads_drafts_and_releases_only_its_duplicate_descriptors) ... ok
+2026-11-03T05:24:47.0896511Z test_unsaved_module_runs_without_saving_and_keeps_its_original_file_identity (test_project_run.TestPythonProjectRun.test_unsaved_module_runs_without_saving_and_keeps_its_original_file_identity) ... ok
+2026-11-03T05:24:47.1238109Z test_edited_module_is_reloaded_without_stale_bytecode (test_runner.TestLocalPython.test_edited_module_is_reloaded_without_stale_bytecode) ... ok
+2026-11-03T05:24:47.1244465Z test_eof_and_unicode (test_runner.TestLocalPython.test_eof_and_unicode) ... ok
+2026-11-03T05:24:47.1419359Z test_imported_module_error_has_its_own_file_and_line (test_runner.TestLocalPython.test_imported_module_error_has_its_own_file_and_line) ... ok
+2026-11-03T05:24:47.1589592Z test_local_workspace_import (test_runner.TestLocalPython.test_local_workspace_import) ... ok
+2026-11-03T05:24:47.1594164Z test_no_stdin_leak_between_runs (test_runner.TestLocalPython.test_no_stdin_leak_between_runs) ... ok
+2026-11-03T05:24:47.1608001Z test_output_limit_and_diagnostic_survive_full_stderr (test_runner.TestLocalPython.test_output_limit_and_diagnostic_survive_full_stderr) ... ok
+2026-11-03T05:24:47.1613656Z test_runtime_error_position (test_runner.TestLocalPython.test_runtime_error_position) ... ok
+2026-11-03T05:24:47.1616406Z test_standard_library (test_runner.TestLocalPython.test_standard_library) ... ok
+2026-11-03T05:24:47.1619230Z test_stdin_stdout (test_runner.TestLocalPython.test_stdin_stdout) ... ok
+2026-11-03T05:24:47.2502477Z test_streams_path_cwd_argv_and_trace_are_restored_after_error (test_runner.TestLocalPython.test_streams_path_cwd_argv_and_trace_are_restored_after_error) ... ok
+2026-11-03T05:24:47.2508256Z test_syntax_error_position (test_runner.TestLocalPython.test_syntax_error_position) ... ok
+2026-11-03T05:24:47.2516562Z test_system_exit_semantics (test_runner.TestLocalPython.test_system_exit_semantics) ... ok
+2026-11-03T05:24:47.2825990Z test_timeout_and_next_execution (test_runner.TestLocalPython.test_timeout_and_next_execution) ... ok
+2026-11-03T05:24:47.5486021Z test_active_parameter_uses_real_signature (test_semantics.SemanticsTests.test_active_parameter_uses_real_signature) ... ok
+2026-11-03T05:24:48.5526086Z test_completed_tokens_do_not_offer_noop_edits (test_semantics.SemanticsTests.test_completed_tokens_do_not_offer_noop_edits) ... ok
+2026-11-03T05:24:49.7400759Z test_concurrent_callers_use_serial_backend (test_semantics.SemanticsTests.test_concurrent_callers_use_serial_backend) ... ok
+2026-11-03T05:24:50.4636554Z test_cross_file_is_static_and_top_level_not_executed (test_semantics.SemanticsTests.test_cross_file_is_static_and_top_level_not_executed) ... ok
+2026-11-03T05:24:50.4664639Z test_current_file_mode_does_not_import_saf_mirror (test_semantics.SemanticsTests.test_current_file_mode_does_not_import_saf_mirror) ... ok
+2026-11-03T05:24:51.2988069Z test_embedded_environment_does_not_spawn_python (test_semantics.SemanticsTests.test_embedded_environment_does_not_spawn_python) ... ok
+2026-11-03T05:24:51.5096292Z test_incomplete_syntax_returns_no_fabricated_names (test_semantics.SemanticsTests.test_incomplete_syntax_returns_no_fabricated_names) ... ok
+2026-11-03T05:24:52.1310285Z test_instance_members_and_actual_function_kind (test_semantics.SemanticsTests.test_instance_members_and_actual_function_kind) ... ok
+2026-11-03T05:24:52.1331509Z test_keyword_parameter_and_custom_shadowing (test_semantics.SemanticsTests.test_keyword_parameter_and_custom_shadowing) ... ok
+2026-11-03T05:24:52.1336521Z test_limits_and_path_escape (test_semantics.SemanticsTests.test_limits_and_path_escape) ... ok
+2026-11-03T05:24:53.0008394Z test_project_configuration_is_not_loaded (test_semantics.SemanticsTests.test_project_configuration_is_not_loaded) ... ok
+2026-11-03T05:24:53.0011679Z test_rejects_split_surrogate_and_out_of_bounds (test_semantics.SemanticsTests.test_rejects_split_surrogate_and_out_of_bounds) ... ok
+2026-11-03T05:24:54.1110796Z test_removed_or_renamed_module_does_not_survive_the_next_snapshot (test_semantics.SemanticsTests.test_removed_or_renamed_module_does_not_survive_the_next_snapshot) ... ok
+2026-11-03T05:24:55.0605455Z test_saved_module_change_is_not_served_from_old_parse_cache (test_semantics.SemanticsTests.test_saved_module_change_is_not_served_from_old_parse_cache) ... ok
+2026-11-03T05:24:55.6823233Z test_scope_hides_other_function_local (test_semantics.SemanticsTests.test_scope_hides_other_function_local) ... ok
+2026-11-03T05:24:55.6846089Z test_signature_bracket_is_utf16_with_emoji_and_crlf (test_semantics.SemanticsTests.test_signature_bracket_is_utf16_with_emoji_and_crlf) ... ok
+2026-11-03T05:24:56.8461478Z test_snapshot_package_relative_imports_and_type_stub (test_semantics.SemanticsTests.test_snapshot_package_relative_imports_and_type_stub) ... ok
+2026-11-03T05:24:56.8650647Z test_standard_library_members (test_semantics.SemanticsTests.test_standard_library_members) ... ok
+2026-11-03T05:24:57.7896924Z test_transitive_project_snapshot_and_signature_use_all_unsaved_modules (test_semantics.SemanticsTests.test_transitive_project_snapshot_and_signature_use_all_unsaved_modules) ... ok
+2026-11-03T05:24:58.4226117Z test_unicode_identifier (test_semantics.SemanticsTests.test_unicode_identifier) ... ok
+2026-11-03T05:24:59.2812756Z test_unsaved_snapshot_and_exact_middle_token_replacement (test_semantics.SemanticsTests.test_unsaved_snapshot_and_exact_middle_token_replacement) ... ok
+2026-11-03T05:25:00.1218797Z test_utf16_emoji_chinese_and_crlf (test_semantics.SemanticsTests.test_utf16_emoji_chinese_and_crlf) ... ok
+2026-11-03T05:25:00.1811515Z test_binary_input_and_output_share_real_descriptors (test_terminal_runner.TestTerminalPython.test_binary_input_and_output_share_real_descriptors) ... ok
+2026-11-03T05:25:00.3961360Z test_cpu_loop_hits_real_trace_deadline (test_terminal_runner.TestTerminalPython.test_cpu_loop_hits_real_trace_deadline) ... ok
+2026-11-03T05:25:00.4552353Z test_duplicate_fds_keep_builtin_input_on_managed_readline (test_terminal_runner.TestTerminalPython.test_duplicate_fds_keep_builtin_input_on_managed_readline) ... ok
+2026-11-03T05:25:00.5148432Z test_eof_is_real_closed_stdin (test_terminal_runner.TestTerminalPython.test_eof_is_real_closed_stdin) ... ok
+2026-11-03T05:25:00.5794598Z test_exit_status_is_preserved (test_terminal_runner.TestTerminalPython.test_exit_status_is_preserved) ... ok
+2026-11-03T05:25:00.6383856Z test_input_eof_traceback_is_live (test_terminal_runner.TestTerminalPython.test_input_eof_traceback_is_live) ... ok
+2026-11-03T05:25:00.7469738Z test_kill_while_waiting_then_fresh_run (test_terminal_runner.TestTerminalPython.test_kill_while_waiting_then_fresh_run) ... ok
+2026-11-03T05:25:00.8115537Z test_native_os_write_is_visible_on_same_stream (test_terminal_runner.TestTerminalPython.test_native_os_write_is_visible_on_same_stream) ... ok
+2026-11-03T05:25:01.4274634Z test_output_cap_is_enforced_on_live_stream (test_terminal_runner.TestTerminalPython.test_output_cap_is_enforced_on_live_stream) ... ok
+2026-11-03T05:25:01.4921867Z test_prefill_uses_existing_buffer_without_waiting (test_terminal_runner.TestTerminalPython.test_prefill_uses_existing_buffer_without_waiting) ... ok
+2026-11-03T05:25:01.5514849Z test_prompt_without_newline_then_multiple_inputs (test_terminal_runner.TestTerminalPython.test_prompt_without_newline_then_multiple_inputs) ... ok
+2026-11-03T05:25:01.6162287Z test_real_traceback_and_line_metadata (test_terminal_runner.TestTerminalPython.test_real_traceback_and_line_metadata) ... ok
+2026-11-03T05:25:01.6748381Z test_stdout_is_live_before_program_finishes (test_terminal_runner.TestTerminalPython.test_stdout_is_live_before_program_finishes) ... ok
+2026-11-03T05:25:01.7394705Z test_unicode_and_ansi_are_not_removed (test_terminal_runner.TestTerminalPython.test_unicode_and_ansi_are_not_removed) ... ok
+2026-11-03T05:25:02.2480539Z test_wait_does_not_consume_execution_budget (test_terminal_runner.TestTerminalPython.test_wait_does_not_consume_execution_budget) ... ok
+2026-11-03T05:25:02.3630822Z test_workspace_imports_still_work (test_terminal_runner.TestTerminalPython.test_workspace_imports_still_work) ... ok
+2026-11-03T05:25:02.3680974Z test_all_shipped_android_vector_paths_have_valid_command_arguments (test_vector_resources.VectorResourcesTest.test_all_shipped_android_vector_paths_have_valid_command_arguments) ... ok
+2026-11-03T05:25:02.3682698Z test_invalid_commands_and_incomplete_curves_are_rejected (test_vector_resources.VectorResourcesTest.test_invalid_commands_and_incomplete_curves_are_rejected) ... ok
+2026-11-03T05:25:02.3684117Z test_old_broken_coordinate_conversion_is_rejected (test_vector_resources.VectorResourcesTest.test_old_broken_coordinate_conversion_is_rejected) ... ok
+2026-11-03T05:25:02.3726057Z test_polylines_and_polygons_preserve_the_original_lucide_vertices (test_vector_resources.VectorResourcesTest.test_polylines_and_polygons_preserve_the_original_lucide_vertices) ... ok
+2026-11-03T05:25:02.3727542Z test_supported_curves_relative_moves_and_exponent_numbers (test_vector_resources.VectorResourcesTest.test_supported_curves_relative_moves_and_exponent_numbers) ... ok
+2026-11-03T05:25:02.3728258Z
+2026-11-03T05:25:02.3728423Z ======================================================================
+2026-11-03T05:25:02.3728908Z ERROR: test_git_https (unittest.loader._FailedTest.test_git_https)
+2026-11-03T05:25:02.3729419Z ----------------------------------------------------------------------
+2026-11-03T05:25:02.3730100Z ImportError: Failed to import test module: test_git_https
+2026-11-03T05:25:02.3730499Z Traceback (most recent call last):
+2026-11-03T05:25:02.3736486Z   File "/opt/hostedtoolcache/Python/3.13.17/x64/lib/python3.13/unittest/loader.py", line 403, in _find_test_path
+2026-11-03T05:25:02.3737190Z     module = self._get_module_from_name(name)
+2026-11-03T05:25:02.3737698Z   File "/opt/hostedtoolcache/Python/3.13.17/x64/lib/python3.13/unittest/loader.py", line 346, in _get_module_from_name
+2026-11-03T05:25:02.3738114Z     __import__(name)
+2026-11-03T05:25:02.3738302Z     ~~~~~~~~~~^^^^^^
+2026-11-03T05:25:02.3738723Z   File "/home/runner/work/CodePocket-Android/CodePocket-Android/tests/test_git_https.py", line 11, in <module>
+2026-11-03T05:25:02.3739152Z     import probe_https as fixture
+2026-11-03T05:25:02.3739686Z   File "/home/runner/work/CodePocket-Android/CodePocket-Android/verification/git-remote-preflight-2026-11-02/probe_https.py", line 38, in <module>
+2026-11-03T05:25:02.3740407Z     CACHE.mkdir(exist_ok=True)
+2026-11-03T05:25:02.3740603Z     ~~~~~~~~~~~^^^^^^^^^^^^^^^
+2026-11-03T05:25:02.3740958Z   File "/opt/hostedtoolcache/Python/3.13.17/x64/lib/python3.13/pathlib/_local.py", line 722, in mkdir
+2026-11-03T05:25:02.3741321Z     os.mkdir(self, mode)
+2026-11-03T05:25:02.3741514Z     ~~~~~~~~^^^^^^^^^^^^
+2026-11-03T05:25:02.3741955Z FileNotFoundError: [Errno 2] No such file or directory: '/home/runner/work/CodePocket-Android/CodePocket-Android/.tools/git-remote-probe'
+2026-11-03T05:25:02.3742337Z
+2026-11-03T05:25:02.3742341Z
+2026-11-03T05:25:02.3742455Z ======================================================================
+2026-11-03T05:25:02.3742765Z ERROR: test_git_remote (unittest.loader._FailedTest.test_git_remote)
+2026-11-03T05:25:02.3743090Z ----------------------------------------------------------------------
+2026-11-03T05:25:02.3743402Z ImportError: Failed to import test module: test_git_remote
+2026-11-03T05:25:02.3743675Z Traceback (most recent call last):
+2026-11-03T05:25:02.3744102Z   File "/opt/hostedtoolcache/Python/3.13.17/x64/lib/python3.13/unittest/loader.py", line 403, in _find_test_path
+2026-11-03T05:25:02.3744522Z     module = self._get_module_from_name(name)
+2026-11-03T05:25:02.3745012Z   File "/opt/hostedtoolcache/Python/3.13.17/x64/lib/python3.13/unittest/loader.py", line 346, in _get_module_from_name
+2026-11-03T05:25:02.3745421Z     __import__(name)
+2026-11-03T05:25:02.3745590Z     ~~~~~~~~~~^^^^^^
+2026-11-03T05:25:02.3746204Z   File "/home/runner/work/CodePocket-Android/CodePocket-Android/tests/test_git_remote.py", line 14, in <module>
+2026-11-03T05:25:02.3746623Z     import probe_https as fixture
+2026-11-03T05:25:02.3747139Z   File "/home/runner/work/CodePocket-Android/CodePocket-Android/verification/git-remote-preflight-2026-11-02/probe_https.py", line 38, in <module>
+2026-11-03T05:25:02.3747749Z     CACHE.mkdir(exist_ok=True)
+2026-11-03T05:25:02.3747940Z     ~~~~~~~~~~~^^^^^^^^^^^^^^^
+2026-11-03T05:25:02.3748287Z   File "/opt/hostedtoolcache/Python/3.13.17/x64/lib/python3.13/pathlib/_local.py", line 722, in mkdir
+2026-11-03T05:25:02.3748647Z     os.mkdir(self, mode)
+2026-11-03T05:25:02.3748831Z     ~~~~~~~~^^^^^^^^^^^^
+2026-11-03T05:25:02.3749251Z FileNotFoundError: [Errno 2] No such file or directory: '/home/runner/work/CodePocket-Android/CodePocket-Android/.tools/git-remote-probe'
+2026-11-03T05:25:02.3749624Z
+2026-11-03T05:25:02.3749628Z
+2026-11-03T05:25:02.3749729Z ======================================================================
+2026-11-03T05:25:02.3750574Z FAIL: test_filemode_false_preserves_an_existing_executable_index_entry_when_staging (test_git_workspace.GitWorkspaceTests.test_filemode_false_preserves_an_existing_executable_index_entry_when_staging)
+2026-11-03T05:25:02.3751245Z ----------------------------------------------------------------------
+2026-11-03T05:25:02.3751509Z Traceback (most recent call last):
+2026-11-03T05:25:02.3752145Z   File "/home/runner/work/CodePocket-Android/CodePocket-Android/tests/test_git_workspace.py", line 189, in test_filemode_false_preserves_an_existing_executable_index_entry_when_staging
+2026-11-03T05:25:02.3752799Z     self.assertTrue(self.git('ls-tree', 'HEAD', 'run.sh').startswith(b'100755 '))
+2026-11-03T05:25:02.3753134Z     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-03T05:25:02.3753386Z AssertionError: False is not true
+2026-11-03T05:25:02.3753519Z
+2026-11-03T05:25:02.3753633Z ----------------------------------------------------------------------
+2026-11-03T05:25:02.3753887Z Ran 116 tests in 16.518s
+2026-11-03T05:25:02.3754002Z
+2026-11-03T05:25:02.3754095Z FAILED (failures=1, errors=2)
+2026-11-03T05:25:02.4763059Z ##[error]Process completed with exit code 1.
+2026-11-03T05:25:02.4858356Z ##[group]Run actions/upload-artifact@v4
+2026-11-03T05:25:02.4858613Z with:
+2026-11-03T05:25:02.4858797Z   name: CodePocket-verification-reports
+2026-11-03T05:25:02.4860166Z   path: app/build/reports/tests/
+third-party/termux/terminal-emulator/build/reports/tests/
+app/build/reports/lint-results-debug.*
+editor-sora/build/reports/lint-results-debug.*
+verification/apk-inspection.json
+verification/semantic-apk-inspection.json
+verification/snippet-inspection.json
+verification/shell-startup-inspection.json
+verification/snippet-fixtures/*.cpp
+verification/snippet-fixtures/*.py
+
+2026-11-03T05:25:02.4861425Z   if-no-files-found: warn
+2026-11-03T05:25:02.4861623Z   compression-level: 6
+2026-11-03T05:25:02.4861804Z   overwrite: false
+2026-11-03T05:25:02.4862017Z   include-hidden-files: false
+2026-11-03T05:25:02.4862207Z env:
+2026-11-03T05:25:02.4862442Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:25:02.4862874Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+2026-11-03T05:25:02.4863232Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:25:02.4863565Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib/pkgconfig
+2026-11-03T05:25:02.4863886Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:25:02.4864184Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:25:02.4864476Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-11-03T05:25:02.4864781Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib
+2026-11-03T05:25:02.4865036Z ##[endgroup]
+2026-11-03T05:25:02.6210766Z (node:2313) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T05:25:02.6211549Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T05:25:02.6277562Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-03T05:25:02.6285147Z The least common ancestor is /home/runner/work/CodePocket-Android/CodePocket-Android. This will be the root directory of the artifact
+2026-11-03T05:25:02.6286133Z With the provided path, there will be 1 file uploaded
+2026-11-03T05:25:02.6286769Z Artifact name is valid!
+2026-11-03T05:25:02.6287119Z Root directory input is valid!
+2026-11-03T05:25:03.0124896Z Beginning upload of artifact content to blob storage
+2026-11-03T05:25:03.0289053Z (node:2313) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-03T05:25:03.2295558Z Uploaded bytes 577
+2026-11-03T05:25:03.2845269Z Finished uploading artifact content to blob storage!
+2026-11-03T05:25:03.2846007Z SHA256 digest of uploaded artifact zip is 60ec0f2b834d900445552ebef5f7a0e4d57492429ac95f1276d2d4c1ddbb2026
+2026-11-03T05:25:03.2847272Z Finalizing artifact upload
+2026-11-03T05:25:03.7338449Z Artifact CodePocket-verification-reports.zip successfully finalized. Artifact ID 13206787504
+2026-11-03T05:25:03.7339453Z Artifact CodePocket-verification-reports has been successfully uploaded! Final size is 577 bytes. Artifact ID is 13206787504
+2026-11-03T05:25:03.7344095Z Artifact download URL: https://github.com/juhe291/CodePocket-Android/actions/runs/41583733713/artifacts/13206787504
+2026-11-03T05:25:03.7520693Z Post job cleanup.
+2026-11-03T05:25:03.8619728Z (node:2325) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T05:25:03.8620868Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T05:25:03.8788786Z Post job cleanup.
+2026-11-03T05:25:03.9489611Z [command]/usr/bin/git version
+2026-11-03T05:25:03.9528938Z git version 2.56.0
+2026-11-03T05:25:03.9558263Z Temporarily overriding HOME='/home/runner/work/_temp/deb4dc31-8984-4542-b859-c9c61eb5e820' before making global git config changes
+2026-11-03T05:25:03.9564291Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T05:25:03.9566262Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/CodePocket-Android/CodePocket-Android
+2026-11-03T05:25:03.9598958Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T05:25:03.9628591Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T05:25:03.9897741Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T05:25:03.9925437Z http.https://github.com/.extraheader
+2026-11-03T05:25:03.9932308Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T05:25:03.9969155Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T05:25:04.0242832Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T05:25:04.0271826Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T05:25:04.0677077Z Cleaning up orphan processes
+2026-11-03T05:25:04.1026420Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-java@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

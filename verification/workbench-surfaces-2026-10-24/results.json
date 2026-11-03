@@ -1,0 +1,51 @@
+{
+  "apk": "dist\\CodePocket-surfaces-2026-10-24-debug.apk",
+  "bytes": 26502881,
+  "sha256": "660d168660ffd1f13b9edb1f0834982f0653e8d94c1b01dcc8cb196d32c75edb",
+  "junit": {
+    "tests": 660,
+    "failures": 2,
+    "skipped": 1,
+    "errors": 0
+  },
+  "failures": [
+    "com.codepocket.ide.MainSurfaceIntegrationTest.tinyLargeDiagnosticOpensFullDetailsInsteadOfSilentlyDisappearing",
+    "com.codepocket.ide.MainSurfaceIntegrationTest.diagnosticHoverScrollsCompleteMessageAndCopiesWithoutEditing"
+  ],
+  "visual_tests_final": 3,
+  "visual_tests_passed": 3,
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 14
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "SetTextI18n": 11
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "old_apks_preserved": 62,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "assemble": "packageDebug and assembleDebug executed successfully; full command nonzero due known test failures",
+  "signature": "passed",
+  "alignment_16kb": "passed",
+  "device_verified": false,
+  "complete_ui": false
+}

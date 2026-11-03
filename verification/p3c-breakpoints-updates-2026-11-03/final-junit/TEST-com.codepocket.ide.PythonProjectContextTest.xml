@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.PythonProjectContextTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:19" hostname="JUHE" time="0.934">
+  <properties/>
+  <testcase name="liveAnalysisCannotResetTheExpectedProviderConflictBase" classname="com.codepocket.ide.PythonProjectContextTest" time="0.017"/>
+  <testcase name="sourceFileAndAggregateLimitsDoNotReturnPartialProjects" classname="com.codepocket.ide.PythonProjectContextTest" time="0.005"/>
+  <testcase name="changesToDiskOrOtherDraftInvalidateAnAlreadyAnalyzedSnapshot" classname="com.codepocket.ide.PythonProjectContextTest" time="0.141"/>
+  <testcase name="missingActiveWrongDraftIdentityAndInterruptedScanAreRejected" classname="com.codepocket.ide.PythonProjectContextTest" time="0.066"/>
+  <testcase name="localReadIncludesPackagesAndStubsButNoNonSourceOrVcsData" classname="com.codepocket.ide.PythonProjectContextTest" time="0.125"/>
+  <testcase name="identicalContentReusesCacheAndChangedVersionsAreBoundedAndImmutable" classname="com.codepocket.ide.PythonProjectContextTest" time="0.207"/>
+  <testcase name="tamperedCacheCannotPublishAndIsRebuiltBeforeReuse" classname="com.codepocket.ide.PythonProjectContextTest" time="0.091"/>
+  <testcase name="deletedFilesAreNotResurrectedByOldSessionDrafts" classname="com.codepocket.ide.PythonProjectContextTest" time="0.06"/>
+  <testcase name="snapshotsOverlaySeveralUnsavedFilesAndNeverWriteOriginalsOrDrafts" classname="com.codepocket.ide.PythonProjectContextTest" time="0.202"/>
+  <testcase name="invalidProviderPathsDuplicateNamesAndCyclesFailClosed" classname="com.codepocket.ide.PythonProjectContextTest" time="0.003"/>
+  <testcase name="liveProviderReadsAdditionsRemovalAndReplacedOpaqueIdsWithoutChangingMirrorOrSaveBase" classname="com.codepocket.ide.PythonProjectContextTest" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

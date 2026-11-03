@@ -1,0 +1,17 @@
+dot: PASS (37 ms)
+arrow: PASS (31 ms)
+namespace: PASS (29 ms)
+vector: PASS (677 ms)
+unicode_crlf: PASS (681 ms)
+middle: PASS (31 ms)
+signature: PASS (27 ms)
+overload: PASS (32 ms)
+overload_arity: PASS (29 ms)
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-semantic-probe-2026-10-27\probe-lsp.py", line 172, in <module>
+    if __name__ == '__main__': main()
+                               ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\verification\cpp-semantic-probe-2026-10-27\probe-lsp.py", line 143, in main
+    if tag in ('dot', 'arrow', 'middle', 'unsaved_header'): assert 'run' in names(response), (tag, response)
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('unsaved_header', {'id': 11, 'jsonrpc': '2.0', 'result': {'isIncomplete': False, 'items': []}})

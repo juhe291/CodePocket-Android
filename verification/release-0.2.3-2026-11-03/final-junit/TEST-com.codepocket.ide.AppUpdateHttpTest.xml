@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.AppUpdateHttpTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T15:43:25" hostname="JUHE" time="0.1">
+  <properties/>
+  <testcase name="malformedJsonAndInvalidUtf8DoNotProduceLatestVersionSuccess" classname="com.codepocket.ide.AppUpdateHttpTest" time="0.061"/>
+  <testcase name="anActualRequestIsUnauthenticatedAndHasNoWorkspaceOrTrackingData" classname="com.codepocket.ide.AppUpdateHttpTest" time="0.009"/>
+  <testcase name="redirectsAreNotFollowedEvenToTheSameLocalServer" classname="com.codepocket.ide.AppUpdateHttpTest" time="0.004"/>
+  <testcase name="noReleaseAndApiLimitsAreDifferentFromBeingCurrent" classname="com.codepocket.ide.AppUpdateHttpTest" time="0.007"/>
+  <testcase name="timeoutAndNetworkMessagesAreTypedWithoutEchoingSensitiveDiagnostics" classname="com.codepocket.ide.AppUpdateHttpTest" time="0.004"/>
+  <testcase name="cancellingAnActiveStreamReleasesItsRequestAndProducesNoSuccess" classname="com.codepocket.ide.AppUpdateHttpTest" time="0.005"/>
+  <testcase name="declaredLargeResponsesAreRejectedBeforeReadingTheirBody" classname="com.codepocket.ide.AppUpdateHttpTest" time="0.003"/>
+  <testcase name="aChunkedResponseCannotExceedTheBodyLimit" classname="com.codepocket.ide.AppUpdateHttpTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

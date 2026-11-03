@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitWorkspaceStoreTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-11-02T15:22:11" hostname="JUHE" time="2.82">
+  <properties/>
+  <testcase name="privatePublicationHoldsStandardGitLocksUntilAllMetadataIsVerified" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.196"/>
+  <testcase name="laterWriteFailureRollsBackKnownOwnIndexBytesAndLeavesSourceUntouched" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.057"/>
+  <testcase name="committedCleanupCanResumeWhenItsPrivateArtifactFolderIsAlreadyGone" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.039"/>
+  <testcase name="staleWorkspaceRejectsPublicationBeforeAnyProviderWrites" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.01"/>
+  <testcase name="publishesOnlyExactMetadataAndKeepsRefsAfterObjectsAndIndex" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.112"/>
+  <testcase name="anotherStoreCannotRecoverAnActivePublicationOnTheSameJournal" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.163"/>
+  <testcase name="aNewStoreCanRecoverKnownOwnWritesAfterAnInterruptedRollback" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.057"/>
+  <testcase name="staleProviderContentOrMetadataFailsBeforePublishingAnything" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.008"/>
+  <testcase name="changedMetadataIsExactAndWorkingFileChangesAreRejected" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.017"/>
+  <testcase name="privateFilesystemAdapterWritesExactBinaryBytesAndDoesNotLeaveTemporaryFiles" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.01"/>
+  <testcase name="gitMetadataIsNotLoadedAsEditorTextOrCopiedIntoAnExternalRun" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="1.817"/>
+  <testcase name="restartNeverDeletesAForeignReplacementOfARecordedLock" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.084"/>
+  <testcase name="changedImmutableObjectsOrConfigurationAreRejectedBeforeWriting" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.027"/>
+  <testcase name="failedCaptureDeletesOnlyItsOwnedJobAndKeepsOtherFiles" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.009"/>
+  <testcase name="freshBinaryProviderSnapshotNeverUsesTheOldEditorMirrorOrTextWriter" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.045"/>
+  <testcase name="unknownPartialOrConcurrentMetadataIsNeverOverwrittenDuringRecovery" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.05"/>
+  <testcase name="foreignStandardGitLocksArePreservedAndNoMetadataIsPublished" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.019"/>
+  <testcase name="restartReleasesOnlyJournalProvenLocksAndRetainsTheCompletedCommit" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.096"/>
+  <testcase name="cyclesAndDuplicateIdsAreRejectedWithoutMutatingProvider" classname="com.codepocket.ide.GitWorkspaceStoreTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

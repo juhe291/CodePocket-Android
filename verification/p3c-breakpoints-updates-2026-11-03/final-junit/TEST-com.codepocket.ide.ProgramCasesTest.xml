@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.ProgramCasesTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:52:15" hostname="JUHE" time="2.245">
+  <properties/>
+  <testcase name="comparisonRulesDoNotDiscardSpacesOrChangeInternalLineEndings" classname="com.codepocket.ide.ProgramCasesTest" time="0.003"/>
+  <testcase name="savedCasesAreIsolatedByStableFileKeysAndEditedCasesDoNotReuseOldVerdicts" classname="com.codepocket.ide.ProgramCasesTest" time="0.156"/>
+  <testcase name="queueAllowsExactlyOneOutstandingCaseAndIgnoresReplaysForeignBatchesAndChangedTickets" classname="com.codepocket.ide.ProgramCasesTest" time="0.003"/>
+  <testcase name="programOutcomesRemainDistinctAndAnExitFailureCannotPassOnMatchingText" classname="com.codepocket.ide.ProgramCasesTest" time="0.007"/>
+  <testcase name="stopAcknowledgesTheCurrentResultButNeverLaunchesAnotherCaseAndCompileFailureHaltsTheQueue" classname="com.codepocket.ide.ProgramCasesTest" time="0.003"/>
+  <testcase name="corruptionAndInvalidCaseLimitsAreRejectedWithoutOverwritingExistingData" classname="com.codepocket.ide.ProgramCasesTest" time="0.078"/>
+  <testcase name="historyIsBoundedByBothCountAndTextWhileNewestRecordsRemainComplete" classname="com.codepocket.ide.ProgramCasesTest" time="1.861"/>
+  <testcase name="truncatedFailureOutputRetainsItsWarningAfterAtomicHistoryRoundTrip" classname="com.codepocket.ide.ProgramCasesTest" time="0.039"/>
+  <testcase name="caseAndHistoryRoundTripKeepUnicodeInputsActualOutputAndDiagnosticProof" classname="com.codepocket.ide.ProgramCasesTest" time="0.037"/>
+  <testcase name="replacementFailurePreservesThePreviousCasesAndHistoryAndCleansOnlyItsTemporaryFile" classname="com.codepocket.ide.ProgramCasesTest" time="0.057"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,67 @@
+test_canonical_https_targets_keep_unicode_ports_and_ipv6 (test_git_https.GitHttpsPolicyTests.test_canonical_https_targets_keep_unicode_ports_and_ipv6) ... ok
+test_credentials_are_validated_and_insecure_context_cannot_be_injected (test_git_https.GitHttpsPolicyTests.test_credentials_are_validated_and_insecure_context_cannot_be_injected) ... ok
+test_unsafe_or_ambiguous_targets_are_rejected_without_echoing_them (test_git_https.GitHttpsPolicyTests.test_unsafe_or_ambiguous_targets_are_rejected_without_echoing_them) ... ok
+test_anonymous_public_fetch_and_private_authentication_error (test_git_https.GitHttpsTransportTests.test_anonymous_public_fetch_and_private_authentication_error) ... ok
+test_authenticated_fetch_uses_real_verified_tls_pack_and_no_credential_url (test_git_https.GitHttpsTransportTests.test_authenticated_fetch_uses_real_verified_tls_pack_and_no_credential_url) ... ok
+test_cancel_and_expired_deadline_fail_before_connecting (test_git_https.GitHttpsTransportTests.test_cancel_and_expired_deadline_fail_before_connecting) ... ok
+test_default_tls_rejects_untrusted_fixture_certificate (test_git_https.GitHttpsTransportTests.test_default_tls_rejects_untrusted_fixture_certificate) ... ok
+test_origin_and_repository_path_change_are_blocked_before_any_request (test_git_https.GitHttpsTransportTests.test_origin_and_repository_path_change_are_blocked_before_any_request) ... ok
+test_real_single_ref_pack_upload_updates_only_the_fixture (test_git_https.GitHttpsTransportTests.test_real_single_ref_pack_upload_updates_only_the_fixture) ... ok
+test_redirect_is_not_followed_and_does_not_rebase_credentials (test_git_https.GitHttpsTransportTests.test_redirect_is_not_followed_and_does_not_rebase_credentials) ... ok
+test_repeated_fetch_releases_the_single_bounded_connection (test_git_https.GitHttpsTransportTests.test_repeated_fetch_releases_the_single_bounded_connection) ... ok
+test_transfer_limit_closes_response_and_preserves_tokens (test_git_https.GitHttpsTransportTests.test_transfer_limit_closes_response_and_preserves_tokens) ... Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\protocol.py", line 600, in write_pkt_line
+    self.write(line)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\web.py", line 418, in write_fn
+    result = write(data)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\wsgiref\handlers.py", line 298, in write
+    self._write(data)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\wsgiref\handlers.py", line 472, in _write
+    result = self.stdout.write(data)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+    ~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\ssl.py", line 1263, in sendall
+    v = self.send(byte_view[count:])
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\ssl.py", line 1232, in send
+    return self._sslobj.write(data)
+           ~~~~~~~~~~~~~~~~~~^^^^^^
+ConnectionAbortedError: [WinError 10053] 你的主机中的软件中止了一个已建立的连接。
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\wsgiref\handlers.py", line 138, in run
+    self.finish_response()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\wsgiref\handlers.py", line 183, in finish_response
+    for data in self.result:
+                ^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\web.py", line 434, in get_info_refs
+    handler.handle()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\server.py", line 627, in handle
+    missing_objects = self.repo.find_missing_objects(
+        wants_wrapper,
+    ...<2 lines>...
+        get_tagged=self.get_tagged,
+    )
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\repo.py", line 895, in find_missing_objects
+    wants = determine_wants(refs, depth)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\server.py", line 624, in wants_wrapper
+    wants.extend(graph_walker.determine_wants(refs, depth))
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\server.py", line 929, in determine_wants
+    self.proto.write_pkt_line(line)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\git-probe\site\dulwich\protocol.py", line 604, in write_pkt_line
+    raise GitProtocolError(str(exc)) from exc
+dulwich.errors.GitProtocolError: [WinError 10053] 你的主机中的软件中止了一个已建立的连接。
+ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 6.962s
+
+OK

@@ -1,0 +1,70 @@
+{
+  "apk": "dist\\CodePocket-heading-polish-2026-10-24-debug.apk",
+  "bytes": 26509321,
+  "sha256": "4fedb4c0cad96a0392e410b56c12a5764b7917ba6181992b2e932eeb0efc37ec",
+  "junit": {
+    "tests": 685,
+    "failures": 0,
+    "skipped": 1,
+    "errors": 0
+  },
+  "failures": [],
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 17
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 1,
+        "SetTextI18n": 13
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "old_apks_preserved": 70,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "assemble": "Debug tests, Lint, packageDebug and assembleDebug succeeded",
+  "signature": "passed",
+  "alignment_16kb": "passed",
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false,
+  "baseline_test_cases_retained": 685,
+  "new_test_cases": 0,
+  "packaged_theme_matches_source": true,
+  "minimum_light_token_contrast": 4.889,
+  "browser": {
+    "cases": 232,
+    "checks": 13,
+    "paletteChecks": 20,
+    "scenes": 29,
+    "devices": 4,
+    "themes": 2,
+    "errors": [],
+    "failures": [],
+    "androidDeviceVerified": false
+  },
+  "no_new_skips": true,
+  "known_issue": "Legacy panelPreferSide option has no effect in current bottom-only workbench; recorded, unchanged",
+  "previous_python_import_failure": "Still unconfirmed/unreproduced; this batch source44/APK39 passed; production archive unchanged",
+  "production_files_changed": [
+    "app/src/main/java/com/codepocket/ide/ui/WorkbenchForms.kt",
+    "app/src/main/java/com/codepocket/ide/SettingsDialog.kt"
+  ]
+}

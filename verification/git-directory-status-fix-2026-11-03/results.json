@@ -1,0 +1,94 @@
+{
+  "apk": "dist/CodePocket-git-directory-status-fix-2026-11-03-debug.apk",
+  "bytes": 118208016,
+  "sha256": "36c76a0b0a38909ee4d8c8b06267ab2af229d1a8b6607ec4506f125571d4e8d1",
+  "version_name": "0.2.1",
+  "version_code": 3,
+  "full_build_exit": 1,
+  "actual_package_executions": 1,
+  "tests": {
+    "tests": 1173,
+    "counts": {
+      "passed": 1171,
+      "failure": 1,
+      "skipped": 1
+    },
+    "previous_identities_retained": 1173,
+    "new_tests": 0,
+    "new_failed": [],
+    "failures": [
+      {
+        "id": "com.codepocket.ide.CppRuntimePreparationTest.trustedFilesDirectoryAliasesDoNotPreventPreparingThePinnedCompilerInputs",
+        "status": "failure"
+      }
+    ],
+    "lint": {
+      "app": {
+        "Warning": 34
+      },
+      "editor-sora": {
+        "Warning": 1
+      },
+      "workspace-core": {}
+    }
+  },
+  "source_python": 159,
+  "packaged_python": 48,
+  "packaged_semantics": 22,
+  "packaged_git_formatting": 84,
+  "native_libraries_byte_identical": 25,
+  "all_other_package_entries_byte_identical": true,
+  "changed_runtime_module": "git_workspace.pyc",
+  "other_python_timestamp_headers": [
+    {
+      "module": "code_formatting.pyc",
+      "before_mtime": 1793635398,
+      "after_mtime": 1793684456,
+      "unchanged_payload_sha256": "d9c248f7794843f14015c8d6190cd2ab843117151242b7623b88e8627cdfdaee"
+    },
+    {
+      "module": "diagnostics.pyc",
+      "before_mtime": 1793635398,
+      "after_mtime": 1793684456,
+      "unchanged_payload_sha256": "a85439c0d8ce155412fcc499b261d8e75cb5c79e9525671af55b0a8c14a31539"
+    },
+    {
+      "module": "git_https.pyc",
+      "before_mtime": 1793635398,
+      "after_mtime": 1793684456,
+      "unchanged_payload_sha256": "f592265b459920746e4a6d616fd56c9fb6cab2f7c35fb997d57dc98f39ba0369"
+    },
+    {
+      "module": "git_remote.pyc",
+      "before_mtime": 1793635398,
+      "after_mtime": 1793684456,
+      "unchanged_payload_sha256": "390359e5c76f679b10042107eb0dfd11ecca1f1a339906648c058da900c333a6"
+    },
+    {
+      "module": "runner.pyc",
+      "before_mtime": 1793635398,
+      "after_mtime": 1793684456,
+      "unchanged_payload_sha256": "9a2f44023adef53d203b9adb02e23e47ae5a1b59ae120593252cf1e3dc946ffa"
+    },
+    {
+      "module": "semantics.pyc",
+      "before_mtime": 1793635398,
+      "after_mtime": 1793684456,
+      "unchanged_payload_sha256": "5ccfd32b0eaf6a0fcb83e75b01eec663ad67ff76e0332e06102c44d4fa9b942f"
+    }
+  ],
+  "old_apks_preserved": 103,
+  "host_shell_tests_reused": 4,
+  "host_snippets_reused": 14,
+  "vector_tests_rerun": 5,
+  "terminal_tests": 146,
+  "terminal_result": "valid UP-TO-DATE",
+  "preview_reused_from": "verification/app-updates-2026-11-03/viewed-previews.json",
+  "dex_resources_manifest_byte_identical": true,
+  "android_device_execution": false,
+  "full_goal_complete": false,
+  "remaining": [
+    "P3-C settings and themes",
+    "P3-D additional language analysis"
+  ]
+}

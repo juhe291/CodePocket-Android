@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_web_auxiliary_apk.py", line 72, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_web_auxiliary_apk.py", line 22, in main
+    assert digest(args.baseline.read_bytes())==BASELINE
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

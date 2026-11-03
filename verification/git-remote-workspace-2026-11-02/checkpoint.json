@@ -1,0 +1,39 @@
+{
+  "stage": "P3-B remote engine and publication validation foundation; original publication not connected",
+  "baseline_commit": "5b13a7b",
+  "remote_missing_baseline": {
+    "tests": 17,
+    "failures": 17
+  },
+  "remote_boundary_first": {
+    "tests": 21,
+    "failures": 1
+  },
+  "remote_tests": 25,
+  "python_source_tests": 151,
+  "old_python_identities_retained": 126,
+  "native_targeted_tests": 40,
+  "new_native_tests": 18,
+  "old_native_identities_retained": 22,
+  "real_tls_to_native_fixtures": [
+    "clone",
+    "fetch",
+    "fast_forward",
+    "configure"
+  ],
+  "current_apk": "dist/CodePocket-local-git-2026-11-02-debug.apk",
+  "current_apk_sha256": "26ac0bec36f7a0a89108727452d1f96a8576086e5f9ee19d889987a568961075",
+  "new_apk_built": false,
+  "android_execution": false,
+  "production_remote_service": false,
+  "encrypted_credential_store": false,
+  "original_worktree_transaction": false,
+  "network_ui": false,
+  "goal_complete": false,
+  "remaining": [
+    "P3-B worktree journal, private service, credentials and UI",
+    "P3-E web auxiliary panel",
+    "P3-C settings and themes",
+    "P3-D more language analysis"
+  ]
+}

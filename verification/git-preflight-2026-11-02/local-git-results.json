@@ -1,0 +1,72 @@
+{
+  "tests": 10,
+  "failures": 0,
+  "errors": 0,
+  "dulwich": "1.2.20",
+  "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+  "source_sha256": "a2c11bcf08a50341fc8e7848141949d606b31b4d8e17eb9cb742bcfdc06b0e03",
+  "candidate_inputs": [
+    {
+      "name": "dulwich",
+      "version": "1.2.20",
+      "filename": "dulwich-1.2.20-py3-none-any.whl",
+      "bytes": 758582,
+      "sha256": "ab521391c3475e7c507f14aeacad0cdf26e97ba5050d8010a1ff34e417c9a842",
+      "requires_python": ">=3.10",
+      "requires_dist": [
+        "urllib3>=2.2.2",
+        "typing_extensions>=4.6.0; python_version < \"3.12\"",
+        "fastimport; extra == \"fastimport\"",
+        "urllib3>=2.2.2; extra == \"https\"",
+        "gpg; extra == \"pgp\"",
+        "pysequoia; extra == \"sequoia\"",
+        "paramiko; extra == \"paramiko\"",
+        "rich; extra == \"colordiff\"",
+        "ruff==0.16.9; extra == \"dev\"",
+        "mypy==2.3.1; extra == \"dev\"",
+        "dissolve>=0.1.1; extra == \"dev\"",
+        "codespell==2.4.3; extra == \"dev\"",
+        "hypothesis>=6; extra == \"hypothesis\"",
+        "merge3; extra == \"merge\"",
+        "atheris; extra == \"fuzzing\"",
+        "patiencediff; extra == \"patiencediff\"",
+        "munkres; extra == \"range-diff\"",
+        "aiohttp; extra == \"aiohttp\""
+      ],
+      "source": "https://files.pythonhosted.org/packages/08/c8/217841f8ae98909dd2045cfd9e9060791ae1dc9c0d2239672ae318b28796/dulwich-1.2.20-py3-none-any.whl",
+      "licenses": [
+        {
+          "member": "dulwich-1.2.20.dist-info/licenses/COPYING",
+          "sha256": "e17db6e0f06d3a70a9a6a6e4e1b85c6dfaa2c7d0154147c798435e333f4b366d"
+        }
+      ]
+    },
+    {
+      "name": "urllib3",
+      "version": "2.8.0",
+      "filename": "urllib3-2.8.0-py3-none-any.whl",
+      "bytes": 135717,
+      "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3",
+      "requires_python": ">=3.10",
+      "requires_dist": [
+        "brotli>=1.2.0; platform_python_implementation == \"CPython\" and extra == \"brotli\"",
+        "brotlicffi>=1.2.0.0; platform_python_implementation != \"CPython\" and extra == \"brotli\"",
+        "h2<5,>=4; extra == \"h2\"",
+        "pysocks!=1.5.7,<2.0,>=1.5.6; extra == \"socks\"",
+        "backports-zstd>=1.0.0; python_version < \"3.14\" and extra == \"zstd\""
+      ],
+      "source": "https://files.pythonhosted.org/packages/92/9d/c4e665119135114480843e7ab388fa94d8480650450e6f8e26b70d323a4c/urllib3-2.8.0-py3-none-any.whl",
+      "licenses": [
+        {
+          "member": "urllib3-2.8.0.dist-info/licenses/LICENSE.txt",
+          "sha256": "130e3a64d5fdd5d096a752694634a7d9df284469de86e5732100268041e3d686"
+        }
+      ]
+    }
+  ],
+  "pure_python_engine": true,
+  "standard_git_used_only_for_host_comparison": true,
+  "android_execution": false,
+  "production_integrated": false,
+  "new_apk_built": false
+}

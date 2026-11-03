@@ -1,0 +1,10 @@
+{
+  "command": [
+    "C:\\mingw64\\bin\\g++.exe",
+    "--version"
+  ],
+  "cwd": "C:\\Users\\q1684\\Desktop\\\u5b89\u5353\u7aef\u7f16\u8bd1\u5668\\CodePocket-Android\\.tools\\cpp-local-probe\\host-build",
+  "returncode": 0,
+  "stdout": "g++.exe (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "stderr": ""
+}

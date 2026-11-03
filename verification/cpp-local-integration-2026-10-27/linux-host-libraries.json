@@ -1,0 +1,330 @@
+[
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libc_musl.so",
+    "method": 8,
+    "crc32": 2913982779,
+    "compressed": 452700,
+    "uncompressed": 730552,
+    "offset": 493813797
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libRemarks.so",
+    "method": 8,
+    "crc32": 2507382613,
+    "compressed": 2449,
+    "uncompressed": 7560,
+    "offset": 494266625
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/aarch64-unknown-linux-musl/libc++abi.so",
+    "method": 8,
+    "crc32": 2018893746,
+    "compressed": 130069,
+    "uncompressed": 490632,
+    "offset": 494269346
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/aarch64-unknown-linux-musl/libc++.so",
+    "method": 8,
+    "crc32": 1799789121,
+    "compressed": 546917,
+    "uncompressed": 1914128,
+    "offset": 494399570
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/aarch64-unknown-linux-musl/libunwind.so",
+    "method": 8,
+    "crc32": 1141233620,
+    "compressed": 24689,
+    "uncompressed": 65272,
+    "offset": 495098734
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libclang-cpp.so",
+    "method": 8,
+    "crc32": 1777957593,
+    "compressed": 47751042,
+    "uncompressed": 158830664,
+    "offset": 495976591
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/liblldbIntelFeatures.so",
+    "method": 8,
+    "crc32": 3921497380,
+    "compressed": 822808,
+    "uncompressed": 2637896,
+    "offset": 543727764
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libc++.so",
+    "method": 0,
+    "crc32": 3006422679,
+    "compressed": 34,
+    "uncompressed": 34,
+    "offset": 544550711
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libc++.so.1",
+    "method": 0,
+    "crc32": 2849229045,
+    "compressed": 36,
+    "uncompressed": 36,
+    "offset": 544550870
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-musl/libc++abi.so",
+    "method": 8,
+    "crc32": 735562936,
+    "compressed": 124782,
+    "uncompressed": 443168,
+    "offset": 544551175
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-musl/libc++.so",
+    "method": 8,
+    "crc32": 3787133706,
+    "compressed": 533604,
+    "uncompressed": 1757864,
+    "offset": 544676111
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-musl/libc++.so.1",
+    "method": 0,
+    "crc32": 727578250,
+    "compressed": 9,
+    "uncompressed": 9,
+    "offset": 545209866
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-musl/libunwind.so",
+    "method": 8,
+    "crc32": 73437295,
+    "compressed": 23937,
+    "uncompressed": 58944,
+    "offset": 545369391
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libxml2.so",
+    "method": 0,
+    "crc32": 706184480,
+    "compressed": 12,
+    "uncompressed": 12,
+    "offset": 546233974
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libedit.so.0",
+    "method": 8,
+    "crc32": 930747287,
+    "compressed": 296048,
+    "uncompressed": 656352,
+    "offset": 546234112
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/liblldb.so",
+    "method": 8,
+    "crc32": 2876197428,
+    "compressed": 51950654,
+    "uncompressed": 177958968,
+    "offset": 546562856
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/arm-unknown-linux-musleabihf/libc++abi.so",
+    "method": 8,
+    "crc32": 1518444645,
+    "compressed": 115962,
+    "uncompressed": 380048,
+    "offset": 598513781
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/arm-unknown-linux-musleabihf/libc++.so",
+    "method": 8,
+    "crc32": 4052607822,
+    "compressed": 507013,
+    "uncompressed": 1558984,
+    "offset": 598629900
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/arm-unknown-linux-musleabihf/libunwind.so",
+    "method": 8,
+    "crc32": 2368748013,
+    "compressed": 16978,
+    "uncompressed": 41752,
+    "offset": 599282678
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libunwind.so",
+    "method": 0,
+    "crc32": 130085327,
+    "compressed": 37,
+    "uncompressed": 37,
+    "offset": 600163975
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libxml2.so.2",
+    "method": 8,
+    "crc32": 2560873188,
+    "compressed": 634622,
+    "uncompressed": 1502208,
+    "offset": 600164319
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libclang.so",
+    "method": 8,
+    "crc32": 3395615858,
+    "compressed": 37082532,
+    "uncompressed": 124986296,
+    "offset": 600799069
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libform.so.6",
+    "method": 8,
+    "crc32": 1181843081,
+    "compressed": 36863,
+    "uncompressed": 93432,
+    "offset": 637888402
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libncurses.so.6",
+    "method": 8,
+    "crc32": 661397366,
+    "compressed": 180231,
+    "uncompressed": 425408,
+    "offset": 637925393
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libc++abi.so.1",
+    "method": 0,
+    "crc32": 2679441203,
+    "compressed": 39,
+    "uncompressed": 39,
+    "offset": 709688081
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i386-unknown-linux-gnu/libc++abi.so",
+    "method": 8,
+    "crc32": 4179606084,
+    "compressed": 125636,
+    "uncompressed": 410488,
+    "offset": 710588366
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i386-unknown-linux-gnu/libc++.so",
+    "method": 8,
+    "crc32": 565418255,
+    "compressed": 548983,
+    "uncompressed": 1717668,
+    "offset": 710714153
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i386-unknown-linux-gnu/libc++.so.1",
+    "method": 0,
+    "crc32": 727578250,
+    "compressed": 9,
+    "uncompressed": 9,
+    "offset": 711263284
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i386-unknown-linux-gnu/libunwind.so",
+    "method": 8,
+    "crc32": 237615529,
+    "compressed": 24647,
+    "uncompressed": 60464,
+    "offset": 711427714
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i386-unknown-linux-gnu/libc++abi.so.1",
+    "method": 0,
+    "crc32": 704006236,
+    "compressed": 12,
+    "uncompressed": 12,
+    "offset": 711609185
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/libpanel.so.6",
+    "method": 8,
+    "crc32": 2338416378,
+    "compressed": 5236,
+    "uncompressed": 15200,
+    "offset": 712278748
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-gnu/libc++abi.so",
+    "method": 8,
+    "crc32": 4078453879,
+    "compressed": 125845,
+    "uncompressed": 445192,
+    "offset": 728228359
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-gnu/libc++.so",
+    "method": 8,
+    "crc32": 3498063917,
+    "compressed": 535202,
+    "uncompressed": 1762472,
+    "offset": 728354357
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-gnu/libc++.so.1",
+    "method": 0,
+    "crc32": 727578250,
+    "compressed": 9,
+    "uncompressed": 9,
+    "offset": 728889709
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-gnu/libunwind.so",
+    "method": 8,
+    "crc32": 1109950068,
+    "compressed": 24411,
+    "uncompressed": 59816,
+    "offset": 729050220
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/x86_64-unknown-linux-gnu/libc++abi.so.1",
+    "method": 0,
+    "crc32": 704006236,
+    "compressed": 12,
+    "uncompressed": 12,
+    "offset": 729236438
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/LLVMPolly.so",
+    "method": 8,
+    "crc32": 1522039925,
+    "compressed": 2201847,
+    "uncompressed": 7648208,
+    "offset": 729913659
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i686-unknown-linux-musl/libc++abi.so",
+    "method": 8,
+    "crc32": 204789277,
+    "compressed": 126062,
+    "uncompressed": 415452,
+    "offset": 732115774
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i686-unknown-linux-musl/libc++.so",
+    "method": 8,
+    "crc32": 3152231456,
+    "compressed": 569122,
+    "uncompressed": 1747828,
+    "offset": 732241988
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i686-unknown-linux-musl/libc++.so.1",
+    "method": 0,
+    "crc32": 727578250,
+    "compressed": 9,
+    "uncompressed": 9,
+    "offset": 732811259
+  },
+  {
+    "name": "android-ndk-r30/toolchains/llvm/prebuilt/linux-x86_64/lib/i686-unknown-linux-musl/libunwind.so",
+    "method": 8,
+    "crc32": 3581227522,
+    "compressed": 23972,
+    "uncompressed": 59064,
+    "offset": 732973412
+  }
+]

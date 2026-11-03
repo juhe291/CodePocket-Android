@@ -1,0 +1,37 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Could not connect to the Gradle daemon.
+Daemon uid: 96975d2f-08f8-4b4c-9ee5-8986367a6433 with diagnostics:
+Daemon pid: 28528
+  log file: C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\gradle-home\daemon\8.9\daemon-28528.out.log
+----- Last  20 lines from daemon log file - daemon-28528.out.log -----
+2026-10-26T21:20:52.704+0800 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Is this a loopback interface? false
+2026-10-26T21:20:52.704+0800 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding IP addresses for network interface sing-tun Tunnel
+2026-10-26T21:20:52.706+0800 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Is this a loopback interface? false
+2026-10-26T21:20:52.706+0800 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding remote address /172.20.0.1
+2026-10-26T21:20:52.706+0800 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding remote address /fdfe:dcba:9876:0:0:0:0:1
+2026-10-26T21:20:52.706+0800 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding IP addresses for network interface sing-tun Tunnel-NDIS Filter-0000
+2026-10-26T21:20:52.707+0800 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Is this a loopback interface? false
+2026-10-26T21:20:52.718+0800 [DEBUG] [org.gradle.internal.remote.internal.inet.TcpIncomingConnector] Listening on [91d04b46-4d3f-47e7-a7b3-7feccd4ac225 port:17794, addresses:[localhost/127.0.0.1]].
+2026-10-26T21:20:52.732+0800 [DEBUG] [org.gradle.launcher.daemon.server.Daemon] Daemon starting at: Mon Oct 26 21:20:52 CST 2026, with address: [91d04b46-4d3f-47e7-a7b3-7feccd4ac225 port:17794, addresses:[localhost/127.0.0.1]]
+2026-10-26T21:20:52.732+0800 [INFO] [org.gradle.launcher.daemon.server.DaemonRegistryUpdater] Advertising the daemon address to the clients: [91d04b46-4d3f-47e7-a7b3-7feccd4ac225 port:17794, addresses:[localhost/127.0.0.1]]
+2026-10-26T21:20:52.732+0800 [DEBUG] [org.gradle.launcher.daemon.server.DaemonRegistryUpdater] Advertised daemon context: DefaultDaemonContext[uid=96975d2f-08f8-4b4c-9ee5-8986367a6433,javaHome=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\jdk17\jdk-17.0.20.1+1,javaVersion=17,daemonRegistryDir=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\gradle-home\daemon,pid=28528,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx3072m,-Dfile.encoding=UTF-8,-Djava.io.tmpdir=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\semantics-tmp,-Duser.country=CN,-Duser.language=zh,-Duser.variant]
+2026-10-26T21:20:52.733+0800 [DEBUG] [org.gradle.launcher.daemon.registry.PersistentDaemonRegistry] Storing daemon address: [91d04b46-4d3f-47e7-a7b3-7feccd4ac225 port:17794, addresses:[localhost/127.0.0.1]], context: DefaultDaemonContext[uid=96975d2f-08f8-4b4c-9ee5-8986367a6433,javaHome=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\jdk17\jdk-17.0.20.1+1,javaVersion=17,daemonRegistryDir=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\gradle-home\daemon,pid=28528,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx3072m,-Dfile.encoding=UTF-8,-Djava.io.tmpdir=C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\semantics-tmp,-Duser.country=CN,-Duser.language=zh,-Duser.variant]
+2026-10-26T21:20:52.750+0800 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on daemon addresses registry.
+2026-10-26T21:20:52.753+0800 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on daemon addresses registry.
+2026-10-26T21:20:52.758+0800 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on daemon addresses registry.
+2026-10-26T21:20:52.758+0800 [LIFECYCLE] [org.gradle.launcher.daemon.server.Daemon] Daemon server started.
+2026-10-26T21:20:52.759+0800 [DEBUG] [org.gradle.launcher.daemon.bootstrap.DaemonStartupCommunication] Completed writing the daemon greeting. Closing streams...
+2026-10-26T21:20:52.765+0800 [DEBUG] [org.gradle.launcher.daemon.server.Daemon] stopOnExpiration() called on daemon
+2026-10-26T21:20:52.766+0800 [DEBUG] [org.gradle.launcher.daemon.server.Daemon] awaitExpiration() called on daemon
+2026-10-26T21:20:52.766+0800 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon is running. Sleeping until state changes.----- End of the daemon log -----
+
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.

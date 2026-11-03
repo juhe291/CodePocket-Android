@@ -1,0 +1,503 @@
+test_corrupt_cache_is_never_accepted_or_silently_replaced (test_cpp_runtime_download.CppRuntimeDownloadTests.test_corrupt_cache_is_never_accepted_or_silently_replaced) ... ERROR
+test_corrupt_cache_is_never_accepted_or_silently_replaced (test_cpp_runtime_download.CppRuntimeDownloadTests.test_corrupt_cache_is_never_accepted_or_silently_replaced) ... ERROR
+test_default_source_keeps_the_existing_lock_repository (test_cpp_runtime_download.CppRuntimeDownloadTests.test_default_source_keeps_the_existing_lock_repository) ... FAIL
+test_default_source_keeps_the_existing_lock_repository (test_cpp_runtime_download.CppRuntimeDownloadTests.test_default_source_keeps_the_existing_lock_repository) ... ERROR
+test_download_is_promoted_only_after_the_original_digest_matches (test_cpp_runtime_download.CppRuntimeDownloadTests.test_download_is_promoted_only_after_the_original_digest_matches) ... ERROR
+test_download_is_promoted_only_after_the_original_digest_matches (test_cpp_runtime_download.CppRuntimeDownloadTests.test_download_is_promoted_only_after_the_original_digest_matches) ... ERROR
+test_existing_fallback_is_verified_without_network (test_cpp_runtime_download.CppRuntimeDownloadTests.test_existing_fallback_is_verified_without_network) ... ERROR
+test_existing_fallback_is_verified_without_network (test_cpp_runtime_download.CppRuntimeDownloadTests.test_existing_fallback_is_verified_without_network) ... ERROR
+test_missing_cache_without_fetch_does_not_contact_a_source (test_cpp_runtime_download.CppRuntimeDownloadTests.test_missing_cache_without_fetch_does_not_contact_a_source) ... ERROR
+test_primary_source_changes_only_the_download_origin (test_cpp_runtime_download.CppRuntimeDownloadTests.test_primary_source_changes_only_the_download_origin) ... FAIL
+test_primary_source_changes_only_the_download_origin (test_cpp_runtime_download.CppRuntimeDownloadTests.test_primary_source_changes_only_the_download_origin) ... ERROR
+test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) ...
+  test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) (source='http://packages.termux.dev/apt/termux-main') ... FAIL
+  test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) (source='https://example.invalid/') ... FAIL
+  test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) (source='https://packages.termux.dev/apt/termux-main?x=1') ... FAIL
+test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) ... ERROR
+test_valid_cache_stays_offline_even_with_fetch_enabled (test_cpp_runtime_download.CppRuntimeDownloadTests.test_valid_cache_stays_offline_even_with_fetch_enabled) ... ERROR
+test_valid_cache_stays_offline_even_with_fetch_enabled (test_cpp_runtime_download.CppRuntimeDownloadTests.test_valid_cache_stays_offline_even_with_fetch_enabled) ... ERROR
+test_wrong_download_digest_cannot_produce_a_valid_cached_package (test_cpp_runtime_download.CppRuntimeDownloadTests.test_wrong_download_digest_cannot_produce_a_valid_cached_package) ... ERROR
+test_wrong_download_digest_cannot_produce_a_valid_cached_package (test_cpp_runtime_download.CppRuntimeDownloadTests.test_wrong_download_digest_cannot_produce_a_valid_cached_package) ... ERROR
+
+======================================================================
+ERROR: test_corrupt_cache_is_never_accepted_or_silently_replaced (test_cpp_runtime_download.CppRuntimeDownloadTests.test_corrupt_cache_is_never_accepted_or_silently_replaced)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp1r20t11e\\cache\\downloads'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 44, in test_corrupt_cache_is_never_accepted_or_silently_replaced
+    target=self.cache/'downloads/package.deb';target.parent.mkdir(parents=True);target.write_bytes(b'wrong')
+                                              ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 726, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp1r20t11e\\cache'
+
+======================================================================
+ERROR: test_corrupt_cache_is_never_accepted_or_silently_replaced (test_cpp_runtime_download.CppRuntimeDownloadTests.test_corrupt_cache_is_never_accepted_or_silently_replaced)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp1r20t11e'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp1r20t11e'
+
+======================================================================
+ERROR: test_default_source_keeps_the_existing_lock_repository (test_cpp_runtime_download.CppRuntimeDownloadTests.test_default_source_keeps_the_existing_lock_repository)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp23_ipzph'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp23_ipzph'
+
+======================================================================
+ERROR: test_download_is_promoted_only_after_the_original_digest_matches (test_cpp_runtime_download.CppRuntimeDownloadTests.test_download_is_promoted_only_after_the_original_digest_matches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpxz5064wr\\cache\\downloads'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 53, in test_download_is_promoted_only_after_the_original_digest_matches
+    target=runtime.obtain('package.deb',self.digest,self.url,True)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\prepare_cpp_runtime.py", line 32, in obtain
+    target = CACHE / 'downloads' / filename; target.parent.mkdir(parents=True, exist_ok=True)
+                                             ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 726, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpxz5064wr\\cache'
+
+======================================================================
+ERROR: test_download_is_promoted_only_after_the_original_digest_matches (test_cpp_runtime_download.CppRuntimeDownloadTests.test_download_is_promoted_only_after_the_original_digest_matches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpxz5064wr'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpxz5064wr'
+
+======================================================================
+ERROR: test_existing_fallback_is_verified_without_network (test_cpp_runtime_download.CppRuntimeDownloadTests.test_existing_fallback_is_verified_without_network)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 40, in test_existing_fallback_is_verified_without_network
+    fallback=Path(self.temporary.name)/'old-package.deb';fallback.write_bytes(self.payload)
+                                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_abc.py", line 641, in write_bytes
+    with self.open(mode='wb') as f:
+         ~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp9olh4rgq\\old-package.deb'
+
+======================================================================
+ERROR: test_existing_fallback_is_verified_without_network (test_cpp_runtime_download.CppRuntimeDownloadTests.test_existing_fallback_is_verified_without_network)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp9olh4rgq'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmp9olh4rgq'
+
+======================================================================
+ERROR: test_missing_cache_without_fetch_does_not_contact_a_source (test_cpp_runtime_download.CppRuntimeDownloadTests.test_missing_cache_without_fetch_does_not_contact_a_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpj8wn1bfz'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpj8wn1bfz'
+
+======================================================================
+ERROR: test_primary_source_changes_only_the_download_origin (test_cpp_runtime_download.CppRuntimeDownloadTests.test_primary_source_changes_only_the_download_origin)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpzdai7naq'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpzdai7naq'
+
+======================================================================
+ERROR: test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmphusg3j_4'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmphusg3j_4'
+
+======================================================================
+ERROR: test_valid_cache_stays_offline_even_with_fetch_enabled (test_cpp_runtime_download.CppRuntimeDownloadTests.test_valid_cache_stays_offline_even_with_fetch_enabled)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpu2fvpxgg\\cache\\downloads'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 36, in test_valid_cache_stays_offline_even_with_fetch_enabled
+    target=self.cache/'downloads/package.deb';target.parent.mkdir(parents=True);target.write_bytes(self.payload)
+                                              ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 726, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpu2fvpxgg\\cache'
+
+======================================================================
+ERROR: test_valid_cache_stays_offline_even_with_fetch_enabled (test_cpp_runtime_download.CppRuntimeDownloadTests.test_valid_cache_stays_offline_even_with_fetch_enabled)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpu2fvpxgg'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpu2fvpxgg'
+
+======================================================================
+ERROR: test_wrong_download_digest_cannot_produce_a_valid_cached_package (test_cpp_runtime_download.CppRuntimeDownloadTests.test_wrong_download_digest_cannot_produce_a_valid_cached_package)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpj2_rmaen\\cache\\downloads'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 58, in test_wrong_download_digest_cannot_produce_a_valid_cached_package
+    runtime.obtain('package.deb',self.digest,self.url,True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\prepare_cpp_runtime.py", line 32, in obtain
+    target = CACHE / 'downloads' / filename; target.parent.mkdir(parents=True, exist_ok=True)
+                                             ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 726, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\pathlib\_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpj2_rmaen\\cache'
+
+======================================================================
+ERROR: test_wrong_download_digest_cannot_produce_a_valid_cached_package (test_cpp_runtime_download.CppRuntimeDownloadTests.test_wrong_download_digest_cannot_produce_a_valid_cached_package)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 631, in _rmtree_unsafe
+    os.rmdir(path)
+    ~~~~~~~~^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpj2_rmaen'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 907, in onexc
+    _resetperms(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 287, in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\python313-full\tools\Lib\tempfile.py", line 276, in _dont_follow_symlinks
+    func(path, *args, follow_symlinks=False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\q1684\\AppData\\Local\\Packages\\sandbox.{73951ca1-7b27-4957-9bb1-081b882fed4a}\\AC\\Temp\\tmpj2_rmaen'
+
+======================================================================
+FAIL: test_default_source_keeps_the_existing_lock_repository (test_cpp_runtime_download.CppRuntimeDownloadTests.test_default_source_keeps_the_existing_lock_repository)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 27, in test_default_source_keeps_the_existing_lock_repository
+    self.assertEqual(self.lock['repository']+'/pool/package.deb',self.package_url(self.lock,'pool/package.deb'))
+                                                                 ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 24, in package_url
+    self.assertTrue(hasattr(runtime,'package_url'),'Explicit official repository selection is missing')
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Explicit official repository selection is missing
+
+======================================================================
+FAIL: test_primary_source_changes_only_the_download_origin (test_cpp_runtime_download.CppRuntimeDownloadTests.test_primary_source_changes_only_the_download_origin)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 30, in test_primary_source_changes_only_the_download_origin
+    self.assertEqual('https://packages.termux.dev/apt/termux-main/pool/package.deb',self.package_url(self.lock,'pool/package.deb','https://packages.termux.dev/apt/termux-main'))
+                                                                                    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 24, in package_url
+    self.assertTrue(hasattr(runtime,'package_url'),'Explicit official repository selection is missing')
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Explicit official repository selection is missing
+
+======================================================================
+FAIL: test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) (source='http://packages.termux.dev/apt/termux-main')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 34, in test_unknown_or_insecure_override_is_rejected
+    with self.subTest(source=source),self.assertRaises(ValueError):self.package_url(self.lock,'pool/package.deb',source)
+                                                                   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 24, in package_url
+    self.assertTrue(hasattr(runtime,'package_url'),'Explicit official repository selection is missing')
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Explicit official repository selection is missing
+
+======================================================================
+FAIL: test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) (source='https://example.invalid/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 34, in test_unknown_or_insecure_override_is_rejected
+    with self.subTest(source=source),self.assertRaises(ValueError):self.package_url(self.lock,'pool/package.deb',source)
+                                                                   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 24, in package_url
+    self.assertTrue(hasattr(runtime,'package_url'),'Explicit official repository selection is missing')
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Explicit official repository selection is missing
+
+======================================================================
+FAIL: test_unknown_or_insecure_override_is_rejected (test_cpp_runtime_download.CppRuntimeDownloadTests.test_unknown_or_insecure_override_is_rejected) (source='https://packages.termux.dev/apt/termux-main?x=1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 34, in test_unknown_or_insecure_override_is_rejected
+    with self.subTest(source=source),self.assertRaises(ValueError):self.package_url(self.lock,'pool/package.deb',source)
+                                                                   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\tests\test_cpp_runtime_download.py", line 24, in package_url
+    self.assertTrue(hasattr(runtime,'package_url'),'Explicit official repository selection is missing')
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Explicit official repository selection is missing
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.068s
+
+FAILED (failures=5, errors=14)

@@ -1,0 +1,166 @@
+{
+    "projects": [
+        ":",
+        ":app",
+        ":editor-assist",
+        ":editor-sora",
+        ":editor-surface",
+        ":terminal-emulator",
+        ":terminal-view",
+        ":workspace-core"
+    ],
+    "debugCompileClasspath": [
+        {
+            "group": "CodePocket",
+            "name": "app",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "editor-assist",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "editor-sora",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "editor-surface",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "terminal-emulator",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "terminal-view",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "workspace-core",
+            "version": "unspecified"
+        },
+        {
+            "group": "org.jetbrains.kotlin",
+            "name": "kotlin-stdlib",
+            "version": "1.9.25"
+        },
+        {
+            "group": "org.jetbrains",
+            "name": "annotations",
+            "version": "13.0"
+        }
+    ],
+    "debugRuntimeClasspath": [
+        {
+            "group": "CodePocket",
+            "name": "app",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "editor-assist",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "editor-sora",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "editor-surface",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "terminal-emulator",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "terminal-view",
+            "version": "unspecified"
+        },
+        {
+            "group": "CodePocket",
+            "name": "workspace-core",
+            "version": "unspecified"
+        },
+        {
+            "group": "androidx.annotation",
+            "name": "annotation",
+            "version": "1.9.1"
+        },
+        {
+            "group": "androidx.annotation",
+            "name": "annotation-jvm",
+            "version": "1.9.1"
+        },
+        {
+            "group": "androidx.collection",
+            "name": "collection",
+            "version": "1.5.0"
+        },
+        {
+            "group": "androidx.collection",
+            "name": "collection-jvm",
+            "version": "1.5.0"
+        },
+        {
+            "group": "com.google.code.gson",
+            "name": "gson",
+            "version": "2.13.1"
+        },
+        {
+            "group": "com.google.errorprone",
+            "name": "error_prone_annotations",
+            "version": "2.38.0"
+        },
+        {
+            "group": "io.github.rosemoe",
+            "name": "editor",
+            "version": "0.23.7"
+        },
+        {
+            "group": "io.github.rosemoe",
+            "name": "language-textmate",
+            "version": "0.23.7"
+        },
+        {
+            "group": "org.eclipse.jdt",
+            "name": "org.eclipse.jdt.annotation",
+            "version": "2.3.100"
+        },
+        {
+            "group": "org.jetbrains.kotlin",
+            "name": "kotlin-stdlib",
+            "version": "2.1.21"
+        },
+        {
+            "group": "org.jetbrains",
+            "name": "annotations",
+            "version": "13.0"
+        },
+        {
+            "group": "org.jruby.jcodings",
+            "name": "jcodings",
+            "version": "1.0.63"
+        },
+        {
+            "group": "org.jruby.joni",
+            "name": "joni",
+            "version": "2.2.6"
+        },
+        {
+            "group": "org.snakeyaml",
+            "name": "snakeyaml-engine",
+            "version": "2.9"
+        }
+    ]
+}

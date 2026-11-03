@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkbenchStructureIntegrationTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:16:18" hostname="JUHE" time="1.064">
+  <properties/>
+  <testcase name="terminalMaximizeRestoreKeepsRailFilesAndEditor" classname="com.codepocket.ide.WorkbenchStructureIntegrationTest" time="0.139"/>
+  <testcase name="sidebarTogglesDoNotRecreateEditorOrCloseFiles" classname="com.codepocket.ide.WorkbenchStructureIntegrationTest" time="0.149"/>
+  <testcase name="phonePortraitDark" classname="com.codepocket.ide.WorkbenchStructureIntegrationTest" time="0.121"/>
+  <testcase name="phoneLandscapeDark" classname="com.codepocket.ide.WorkbenchStructureIntegrationTest" time="0.114"/>
+  <testcase name="phonePortraitLight" classname="com.codepocket.ide.WorkbenchStructureIntegrationTest" time="0.135"/>
+  <testcase name="mobileMenuHasCategoriesInsteadOfLongCommandList" classname="com.codepocket.ide.WorkbenchStructureIntegrationTest" time="0.109"/>
+  <testcase name="tabletLandscapeDark" classname="com.codepocket.ide.WorkbenchStructureIntegrationTest" time="0.172"/>
+  <testcase name="tabletPortraitLight" classname="com.codepocket.ide.WorkbenchStructureIntegrationTest" time="0.125"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

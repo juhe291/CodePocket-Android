@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.SnippetTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-03T01:33:07" hostname="JUHE" time="0.006">
+  <properties/>
+  <testcase name="compositionStyleReplacementsCanGrowShrinkAndDeleteAField" classname="com.codepocket.ide.SnippetTest" time="0.001"/>
+  <testcase name="ordinaryCompletionInsideAFieldKeepsTheNextTabStopAndClosingText" classname="com.codepocket.ide.SnippetTest" time="0.001"/>
+  <testcase name="catalogueAndCompletionKeepTemplatesSeparateFromLanguageNames" classname="com.codepocket.ide.SnippetTest" time="0.001"/>
+  <testcase name="generatedDefaultsExposeActualModelOutputForHostCompilerSmoke" classname="com.codepocket.ide.SnippetTest" time="0.0"/>
+  <testcase name="editsOutsideActiveStopOrAnotherBufferEndNavigationOnly" classname="com.codepocket.ide.SnippetTest" time="0.0"/>
+  <testcase name="oneRangeReplacementPreservesUnrelatedSourceAndRejectsAmbiguousContexts" classname="com.codepocket.ide.SnippetTest" time="0.001"/>
+  <testcase name="navigationHandlesEmptyStopsReverseAndFinalCaretWithoutEditing" classname="com.codepocket.ide.SnippetTest" time="0.0"/>
+  <testcase name="expansionUsesIndentPreferencesAndPreservesCrLfUtf16Coordinates" classname="com.codepocket.ide.SnippetTest" time="0.0"/>
+  <testcase name="fieldReplacementMovesLaterStopsAndFinalOffsetByUtf16Delta" classname="com.codepocket.ide.SnippetTest" time="0.0"/>
+  <testcase name="completionInsertionChecksIdentityRevisionSelectionAndCapacityForRealBody" classname="com.codepocket.ide.SnippetTest" time="0.0"/>
+  <testcase name="automaticPairEditUsesTheSamePlaceholderRangeInsteadOfBreakingIt" classname="com.codepocket.ide.SnippetTest" time="0.0"/>
+  <testcase name="tabAndEscapeNeverInterceptCompositionSoftKeyboardOrHandledCompletion" classname="com.codepocket.ide.SnippetTest" time="0.002"/>
+  <system-out><![CDATA[CODEPOCKET_SNIPPET_FIXTURES=[{"cpp":false,"code":"for item in range(10):\n    pass","variant":"default","id":"py.for"},{"cpp":false,"code":"if True:\n    pass","variant":"default","id":"py.if"},{"cpp":false,"code":"while False:\n    pass","variant":"default","id":"py.while"},{"cpp":false,"code":"def solve(values):\n    pass","variant":"default","id":"py.def"},{"cpp":false,"code":"print(0)","variant":"default","id":"py.print"},{"cpp":false,"code":"if __name__ == \"__main__\":\n    pass","variant":"default","id":"py.main"},{"cpp":true,"code":"for (const auto& item : values) {\n    \n}","variant":"default","id":"cpp.for"},{"cpp":true,"code":"if (true) {\n    \n}","variant":"default","id":"cpp.if"},{"cpp":true,"code":"while (false) {\n    \n}","variant":"default","id":"cpp.while"},{"cpp":true,"code":"void solve() {\n    \n}","variant":"default","id":"cpp.func"},{"cpp":true,"code":"std::cout << 0 << '\\n';","variant":"default","id":"cpp.cout"},{"cpp":true,"code":"int main() {\n    \n    return 0;\n}","variant":"default","id":"cpp.main"},{"cpp":false,"code":"if True:\r\n\tfor item in range(10):\r\n\t\tpass\r\n","variant":"nested-crlf-tab","id":"py.for"},{"cpp":true,"code":"// ]]>&#x1f600;<![CDATA[\r\n  if (true) {\r\n    \r\n  }","variant":"utf16-indent","id":"cpp.if"}]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

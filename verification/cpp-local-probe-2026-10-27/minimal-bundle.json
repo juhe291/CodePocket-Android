@@ -1,0 +1,38 @@
+{
+  "files": [
+    {
+      "file": "staged-native/libcodepocket_clang.so",
+      "bytes": 121040,
+      "sha256": "a92b55e51e39062e5565bfa275995b4c5c03548261f4156365f40fa40d2b50f5"
+    },
+    {
+      "file": "staged-native/libcodepocket_lld.so",
+      "bytes": 5871888,
+      "sha256": "4f84c10a34724239eac3379a52ff25f314eb96413983fbac8dbff3f73dba4a20"
+    },
+    {
+      "file": "support/lib/crtbegin_so.o",
+      "bytes": 4696,
+      "sha256": "e0d8a93dd50ec6de576f44c2f915f3f713fc4a171f778536622e9ad1b651003b"
+    },
+    {
+      "file": "support/lib/crtend_so.o",
+      "bytes": 912,
+      "sha256": "bd8ca7451afaaffa734ffc1dfca13c88cf9630d862d8051187c1343d28592d4e"
+    },
+    {
+      "file": "support/lib/libunwind.a",
+      "bytes": 92456,
+      "sha256": "bfbe474acf75b59fd2f19f0b7210588aa662410d5d8d0996812fe50e9e0143ab"
+    },
+    {
+      "file": "support/lib/clang/21/lib/linux/libclang_rt.builtins-aarch64-android.a",
+      "bytes": 409982,
+      "sha256": "9aeed0613b933c2c79a7c366371b5910681b740b78093d33237fd31c67345cb2"
+    }
+  ],
+  "raw_bytes": 6500974,
+  "probe_zip_bytes": 2289345,
+  "not_an_apk": true,
+  "production_integrated": false
+}

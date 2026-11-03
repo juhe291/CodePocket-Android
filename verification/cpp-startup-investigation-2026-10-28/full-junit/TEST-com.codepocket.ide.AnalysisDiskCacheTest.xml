@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.AnalysisDiskCacheTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-28T05:46:52" hostname="JUHE" time="0.091">
+  <properties/>
+  <testcase name="byteLimitRemovesOldestCacheEntriesAndKeepsSourceOutsideTheCache" classname="com.codepocket.ide.AnalysisDiskCacheTest" time="0.055"/>
+  <testcase name="defaultLimitsAndNonexistentCacheDoNotCreateOrDeleteUserDirectories" classname="com.codepocket.ide.AnalysisDiskCacheTest" time="0.004"/>
+  <testcase name="fileLimitIsIndependentAndRepeatedTrimmingIsIdempotent" classname="com.codepocket.ide.AnalysisDiskCacheTest" time="0.032"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,21 @@
+[
+  {
+    "case": "python_real_stdin_stdlib_unicode",
+    "passed": true,
+    "stdout": "15\n9\n中文输出\n",
+    "source": "a.py",
+    "engine": "Chaquopy on Android"
+  },
+  {
+    "case": "per_file_stdin_switching",
+    "passed": true,
+    "a": "7 8",
+    "b": "21"
+  },
+  {
+    "case": "editor_input_autosaved_to_actual_file",
+    "passed": true,
+    "file": "edit.py",
+    "text": "42"
+  }
+]

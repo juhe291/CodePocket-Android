@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorFeaturesTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-15T12:22:21" hostname="JUHE" time="0.04">
+  <properties/>
+  <testcase name="pythonFloorDivisionIsNotAComment" classname="com.codepocket.ide.EditorFeaturesTest" time="0.024"/>
+  <testcase name="newlinePairsAndClosingBracketSkipping" classname="com.codepocket.ide.EditorFeaturesTest" time="0.01"/>
+  <testcase name="stringsCommentsAndMultilineLiteralsAreNotCode" classname="com.codepocket.ide.EditorFeaturesTest" time="0.002"/>
+  <testcase name="completionHandlesCaretAndDocumentIdentifiers" classname="com.codepocket.ide.EditorFeaturesTest" time="0.003"/>
+  <testcase name="indentationAtStartPartialIndentAndSelectionEndingOnNextLine" classname="com.codepocket.ide.EditorFeaturesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,43 @@
+{
+  "real_backend": true,
+  "android_execution": false,
+  "engine": "Jedi 0.20.1",
+  "backend_sha256": "65b3368de6b80bbcca8109706f5b1bcf2d02cd24d05105456dc5f2d92f6b2a17",
+  "cases": {
+    "unsaved_project": {
+      "path": "main.py",
+      "code": "from api import payload\npayload.up",
+      "caret": 34,
+      "mode": "complete",
+      "content": {
+        "sibling.py": "payload='😀中文'\n",
+        "api.py": "from sibling import payload\n",
+        "main.py": "from api import payload\npayload.up"
+      },
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"upper\", \"kind\": \"function\", \"detail\": \"def upper\\nReturn a copy of the string converted to uppercase.\"}], \"signatures\": [], \"start\": 32, \"end\": 34}"
+    },
+    "project_signature": {
+      "path": "main.py",
+      "code": "from api import combine\ncombine(1,",
+      "caret": 34,
+      "mode": "signature",
+      "content": {
+        "sibling.py": "def combine(left: int, right: str): pass\n",
+        "api.py": "from sibling import combine\n",
+        "main.py": "from api import combine\ncombine(1,"
+      },
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [], \"signatures\": [{\"name\": \"combine\", \"parameters\": [\"left: int\", \"right: str\"], \"active\": 1, \"opened\": 31, \"detail\": \"\"}]}"
+    },
+    "fresh_provider": {
+      "path": "external.py",
+      "code": "from helper import payload\npayload.up",
+      "caret": 37,
+      "mode": "complete",
+      "content": {
+        "helper.py": "payload='live provider'\n",
+        "external.py": "from helper import payload\npayload.up"
+      },
+      "response": "{\"available\": true, \"engine\": \"Jedi 0.20.1\", \"items\": [{\"label\": \"upper\", \"kind\": \"function\", \"detail\": \"def upper\\nReturn a copy of the string converted to uppercase.\"}], \"signatures\": [], \"start\": 35, \"end\": 37}"
+    }
+  }
+}

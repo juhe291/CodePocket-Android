@@ -1,0 +1,7 @@
+Starting: Intent { cmp=com.codepocket.ide/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.codepocket.ide/.MainActivity
+TotalTime: 332
+WaitTime: 340
+Complete

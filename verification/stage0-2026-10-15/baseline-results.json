@@ -1,0 +1,50 @@
+{
+  "junit": [
+    {
+      "suite": "com.codepocket.ide.EditorFeaturesTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "timestamp": "2026-10-15T10:21:20"
+    },
+    {
+      "suite": "com.codepocket.ide.WandboxEngineTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "timestamp": "2026-10-15T10:21:20"
+    },
+    {
+      "suite": "com.codepocket.ide.WorkspaceTest",
+      "tests": 7,
+      "skipped": 1,
+      "failures": 0,
+      "errors": 0,
+      "timestamp": "2026-10-15T10:21:20"
+    }
+  ],
+  "lintErrors": 0,
+  "lintWarnings": 12,
+  "lintById": [
+    {
+      "id": "ChromeOsAbiSupport",
+      "count": 1
+    },
+    {
+      "id": "DataExtractionRules",
+      "count": 1
+    },
+    {
+      "id": "OldTargetApi",
+      "count": 1
+    },
+    {
+      "id": "SetTextI18n",
+      "count": 9
+    }
+  ],
+  "sourceUnchanged": true,
+  "deviceExecution": false
+}

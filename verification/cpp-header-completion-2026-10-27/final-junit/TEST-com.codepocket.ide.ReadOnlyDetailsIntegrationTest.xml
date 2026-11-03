@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.ReadOnlyDetailsIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-27T15:47:13" hostname="JUHE" time="1.153">
+  <properties/>
+  <testcase name="tabletLightLicenseRetainsItsCompleteSelectableTextAndScrollsToTheEnd" classname="com.codepocket.ide.ReadOnlyDetailsIntegrationTest" time="0.23"/>
+  <testcase name="compactTerminalFailureKeepsFullRecordCopyAndNeverStartsAReplacementSession" classname="com.codepocket.ide.ReadOnlyDetailsIntegrationTest" time="0.157"/>
+  <testcase name="tabletLightDiagnosticCopiesTheFullOriginalMessageAndKeepsCodeSelection" classname="com.codepocket.ide.ReadOnlyDetailsIntegrationTest" time="0.159"/>
+  <testcase name="phoneLightLargeHelpKeepsTheHeadingBodyAndCloseReachable" classname="com.codepocket.ide.ReadOnlyDetailsIntegrationTest" time="0.149"/>
+  <testcase name="tabletSettingsKeyHelpHasAReadingWidthAndClosesToTheOriginalDraft" classname="com.codepocket.ide.ReadOnlyDetailsIntegrationTest" time="0.218"/>
+  <testcase name="resizedReaderReusesItsTextScrollAndDropsItsLayoutObserverAfterDismiss" classname="com.codepocket.ide.ReadOnlyDetailsIntegrationTest" time="0.24"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

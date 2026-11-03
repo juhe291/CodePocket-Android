@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CppSemanticIntegrationTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-27T01:36:52" hostname="JUHE" time="1.883">
+  <properties/>
+  <testcase name="tabletLightAndroidVectorKeepsUnicodeAndPlacesCaretInsideArguments" classname="com.codepocket.ide.CppSemanticIntegrationTest" time="0.274"/>
+  <testcase name="aKeyboardChoiceSurvivesALateCppUpgradeAndFailuresKeepLexicalFallback" classname="com.codepocket.ide.CppSemanticIntegrationTest" time="0.241"/>
+  <testcase name="phoneLightLargeActualOverloadsKeepSelectionAndRealSecondParameter" classname="com.codepocket.ide.CppSemanticIntegrationTest" time="0.233"/>
+  <testcase name="tabletRealMemberInsertionConsumesSuffixAndSavesThenUndoes" classname="com.codepocket.ide.CppSemanticIntegrationTest" time="0.275"/>
+  <testcase name="lateCppResponseCannotChangeTheNewPythonFileOrReopenOldCandidates" classname="com.codepocket.ide.CppSemanticIntegrationTest" time="0.231"/>
+  <testcase name="unsavedHeaderReachesTheActualSnapshotAndDoesNotSaveOriginals" classname="com.codepocket.ide.CppSemanticIntegrationTest" time="0.251"/>
+  <testcase name="tabletLightCppLicenseReaderPreservesSettingsDraftAndFullSourceInstructions" classname="com.codepocket.ide.CppSemanticIntegrationTest" time="0.378"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

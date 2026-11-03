@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.FormattingWorkbenchIntegrationTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-02T16:38:51" hostname="JUHE" time="3.502">
+  <properties/>
+  <testcase name="defaultDisabledPolicySavesTheExactTextWithoutStartingAnEngine" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.157"/>
+  <testcase name="fileSwitchRejectsThePreviousDocumentsFormattingResult" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.359"/>
+  <testcase name="saveFormatsOnceWritesThroughTheOriginalVersionGuardAndUndoRemainsAvailable" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.277"/>
+  <testcase name="manualFormattingIsOneNativeUndoAndNeverImplicitlySavesTheFile" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.308"/>
+  <testcase name="normalAutoSaveUsesTheFormatPolicyAndDoesNotScheduleAFormattingLoop" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.269"/>
+  <testcase name="activeCompositionRejectsTheLateResultAndKeepsTheImeText" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.293"/>
+  <testcase name="hardwareShortcutUsesTheSameEngineAndRepeatedKeyDownDoesNotQueueAnotherRequest" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.267"/>
+  <testcase name="caretMovementRejectsALateResultInsteadOfMovingTheSelectionBack" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.262"/>
+  <testcase name="typingDuringSaveFormattingSavesTheLatestRawBufferOnceWithoutOverwritingIt" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.318"/>
+  <testcase name="formatterFailureStillSavesTheUnchangedSourceWithoutARepeatLoop" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.127"/>
+  <testcase name="formattingCannotBypassAnExternalSaveConflictOrDiscardTheFormattedDraft" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.332"/>
+  <testcase name="newTypingRejectsALateResultAndKeepsCurrentBufferAndUndo" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.271"/>
+  <testcase name="saveFormattingKeepsCloudStdinFocusAndNeverChangesItsText" classname="com.codepocket.ide.FormattingWorkbenchIntegrationTest" time="0.262"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

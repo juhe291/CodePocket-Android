@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.ContextBatchIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T01:55:57" hostname="JUHE" time="1.661">
+  <properties/>
+  <testcase name="tabletProjectSearchEmptyStateDoesNotReserveABlankResultsPanel" classname="com.codepocket.ide.ContextBatchIntegrationTest" time="0.22"/>
+  <testcase name="tabletFileContextKeepsRealSaveProtectionAndRenameIdentity" classname="com.codepocket.ide.ContextBatchIntegrationTest" time="0.342"/>
+  <testcase name="tabletLightLargeSessionAndPaletteSelectorsKeepTheSelectedModel" classname="com.codepocket.ide.ContextBatchIntegrationTest" time="0.293"/>
+  <testcase name="phoneLightLargeFileTitleAndDeleteCancelKeepTheFileAndIgnoreOldRows" classname="com.codepocket.ide.ContextBatchIntegrationTest" time="0.279"/>
+  <testcase name="tabletProjectMenuShowsScopeAndCreatesTheFolderInTheSelectedDirectory" classname="com.codepocket.ide.ContextBatchIntegrationTest" time="0.282"/>
+  <testcase name="phoneLightLargeProjectSearchUsesTheFullInputWidthAndNavigatesRealUnsavedResults" classname="com.codepocket.ide.ContextBatchIntegrationTest" time="0.245"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

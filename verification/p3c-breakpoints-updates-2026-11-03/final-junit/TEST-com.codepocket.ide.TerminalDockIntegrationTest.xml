@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.TerminalDockIntegrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T13:53:42" hostname="JUHE" time="3.257">
+  <properties/>
+  <testcase name="veryNarrowDockScrollsToExistingActionsWithoutReplacingSession" classname="com.codepocket.ide.TerminalDockIntegrationTest" time="0.361"/>
+  <testcase name="staleServiceResultDoesNotDropTheRestoredTerminalChannel" classname="com.codepocket.ide.TerminalDockIntegrationTest" time="1.091"/>
+  <testcase name="narrowPhoneKeepsEveryTerminalActionInsidePanel" classname="com.codepocket.ide.TerminalDockIntegrationTest" time="0.348"/>
+  <testcase name="resizingAndControlToggleKeepSessionBufferAndPreference" classname="com.codepocket.ide.TerminalDockIntegrationTest" time="1.076"/>
+  <testcase name="tabletLargeLightKeepsEveryTerminalActionReadable" classname="com.codepocket.ide.TerminalDockIntegrationTest" time="0.381"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.CodeFormattingServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T10:25:36" hostname="JUHE" time="0.314">
+  <properties/>
+  <testcase name="queueKeepsOnlyTheNewestRequestAndCancellationCannotPublishOldSuccess" classname="com.codepocket.ide.CodeFormattingServiceTest" time="0.189"/>
+  <testcase name="deadlineRepliesOnceAndClosesOnlyTheOwnedFormatterChild" classname="com.codepocket.ide.CodeFormattingServiceTest" time="0.029"/>
+  <testcase name="privateServiceUsesRealFormatterAndIgnoresAnySuppliedProjectPath" classname="com.codepocket.ide.CodeFormattingServiceTest" time="0.096"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkbenchPathStatusIntegrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-27T01:49:13" hostname="JUHE" time="0.858">
+  <properties/>
+  <testcase name="tabletLightLargePathAndFooterDoNotClipText" classname="com.codepocket.ide.WorkbenchPathStatusIntegrationTest" time="0.188"/>
+  <testcase name="normalPathKeepsCompactHeightAndFullExplanation" classname="com.codepocket.ide.WorkbenchPathStatusIntegrationTest" time="0.149"/>
+  <testcase name="phoneLargeRealSaveConflictShowsFailureAndRetainsBufferAndDraft" classname="com.codepocket.ide.WorkbenchPathStatusIntegrationTest" time="0.176"/>
+  <testcase name="phoneLargePathAndFooterDoNotClipText" classname="com.codepocket.ide.WorkbenchPathStatusIntegrationTest" time="0.16"/>
+  <testcase name="errorWordInFilenameNeverMakesAnOlderSaveDescribeTheNewBuffer" classname="com.codepocket.ide.WorkbenchPathStatusIntegrationTest" time="0.185"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+// This phase only: read cached SDK jars offline and keep host lock/temp files in the project.
+allprojects {
+    tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+        systemProperty 'user.home', new File(rootDir, '.tools/userhome').absolutePath
+        systemProperty 'java.io.tmpdir', new File(rootDir, '.tools/details-batch-tmp-2026-10-26').absolutePath
+        systemProperty 'robolectric.offline', 'true'
+        systemProperty 'robolectric.dependency.dir', new File(rootDir, '.tools/robolectric-offline').absolutePath
+    }
+}

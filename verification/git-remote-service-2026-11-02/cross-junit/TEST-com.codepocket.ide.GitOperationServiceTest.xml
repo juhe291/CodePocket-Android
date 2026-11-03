@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitOperationServiceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-02T15:14:31" hostname="JUHE" time="15.514">
+  <properties/>
+  <testcase name="activeRequestIsCancelledAndOnlyTheLatestQueuedSnapshotRuns" classname="com.codepocket.ide.GitOperationServiceTest" time="12.329"/>
+  <testcase name="deadlineRepliesOnceAndKeepsTheLeaseUntilTheWorkerFinishes" classname="com.codepocket.ide.GitOperationServiceTest" time="0.256"/>
+  <testcase name="realPrivateServiceOperatesOnItsOwnSnapshotAndRejectsAWorkspaceRoot" classname="com.codepocket.ide.GitOperationServiceTest" time="2.83"/>
+  <testcase name="serviceAndUiMayCreateTheirSnapshotParentConcurrently" classname="com.codepocket.ide.GitOperationServiceTest" time="0.099"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

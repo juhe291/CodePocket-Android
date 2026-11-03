@@ -1,0 +1,150 @@
+{
+  "totals": {
+    "tests": 35,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.CodeFormattingServiceTest.queueKeepsOnlyTheNewestRequestAndCancellationCannotPublishOldSuccess",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CodeFormattingServiceTest.privateServiceUsesRealFormatterAndIgnoresAnySuppliedProjectPath",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CodeFormattingTest.cppUtf16CrLfSelectionAndReverseOrderedEditsAreValidated",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CodeFormattingTest.responseMustMatchSourceEngineLimitsAndSelection",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CodeFormattingTest.actualPythonClientUsesUnsavedSourceAndMapsUnicodeSelection",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CodeFormattingTest.insertedCppWhitespaceStaysOutsideTheOriginalSelectedToken",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CodeFormattingTest.malformedOverlappingSurrogateAndOverlargeEditsFailClosed",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.CodeFormattingTest.actualCppFormatterUsesPrivateStylePreservesIncludeOrderAndDoesNotWriteDraft",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormatEntryIntegrationTest.welcomeDisablesFormattingAndKeepsItsSourceAndWorkspaceEmpty",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormatEntryIntegrationTest.loadedDocumentHasFormattingInTheActualEditMenu",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingSurfaceTest.phoneLargeTextUsesTheExistingSettingsDraftAndNativeToggle",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingSurfaceTest.tabletLightUsesTheSameSettingAndApplyFlow",
+      "status": "failure"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.defaultDisabledPolicySavesTheExactTextWithoutStartingAnEngine",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.fileSwitchRejectsThePreviousDocumentsFormattingResult",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.saveFormatsOnceWritesThroughTheOriginalVersionGuardAndUndoRemainsAvailable",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.manualFormattingIsOneNativeUndoAndNeverImplicitlySavesTheFile",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.normalAutoSaveUsesTheFormatPolicyAndDoesNotScheduleAFormattingLoop",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.activeCompositionRejectsTheLateResultAndKeepsTheImeText",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.hardwareShortcutUsesTheSameEngineAndRepeatedKeyDownDoesNotQueueAnotherRequest",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.caretMovementRejectsALateResultInsteadOfMovingTheSelectionBack",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.typingDuringSaveFormattingSavesTheLatestRawBufferOnceWithoutOverwritingIt",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.formatterFailureStillSavesTheUnchangedSourceWithoutARepeatLoop",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.formattingCannotBypassAnExternalSaveConflictOrDiscardTheFormattedDraft",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.newTypingRejectsALateResultAndKeepsCurrentBufferAndUndo",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.FormattingWorkbenchIntegrationTest.saveFormattingKeepsCloudStdinFocusAndNeverChangesItsText",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MenuHierarchyIntegrationTest.tabletLightDirectMenuHasContextAndKeepsRealCommandDispatch",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MenuHierarchyIntegrationTest.tabletLightLargeTerminalGroupsHaveDistinctIconsAndReturnToTheSameSession",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MenuHierarchyIntegrationTest.phoneReturnsToCategoriesWithoutEditingAndIgnoresAnOldBackButton",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.MenuHierarchyIntegrationTest.phoneLightLargeKeepsTheReturnHeaderVisibleWhileCommandsScroll",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsChromeIntegrationTest.phoneLightLargeFontChoiceRemainsDraftUntilActualApply",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsChromeIntegrationTest.tabletLightEditorGroupsAndCancelKeepTheUnappliedDraft",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsChromeIntegrationTest.phoneSearchGroupsOnceAndRetainsCursorDraftAcrossMainRecreation",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsChromeIntegrationTest.phoneLightLargeLongProjectHeadingKeepsSingleLineAndFullPath",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsChromeIntegrationTest.phoneProjectHeadingOpensTheRealWorkspacePickerWithoutChangingTheEditor",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.SettingsChromeIntegrationTest.tabletHasOneVisibleRunEntryAndPreservesTheRealRunMenu",
+      "status": "passed"
+    }
+  ]
+}

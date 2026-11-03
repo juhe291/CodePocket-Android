@@ -1,0 +1,78 @@
+{
+  "apk": "dist/CodePocket-menu-context-2026-10-26-debug.apk",
+  "bytes": 26674560,
+  "sha256": "bc25c79c4b03153b46486d518b3ab5f96bac4ce089270497777dd5b0e7850f7f",
+  "junit": {
+    "tests": 721,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 16
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "browser": {
+    "cases": 288,
+    "checks": 54,
+    "paletteChecks": 20,
+    "scenes": 36,
+    "devices": 4,
+    "themes": 2,
+    "errors": [],
+    "failures": [],
+    "androidDeviceVerified": false
+  },
+  "baseline_tests": 4,
+  "baseline_failures": 4,
+  "baseline_test_cases_retained": 717,
+  "new_test_cases": 4,
+  "no_new_skips": true,
+  "native_previews": 10,
+  "old_apks_preserved": 81,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "signature": "passed",
+  "signer_sha256": "d58e4cd7c849ebcf3cf35fde35f1d201c2569bb9ef11f2b48a4ba80cacd10408",
+  "alignment_16kb": "passed",
+  "zip_crc": "passed",
+  "packaged_theme_matches_source": true,
+  "final_build": "Full main app tests, app/Sora Lint and assembleDebug succeeded.",
+  "final_package_task_executed": true,
+  "batch_package_task_executed": true,
+  "production_changed": [
+    "ui/WorkbenchMenu.kt: fixed category header, optional return, left-arrow navigation, late callback guard",
+    "ui/IdeCommandMenu.kt: pass category context without changing command IDs",
+    "MainActivity.kt: parent paths, terminal section identities/icons and size-menu context"
+  ],
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false,
+  "host_boundary": "Real Main/Sora Views, dirty InputConnection buffer, actual menu command dispatch and terminal session-model identity under Robolectric. No physical keyboard, Android IME or live Android PTY process claim.",
+  "scope": "Menu context and parent navigation only; command identity, enabling checks, document selection/revision and terminal session models are preserved. System Back remains platform-managed.",
+  "prior_single_import_failure": "Previously unconfirmed and not reproduced; production Python is unchanged.",
+  "prior_host_focus_observation": "Passive tablet height transition remains recorded in the compact-captions phase; not fixed or device-verified in this batch."
+}

@@ -1,0 +1,181 @@
+I[00:32:44.613] clangd version 21.1.8 (https://github.com/llvm/llvm-project 2078da43e25a4623cab2d0d60decddf709aaea28)
+I[00:32:44.615] Features: windows+grpc
+I[00:32:44.615] PID: 544
+I[00:32:44.615] Working directory: C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project
+I[00:32:44.615] argv[0]: C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host\clangd_21.1.8\bin\clangd.exe
+I[00:32:44.615] argv[1]: --enable-config=false
+I[00:32:44.615] argv[2]: --background-index=false
+I[00:32:44.615] argv[3]: --clang-tidy=false
+I[00:32:44.615] argv[4]: --header-insertion=never
+I[00:32:44.615] argv[5]: --function-arg-placeholders=false
+I[00:32:44.615] argv[6]: --completion-style=detailed
+I[00:32:44.615] argv[7]: --limit-results=30
+I[00:32:44.615] argv[8]: --pch-storage=memory
+I[00:32:44.615] argv[9]: --log=verbose
+I[00:32:44.615] Starting LSP over stdin/stdout
+V[00:32:44.615] <<< {"id":1,"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{"general":{"positionEncodings":["utf-16"]},"textDocument":{"completion":{"completionItem":{"documentationFormat":["plaintext"],"insertReplaceSupport":true,"snippetSupport":true}},"signatureHelp":{"signatureInformation":{"documentationFormat":["plaintext"],"parameterInformation":{"labelOffsetSupport":true}}}}},"clientInfo":{"name":"CodePocket host probe","version":"P2-C"},"initializationOptions":{"fallbackFlags":["-xc++","-std=c++17","--target=aarch64-linux-android24","--sysroot=C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot","-resource-dir=C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21","-isystem","C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1","-isystem","C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include","-isystem","C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android","-IC:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project"]},"processId":30152,"rootUri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project"}}
+
+I[00:32:44.615] <-- initialize(1)
+I[00:32:44.662] --> reply:initialize(1) 46 ms
+V[00:32:44.662] >>> {"id":1,"jsonrpc":"2.0","result":{"capabilities":{"astProvider":true,"callHierarchyProvider":true,"clangdInlayHintsProvider":true,"codeActionProvider":true,"compilationDatabase":{"automaticReload":true},"completionProvider":{"resolveProvider":false,"triggerCharacters":[".","<",">",":","\"","/","*"]},"declarationProvider":true,"definitionProvider":true,"documentFormattingProvider":true,"documentHighlightProvider":true,"documentLinkProvider":{"resolveProvider":false},"documentOnTypeFormattingProvider":{"firstTriggerCharacter":"\n","moreTriggerCharacter":[]},"documentRangeFormattingProvider":{"rangesSupport":true},"documentSymbolProvider":true,"executeCommandProvider":{"commands":["clangd.applyFix","clangd.applyRename","clangd.applyTweak"]},"foldingRangeProvider":true,"hoverProvider":true,"implementationProvider":true,"inactiveRegionsProvider":true,"inlayHintProvider":true,"memoryUsageProvider":true,"positionEncoding":"utf-16","referencesProvider":true,"renameProvider":true,"selectionRangeProvider":true,"semanticTokensProvider":{"full":{"delta":true},"legend":{"tokenModifiers":["declaration","definition","deprecated","deduced","readonly","static","abstract","virtual","dependentName","defaultLibrary","usedAsMutableReference","usedAsMutablePointer","constructorOrDestructor","userDefined","functionScope","classScope","fileScope","globalScope"],"tokenTypes":["variable","variable","parameter","function","method","function","property","variable","class","interface","enum","enumMember","type","type","unknown","namespace","typeParameter","concept","type","macro","modifier","operator","bracket","label","comment"]},"range":false},"signatureHelpProvider":{"triggerCharacters":["(",")","{","}","<",">",","]},"standardTypeHierarchyProvider":true,"textDocumentSync":{"change":2,"openClose":true,"save":true},"typeDefinitionProvider":true,"typeHierarchyProvider":true,"workspaceSymbolProvider":true},"offsetEncoding":"utf-16","serverInfo":{"name":"clangd","version":"clangd version 21.1.8 (https://github.com/llvm/llvm-project 2078da43e25a4623cab2d0d60decddf709aaea28) windows+grpc x86_64-pc-windows-msvc"}}}
+
+V[00:32:44.662] <<< {"jsonrpc":"2.0","method":"initialized","params":{}}
+
+I[00:32:44.662] <-- initialized
+V[00:32:44.662] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"struct Token { void run(); int value; };\nvoid f(){Token item; item.ru","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/dot.cpp","version":1}}}
+
+I[00:32:44.663] <-- textDocument/didOpen
+V[00:32:44.663] <<< {"id":2,"jsonrpc":"2.0","method":"textDocument/completion","params":{"position":{"character":28,"line":1},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/dot.cpp"}}}
+
+I[00:32:44.663] <-- textDocument/completion(2)
+V[00:32:44.663] Build for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\dot.cpp is not ready. Enter fallback mode.
+I[00:32:44.666] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\dot.cpp
+V[00:32:44.666] Code complete: fuzzyFind({
+  "AnyScope": true,
+  "Limit": 30,
+  "PreferredTypes": [],
+  "ProximityPaths": [
+    "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\dot.cpp"
+  ],
+  "Query": "ru",
+  "RestrictForCodeCompletion": true,
+  "Scopes": [
+    ""
+  ]
+})
+I[00:32:44.667] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\dot.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 --target=aarch64-linux-android24 "--sysroot=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot" "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android" "-IC:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\dot.cpp"
+I[00:32:44.667] Code complete: 0 results from Sema, 0 from Index, 0 matched, 1 from identifiers, 1 returned.
+I[00:32:44.667] --> reply:textDocument/completion(2) 4 ms
+V[00:32:44.667] >>> {"id":2,"jsonrpc":"2.0","result":{"isIncomplete":false,"items":[{"deprecated":true,"filterText":"run","insertText":"run","insertTextFormat":1,"kind":1,"label":" run","score":0.11814375966787338,"sortText":"420e0aa5run","textEdit":{"newText":"run","range":{"end":{"character":28,"line":1},"start":{"character":26,"line":1}}}}]}}
+
+V[00:32:44.668] <<< {"jsonrpc":"2.0","method":"textDocument/didClose","params":{"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/dot.cpp"}}}
+
+I[00:32:44.668] <-- textDocument/didClose
+I[00:32:44.668] --> textDocument/publishDiagnostics
+V[00:32:44.668] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/dot.cpp"}}
+
+V[00:32:44.668] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"struct Token { void run(); int value; };\nvoid f(){Token* item; item->ru","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/arrow.cpp","version":1}}}
+
+I[00:32:44.668] <-- textDocument/didOpen
+V[00:32:44.668] <<< {"id":3,"jsonrpc":"2.0","method":"textDocument/completion","params":{"position":{"character":30,"line":1},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/arrow.cpp"}}}
+
+I[00:32:44.668] <-- textDocument/completion(3)
+I[00:32:44.668] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\arrow.cpp
+I[00:32:44.668] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\arrow.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 --target=aarch64-linux-android24 "--sysroot=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot" "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android" "-IC:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\arrow.cpp"
+V[00:32:44.669] Build for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\arrow.cpp is not ready. Enter fallback mode.
+V[00:32:44.671] Driver produced command: cc1 -cc1 -triple aarch64-unknown-linux-android24 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name dot.cpp -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=non-leaf -ffp-contract=on -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -enable-tlsdesc -target-cpu generic -target-feature +v8a -target-feature +fp-armv8 -target-feature +neon -target-feature +fix-cortex-a53-835769 -target-abi aapcs -debugger-tuning=gdb "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android" -I "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -isysroot "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot" -internal-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21\\include" -internal-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/usr/local/include" -internal-externc-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/include" -internal-externc-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/usr/include" -std=c++17 -fdeprecated-macro -ferror-limit 19 -femulated-tls -fno-signed-char -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -no-round-trip-args -target-feature +outline-atomics -D__GCC_HAVE_DWARF2_CFI_ASM=1 -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\dot.cpp"
+V[00:32:44.672] Code complete: fuzzyFind({
+  "AnyScope": true,
+  "Limit": 30,
+  "PreferredTypes": [],
+  "ProximityPaths": [
+    "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\arrow.cpp"
+  ],
+  "Query": "ru",
+  "RestrictForCodeCompletion": true,
+  "Scopes": [
+    ""
+  ]
+})
+I[00:32:44.672] Code complete: 0 results from Sema, 0 from Index, 0 matched, 1 from identifiers, 1 returned.
+I[00:32:44.672] --> reply:textDocument/completion(3) 3 ms
+V[00:32:44.672] >>> {"id":3,"jsonrpc":"2.0","result":{"isIncomplete":false,"items":[{"deprecated":true,"filterText":"run","insertText":"run","insertTextFormat":1,"kind":1,"label":" run","score":0.11814375966787338,"sortText":"420e0aa5run","textEdit":{"newText":"run","range":{"end":{"character":30,"line":1},"start":{"character":28,"line":1}}}}]}}
+
+V[00:32:44.672] Driver produced command: cc1 -cc1 -triple aarch64-unknown-linux-android24 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name arrow.cpp -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=non-leaf -ffp-contract=on -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -enable-tlsdesc -target-cpu generic -target-feature +v8a -target-feature +fp-armv8 -target-feature +neon -target-feature +fix-cortex-a53-835769 -target-abi aapcs -debugger-tuning=gdb "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android" -I "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -isysroot "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot" -internal-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21\\include" -internal-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/usr/local/include" -internal-externc-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/include" -internal-externc-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/usr/include" -std=c++17 -fdeprecated-macro -ferror-limit 19 -femulated-tls -fno-signed-char -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -no-round-trip-args -target-feature +outline-atomics -D__GCC_HAVE_DWARF2_CFI_ASM=1 -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\arrow.cpp"
+V[00:32:44.672] Building first preamble for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\arrow.cpp version 1
+V[00:32:44.672] <<< {"jsonrpc":"2.0","method":"textDocument/didClose","params":{"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/arrow.cpp"}}}
+
+I[00:32:44.673] <-- textDocument/didClose
+I[00:32:44.673] --> textDocument/publishDiagnostics
+V[00:32:44.673] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/arrow.cpp"}}
+
+V[00:32:44.673] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"namespace Library { void solve(int); int answer; }\nvoid f(){Library::so","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/namespace.cpp","version":1}}}
+
+I[00:32:44.673] <-- textDocument/didOpen
+V[00:32:44.673] <<< {"id":4,"jsonrpc":"2.0","method":"textDocument/completion","params":{"position":{"character":20,"line":1},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/namespace.cpp"}}}
+
+I[00:32:44.673] <-- textDocument/completion(4)
+I[00:32:44.673] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\namespace.cpp
+I[00:32:44.673] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\namespace.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 --target=aarch64-linux-android24 "--sysroot=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot" "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android" "-IC:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\namespace.cpp"
+V[00:32:44.673] Build for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\namespace.cpp is not ready. Enter fallback mode.
+V[00:32:44.676] Code complete: fuzzyFind({
+  "AnyScope": false,
+  "Limit": 30,
+  "PreferredTypes": [],
+  "ProximityPaths": [
+    "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\namespace.cpp"
+  ],
+  "Query": "so",
+  "RestrictForCodeCompletion": true,
+  "Scopes": [
+    "Library::"
+  ]
+})
+I[00:32:44.676] Code complete: 0 results from Sema, 0 from Index, 0 matched, 1 from identifiers, 1 returned.
+I[00:32:44.676] --> reply:textDocument/completion(4) 3 ms
+V[00:32:44.676] >>> {"id":4,"jsonrpc":"2.0","result":{"isIncomplete":false,"items":[{"deprecated":true,"filterText":"solve","insertText":"solve","insertTextFormat":1,"kind":1,"label":" solve","score":0.1430918425321579,"sortText":"41ed7955solve","textEdit":{"newText":"solve","range":{"end":{"character":20,"line":1},"start":{"character":18,"line":1}}}}]}}
+
+V[00:32:44.677] <<< {"jsonrpc":"2.0","method":"textDocument/didClose","params":{"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/namespace.cpp"}}}
+
+I[00:32:44.677] <-- textDocument/didClose
+I[00:32:44.677] --> textDocument/publishDiagnostics
+V[00:32:44.677] >>> {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[],"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/namespace.cpp"}}
+
+V[00:32:44.677] Driver produced command: cc1 -cc1 -triple aarch64-unknown-linux-android24 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name namespace.cpp -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=non-leaf -ffp-contract=on -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -enable-tlsdesc -target-cpu generic -target-feature +v8a -target-feature +fp-armv8 -target-feature +neon -target-feature +fix-cortex-a53-835769 -target-abi aapcs -debugger-tuning=gdb "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android" -I "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -isysroot "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot" -internal-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21\\include" -internal-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/usr/local/include" -internal-externc-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/include" -internal-externc-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/usr/include" -std=c++17 -fdeprecated-macro -ferror-limit 19 -femulated-tls -fno-signed-char -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -no-round-trip-args -target-feature +outline-atomics -D__GCC_HAVE_DWARF2_CFI_ASM=1 -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\namespace.cpp"
+V[00:32:44.678] <<< {"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"languageId":"cpp","text":"#include <vector>\nvoid f(){std::vector<int> items; items.pu","uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/vector.cpp","version":1}}}
+
+I[00:32:44.678] <-- textDocument/didOpen
+V[00:32:44.678] <<< {"id":5,"jsonrpc":"2.0","method":"textDocument/completion","params":{"position":{"character":41,"line":1},"textDocument":{"uri":"file:///C:/Users/q1684/Desktop/%E5%AE%89%E5%8D%93%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/CodePocket-Android/.tools/cpp-semantic-probe/host-project/vector.cpp"}}}
+
+I[00:32:44.678] <-- textDocument/completion(5)
+I[00:32:44.678] Failed to find compilation database for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\vector.cpp
+I[00:32:44.678] ASTWorker building file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\vector.cpp version 1 with command clangd fallback
+[C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project]
+"C:\\mingw64\\bin\\clang" -xc++ -std=c++17 --target=aarch64-linux-android24 "--sysroot=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot" "-resource-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android" "-IC:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -- "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\vector.cpp"
+V[00:32:44.678] Build for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\vector.cpp is not ready. Enter fallback mode.
+V[00:32:44.681] Code complete: fuzzyFind({
+  "AnyScope": true,
+  "Limit": 30,
+  "PreferredTypes": [],
+  "ProximityPaths": [
+    "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\vector.cpp"
+  ],
+  "Query": "pu",
+  "RestrictForCodeCompletion": true,
+  "Scopes": [
+    ""
+  ]
+})
+I[00:32:44.681] Code complete: 0 results from Sema, 0 from Index, 0 matched, 0 from identifiers, 0 returned.
+I[00:32:44.681] --> reply:textDocument/completion(5) 2 ms
+V[00:32:44.681] >>> {"id":5,"jsonrpc":"2.0","result":{"isIncomplete":false,"items":[]}}
+
+V[00:32:44.681] <<< {"id":6,"jsonrpc":"2.0","method":"shutdown","params":null}
+
+I[00:32:44.681] <-- shutdown(6)
+I[00:32:44.681] --> reply:shutdown(6) 0 ms
+V[00:32:44.681] >>> {"id":6,"jsonrpc":"2.0","result":null}
+
+V[00:32:44.681] <<< {"jsonrpc":"2.0","method":"exit","params":null}
+
+I[00:32:44.681] <-- exit
+I[00:32:44.681] LSP finished, exiting with status 0
+V[00:32:44.681] Driver produced command: cc1 -cc1 -triple aarch64-unknown-linux-android24 -fsyntax-only -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name vector.cpp -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=non-leaf -ffp-contract=on -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -enable-tlsdesc -target-cpu generic -target-feature +v8a -target-feature +fp-armv8 -target-feature +neon -target-feature +fix-cortex-a53-835769 -target-abi aapcs -debugger-tuning=gdb "-fdebug-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" "-fcoverage-compilation-dir=C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -resource-dir "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\c++\\v1" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include" -isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot\\include\\aarch64-linux-android" -I "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project" -isysroot "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot" -internal-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\clang\\lib\\clang\\21\\include" -internal-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/usr/local/include" -internal-externc-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/include" -internal-externc-isystem "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\extracted\\ndk-sysroot/usr/include" -std=c++17 -fdeprecated-macro -ferror-limit 19 -femulated-tls -fno-signed-char -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -no-round-trip-args -target-feature +outline-atomics -D__GCC_HAVE_DWARF2_CFI_ASM=1 -x c++ "C:\\Users\\q1684\\Desktop\\\xE5\xAE\x89\xE5\x8D\x93\xE7\xAB\xAF\xE7\xBC\x96\xE8\xAF\x91\xE5\x99\xA8\\CodePocket-Android\\.tools\\cpp-semantic-probe\\host-project\\vector.cpp"
+I[00:32:44.689] Built preamble of size 836532 for file C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\arrow.cpp version 1 in 0.02 seconds
+V[00:32:44.690] indexed preamble AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\arrow.cpp version 1:
+  symbol slab: 0 symbols, 128 bytes
+  ref slab: 0 symbols, 0 refs, 136 bytes
+  relations slab: 0 relations, 24 bytes
+I[00:32:44.691] Indexing c++17 standard library in the context of C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\arrow.cpp
+V[00:32:45.602] indexed preamble AST for C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\.tools\cpp-semantic-probe\host-project\arrow.cpp version :
+  symbol slab: 11607 symbols, 3200856 bytes
+  ref slab: 0 symbols, 0 refs, 136 bytes
+  relations slab: 455 relations, 8082 bytes
+I[00:32:45.618] Indexed c++17 standard library: 10592 symbols, 1015 filtered
+V[00:32:45.649] Build dynamic index for header symbols with estimated memory usage of 7768936 bytes

@@ -1,0 +1,9 @@
+test_approved_build_assets_pass_without_creating_an_apk (__main__.DeltaChecks.test_approved_build_assets_pass_without_creating_an_apk) ... ok
+test_original_native_changes_are_rejected (__main__.DeltaChecks.test_original_native_changes_are_rejected) ... ok
+test_original_runner_changes_are_rejected (__main__.DeltaChecks.test_original_runner_changes_are_rejected) ... ok
+test_unapproved_build_fields_are_rejected (__main__.DeltaChecks.test_unapproved_build_fields_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 6.247s
+
+OK

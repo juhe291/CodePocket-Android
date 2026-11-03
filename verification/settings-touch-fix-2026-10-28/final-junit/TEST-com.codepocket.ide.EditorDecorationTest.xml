@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorDecorationTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-28T04:26:18" hostname="JUHE" time="0.021">
+  <properties/>
+  <testcase name="cppTypedParametersAndOrdinaryVariablesAreDistinct" classname="com.codepocket.ide.EditorDecorationTest" time="0.001"/>
+  <testcase name="rawCppLiteralsAndContinuedMacrosDoNotInventErrors" classname="com.codepocket.ide.EditorDecorationTest" time="0.001"/>
+  <testcase name="runtimeErrorsRequireExactSourceProofAndActualCodeErrorKind" classname="com.codepocket.ide.EditorDecorationTest" time="0.003"/>
+  <testcase name="malformedBracketsHaveBoundedClearlyLabelledLocalDiagnostics" classname="com.codepocket.ide.EditorDecorationTest" time="0.0"/>
+  <testcase name="variableParameterMemberConstantAndCustomTypeHintsDiffer" classname="com.codepocket.ide.EditorDecorationTest" time="0.001"/>
+  <testcase name="mixedBracketsUseOneDepthStackWithMatchingPairColours" classname="com.codepocket.ide.EditorDecorationTest" time="0.0"/>
+  <testcase name="nestedTemplatesColourAnglesButComparisonsAndShiftsDoNot" classname="com.codepocket.ide.EditorDecorationTest" time="0.001"/>
+  <testcase name="emojiBeforeBracketsDoesNotShiftUtf16Ranges" classname="com.codepocket.ide.EditorDecorationTest" time="0.0"/>
+  <testcase name="spanAndTextBudgetsAlsoBoundNewDecorations" classname="com.codepocket.ide.EditorDecorationTest" time="0.011"/>
+  <testcase name="stringsCommentsAndPythonTripleQuotesAreOpaque" classname="com.codepocket.ide.EditorDecorationTest" time="0.0"/>
+  <testcase name="syntaxChecksCacheAcrossCaretAndThemeButNeverAcrossBuffersOrLanguages" classname="com.codepocket.ide.EditorDecorationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkbenchSidebarBehaviorTest" tests="7" skipped="0" failures="2" errors="0" timestamp="2026-10-28T16:19:32" hostname="JUHE" time="12.039">
+  <properties/>
+  <testcase name="closingPhoneSearchDoesNotReopenASidebarOnWindowExpansion" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="8.183">
+    <failure message="java.lang.AssertionError: The window manager must keep the requested viewport expected:&lt;1280&gt; but was:&lt;411&gt;" type="java.lang.AssertionError">java.lang.AssertionError: The window manager must keep the requested viewport expected:&lt;1280&gt; but was:&lt;411&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at com.codepocket.ide.WorkbenchSidebarBehaviorTest.resize(WorkbenchSidebarBehaviorTest.kt:35)
+	at com.codepocket.ide.WorkbenchSidebarBehaviorTest.closingPhoneSearchDoesNotReopenASidebarOnWindowExpansion(WorkbenchSidebarBehaviorTest.kt:82)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="recreatedSearchDrawerRestoresItsQueryWithAPositiveWindowHeight" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="1.109"/>
+  <testcase name="queryAndEditorIdentitySurviveRehostingBetweenPhoneDrawerAndTabletSidebar" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.971">
+    <failure message="java.lang.AssertionError: The window manager must keep the requested viewport expected:&lt;1280&gt; but was:&lt;411&gt;" type="java.lang.AssertionError">java.lang.AssertionError: The window manager must keep the requested viewport expected:&lt;1280&gt; but was:&lt;411&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at com.codepocket.ide.WorkbenchSidebarBehaviorTest.resize(WorkbenchSidebarBehaviorTest.kt:35)
+	at com.codepocket.ide.WorkbenchSidebarBehaviorTest.queryAndEditorIdentitySurviveRehostingBetweenPhoneDrawerAndTabletSidebar(WorkbenchSidebarBehaviorTest.kt:71)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="drawerWindowAnimationNeverSlidesItsWholeSurfaceOverTheFixedActivityBar" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.415"/>
+  <testcase name="tabletSearchLivesInTheSidebarAndLeavesTheEditorBufferUntouched" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.54"/>
+  <testcase name="phoneSearchOpensInTheSameDrawerGeometryAsExplorer" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.385"/>
+  <testcase name="tabletSidebarUsesTheRealUnsavedWorkspaceSearchWorker" classname="com.codepocket.ide.WorkbenchSidebarBehaviorTest" time="0.436"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

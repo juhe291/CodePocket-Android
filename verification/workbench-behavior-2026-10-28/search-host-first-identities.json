@@ -1,0 +1,58 @@
+{
+  "totals": {
+    "tests": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "id": "com.codepocket.ide.MainSurfaceIntegrationTest.projectSearchIncludesUnsavedBufferThroughTheRealWorkspaceWorker",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.drawerWindowAnimationNeverSlidesItsWholeSurfaceOverTheFixedActivityBar",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.tabletSearchLivesInTheSidebarAndLeavesTheEditorBufferUntouched",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchSidebarBehaviorTest.phoneSearchOpensInTheSameDrawerGeometryAsExplorer",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.terminalMaximizeRestoreKeepsRailFilesAndEditor",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.sidebarTogglesDoNotRecreateEditorOrCloseFiles",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phonePortraitDark",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phoneLandscapeDark",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.phonePortraitLight",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.mobileMenuHasCategoriesInsteadOfLongCommandList",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.tabletLandscapeDark",
+      "status": "passed"
+    },
+    {
+      "id": "com.codepocket.ide.WorkbenchStructureIntegrationTest.tabletPortraitLight",
+      "status": "passed"
+    }
+  ]
+}

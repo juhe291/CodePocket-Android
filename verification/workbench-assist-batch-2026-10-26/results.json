@@ -1,0 +1,96 @@
+{
+  "apk": "dist/CodePocket-assist-batch-2026-10-26-debug.apk",
+  "bytes": 26677963,
+  "sha256": "3521f180bf05f1c08c6d8f4008e224ca492e8bcb8d656605d802933a0430fef9",
+  "junit": {
+    "tests": 739,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "lint": {
+    "app": {
+      "severity": {
+        "Warning": 17
+      },
+      "ids": {
+        "OldTargetApi": 1,
+        "ChromeOsAbiSupport": 1,
+        "DataExtractionRules": 1,
+        "UnusedResources": 1,
+        "ViewConstructor": 1,
+        "SetTextI18n": 12
+      }
+    },
+    "editor-sora": {
+      "severity": {
+        "Warning": 1
+      },
+      "ids": {
+        "GradleDependency": 1
+      }
+    }
+  },
+  "browser": {
+    "cases": 352,
+    "checks": 81,
+    "paletteChecks": 20,
+    "scenes": 44,
+    "devices": 4,
+    "themes": 2,
+    "errors": [],
+    "failures": [],
+    "androidDeviceVerified": false
+  },
+  "new_lint_warning": {
+    "id": "ViewConstructor",
+    "severity": "Warning",
+    "new_count": 1,
+    "xml_references": [],
+    "reason": "The candidate row has palette constructor arguments and is instantiated only from Kotlin; the layout-tool-compatible constructor is absent.",
+    "disposition": "Recorded for later component cleanup per the user UI-first nonblocking-issue preference; Lint remains enabled."
+  },
+  "baseline_tests": 6,
+  "baseline_failures": 6,
+  "targeted": {
+    "tests": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "baseline_test_cases_retained": 733,
+  "new_test_cases": 6,
+  "no_new_skips": true,
+  "native_previews": 6,
+  "browser_screenshots": 222,
+  "old_apks_preserved": 84,
+  "native_libraries_identical": 10,
+  "python_app_archive_identical": true,
+  "source_python_tests": 44,
+  "packaged_python_tests": 39,
+  "shell_startup_tests": 4,
+  "python_snippets": 7,
+  "cpp17_snippets": 7,
+  "signature": "passed",
+  "signer_sha256": "d58e4cd7c849ebcf3cf35fde35f1d201c2569bb9ef11f2b48a4ba80cacd10408",
+  "alignment_16kb": "passed",
+  "zip_crc": "passed",
+  "packaged_theme_matches_source": true,
+  "final_build": "Full main app tests, app/Sora Lint and assembleDebug succeeded.",
+  "final_package_task_executed": true,
+  "apk_build_invocations": 1,
+  "production_changed": [
+    "CompletionPopup.kt and ui/CompletionCandidateRow.kt: measured compact candidates, kind metadata/icons and selected documentation height",
+    "SignaturePopup.kt: single-form controls, form counter, wrap-content reference width and post-layout parameter scroll",
+    "MainActivity.kt and ui/WorkbenchChoiceAdapter.kt: typed snippet picker, real template scope and monospace triggers"
+  ],
+  "device_verified": false,
+  "remote_ci_verified": false,
+  "complete_ui": false,
+  "host_boundary": "Real Main/Sora, actual lexical provider and input transactions, direction/Tab acceptance, reference-form touch selection, snippet insertion/placeholder navigation/undo under Robolectric. Not an Android IME, physical keyboard, semantic server or live Android PTY test.",
+  "scope": "One batch of three editor-assistance surfaces. Existing lexical/signature/snippet engines, source guards, cursor placement, runtime and file safety preserved.",
+  "prior_single_import_failure": "Previously unconfirmed and not reproduced; production Python unchanged.",
+  "prior_host_focus_observation": "Passive tablet height transition remains recorded in compact-captions phase, not fixed or device-verified here.",
+  "browser_repair": "First full 44-scene matrix passed; examples reflect the actual two-form range catalogue and lexical/native template boundaries.",
+  "test_refinement": "Initial compile exposed a new field name colliding with View.foreground; renamed it. Targeted tests then corrected range(10) template expectations, used real explicit assistance handlers to cancel pending automatic refresh, and applied touch-size assertions to visible controls after intentionally hiding single-form cycle actions. Range catalogue has two forms, so one Next reaches the long form. Further native layout checks exposed the old fixed child width; explicit wrap-content sizing and guarded post-layout scrolling fixed it. Final 26 targeted cases passed, with all editor/undo/selection/path assertions retained."
+}

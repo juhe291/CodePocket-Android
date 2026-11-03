@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-26T13:29:45" hostname="JUHE" time="1.27">
+  <properties/>
+  <testcase name="lateFailureFromPreviousSessionCannotCloseReplacement" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.041"/>
+  <testcase name="firstSessionCreatesTerminalViewWithoutCrashing" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.041"/>
+  <testcase name="reproducesLegacyTypefaceBeforeTextSizeCrash" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.038"/>
+  <testcase name="closingSessionDeletesOnlyItsStartupFile" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.037"/>
+  <testcase name="actualEmulatorOutputDoesNotSnapBrowsingHistoryToBottom" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.064"/>
+  <testcase name="switchingPaneKeepsHistoryOffsetWithoutHoldingOldView" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.169"/>
+  <testcase name="realTerminalExposesTextInputAndKeyboardButton" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.336"/>
+  <testcase name="restoringFocusTargetsActualTerminalWithoutShowingKeyboard" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.258"/>
+  <testcase name="failedSessionDeletesStartupFile" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.067"/>
+  <testcase name="currentFailureIsOneFailedStateAndReadableWithoutUsb" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.067"/>
+  <testcase name="clearDisplayUsesEmulatorNotProgramStdin" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.071"/>
+  <testcase name="repeatedNotificationsReuseTerminalAndSession" classname="com.codepocket.ide.terminal.shell.ShellTerminalInitializationTest" time="0.081"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

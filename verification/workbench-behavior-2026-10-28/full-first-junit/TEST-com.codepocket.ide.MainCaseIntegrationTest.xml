@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainCaseIntegrationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-29T18:13:07" hostname="JUHE" time="1.773">
+  <properties/>
+  <testcase name="cloudCasesRequireTheExistingUploadConsentAndCancelDoesNotStartTheQueue" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.178"/>
+  <testcase name="finishingDuringPreparationStopsTheBatchAndCleansItsLateSnapshotWithoutAnExecutedRecord" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.147"/>
+  <testcase name="activityRecreationRestoresTheOpenCaseEditorAndExactWhitespace" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.327"/>
+  <testcase name="sourceSaveConflictPreventsBatchStartAndKeepsTheRecoverableEditorBytes" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.144"/>
+  <testcase name="cloudInputMenuCanCollapseItsOwnInputWithoutDeletingTheText" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.167"/>
+  <testcase name="rotatingDuringAnAtomicSaveKeepsTheSameCaseIdInsteadOfAddingADuplicate" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.222"/>
+  <testcase name="cloudInputCloseButtonRespondsToTouchAndRemainsClosedAfterRecreation" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.231"/>
+  <testcase name="localCppNeverDisplaysTheCloudPresetInputEvenWhenItsExpandedStateWasRemembered" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.139"/>
+  <testcase name="batchSavesActualSoraCodeAndPersistsTheRealMissingBridgeFailureWithoutRunningTheNextCase" classname="com.codepocket.ide.MainCaseIntegrationTest" time="0.218"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

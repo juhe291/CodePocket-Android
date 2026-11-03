@@ -1,0 +1,6 @@
+{
+  "app/src/main/java/com/codepocket/ide/MainActivity.kt": "97ac7551b42ef80e6536ff580b14832b9cb9315140b3412a1eab76f8d3c7ce85",
+  "app/src/main/java/com/codepocket/ide/SettingsDialog.kt": "2031cf6349dba1ef0e1c2efa72db9f800b613d91d50a0e1ddbf0179ca3569e5b",
+  "app/src/main/java/com/codepocket/ide/ui/ReadOnlyDetails.kt": "58f03279a4c76949352b71454913316e68c8c66b5c1ee8016875bea388da6e6c",
+  "app/src/main/java/com/codepocket/ide/terminal/shell/ShellTerminalPane.java": "41b897aac51f4a2e2e3260602495cce12d374a2c3c6fe9e947698aa9809531f0"
+}

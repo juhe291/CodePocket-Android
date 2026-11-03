@@ -1,0 +1,38 @@
+{
+  "clang.subpackage.sh": {
+    "sha256_lf": "8387a2314c0b2b0174dc6fbc7b1c4de64c62a165d285e72bde6ddbf8d0104b36",
+    "bytes": 1238
+  },
+  "libcxx-build.sh": {
+    "sha256_lf": "f0e670ec0f30469e91920a42427115e4bee082c8a22a6dc72e983603dfe659cf",
+    "bytes": 1209
+  },
+  "libiconv-build.sh": {
+    "sha256_lf": "5542ba656ce53cf6c13659afe25c6fe69e254d2b9e05b0d8105f4f4b3dc9cb15",
+    "bytes": 685
+  },
+  "libllvm-build.sh": {
+    "sha256_lf": "55d48a1f31939fb7585ce8320110a6bbe523a28665cb668333eeb56a566e8877",
+    "bytes": 7957
+  },
+  "ndk-sysroot-build.sh": {
+    "sha256_lf": "a5b6f7f77bd2fcbd6b809ba92b559940321a59e142504ec5e6bc5044b6a96221",
+    "bytes": 4043
+  },
+  "properties.sh": {
+    "sha256_lf": "238a19b2f29ef5eed5806a21bee8f5a51bc5031e7db3fcc393d831292300b725",
+    "bytes": 92423
+  },
+  "repo.json": {
+    "sha256_lf": "ca98924f4cd78e63dfb5c8dca10bfa34d407861cd864d97f1bf3f2ef63554271",
+    "bytes": 522
+  },
+  "termux-autobuilds.gpg": {
+    "sha256_lf": "21c385d5a30107453bd60582d64e2f6e5f5ce11e340ac05e57f943f9c0235420",
+    "bytes": 2458
+  },
+  "zstd-build.sh": {
+    "sha256_lf": "d7768dbd39af796ae9d5d1f0cc95d963ed5fa842332aecd9b6b046d87bbc48ec",
+    "bytes": 1697
+  }
+}

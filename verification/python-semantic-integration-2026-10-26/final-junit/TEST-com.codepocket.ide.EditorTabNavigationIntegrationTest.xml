@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.EditorTabNavigationIntegrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-26T10:14:56" hostname="JUHE" time="3.043">
+  <properties/>
+  <testcase name="resizingExplorerRevealsCurrentTabWithoutRecreatingEditor" classname="com.codepocket.ide.EditorTabNavigationIntegrationTest" time="0.796"/>
+  <testcase name="typingAndSavingDoNotStealManualTabScrollButExplicitOpenReveals" classname="com.codepocket.ide.EditorTabNavigationIntegrationTest" time="0.482"/>
+  <testcase name="tabletLightLargeResizeRetainsCurrentDocumentAndRevealsClose" classname="com.codepocket.ide.EditorTabNavigationIntegrationTest" time="0.862"/>
+  <testcase name="openingAndClosingLastTabKeepsCurrentFileVisible" classname="com.codepocket.ide.EditorTabNavigationIntegrationTest" time="0.517"/>
+  <testcase name="oversizedFilenameKeepsItsCloseTargetReachable" classname="com.codepocket.ide.EditorTabNavigationIntegrationTest" time="0.386"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

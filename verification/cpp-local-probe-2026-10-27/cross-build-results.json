@@ -1,0 +1,183 @@
+{
+  "host_compiler": "g++.exe (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 15.2.0",
+  "host_real_shared_library_execution": true,
+  "host_cases": 4,
+  "android_cross_compiler": "Android (12470979, based on r522817c) clang version 18.0.3 (https://android.googlesource.com/toolchain/llvm-project d8003a456d14a3deb8054cdaa529ffbf02d9b262)",
+  "android_program": {
+    "file": "C:/Users/q1684/Desktop/\u5b89\u5353\u7aef\u7f16\u8bd1\u5668/CodePocket-Android/.tools/cpp-local-probe/android-build/program.so",
+    "bytes": 183432,
+    "sha256": "be2c804dc8e3f0d28ef07dbef97a8ee4704245f0f3beb28540f5e3cf6a0ba5a7",
+    "elf_class": 64,
+    "endian": "little",
+    "machine": 183,
+    "aarch64": true,
+    "type": 3,
+    "entry": 0,
+    "interpreter": null,
+    "soname": "program.so",
+    "needed": [
+      "libcpB_______.so",
+      "libm.so",
+      "libdl.so",
+      "libc.so"
+    ],
+    "runpaths": [],
+    "android_notes": [
+      {
+        "api": 24,
+        "ndk": "r27c"
+      }
+    ],
+    "loads": [
+      {
+        "offset": 0,
+        "vaddr": 0,
+        "bytes": 46120,
+        "align": 16384
+      },
+      {
+        "offset": 46120,
+        "vaddr": 62504,
+        "bytes": 51400,
+        "align": 16384
+      },
+      {
+        "offset": 97520,
+        "vaddr": 130288,
+        "bytes": 1696,
+        "align": 16384
+      },
+      {
+        "offset": 99216,
+        "vaddr": 148368,
+        "bytes": 80,
+        "align": 16384
+      }
+    ],
+    "load_segments_16k_compatible": true,
+    "text_relocations": false,
+    "contains_termux_prefix": false,
+    "android_execution": false
+  },
+  "android_runner": {
+    "file": "C:/Users/q1684/Desktop/\u5b89\u5353\u7aef\u7f16\u8bd1\u5668/CodePocket-Android/.tools/cpp-local-probe/android-build/libcodepocket_cpp_runner.so",
+    "bytes": 7008,
+    "sha256": "e783a8575ed228e4d97dc53b575d97a3fe780da70d2a4da19ae8e39b947d750c",
+    "elf_class": 64,
+    "endian": "little",
+    "machine": 183,
+    "aarch64": true,
+    "type": 3,
+    "entry": 18408,
+    "interpreter": "/system/bin/linker64",
+    "soname": null,
+    "needed": [
+      "libdl.so",
+      "libc.so"
+    ],
+    "runpaths": [],
+    "android_notes": [
+      {
+        "api": 24,
+        "ndk": "r27c"
+      }
+    ],
+    "loads": [
+      {
+        "offset": 0,
+        "vaddr": 0,
+        "bytes": 2024,
+        "align": 16384
+      },
+      {
+        "offset": 2024,
+        "vaddr": 18408,
+        "bytes": 728,
+        "align": 16384
+      },
+      {
+        "offset": 2752,
+        "vaddr": 35520,
+        "bytes": 488,
+        "align": 16384
+      },
+      {
+        "offset": 3240,
+        "vaddr": 52392,
+        "bytes": 24,
+        "align": 16384
+      }
+    ],
+    "load_segments_16k_compatible": true,
+    "text_relocations": false,
+    "contains_termux_prefix": false,
+    "android_execution": false
+  },
+  "android_split_frontend": "Android (16134705, based on r574158c) clang version 21.0.0 (https://android.googlesource.com/toolchain/llvm-project 9f872551d3c681d06fd303b36f16ed5c274735eb)",
+  "android_split_program": {
+    "file": "C:/Users/q1684/Desktop/\u5b89\u5353\u7aef\u7f16\u8bd1\u5668/CodePocket-Android/.tools/cpp-local-probe/android-build/split-program.so",
+    "bytes": 163104,
+    "sha256": "e17a289dc6082e50b540136843e9b047f1d53599d6683f318b0e2ed8c35dd654",
+    "elf_class": 64,
+    "endian": "little",
+    "machine": 183,
+    "aarch64": true,
+    "type": 3,
+    "entry": 0,
+    "interpreter": null,
+    "soname": "split-program.so",
+    "needed": [
+      "libcpB_______.so",
+      "libc.so",
+      "libm.so",
+      "libdl.so"
+    ],
+    "runpaths": [],
+    "android_notes": [
+      {
+        "api": 24,
+        "ndk": "r30"
+      }
+    ],
+    "loads": [
+      {
+        "offset": 0,
+        "vaddr": 0,
+        "bytes": 40588,
+        "align": 16384
+      },
+      {
+        "offset": 40588,
+        "vaddr": 56972,
+        "bytes": 48228,
+        "align": 16384
+      },
+      {
+        "offset": 88816,
+        "vaddr": 121584,
+        "bytes": 1560,
+        "align": 16384
+      },
+      {
+        "offset": 90376,
+        "vaddr": 139528,
+        "bytes": 80,
+        "align": 16384
+      }
+    ],
+    "load_segments_16k_compatible": true,
+    "text_relocations": false,
+    "contains_termux_prefix": false,
+    "android_execution": false
+  },
+  "frozen_termux_crt_and_compiler_rt_linked": true,
+  "actual_compile_and_link_failures_verified": 2,
+  "uses_actual_packaged_private_libcxx": true,
+  "android_execution": false,
+  "production_integrated": false,
+  "limitations": [
+    "Host GCC execution does not validate Android dlopen/SELinux/PTY.",
+    "NDK host Clang is not the Termux Android Clang executable; its startup remains unverified.",
+    "Basic mode uses NDK27 Clang18. Split mode uses official NDK30 Clang21 with frozen headers/CRT/compiler-rt, NDK27 platform import stubs and host LLD18; Android startup still requires validation."
+  ]
+}

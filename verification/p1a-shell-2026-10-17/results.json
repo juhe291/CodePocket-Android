@@ -1,0 +1,79 @@
+{
+  "scope": "P1-A compact native shell",
+  "baseline": "18bf61f",
+  "build_duration": "1m 26s",
+  "force_rerun": true,
+  "executed_gradle_tasks": 62,
+  "kotlin": {
+    "tests": 114,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "passed": 113
+  },
+  "new_shell_tests": 15,
+  "lint": {
+    "errors": 0,
+    "warnings": 11,
+    "warning_ids": {
+      "OldTargetApi": 1,
+      "ChromeOsAbiSupport": 1,
+      "DataExtractionRules": 1,
+      "SetTextI18n": 8
+    }
+  },
+  "python_source_tests_passed": 13,
+  "apk_bytecode_tests_passed": 13,
+  "generated_template_python_passed": 7,
+  "generated_template_cpp17_passed": 7,
+  "apk": {
+    "apk": "C:\\Users\\q1684\\Desktop\\安卓端编译器\\CodePocket-Android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+    "size_bytes": 21794722,
+    "sha256": "44773506fbf7937d176e8eae3e4bb23a6fedd84c81fc59fbf6f46d7c2ac23ea9",
+    "zip_crc_passed": true,
+    "abis": [
+      "arm64-v8a"
+    ],
+    "python_archives_checked": [
+      "assets/chaquopy/app.imy",
+      "assets/chaquopy/bootstrap.imy",
+      "assets/chaquopy/requirements-arm64-v8a.imy",
+      "assets/chaquopy/requirements-common.imy",
+      "assets/chaquopy/stdlib-arm64-v8a.imy",
+      "assets/chaquopy/stdlib-common.imy"
+    ],
+    "bundled_runner": "runner.pyc",
+    "bundled_runner_tests": 13,
+    "test_failures": 0,
+    "test_errors": 0,
+    "device_execution": false
+  },
+  "delivered_apk": "dist/CodePocket-P1A-shell-debug.apk",
+  "dex_shell_classes": [
+    "MainToolbar",
+    "PanelToolbar",
+    "IdeCommandMenu",
+    "IdeCommands",
+    "IdeControls",
+    "IdeIconDrawable",
+    "DesignTokens",
+    "WorkspaceLayoutPolicy"
+  ],
+  "protected_inputs_unchanged": 59,
+  "changed_protected_inputs": {
+    "app/src/main/java/com/codepocket/ide/MainActivity.kt": {
+      "before": "d4413e34b92729f7c795193fabfd7a8779b8e7e2184a2b660d9260ac4097ddf8",
+      "after": "e955f50d557be3bbb70eef299b7f43d509ea8490c2a5f23443da13c12e0c8f28"
+    },
+    "app/src/main/res/values/strings.xml": {
+      "before": "c2324c4349b8c3cf7b827ec22d6aa5100eafc4504022908f5cb5ab9fd5510b7b",
+      "after": "35e44ae4a3fe2df982e0b28094a2a6427df545b83009a6e67e688cd57ff3c379"
+    }
+  },
+  "requirements_preserved": true,
+  "device_tested": false,
+  "emulator_tested": false,
+  "remote_actions_run": false,
+  "online_wandbox_run": false,
+  "visual_or_fps_verified": false
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.WorkspaceTest" tests="7" skipped="1" failures="0" errors="0" timestamp="2026-10-30T02:19:27" hostname="JUHE" time="0.108">
+  <properties/>
+  <testcase name="rejectsBadNamesConflictsAndRecursiveMove" classname="com.codepocket.ide.WorkspaceTest" time="0.022"/>
+  <testcase name="rejectsLinksDuringRecursiveDeletion" classname="com.codepocket.ide.WorkspaceTest" time="0.003">
+    <skipped/>
+  </testcase>
+  <testcase name="failedReplacementKeepsOldContentAndCleansTemporary" classname="com.codepocket.ide.WorkspaceTest" time="0.015"/>
+  <testcase name="rejectsTraversalAbsoluteAndSiblingPaths" classname="com.codepocket.ide.WorkspaceTest" time="0.005"/>
+  <testcase name="invalidUtf8AndBinaryAreRejectedAndBomIsAccepted" classname="com.codepocket.ide.WorkspaceTest" time="0.009"/>
+  <testcase name="oversizedReadAndWritePreserveOriginal" classname="com.codepocket.ide.WorkspaceTest" time="0.01"/>
+  <testcase name="nestedCreateRenameMoveAndReadWrite" classname="com.codepocket.ide.WorkspaceTest" time="0.042"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

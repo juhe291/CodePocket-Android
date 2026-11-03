@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.MainCaretMotionIntegrationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-02T08:48:23" hostname="JUHE" time="1.361">
+  <properties/>
+  <testcase name="phoneMainImeCommitsImmediatelyAndUsesTheRequestedTypingAndBackspaceDuration" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.157"/>
+  <testcase name="phoneCompositionAndBackgroundFocusKeepTheCursorAndTerminalOwnershipAccurate" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.13"/>
+  <testcase name="actualHardwareArrowChangesLogicalSelectionBeforeEightyMillisecondTransition" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.135"/>
+  <testcase name="actualSettingsApplySeparatelyControlsMovementAndBlinkWithoutReplacingTheBuffer" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.154"/>
+  <testcase name="tabletLightWindowResizeKeepsPanelsSessionsAndCancelsOnlyTheCaretTransition" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.177"/>
+  <testcase name="completionShowAlignsTheCaretEvenBeforeAnExtendedTweenCanFinish" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.144"/>
+  <testcase name="systemReducedAnimationSettingCancelsActualMainEditorAnimations" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.177"/>
+  <testcase name="powerSavingBroadcastStopsAnimationsAndKeepsTheDocument" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.131"/>
+  <testcase name="mainLifecyclePauseReleasesCaretCallbacksAndResumeRetainsSelection" classname="com.codepocket.ide.MainCaretMotionIntegrationTest" time="0.155"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Intent = Intent { act=android.os.action.POWER_SAVE_MODE_CHANGED }; Matching wrappers: [Wrapper[receiver=[com.codepocket.ide.animation.MotionEnvironment$receiver$1@6a2d38bb], context=[android.app.ContextImpl@1547a37e], intentFilter=[android.content.IntentFilter@6c7b1e61]]]
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>
