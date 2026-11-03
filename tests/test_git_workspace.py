@@ -183,7 +183,9 @@ class GitWorkspaceTests(unittest.TestCase):
         self.assertEqual(before, manifest())
 
     def test_filemode_false_preserves_an_existing_executable_index_entry_when_staging(self):
-        self.init(); self.write('run.sh', b'#!/bin/sh\necho one\n'); self.stage('run.sh')
+        self.init(); self.git('config', 'core.filemode', 'false')
+        self.assertEqual(b'false\n', self.git('config', '--get', 'core.filemode'))
+        self.write('run.sh', b'#!/bin/sh\necho one\n'); self.stage('run.sh')
         self.git('update-index', '--chmod=+x', 'run.sh'); self.commit('executable')
         self.write('run.sh', b'#!/bin/sh\necho two\n'); self.stage('run.sh'); self.commit('new body')
         self.assertTrue(self.git('ls-tree', 'HEAD', 'run.sh').startswith(b'100755 '))

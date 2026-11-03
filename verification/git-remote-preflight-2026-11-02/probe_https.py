@@ -35,7 +35,7 @@ import git_workspace
 
 CACHE=ROOT/'.tools/git-remote-probe'
 assert CACHE.resolve().is_relative_to(ROOT.resolve())
-CACHE.mkdir(exist_ok=True)
+CACHE.mkdir(parents=True,exist_ok=True)
 TLS=CACHE/'tls';TLS.mkdir(exist_ok=True)
 CERT=TLS/'localhost-cert.pem';KEY=TLS/'localhost-key.pem'
 TOKEN='fixture-only-pat-never-a-real-account'

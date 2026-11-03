@@ -4,6 +4,7 @@
 
 ## 最新优先级：检查更新完成验证 → GitHub推送（2026-11-03）
 
+- 1948720已正常推送到新建公开仓库https://github.com/juhe291/CodePocket-Android ，master/远端SHA精确核对，原历史保持。既有CI41583733713实际失败在两个旧夹具；已按[干净CI修复记录](FIX_GITHUB_CLEAN_CI_2026-11-03.md)仅补缓存父目录/显式filemode=false，原断言保持。干净导入原失败→成功，完整Python157重跑全通过；生产和APK不变，不重打包。修复追加提交/远端结果以verification/github-clean-ci-fix-2026-11-03/push-results.json为准。
 - [本批交付](APP_UPDATES_DELIVERY_2026-11-03.md)：从1daa97f完成手动更新入口/实际安装版本、固定juhe291/CodePocket-Android正式源、有界HTTP读取与取消、状态/全文和可信下载跳转。版本0.2.1/3，无自动联网/安装；原设置草稿、Sora保存、头文件Tab、真实运行与PTY保持。
 - 定向36/扩大122全部通过，新24全通过；集中1173项1171通过/1既有Windows失败/1旧跳过，旧1149身份和跳过保持，Lint零错误。一次实际打包，完整命令退出1，不能称全绿。486份冻结输入及全部原始证据在verification/app-updates-2026-11-03。
 - 候选dist/CodePocket-updates-0.2.1-2026-11-03-debug.apk，118139841字节，SHA256 `4715b84bb9454c5136f823ea07cf2e09d34e3cfc4c21b24a35e688502e44bd91`；原签名/CRC/16KiB/版本/Manifest/正式源/DEX检查通过，原25库/50资产和102旧包保持。未变运行专项按摘要复用，设备验收后置。
