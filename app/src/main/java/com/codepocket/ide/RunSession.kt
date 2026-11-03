@@ -16,6 +16,7 @@ import java.util.concurrent.Future
 import com.codepocket.ide.terminal.shell.ShellRuntime
 import com.codepocket.ide.terminal.bridge.TerminalBridgeBroker
 import com.codepocket.ide.terminal.bridge.BridgeCommand
+import org.json.JSONArray
 import java.io.File
 
 /** Process-wide owner; no Activity/View references. Python lives in the private :python process. */
@@ -57,6 +58,7 @@ object RunSession {
     private var terminalBridge: TerminalBridgeBroker? = null
     private var terminalStreams: TerminalBridgeBroker.Streams? = null
     private var terminalLaunchFile: File? = null
+    private var runBreakpoints: List<Int> = emptyList()
     private var startupStage = "准备本地终端"
     private fun startup(stage:String) { startupStage=stage;terminalOwner?.refreshForeground() }
     private var interactiveInput = false
@@ -70,10 +72,12 @@ object RunSession {
     internal fun start(app: Context, code: String, input: String, cpp: Boolean, sourcePath: String, projectRoot: String, identity: String,
         pythonEntry: String = sourcePath, entryKey: String? = null, terminal: ShellRuntime? = null,
         interactive: Boolean = false, cppJob:CppRunSnapshot?=null, scope:CppBuildScope=CppBuildScope.CURRENT,pythonJob:PythonRunSnapshot?=null,
-        caseMode:Boolean=false,onComplete:((RunResult)->Unit)?=null): Boolean {
+        caseMode:Boolean=false,onComplete:((RunResult)->Unit)?=null,breakpoints:List<Int> = emptyList()): Boolean {
         check(Looper.myLooper() == Looper.getMainLooper())
         require(cppJob==null || cpp && terminal!=null)
         require(pythonJob==null||!cpp)
+        runBreakpoints = if (cpp || terminal == null) emptyList()
+            else breakpoints.filter { it > 0 }.distinct().sorted().take(500)
         val id = tickets.begin() ?: return false
         localCppMode=cppJob!=null;localCppRunning=false;localProgramBegan=0;cppSnapshot=cppJob;cppScope=scope;localCppClient=null
         pythonSnapshot=pythonJob
@@ -226,6 +230,7 @@ object RunSession {
                                 putLong("id", id); putString("code", code); putString("stdin", input)
                                 putString("path", executionPath); putString("root", root)
                                 putString("pythonJob",pythonSnapshot?.directory?.path)
+                                putString("breakpoints",JSONArray(runBreakpoints).toString())
                                 terminalStreams?.let { streams ->
                                     putBoolean("terminal",true);putBoolean("interactive",interactiveInput)
                                     putParcelable("ttyIn",streams.input);putParcelable("ttyOut",streams.output);putParcelable("ttyErr",streams.error)
@@ -303,6 +308,7 @@ object RunSession {
             lastKilledPid=pythonPid;Process.killProcess(pythonPid)
         }
         pythonPid = 0;pythonGroup=0
+        runBreakpoints = emptyList()
         terminalStreams?.close();terminalStreams=null
         val owner=terminalOwner;val control=terminalControl
         terminalOwner=null;terminalControl=null;terminalClock=null

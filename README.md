@@ -1,6 +1,8 @@
 # CodePocket · Android C++ / Python IDE
 
-**2026-11-03 本地最新 Bug 候选**：[本轮构建记录](docs/BUGFIX_APK_DELIVERY_2026-11-03.md)，`dist/CodePocket-bugfix-2026-11-03-debug.apk`，SHA256 `6949b5f6d6f088a9426b69c8221f68e1c6929278d4a8bf1cca5ed16ae290ddd9`。原签名，1173项1171通过/1既有Windows失败/1旧跳过、Lint零错误；实际包内48/22/84通过，设备后置。其余工作见[DeepSeek交接](docs/DEEPSEEK_HANDOFF_2026-11-03.md)；用户已停止后续GitHub推送，远端CI仍有2项未解决，未发布Release。
+**2026-11-03 本地最新候选：0.2.2 (4)**：[本批记录](docs/P3C_BREAKPOINTS_UPDATES_DELIVERY_2026-11-03.md)，`dist/CodePocket-p3c-breakpoints-updates-2026-11-03-debug.apk`，118,221,699 字节，SHA256 `f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a`。原 Debug 签名，App 1191 项 1189 通过/1 既有 Windows 头文件失败/1 旧跳过、termux 146 通过、Lint 零错误；Python 源码 175 通过，实际包内 runner/project/diagnostics 51、Git 21/格式化 20 及语义/矢量/Shell/片段通过，设备后置。新增：设置多词/别名搜索、可保存并真正作用于正式 Sora 与预览的自定义语法主题、按文件持久化断点与本地 Python 真实 pdb 断点、默认关闭的启动自动检测更新。完整命令退出 1，不称全绿；P3-D 语言分析调研完成、待实现；未发布 Release/APK。
+
+**历史：2026-11-03 Bug 候选**：[本轮构建记录](docs/BUGFIX_APK_DELIVERY_2026-11-03.md)，`dist/CodePocket-bugfix-2026-11-03-debug.apk`，SHA256 `6949b5f6d6f088a9426b69c8221f68e1c6929278d4a8bf1cca5ed16ae290ddd9`。原签名，1173项1171通过/1既有Windows失败/1旧跳过、Lint零错误；实际包内48/22/84通过，设备后置。其余交接见[DeepSeek接手入口](docs/DEEPSEEK_HANDOFF_2026-11-03.md)，当时远端CI仍有2项未解决，未发布Release。
 
 Kotlin原生Views与正式Sora编辑器，提供Python/C++真实本地运行、PTY终端、头文件Tab补全、保存/恢复保护、项目树/搜索/Git工作台及网页辅助栏。支持手机和平板，网页搜索默认必应、可选百度。
 

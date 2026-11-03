@@ -3,7 +3,7 @@ package com.codepocket.ide
 import org.json.JSONObject
 
 enum class UiTheme { DARK, LIGHT, SYSTEM }
-enum class SyntaxTheme { FOLLOW_UI, DARK, LIGHT }
+enum class SyntaxTheme { FOLLOW_UI, DARK, LIGHT, CUSTOM }
 enum class TerminalTheme { FOLLOW_UI, CODEPOCKET_DARK, NORD, DRACULA, LIGHT }
 enum class CppBackend { CLOUD, LOCAL }
 
@@ -35,15 +35,29 @@ data class AppSettings(
     val panelPreferSide: Boolean = false,  // P1-B: Bottom-first strategy
     val cppBackend: CppBackend = CppBackend.CLOUD,
     val cppBuildScope: CppBuildScope = CppBuildScope.CURRENT,
-    val formatOnSave: Boolean = false
+    val formatOnSave: Boolean = false,
+    /** Opt-in: one silent GitHub release check per app launch; no project credentials are used. */
+    val autoCheckUpdates: Boolean = false,
+    /** Bounded, validated TextMate subset; empty means no user theme is stored. */
+    val customSyntaxTheme: String = ""
 ) : AssistOptionsContract {
-    fun normalized() = copy(fontSize = fontSize.coerceIn(10, 28), terminalFontSize = terminalFontSize.coerceIn(10, 24),
-        tabWidth = tabWidth.takeIf { it in listOf(2, 4, 8) } ?: 4, autoSaveDelayMs = autoSaveDelayMs.coerceIn(300, 10000))
+    fun normalized(): AppSettings {
+        val custom = customTheme()
+        return copy(fontSize = fontSize.coerceIn(10, 28), terminalFontSize = terminalFontSize.coerceIn(10, 24),
+            tabWidth = tabWidth.takeIf { it in listOf(2, 4, 8) } ?: 4, autoSaveDelayMs = autoSaveDelayMs.coerceIn(300, 10000),
+            customSyntaxTheme = custom?.json.orEmpty(),
+            syntax = if (syntax == SyntaxTheme.CUSTOM && custom == null) SyntaxTheme.FOLLOW_UI else syntax)
+    }
     fun isDark(systemDark: Boolean) = when (theme) { UiTheme.DARK -> true; UiTheme.LIGHT -> false; UiTheme.SYSTEM -> systemDark }
-    fun syntaxIsDark(uiDark: Boolean) = when (syntax) { SyntaxTheme.DARK -> true; SyntaxTheme.LIGHT -> false; SyntaxTheme.FOLLOW_UI -> uiDark }
+    /** The one parsed definition shared by the real Sora theme and the native preview; invalid text is no theme. */
+    fun customTheme(): com.codepocket.editorlab.SyntaxThemeDefinition? =
+        if (customSyntaxTheme.isBlank()) null
+        else runCatching { com.codepocket.editorlab.SyntaxThemeDefinition.parse(customSyntaxTheme) }.getOrNull()
+    fun syntaxIsDark(uiDark: Boolean) = when (syntax) { SyntaxTheme.DARK -> true; SyntaxTheme.LIGHT -> false; SyntaxTheme.FOLLOW_UI -> uiDark; SyntaxTheme.CUSTOM -> customTheme()?.dark ?: uiDark }
     fun toJson(): String = normalized().let { s -> JSONObject().apply {
-        put("version", 11); put("terminalTheme", s.terminalTheme.name); put("theme", s.theme.name); put("syntax", s.syntax.name)
-        put("formatOnSave", s.formatOnSave)
+        put("version", 12); put("terminalTheme", s.terminalTheme.name); put("theme", s.theme.name); put("syntax", s.syntax.name)
+        put("customSyntaxTheme", s.customSyntaxTheme)
+        put("formatOnSave", s.formatOnSave); put("autoCheckUpdates", s.autoCheckUpdates)
         put("cppBackend",s.cppBackend.name);put("cppBuildScope",s.cppBuildScope.name)
         put("fontSize", s.fontSize); put("terminalFontSize", s.terminalFontSize); put("tabWidth", s.tabWidth)
         put("useSpaces", s.useSpaces); put("lineNumbers", s.lineNumbers); put("wordWrap", s.wordWrap)
@@ -59,6 +73,8 @@ data class AppSettings(
             val defaults = AppSettings(theme = if (legacyDark) UiTheme.DARK else UiTheme.LIGHT)
             val j = runCatching { JSONObject(json ?: "{}") }.getOrNull() ?: return defaults
             return defaults.copy(
+                customSyntaxTheme = j.optString("customSyntaxTheme", ""),
+                autoCheckUpdates = j.optBoolean("autoCheckUpdates", defaults.autoCheckUpdates),
                 formatOnSave = j.optBoolean("formatOnSave", defaults.formatOnSave),
                 cppBackend = runCatching { CppBackend.valueOf(j.optString("cppBackend")) }.getOrDefault(defaults.cppBackend),
                 cppBuildScope = runCatching { CppBuildScope.valueOf(j.optString("cppBuildScope")) }.getOrDefault(defaults.cppBuildScope),

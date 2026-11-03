@@ -82,8 +82,16 @@ class MainActivity : Activity() {
     private var pendingCasesState: String? = null
     private var settingsApplyFailure: (() -> Unit)? = null
     private val syntaxDark get() = settings.syntaxIsDark(dark)
-    private val codeBackground get() = Color.parseColor(if (syntaxDark) "#1E242E" else "#FFFFFF")
-    private val codeForeground get() = Color.parseColor(if (syntaxDark) "#D4D4D4" else "#242424")
+    /** One parsed custom theme definition is shared by the real Sora scheme, chrome and the native preview. */
+    private val customSyntaxTheme get() = settings.customTheme()
+    private val codeBackground get(): Int {
+        val fallback = Color.parseColor(if (syntaxDark) "#1E242E" else "#FFFFFF")
+        return customSyntaxTheme?.color("editor.background", fallback) ?: fallback
+    }
+    private val codeForeground get(): Int {
+        val fallback = Color.parseColor(if (syntaxDark) "#D4D4D4" else "#242424")
+        return customSyntaxTheme?.color("editor.foreground", fallback) ?: fallback
+    }
     private var activePath = ""
     private var workspaceOpen = false
     private var requestedWorkspaceOpen: Boolean? = null
@@ -154,6 +162,7 @@ class MainActivity : Activity() {
     private var webPanel:WebAuxiliaryPanel?=null
     private var pendingWebState:Bundle?=null
     private var appUpdateDialog:AppUpdateDialog?=null
+    private var appUpdateAutoCheck:AppUpdateAutoCheck?=null
     private var appUpdateRepository=AppUpdateRepository.parse(BuildConfig.UPDATE_REPOSITORY)
     private var appUpdateSourceFactory:(AppUpdateRepository)->AppUpdateSource={GitHubAppUpdateSource(it)}
     private var auxiliaryResize:ExplorerResizeHandle?=null
@@ -201,6 +210,7 @@ class MainActivity : Activity() {
             if (editor.isComposing) { hideCompletion(); return@Runnable }
             editorAnalysis?.request()
             updateTabStops()
+            syncBreakpoints()
             updateSuggestions()
             updateSignatureHelp()
         }
@@ -390,6 +400,8 @@ class MainActivity : Activity() {
                                 android.graphics.Rect(0, 0, snapshot.width, snapshot.height), matchRootSize = true)
                             else snapshot.release()
                         }
+                        // Never competes with restored dialogs/editors: runs after the workbench is published.
+                        handler.post { if (!isDestroyed && !isFinishing) maybeAutoCheckUpdates() }
                     }
                 }.onFailure { error ->
                     themeSnapshot?.release(); themeSnapshot = null
@@ -540,6 +552,7 @@ class MainActivity : Activity() {
 
     override fun onDestroy() {
         appUpdateDialog?.close();appUpdateDialog=null
+        appUpdateAutoCheck?.close();appUpdateAutoCheck=null
         webPanel?.close();webPanel=null;auxiliaryResize?.cancelGesture();auxiliaryResize=null
         remoteGuardEpoch.incrementAndGet();remoteUi?.close();remoteUi=null
         gitUi?.close();gitUi=null;releaseGitSurface()
@@ -1353,6 +1366,7 @@ class MainActivity : Activity() {
         editorBody.addView(numbers, LinearLayout.LayoutParams(dp(42), -1))
         editorAnalysis?.close(); editorPort?.close()
         editor = WorkbenchEditor(this)
+        editor.setOnBreakpointToggle { line -> toggleBreakpoint(line) }
         editor.setInputRejected { if (!isDestroyed) status.setText(R.string.editor_input_limit) }
         editorPort = SoraEditorPort(editor,
             { if (loadedPath != activePath || !::sessions.isInitialized) null
@@ -2239,6 +2253,7 @@ class MainActivity : Activity() {
         try {
             // Welcome has its own buffer identity; no hidden editable text belongs to a real file.
             if (!editor.replaceDocument("welcome:${workspace.identity}", "")) return false
+            editor.setBreakpoints(intArrayOf())
             activePath="";loadedPath=null;loadedVersion=null;dirty=false;editRevision++
             (editorPort as? SoraEditorPort)?.clearDiagnostics()
             quietInput=true
@@ -2276,6 +2291,7 @@ class MainActivity : Activity() {
             if (editorPort?.replaceDocument(recovered.text) != true) {
                 status.setText(R.string.editor_document_rejected); return false
             }
+            editor.setBreakpoints(sessions.file(activePath).breakpoints.toIntArray())
             editRevision++
             loadedPath = activePath
             loadedVersion = recovered.baseHash
@@ -2836,6 +2852,26 @@ class MainActivity : Activity() {
         appUpdateDialog=AppUpdateDialog(this,appUpdateRepository,appUpdateSourceFactory).also{it.show()}
     }
 
+    /** Opt-in, once-per-process startup check; quiet unless a genuinely newer release exists. */
+    private fun maybeAutoCheckUpdates() {
+        if(!settings.autoCheckUpdates || appUpdateAutoCheck!=null || isDestroyed || isFinishing)return
+        val factory=AppUpdateAutoCheck.sourceFactoryForTests ?: appUpdateSourceFactory
+        val check=AppUpdateAutoCheck(this,appUpdateRepository,factory)
+        appUpdateAutoCheck=check
+        check.checkOnce { result, installed ->
+            if(isDestroyed || isFinishing)return@checkOnce
+            val release=result.release ?: return@checkOnce
+            if(result.kind!=AppUpdateKind.AVAILABLE)return@checkOnce
+            val target=release.asset?.url ?: release.page
+            ReadOnlyDetails.show(this,"发现新版本","GitHub · 正式发布",AppUpdateDialog.summary(result,installed),
+                IdeIcon.REFRESH,false,false,"自动更新检查结果",AppUpdateDialog.actionLabel(result),
+                Runnable {
+                    runCatching { startActivity(Intent(Intent.ACTION_VIEW,Uri.parse(target)).addCategory(Intent.CATEGORY_BROWSABLE)) }
+                        .onFailure { if(::status.isInitialized)status.text="没有可打开正式发布页的浏览器" }
+                })
+        }
+    }
+
     private fun applySettings(next: AppSettings, onApplied: (Boolean) -> Unit = {}) {
         if (workspaceBusy || isDestroyed) { onApplied(false); return }
         val themeChanged = next.isDark(isSystemDark()) != dark
@@ -2919,7 +2955,8 @@ class MainActivity : Activity() {
         editor.setLineNumbers(settings.lineNumbers)
         editor.setHorizontallyScrolling(!settings.wordWrap)
         (editor.parent as? View)?.setBackgroundColor(codeBackground)
-        editor.setTextColor(codeForeground); numbers.setTextColor(if (syntaxDark) 0xFF9DA3AD.toInt() else 0xFF636A74.toInt())
+        val numberFallback = if (syntaxDark) 0xFF9DA3AD.toInt() else 0xFF636A74.toInt()
+        editor.setTextColor(codeForeground); numbers.setTextColor(customSyntaxTheme?.color("editorLineNumber.foreground", numberFallback) ?: numberFallback)
         if (::sessions.isInitialized && loadedPath == activePath && settings.wordWrap) {
             val file = sessions.file(activePath); file.view = file.view.copy(scrollX = 0)
         }
@@ -2933,7 +2970,7 @@ class MainActivity : Activity() {
 
     private fun updateTabStops() {
         editor.configureIndent(settings.tabWidth, settings.useSpaces, settings.autoIndent, settings.autoPairs)
-        editor.configureLanguage(isCpp(), activePath.endsWith(".py", true), syntaxDark)
+        editor.configureLanguage(isCpp(), activePath.endsWith(".py", true), syntaxDark, customSyntaxTheme)
     }
 
     private fun cancelWorkbenchMotion() {
@@ -2950,8 +2987,11 @@ class MainActivity : Activity() {
         if (isDestroyed) return
         val allowed = motionForeground && motionAllowed()
         if (!allowed) cancelWorkbenchMotion()
-        if (::editor.isInitialized) editor.configureMotion(allowed, settings.cursorMovement, settings.cursorBlink,
-            if (syntaxDark) 0xFFAECDFF.toInt() else 0xFF005FB8.toInt())
+        if (::editor.isInitialized) {
+            val cursorFallback = if (syntaxDark) 0xFFAECDFF.toInt() else 0xFF005FB8.toInt()
+            editor.configureMotion(allowed, settings.cursorMovement, settings.cursorBlink,
+                customSyntaxTheme?.color("editorCursor.foreground", cursorFallback) ?: cursorFallback)
+        }
         shellPane?.setAnimationsEnabled(allowed && settings.cursorBlink)
     }
 
@@ -3474,6 +3514,26 @@ class MainActivity : Activity() {
         if (!CaseRunSession.start(applicationContext, request, cases.toList())) alert("已有程序正在执行，请先停止")
     }
 
+    /** Breakpoints are per-file UI state; they never dirty the document or create undo history. */
+    private fun toggleBreakpoint(line:Int){
+        if(line<1 || !::sessions.isInitialized || loadedPath==null || loadedPath!=activePath) return
+        val session=sessions.file(activePath)
+        val next=session.breakpoints.toMutableSet().apply{ if(!add(line)) remove(line) }.sorted()
+        session.breakpoints=next
+        if(::editor.isInitialized) editor.setBreakpoints(next.toIntArray())
+        persistSessions()
+        status.text=if(line in next)getString(R.string.breakpoint_set,line)
+            else getString(R.string.breakpoint_removed,line)
+    }
+
+    /** The gutter prunes lines removed by edits; mirror that real state back into the file session. */
+    private fun syncBreakpoints(){
+        if(!::sessions.isInitialized || loadedPath==null || loadedPath!=activePath || !::editor.isInitialized) return
+        val live=editor.getBreakpoints().toList()
+        val session=sessions.file(activePath)
+        if(live!=session.breakpoints){session.breakpoints=live;persistSessions()}
+    }
+
     private fun runCode(consented: Boolean = false) {
         if (running || workspaceBusy) return
         if (dirty || saving) { saveActive { runCode(consented) }; return }
@@ -3482,6 +3542,8 @@ class MainActivity : Activity() {
         if (code.isBlank()) { alert("请先输入代码"); return }
         if (code.length > 100000 || input.length() > 20000) { alert("代码最多 10 万字符；输入最多 2 万字符"); return }
         val cpp = isCpp()
+        val sessionBreakpoints = sessions.file(activePath).breakpoints
+        val runBreakpoints = if(cpp) emptyList() else sessionBreakpoints
         val localCpp=cpp && settings.cppBackend==CppBackend.LOCAL
         val stdin=if(localCpp) "" else input.text.toString()
         val scope=settings.cppBuildScope
@@ -3508,12 +3570,13 @@ class MainActivity : Activity() {
         val interactive = true
         fun launch(entry: String, root: String, key: String?, job:CppRunSnapshot?=null,pythonJob:PythonRunSnapshot?=null) {
             if (!RunSession.start(applicationContext,code,stdin,cpp,runningFile,root,workspace.identity,
-                entry,key,owner,interactive,job,scope,pythonJob)) {job?.close();pythonJob?.close();alert("当前终端正在执行命令。请先停止它或新建终端后运行。")}
+                entry,key,owner,interactive,job,scope,pythonJob,breakpoints=runBreakpoints)) {job?.close();pythonJob?.close();alert("当前终端正在执行命令。请先停止它或新建终端后运行。")}
         }
         // A remembered-open panel can still be temporarily GONE under the editor IME.
         // Explicit Run must reveal it too; hiding the IME does not focus/show the terminal keyboard.
         hideKeyboard()
         if (panelLayout?.showPanel != true) togglePanel() else updateImeLayout()
+        if(cpp && sessionBreakpoints.isNotEmpty()) status.text=getString(R.string.breakpoint_unsupported)
         val projectRoot = workspace.root.absolutePath
         if(localCpp) {
             val target=workspace;val path=activePath;val keys=sessions.analysisKeys();val key=sessions.key(path)

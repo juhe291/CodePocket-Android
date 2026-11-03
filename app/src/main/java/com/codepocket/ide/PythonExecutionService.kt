@@ -49,7 +49,8 @@ class PythonExecutionService : Service() {
                     android.system.Os.dup2(error.fileDescriptor,2)
                     val events = TerminalEvents(id, reply)
                     PythonEngine.runTerminal(applicationContext,args.getString("code")!!,args.getString("stdin")!!,
-                        args.getString("path")!!,args.getString("root")!!,args.getBoolean("interactive",true),events,overlays)
+                        args.getString("path")!!,args.getString("root")!!,args.getBoolean("interactive",true),events,overlays,
+                        args.getString("breakpoints").orEmpty())
                 } else PythonEngine.run(applicationContext, args.getString("code")!!, args.getString("stdin")!!,
                     args.getString("path")!!, args.getString("root")!!,overlays)
             } catch (e: Exception) {

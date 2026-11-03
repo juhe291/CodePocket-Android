@@ -1,0 +1,13 @@
+{
+  "apk_sha256": "f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a",
+  "backend_bytecode_sha256": "e643351943fcae6bbf05399286a776ffe1a5a78367450acda27ed2b3d0161fb3",
+  "tests": 22,
+  "failures": 0,
+  "errors": 0,
+  "jedi": "0.20.1",
+  "parso": "0.8.7",
+  "dependencies_from_actual_apk": true,
+  "dependency_bytecode_loaded": true,
+  "filesystem_packages_verified": true,
+  "device_execution": false
+}

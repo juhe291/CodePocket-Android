@@ -2,15 +2,20 @@ package com.codepocket.ide
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
+import com.codepocket.editorlab.SyntaxThemeDefinition
+import com.codepocket.editorlab.SyntaxThemePreview
 import com.codepocket.ide.animation.DialogMotion
 import com.codepocket.ide.ui.*
 import org.json.JSONObject
@@ -36,7 +41,9 @@ object SettingsDialog {
         fun toggle(key:String,c:Int,t:String,h:String,get:(AppSettings)->Boolean,set:(AppSettings,Boolean)->AppSettings){add(Spec(key,c,t,h,get,set))}
         fun choice(key:String,c:Int,t:String,h:String,options:List<String>,get:(AppSettings)->Int,set:(AppSettings,Int)->AppSettings){add(Spec(key,c,t,h,options=options,selected=get,choose=set))}
         choice("theme",0,"界面主题","工作台、菜单与设置使用同一套主题",listOf("深色","浅色","跟随系统"),{it.theme.ordinal},{s,i->s.copy(theme=UiTheme.values()[i])})
-        choice("syntax",1,"语法主题","当前为词法高亮，尚非深度语义分析",listOf("跟随界面","Dark+","Light+"),{it.syntax.ordinal},{s,i->s.copy(syntax=SyntaxTheme.values()[i])})
+        choice("syntax",1,"语法主题","语法高亮为词法层；自定义主题只影响配色，不改变分析能力",listOf("跟随界面","Dark+","Light+","自定义"),{it.syntax.ordinal},
+            {s,i->if(i==SyntaxTheme.CUSTOM.ordinal)s.copy(syntax=SyntaxTheme.CUSTOM,customSyntaxTheme=s.customSyntaxTheme.ifBlank{
+                SyntaxThemeDefinition.builtin(activity,s.syntaxIsDark(activity.resources.configuration.uiMode and 0x30 == 0x20)).json})else s.copy(syntax=SyntaxTheme.values()[i])})
         choice("fontSize",1,"代码字号","预览与实际字号均使用 sp",(10..28).map{"$it sp"},{it.fontSize-10},{s,i->s.copy(fontSize=i+10)})
         choice("tabWidth",1,"缩进宽度","Tab 和智能缩进共同使用",listOf("2 列","4 列","8 列"),{listOf(2,4,8).indexOf(it.tabWidth)},{s,i->s.copy(tabWidth=listOf(2,4,8)[i])})
         toggle("useSpaces",1,"使用空格缩进","关闭后插入 Tab 字符",{it.useSpaces},{s,v->s.copy(useSpaces=v)})
@@ -62,6 +69,7 @@ object SettingsDialog {
         toggle("animations",5,"动画总开关","遵从系统减少动画与省电策略",{it.animations},{s,v->s.copy(animations=v)})
         toggle("cursorMovement",5,"平滑移动代码光标","键入约60ms，短距离导航约80ms；实际输入位置即时更新",{it.cursorMovement},{s,v->s.copy(cursorMovement=v)})
         toggle("cursorBlink",5,"柔和闪烁代码光标","输入时清晰显示，停顿后柔和闪烁；关闭后常亮",{it.cursorBlink},{s,v->s.copy(cursorBlink=v)})
+        toggle("autoCheckUpdates",6,"启动时自动检测更新","开启后仅在应用启动时后台读取 GitHub 正式 Release；无新版本保持安静，可随时关闭",{it.autoCheckUpdates},{s,v->s.copy(autoCheckUpdates=v)})
     }
     // Property identities stay stable across translated labels and search rendering.
     private fun section(key:String):String?=when(key){
@@ -203,6 +211,57 @@ object SettingsDialog {
             details.addView(item,LinearLayout.LayoutParams(-1,-2))
             details.addView(View(activity).apply{setBackgroundColor(p.border)},LinearLayout.LayoutParams(-1,dp(1)))
         }
+        fun customThemeSection(uiDark:Boolean){
+            details.addView(WorkbenchForms.sectionHeading(activity,"自定义语法主题","",IdeIcon.PALETTE))
+            details.addView(WorkbenchForms.caption(activity,"粘贴或编辑有界的 TextMate 主题子集：name、type、必要的 colors 与 tokenColors。不接受 include、URL、脚本或未知字段，最多 16 KiB；确认只更新设置草稿，整页应用成功后才保存。"))
+            val input=EditText(activity).apply{
+                setText(draft.value.customSyntaxTheme)
+                textSize=12f; typeface=Typeface.MONOSPACE; gravity=Gravity.TOP or Gravity.START
+                minLines=6; maxLines=12; isSingleLine=false; setHorizontallyScrolling(false)
+                setPadding(dp(10),dp(8),dp(10),dp(8)); contentDescription="自定义语法主题JSON"
+                background=WorkbenchStyle.shape(activity,p.editor,p.border,4)
+                filters=arrayOf<InputFilter>(InputFilter.LengthFilter(SyntaxThemeDefinition.MAX_BYTES))
+                setTextColor(p.foreground); setHintTextColor(p.muted)
+                hint="{\"name\":…,\"type\":\"dark\",\"colors\":{…},\"tokenColors\":[…]}"
+            }
+            details.addView(input,LinearLayout.LayoutParams(-1,dp(184)).apply{topMargin=dp(8)})
+            val feedback=TextView(activity).apply{textSize=12f;setTextColor(p.muted);setPadding(0,dp(6),0,dp(6))}
+            details.addView(feedback)
+            val previewHost=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;setPadding(0,dp(4),0,dp(4))}
+            var lastValid=draft.value.customTheme() ?: SyntaxThemeDefinition.builtin(activity,uiDark)
+            fun preview(){
+                previewHost.removeAllViews()
+                previewHost.addView(SyntaxThemePreview.create(activity,lastValid.dark,draft.value.fontSize,lastValid))
+            }
+            fun parseInput(validateEngine:Boolean,report:Boolean):SyntaxThemeDefinition?{
+                draft.value=draft.value.copy(customSyntaxTheme=input.text.toString())
+                return try{
+                    val definition=SyntaxThemeDefinition.parse(input.text.toString())
+                    if(validateEngine)definition.validateEngine()
+                    lastValid=definition; preview()
+                    if(report){feedback.setTextColor(p.accentText);feedback.text="主题有效：${definition.name}（${definition.json.length} 字符）"}
+                    definition
+                }catch(error:Exception){
+                    preview()
+                    if(report){feedback.setTextColor(p.error);feedback.text="主题无效：${error.message}"}
+                    null
+                }
+            }
+            input.addTextChangedListener(object:TextWatcher{
+                override fun beforeTextChanged(s:CharSequence?,start:Int,count:Int,after:Int){}
+                override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int){if(!busy)parseInput(validateEngine=false,report=true)}
+                override fun afterTextChanged(s:Editable?){}
+            })
+            fun action(label:String,run:()->Unit){details.addView(WorkbenchStyle.menuRow(activity,label).apply{setOnClickListener{if(!busy)run()}})}
+            action("载入 Dark+ 模板"){input.setText(SyntaxThemeDefinition.builtin(activity,true).json)}
+            action("载入 Light+ 模板"){input.setText(SyntaxThemeDefinition.builtin(activity,false).json)}
+            action("验证主题"){parseInput(validateEngine=true,report=true)}
+            action("复制主题 JSON"){activity.getSystemService(ClipboardManager::class.java)?.setPrimaryClip(ClipData.newPlainText("CodePocket 语法主题",input.text))
+                feedback.setTextColor(p.accentText);feedback.text="已复制主题 JSON"}
+            details.addView(WorkbenchForms.caption(activity,"预览使用与生产 Sora 相同的主题数据；非法主题保留上一次有效预览，并在应用时阻止保存。"))
+            details.addView(previewHost,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(8)})
+            preview()
+        }
         fun discard(){
             if(busy)return
             if(draft.value==current)dialog.dismiss()
@@ -223,8 +282,12 @@ object SettingsDialog {
             when {
                 draft.query.isNotBlank()->{
                     details.addView(WorkbenchForms.sectionHeading(activity,"搜索结果","",IdeIcon.SEARCH))
-                    val matches=all.filter{(it.title+it.help+categories[it.category]).contains(draft.query,true)}
-                    if(matches.isEmpty())heading("没有匹配的设置")
+                    val matches=all.filter{SettingsSearch.matches(draft.query,it.key,it.title,it.help,
+                        categories[it.category],section(it.key).orEmpty(),it.options.joinToString(" "))}
+                    if(matches.isEmpty()){
+                        heading("没有匹配的设置")
+                        details.addView(WorkbenchStyle.menuRow(activity,"清除搜索").apply{setOnClickListener{if(!busy)search.setText("")}})
+                    }
                     matches.groupBy{it.category to section(it.key)}.forEach{(group,items)->
                         groupCaption(categories[group.first]+(group.second?.let{" · $it"}?:""))
                         items.forEach(::row)
@@ -241,10 +304,11 @@ object SettingsDialog {
                     if(draft.category==0){
                         val uiDark=draft.value.isDark(activity.resources.configuration.uiMode and 0x30 == 0x20)
                         val codeDark=draft.value.syntaxIsDark(uiDark)
+                        val custom=draft.value.customTheme()
                         val samplePalette=DesignTokens.palette(codeDark)
                         val example=LinearLayout(activity).apply{
                             orientation=LinearLayout.VERTICAL;setPadding(dp(16),dp(12),dp(16),dp(16))
-                            background=WorkbenchStyle.shape(activity,samplePalette.editor,samplePalette.border,4)
+                            background=WorkbenchStyle.shape(activity,custom?.color("editor.background",samplePalette.editor)?:samplePalette.editor,samplePalette.border,4)
                             contentDescription="主题预览示意，不是编辑文件"
                         }
                         example.addView(TextView(activity).apply{
@@ -252,9 +316,14 @@ object SettingsDialog {
                             setCompoundDrawablesWithIntrinsicBounds(IdeIconDrawable(activity,IdeIcon.CPP,samplePalette.accentText,dp(18)),null,null,null)
                             compoundDrawablePadding=dp(8);setPadding(0,0,0,dp(12))
                         })
-                        example.addView(com.codepocket.editorlab.SyntaxThemePreview.create(activity,codeDark,draft.value.fontSize))
+                        example.addView(SyntaxThemePreview.create(activity,codeDark,draft.value.fontSize,custom))
                         details.addView(example,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(20)})
-                        details.addView(TextView(activity).apply{text="主题预览 · ${if(codeDark)"Dark+" else "Light+"} · 应用后生效";textSize=11f;setTextColor(p.muted);setPadding(0,dp(8),0,0)})
+                        details.addView(TextView(activity).apply{
+                            text=if(custom!=null)"主题预览 · 自定义「${custom.name}」 · 应用后生效"
+                            else "主题预览 · ${if(codeDark)"Dark+" else "Light+"} · 应用后生效"
+                            textSize=11f;setTextColor(p.muted);setPadding(0,dp(8),0,0)
+                        })
+                        if(draft.value.syntax==SyntaxTheme.CUSTOM)customThemeSection(uiDark)
                     }
                     if(draft.category==3)heading("文件安全",activity.getString(R.string.settings_save_help))
                     if(draft.category==2)details.addView(WorkbenchStyle.menuRow(activity,"补全按键说明").apply{
@@ -327,7 +396,17 @@ object SettingsDialog {
         dialog.window?.decorView?.setTag(R.id.settings_checkpoint,{draft.scroll=scroller.scrollY;draft.checkpoint()})
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener{discard()}
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            if(!busy){setBusy(true);feedback.visibility=View.GONE
+            if(!busy){
+                if(draft.value.syntax==SyntaxTheme.CUSTOM){
+                    val outcome=runCatching {
+                        val definition=SyntaxThemeDefinition.parse(draft.value.customSyntaxTheme)
+                        definition.validateEngine(); draft.value=draft.value.copy(customSyntaxTheme=definition.json)
+                    }
+                    if(outcome.isFailure){
+                        feedback.text="自定义语法主题无效：${outcome.exceptionOrNull()?.message}";feedback.visibility=View.VISIBLE;return@setOnClickListener
+                    }
+                }
+                setBusy(true);feedback.visibility=View.GONE
                 val finished:(Boolean)->Unit={ok->if(dialog.isShowing){setBusy(false);if(ok)dialog.dismiss() else {feedback.text="设置尚未应用，请处理保存错误后重试";feedback.visibility=View.VISIBLE}}}
                 try{if(apply!=null)apply(draft.value.normalized(),finished) else {save(draft.value.normalized());finished(true)}}catch(e:Exception){finished(false);feedback.text=e.message}
             }

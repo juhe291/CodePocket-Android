@@ -48,6 +48,18 @@ class EditorSessionsTest {
         val state = EditorViewState(99, 2, -1, 10, "stdin", 9, -1).clamp(5, 3)
         assertEquals(EditorViewState(5, 2, 0, 10, "stdin", 3, 0), state)
     }
+    @Test fun breakpointsArePerFileBoundedAndSurviveRestore() {
+        val sessions = EditorSessions("project")
+        sessions.file("main.py").breakpoints = listOf(3, 1, 2)
+        sessions.file("main.cpp").breakpoints = listOf(9)
+        val restored = EditorSessions("project", sessions.toJson())
+        assertEquals(listOf(1, 2, 3), restored.file("main.py").breakpoints)
+        assertEquals(listOf(9), restored.file("main.cpp").breakpoints)
+        assertEquals(emptyList<Int>(), restored.file("other.py").breakpoints)
+        val malformed = EditorSessions("project",
+            """[{"path":"a.py","id":"x","breakpoints":[0,-1,2,2,2000001]}]""")
+        assertEquals(listOf(2), malformed.file("a.py").breakpoints)
+    }
     @Test fun keyboardPolicyKeepsStdinReachableAndRestoresPanel() {
         assertFalse(ImeLayoutPolicy.resolve(true, false, 250, true).showPanel)
         assertTrue(ImeLayoutPolicy.resolve(true, true, 250, true).showPanel)

@@ -62,7 +62,8 @@ class SoraWorkbenchIntegrationTest {
         assertEquals("io.github.rosemoe.sora.widget.CodeEditor",editor.inputView().javaClass.superclass.name)
         assertEquals(workspace.read(workspace.resolve("main.py")),port.snapshot()!!.buffer.text)
         assertEquals("internal",workspace.identity)
-        assertEquals(1,(editor as android.view.ViewGroup).childCount)
+        // One real Sora editor plus the narrow breakpoint marker column; no second text editor.
+        assertEquals(2,(editor as android.view.ViewGroup).childCount)
     }
     @Test fun physicalSaveWritesActualProjectBytesAndClearsOnlyMatchingDraft() {
         val text="print('主程序真实保存')\n";loadText(text);editor.setSelection(text.length)

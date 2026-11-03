@@ -13,10 +13,15 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 
-/** Small illustrative sample; colors come from the same shipped themes as production TextMate. */
+/** Small illustrative sample; colors come from the same shipped/custom TextMate themes as production Sora. */
 public final class SyntaxThemePreview {
     private SyntaxThemePreview() {}
     public static TextView create(Context context, boolean dark, int fontSize) {
+        return create(context, dark, fontSize, null);
+    }
+    /** Custom and built-in themes both render from one validated SyntaxThemeDefinition; no second palette. */
+    public static TextView create(Context context, boolean dark, int fontSize, SyntaxThemeDefinition custom) {
+        if (custom != null) return custom(context, custom, fontSize);
         TextView view = new TextView(context);
         view.setTypeface(Typeface.MONOSPACE);
         view.setTextSize(fontSize);
@@ -50,6 +55,30 @@ public final class SyntaxThemePreview {
             view.setText("代码配色预览暂不可用");
             android.util.Log.w("CodePocketEditor", "Cannot load syntax preview theme", failure);
         }
+        return view;
+    }
+    private static TextView custom(Context context, SyntaxThemeDefinition theme, int fontSize) {
+        TextView view = new TextView(context);
+        view.setTypeface(Typeface.MONOSPACE);
+        view.setTextSize(fontSize);
+        view.setContentDescription("C++ 代码配色预览（自定义主题）");
+        int foreground = theme.color("editor.foreground", 0xffd4d4d4);
+        view.setTextColor(foreground);
+        view.setBackgroundColor(theme.color("editor.background", 0xff1e1e1e));
+        SpannableStringBuilder sample = new SpannableStringBuilder();
+        append(sample, "#include", theme.tokenColor("keyword", foreground));
+        append(sample, " <iostream>\n", theme.tokenColor("string", foreground));
+        append(sample, "int", theme.tokenColor("storage.type", foreground));
+        append(sample, " ", foreground);
+        append(sample, "main", theme.tokenColor("entity.name.function", foreground));
+        append(sample, "() {\n    std::cout << ", foreground);
+        append(sample, "\"Hello\"", theme.tokenColor("string", foreground));
+        append(sample, ";\n    ", foreground);
+        append(sample, "return", theme.tokenColor("keyword", foreground));
+        append(sample, " ", foreground);
+        append(sample, "0", theme.tokenColor("constant.numeric", foreground));
+        append(sample, ";\n}", foreground);
+        view.setText(sample);
         return view;
     }
     private static int color(JSONObject theme, String scope, int fallback) throws Exception {

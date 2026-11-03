@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.FullWorkbenchMotionTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:54:36" hostname="JUHE" time="1.213">
+  <properties/>
+  <testcase name="configurationCheckpointKeepsTheExpandedTreeAndItsViewport" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.04"/>
+  <testcase name="tabSelectionIndicatorMovesWithoutMovingTabsOrLosingTheirFocus" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.055"/>
+  <testcase name="themeCrossfadeRetainsFocusSelectionAndHasNoExtraViewOrTouchTarget" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.064"/>
+  <testcase name="explorerRestoreRejectsNegativeScrollAndBoundsItsConfigurationPayload" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.059"/>
+  <testcase name="themeHandoverTransfersOnlyTheBitmapAndDoesNotKeepTheOldActivity" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.068"/>
+  <testcase name="nativeContextMenuStillUsesTheRealMenuAndItsCommandCallback" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.13"/>
+  <testcase name="repeatedSnapshotsAndDetachReleaseThePreviousBitmap" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.046"/>
+  <testcase name="highResolutionTabletSnapshotsHaveABoundedPixelBudget" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.044"/>
+  <testcase name="reopeningCancelsTheOldClosingSnapshot" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.046"/>
+  <testcase name="settingsCancelDiscardsCursorChangesAndApplyPersistsThem" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.25"/>
+  <testcase name="treeCollapseCompletesAndCancellationClearsPendingPlatformTransitions" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.062"/>
+  <testcase name="followingSystemThemeCapturesABoundedConfigurationTransitionWithoutKeepingAView" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.037"/>
+  <testcase name="dialogWindowAnimationHonorsAppDisable" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.054"/>
+  <testcase name="largeTreesSkipNativeReflowInsteadOfSchedulingHundredsOfAnimations" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.039"/>
+  <testcase name="phoneAndNarrowTabletDrawersUseALeftTransitionAndRespectAppOff" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.07"/>
+  <testcase name="panelCloseUsesANonInteractiveOverlayAndHidesTheRealPaneImmediately" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.045"/>
+  <testcase name="themeSnapshotIsDiscardedWhenTabletWindowChangesSize" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.045"/>
+  <testcase name="panelBoundsTransitionDoesNotRelayoutItsContentOnEveryAnimationFrame" classname="com.codepocket.ide.FullWorkbenchMotionTest" time="0.058"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

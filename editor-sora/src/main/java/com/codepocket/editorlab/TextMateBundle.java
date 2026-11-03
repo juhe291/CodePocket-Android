@@ -80,6 +80,12 @@ final class TextMateBundle implements AutoCloseable {
         // Update grammar metadata first, then notify the analyzer and scheme together.
         grammars.setTheme(model); themes.setTheme(model); return model;
     }
+    /** Load the same bounded custom subset into the real engine; no registry lifetime ownership is kept. */
+    ThemeModel customTheme(SyntaxThemeDefinition definition) throws Exception {
+        if (closed) throw new IllegalStateException("Closed grammar bundle");
+        ThemeModel model = definition.model();
+        grammars.setTheme(model); themes.setTheme(model); return model;
+    }
     @Override public void close() {
         if (closed) return;
         closed = true; grammars.dispose(); themes.dispose();

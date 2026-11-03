@@ -1,0 +1,34 @@
+{
+  "previous_apk_sha256": "6949b5f6d6f088a9426b69c8221f68e1c6929278d4a8bf1cca5ed16ae290ddd9",
+  "current_apk_sha256": "f6a464a61435b91cfd041c95f7de8b5e6ba4ff9f43dc29b9c7b8d2f2cc09db6a",
+  "changed_entries": [
+    "AndroidManifest.xml",
+    "assets/chaquopy/app.imy",
+    "assets/chaquopy/build.json",
+    "classes2.dex",
+    "classes3.dex",
+    "classes6.dex",
+    "classes7.dex",
+    "res/layout/diagnostic_tooltip_window.xml",
+    "res/layout/text_compose_panel.xml",
+    "resources.arsc"
+  ],
+  "added_entries": [],
+  "removed_entries": [],
+  "app_imy_inner_changed": [
+    "code_formatting.pyc",
+    "diagnostics.pyc",
+    "git_https.pyc",
+    "git_remote.pyc",
+    "git_workspace.pyc",
+    "runner.pyc",
+    "semantics.pyc"
+  ],
+  "build_json_changed_assets": [
+    "app.imy"
+  ],
+  "requirements_common_identical": true,
+  "native_libraries_identical": 25,
+  "cpp_runtime_assets_identical": 3,
+  "packaged_runner_tests_passed_by_verify_apk": true
+}

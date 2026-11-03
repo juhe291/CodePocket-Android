@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.AppUpdateAutoCheckTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:52:59" hostname="JUHE" time="25.447">
+  <properties/>
+  <testcase name="availableReleaseShowsTheSharedNativeDialogButCurrentVersionStaysSilent" classname="com.codepocket.ide.AppUpdateAutoCheckTest" time="15.186"/>
+  <testcase name="disabledSettingNeverStartsANetworkCheck" classname="com.codepocket.ide.AppUpdateAutoCheckTest" time="8.858"/>
+  <testcase name="oneAttemptPerProcessSurvivesActivityRecreation" classname="com.codepocket.ide.AppUpdateAutoCheckTest" time="1.33"/>
+  <testcase name="cancelBeforeDeliveryPreventsAnyCallback" classname="com.codepocket.ide.AppUpdateAutoCheckTest" time="0.072"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

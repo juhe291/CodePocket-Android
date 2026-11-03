@@ -2,6 +2,7 @@ package com.codepocket.editorlab;
 
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
@@ -14,6 +15,9 @@ final class SoraSyntaxController implements AutoCloseable {
     private final Consumer<String> changed;
     private TextMateBundle bundle;
     private SyntaxLanguage requested = SyntaxLanguage.PYTHON, applied;
+    private SyntaxThemeDefinition custom;
+    private String appliedCustom = "";
+    private boolean customLoadFailed;
     private boolean dark = true, appliedDark, closed, paused, broken;
     private Boolean fallbackDark;
     private int tabWidth = 4;
@@ -31,7 +35,10 @@ final class SoraSyntaxController implements AutoCloseable {
     }
     void failed() { if (!closed) { state = "语法加载失败 · 纯文本"; changed.accept(state); } }
     String state() { return state; }
-    void configure(SyntaxLanguage language, boolean isDark) { requested = language; dark = isDark; broken = false; request(); }
+    void configure(SyntaxLanguage language, boolean isDark) { configure(language, isDark, null); }
+    void configure(SyntaxLanguage language, boolean isDark, SyntaxThemeDefinition customTheme) {
+        requested = language; dark = isDark; custom = customTheme; broken = false; request();
+    }
     void request() { if (!closed && !paused) { editor.removeCallbacks(update); editor.post(update); } }
     void pause() { paused = true; editor.removeCallbacks(update); }
     void resume() { paused = false; request(); }
@@ -45,10 +52,21 @@ final class SoraSyntaxController implements AutoCloseable {
             return;
         }
         if (broken) return;
-        if (applied == effective && appliedDark == dark) { describe(effective); return; }
+        String customKey = custom == null ? "" : custom.json;
+        if (applied == effective && appliedDark == dark && appliedCustom.equals(customKey)) { describe(effective); return; }
         if (editor.hasComposingText()) { editor.postDelayed(update, 120); return; }
         try {
-            var model = bundle.theme(dark);
+            ThemeModel model;
+            customLoadFailed = false;
+            try {
+                model = custom == null ? bundle.theme(dark) : bundle.customTheme(custom);
+            } catch (Exception | LinkageError customFailure) {
+                if (custom == null) throw customFailure;
+                // The bounded JSON is already validated before reaching here; if the real engine still
+                // rejects it, keep an explicit built-in fallback instead of leaving a half-attached scheme.
+                android.util.Log.e("CodePocketEditorLab", "Custom TextMate theme could not load", customFailure);
+                customLoadFailed = true; model = bundle.theme(dark);
+            }
             if (applied != effective) {
                 if (effective == SyntaxLanguage.PLAIN) editor.setEditorLanguage(null);
                 else {
@@ -61,7 +79,7 @@ final class SoraSyntaxController implements AutoCloseable {
             }
             TextMateColorScheme scheme = new TextMateColorScheme(bundle.themes, model);
             scheme.setTheme(model); attach(scheme);
-            applied = effective; appliedDark = dark;
+            applied = effective; appliedDark = dark; appliedCustom = customKey;
             describe(effective);
         } catch (Exception | LinkageError error) {
             android.util.Log.e("CodePocketEditorLab", "TextMate attachment failed", error);
@@ -73,10 +91,24 @@ final class SoraSyntaxController implements AutoCloseable {
     private void attach(EditorColorScheme scheme) {
         editor.setColorScheme(scheme);
         // Attachment can initialize/reset base colors. Apply workbench overrides afterwards.
-        chrome(scheme);
+        chrome(scheme, custom);
     }
-    /** Keep fallback/loaded/failed grammar chrome stable; VS2019's stock teal gutter is too strong here. */
-    private EditorColorScheme chrome(EditorColorScheme scheme) {
+    /** Keep fallback/loaded/failed grammar chrome stable; custom colors come from the same parsed JSON. */
+    private EditorColorScheme chrome(EditorColorScheme scheme, SyntaxThemeDefinition theme) {
+        if (theme != null) {
+            int background = theme.color("editor.background", dark ? 0xff1e1e1e : 0xffffffff);
+            int foreground = theme.color("editor.foreground", dark ? 0xffd4d4d4 : 0xff263445);
+            scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, background);
+            scheme.setColor(EditorColorScheme.TEXT_NORMAL, foreground);
+            scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, background);
+            scheme.setColor(EditorColorScheme.LINE_NUMBER, theme.color("editorLineNumber.foreground", dark ? 0xff858585 : 0xff707070));
+            scheme.setColor(EditorColorScheme.LINE_NUMBER_CURRENT, theme.color("editorLineNumber.foreground", dark ? 0xffc5cedb : 0xff334155));
+            scheme.setColor(EditorColorScheme.LINE_DIVIDER, dark ? 0xff303846 : 0xffdbe2eb);
+            scheme.setColor(EditorColorScheme.CURRENT_LINE, theme.color("editor.lineHighlightBackground", dark ? 0xff262626 : 0xfff3f3f3));
+            scheme.setColor(EditorColorScheme.TEXT_SELECTED, theme.color("editor.selectionBackground", dark ? 0xff264f78 : 0xffadd6ff));
+            scheme.setColor(EditorColorScheme.SELECTION_HANDLE, dark ? 0xffaecdff : 0xff005fb8);
+            return scheme;
+        }
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, dark ? 0xff1e1e1e : 0xffffffff);
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, dark ? 0xff1e1e1e : 0xffffffff);
         scheme.setColor(EditorColorScheme.LINE_NUMBER, dark ? 0xff858585 : 0xff707070);
@@ -103,7 +135,9 @@ final class SoraSyntaxController implements AutoCloseable {
     }
     private void describe(SyntaxLanguage effective) {
         String next = effective == SyntaxLanguage.PLAIN ? (requested == SyntaxLanguage.PLAIN ? "纯文本" : "超出4.5万字符着色预算 · 纯文本") :
-            effective.label + " · TextMate语法（非语义）";
+            custom == null ? effective.label + " · TextMate语法（非语义）" :
+            customLoadFailed ? effective.label + " · 自定义主题不可用，已回退内置配色（非语义）" :
+            effective.label + " · 自定义TextMate主题（非语义）";
         if (!next.equals(state)) { state = next; changed.accept(state); }
     }
     @Override public void close() {

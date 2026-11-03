@@ -41,10 +41,10 @@ object PythonEngine {
         return decode(result,"Python 3.13 · 本地")
     }
     fun runTerminal(context: android.content.Context, code: String, input: String, filename: String, projectDir: String,
-        interactive: Boolean, events: Any,overlaysPath:String=""): RunResult {
+        interactive: Boolean, events: Any,overlaysPath:String="",breakpointsJson:String=""): RunResult {
         if (!Python.isStarted()) Python.start(com.chaquo.python.android.AndroidPlatform(context.applicationContext))
         val data = JSONObject(Python.getInstance().getModule("runner").callAttr("run_terminal", code, input, filename,
-            projectDir, 0, 1, 2, interactive, events,overlaysPath).toString())
+            projectDir, 0, 1, 2, interactive, events,overlaysPath,breakpointsJson).toString())
         return decode(data,"Python 3.13 · 终端 / 本地")
     }
     internal fun decode(data:JSONObject,engine:String)=RunResult(

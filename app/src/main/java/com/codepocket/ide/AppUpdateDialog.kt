@@ -87,31 +87,9 @@ internal class AppUpdateDialog(private val activity:Activity,
     }
     private fun render(result:AppUpdateResult) {
         val release=result.release
-        val summary=when(result.kind) {
-            AppUpdateKind.AVAILABLE->"发现新版本 ${release!!.version}"
-            AppUpdateKind.CURRENT->"当前已是最新正式版本"
-            AppUpdateKind.AHEAD->"当前安装版本比最新正式版本更新"
-            AppUpdateKind.NO_RELEASE->"更新源尚无可访问的正式版本。可以打开发布页核对。"
-            AppUpdateKind.UNCONFIGURED->"此安装包尚未配置正式更新源。"
-            AppUpdateKind.FAILED->when(result.failure) {
-                AppUpdateFailure.RATE_LIMIT->"GitHub 请求次数已达上限，请稍后重试。"
-                AppUpdateFailure.TIMEOUT->"检查超时，请稍后重试。"
-                AppUpdateFailure.RESPONSE->"更新源返回的信息无法识别，请稍后重试。"
-                AppUpdateFailure.TOO_LARGE->"更新信息过大，请从发布页核对。"
-                else->"无法连接更新源，请检查网络后重试。"
-            }
-        }
-        body?.text=buildString {
-            append(installed.label).append("\n\n").append(summary)
-            if(release!=null){
-                append("\n正式版本 ").append(release.version)
-                if(result.kind==AppUpdateKind.AVAILABLE && release.asset==null)append("\n暂无可直接选择的适配 APK，请查看发布页。")
-                release.asset?.let{if(result.kind==AppUpdateKind.AVAILABLE)append("\n").append(it.name).append(" · ").append((it.bytes+1048575)/1048576).append(" MB")}
-                append("\n\n更新说明\n").append(release.notes.ifBlank{"暂无更新说明。"})
-            }
-        }
+        body?.text=summary(result,installed)
         when(result.kind) {
-            AppUpdateKind.AVAILABLE->setAction(if(release!!.asset==null)"查看发布页" else "前往下载"){external(release.asset?.url?:release.page)}
+            AppUpdateKind.AVAILABLE->setAction(actionLabel(result)){external(release!!.asset?.url?:release.page)}
             AppUpdateKind.NO_RELEASE->setAction("查看发布页"){repository?.let{external(it.releasesPage)}}
             AppUpdateKind.FAILED->setAction("重新检查",::checkNow)
             else->setAction(null,null)
@@ -133,5 +111,40 @@ internal class AppUpdateDialog(private val activity:Activity,
         worker.shutdownNow();handler.removeCallbacksAndMessages(null)
         if(registered){activity.application.unregisterActivityLifecycleCallbacks(lifecycle);registered=false}
         val current=dialog;dialog=null;body=null;if(current?.isShowing==true)current.dismiss()
+    }
+    companion object {
+        /** One presentation for the manual dialog and the quiet startup check; no second wording set. */
+        internal fun summary(result:AppUpdateResult,installed:InstalledAppUpdateVersion):String {
+            val release=result.release
+            val headline=when(result.kind) {
+                AppUpdateKind.AVAILABLE->"发现新版本 ${release!!.version}"
+                AppUpdateKind.CURRENT->"当前已是最新正式版本"
+                AppUpdateKind.AHEAD->"当前安装版本比最新正式版本更新"
+                AppUpdateKind.NO_RELEASE->"更新源尚无可访问的正式版本。可以打开发布页核对。"
+                AppUpdateKind.UNCONFIGURED->"此安装包尚未配置正式更新源。"
+                AppUpdateKind.FAILED->when(result.failure) {
+                    AppUpdateFailure.RATE_LIMIT->"GitHub 请求次数已达上限，请稍后重试。"
+                    AppUpdateFailure.TIMEOUT->"检查超时，请稍后重试。"
+                    AppUpdateFailure.RESPONSE->"更新源返回的信息无法识别，请稍后重试。"
+                    AppUpdateFailure.TOO_LARGE->"更新信息过大，请从发布页核对。"
+                    else->"无法连接更新源，请检查网络后重试。"
+                }
+            }
+            return buildString {
+                append(installed.label).append("\n\n").append(headline)
+                if(release!=null){
+                    append("\n正式版本 ").append(release.version)
+                    if(result.kind==AppUpdateKind.AVAILABLE && release.asset==null)append("\n暂无可直接选择的适配 APK，请查看发布页。")
+                    release.asset?.let{if(result.kind==AppUpdateKind.AVAILABLE)append("\n").append(it.name).append(" · ").append((it.bytes+1048575)/1048576).append(" MB")}
+                    append("\n\n更新说明\n").append(release.notes.ifBlank{"暂无更新说明。"})
+                }
+            }
+        }
+        internal fun actionLabel(result:AppUpdateResult):String?=when(result.kind) {
+            AppUpdateKind.AVAILABLE->if(result.release!!.asset==null)"查看发布页" else "前往下载"
+            AppUpdateKind.NO_RELEASE->"查看发布页"
+            AppUpdateKind.FAILED->"重新检查"
+            else->null
+        }
     }
 }

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_git_status_apk.py", line 92, in <module>
+    if __name__=='__main__':sys.exit(main())
+                                     ~~~~^^
+  File "C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\scripts\verify_git_status_apk.py", line 55, in main
+    assert digest(args.baseline.read_bytes())==BASELINE
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -109,17 +109,44 @@ class CappedOutput(io.StringIO):
         return super().write(value)
 
 
-def run_code(source, stdin_text, filename="main.py", project_dir="", overlays_path=""):
+def run_code(source, stdin_text, filename="main.py", project_dir="", overlays_path="", breakpoints=None):
     # CPython streams, cwd and module caches are process-wide.
     with _RUN_LOCK:
-        return _run_code(source, stdin_text, filename, project_dir, overlays_path=overlays_path)
+        return _run_code(source, stdin_text, filename, project_dir, overlays_path=overlays_path, breakpoints=breakpoints)
 
 
-def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays_path=""):
+def _breakpoint_lines(value):
+    """Bounded 1-based line list; accepts the Android bundle's JSON text or a plain sequence."""
+    if not value:
+        return []
+    if isinstance(value, str):
+        try:
+            value = json.loads(value)
+        except ValueError:
+            return []
+    if not isinstance(value, (list, tuple)):
+        return []
+    result = set()
+    for item in value:
+        if type(item) is int and 0 < item <= 2_000_000:
+            result.add(item)
+        if len(result) >= 500:
+            break
+    return sorted(result)
+
+
+def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays_path="", breakpoints=None):
     root = os.path.realpath(project_dir) if project_dir else None
     overlays = _load_overlays(overlays_path, root)
     stdout = terminal.stdout if terminal else CappedOutput()
     stderr = terminal.stderr if terminal else CappedOutput()
+    # Breakpoints only make sense with a real interactive terminal that can answer the debugger prompt.
+    active_breakpoints = set(_breakpoint_lines(breakpoints)) if terminal is not None and getattr(terminal, "interactive", False) else set()
+    debugger = None
+    if active_breakpoints:
+        import pdb
+        debugger = pdb.Pdb(stdin=terminal.stdin, stdout=terminal.stderr)
+        debugger.reset()
     old_stdin = sys.stdin
     old_path = list(sys.path)
     old_trace = sys.gettrace()
@@ -142,6 +169,7 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays
     diagnostic = ""
     error_kind = "success"
     exit_code = 0
+    breakpoint_quit = False
     compiled_sources, syntax_sources, cached_lines = {}, {}, {}
     missing = object()
 
@@ -153,12 +181,18 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays
         except UnicodeError:
             decoded, digest = None, None
         if decoded is not None:
-            if path not in cached_lines:
-                cached_lines[path] = linecache.cache.get(path, missing)
             lines = decoded.splitlines(keepends=True)
             if lines and not lines[-1].endswith("\n"):
                 lines[-1] += "\n"
-            linecache.cache[path] = (len(decoded), None, lines, path)
+            # Bdb canonicalises filenames (abspath+normcase; realpath for existing files), so the
+            # debugger's set_break()/source display must find the same bounded source there too.
+            canonical = os.path.normcase(os.path.abspath(path))
+            if os.path.isfile(canonical):
+                canonical = os.path.normcase(os.path.realpath(canonical))
+            for key in {path, canonical}:
+                if key not in cached_lines:
+                    cached_lines[key] = linecache.cache.get(key, missing)
+                linecache.cache[key] = (len(decoded), None, lines, path)
         try:
             code = compile(text, path, "exec")
         except SyntaxError as exc:
@@ -177,6 +211,16 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays
             raise TimeoutError("运行超过 6 秒，已中止（仅限制 Python 字节码）")
         return watchdog
 
+    def debug_trace(frame, event, arg):
+        # Enter the real Pdb on the active file's own call event, then let Pdb keep the global trace
+        # so its native continue/next/step loop and breakpoint table work through the same PTY.
+        if event == "call" and frame.f_code.co_filename == filename:
+            debugger.botframe = frame
+            debugger.set_continue()
+            sys.settrace(debugger.trace_dispatch)
+            return debugger.trace_dispatch
+        return debug_trace
+
     try:
         sys.stdin = terminal.stdin if terminal and terminal.interactive else io.StringIO(stdin_text)
         sys.argv = [filename]
@@ -190,8 +234,13 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays
             importlib.invalidate_caches()
         with redirect_stdout(stdout), redirect_stderr(stderr):
             try:
-                sys.settrace(watchdog)
                 compiled = compile_source(source, filename)
+                if debugger is not None:
+                    # compile_source() published the bounded linecache source, so Pdb can resolve
+                    # each requested line instead of silently ignoring "line does not exist".
+                    for line in sorted(active_breakpoints)[:500]:
+                        debugger.set_break(filename, line)
+                sys.settrace(debug_trace if debugger is not None else watchdog)
                 exec(compiled, {"__name__": "__main__", "__file__": filename})
             except BaseException as exc:
                 sys.settrace(None)
@@ -202,9 +251,12 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays
                     error_kind = "success" if exit_code == 0 else "runtime"
                 else:
                     exit_code = 1
+                    import bdb
+                    breakpoint_quit = isinstance(exc, bdb.BdbQuit)
                     error_kind = ("timeout" if isinstance(exc, TimeoutError)
                                   else "compile" if isinstance(exc, SyntaxError) else "runtime")
-                    diagnostic = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+                    diagnostic = "已退出断点调试器。\n" if breakpoint_quit else \
+                        "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
                 # Prefer the last traceback frame belonging to the active file.
                 if isinstance(exc, SyntaxError):
                     error_line = exc.lineno
@@ -223,6 +275,11 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays
                         frame = frame.tb_next
     finally:
         sys.settrace(old_trace)
+        if debugger is not None:
+            try:
+                debugger.clear_all_breaks()
+            except Exception:
+                pass
         sys.stdin = old_stdin
         sys.path[:] = old_path
         sys.argv = old_argv
@@ -259,6 +316,7 @@ def _run_code(source, stdin_text, filename, project_dir, terminal=None, overlays
         "error_file": error_file,
         "error_source_hash": error_source_hash,
         "error_kind": error_kind,
+        "breakpoint_quit": breakpoint_quit,
         "elapsed_ms": int((time.monotonic() - begin) * 1000),
     }, ensure_ascii=False)
 
@@ -404,11 +462,11 @@ class TerminalStreams:
 
 
 def run_terminal(source, stdin_text, filename, project_dir, stdin_fd, stdout_fd, stderr_fd,
-                 interactive=True, events=None, overlays_path=""):
+                 interactive=True, events=None, overlays_path="", breakpoints=None):
     """Execute real Python against inherited terminal descriptors; never manufactures output or input."""
     with _RUN_LOCK:
         streams = TerminalStreams(stdin_fd, stdout_fd, stderr_fd, interactive, events)
         try:
-            return _run_code(source, stdin_text, filename, project_dir, streams, overlays_path)
+            return _run_code(source, stdin_text, filename, project_dir, streams, overlays_path, breakpoints)
         finally:
             streams.close()

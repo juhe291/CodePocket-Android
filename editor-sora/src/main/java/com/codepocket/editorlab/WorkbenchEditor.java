@@ -17,6 +17,7 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.IntConsumer;
 
 /** Production Java boundary. No Sora or Kotlin-2 types in the public API. No file or runner ownership.
  * The historical adapter package is retained so the internal harness tests the identical implementation.
@@ -26,6 +27,7 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     private final SoraInputEditor editor;
     private final SoraEditorAdapter adapter;
     private final SoraSyntaxController syntax;
+    private final BreakpointGutter breakpoints;
     private final ExecutorService syntaxLoader = Executors.newSingleThreadExecutor();
     private Changes changes;
     private Runnable caretChanged, scrolled, compositionEnded, inputRejected;
@@ -55,6 +57,9 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
         editor.getComponent(EditorAutoCompletion.class).setEnabled(false);
         addView(editor, new LayoutParams(-1, -1));
         adapter = new SoraEditorAdapter(editor);
+        // Own narrow marker column over the existing line-number margin; no second text editor.
+        breakpoints = new BreakpointGutter(context, editor);
+        addView(breakpoints, new LayoutParams(Math.max((int) (12 * density), (int) editor.getLineNumberMarginLeft()), -1));
         syntax = new SoraSyntaxController(editor, ignored -> {});
         adapter.replaceDocument(key, "", 0, 0);
         editor.subscribeEvent(ContentChangeEvent.class, (event, receipt) -> {
@@ -152,12 +157,17 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     public boolean revealCaret() { return adapter.revealCaret(); }
     @Override public Anchor anchor() { return adapter.anchor(); }
     public void setTextSize(float sp) { editor.setTextSize(sp); }
+    /** 1-based breakpoint lines only. Markers are UI state owned by the existing file session. */
+    public void setBreakpoints(int[] lines) { breakpoints.setLines(lines); }
+    public int[] getBreakpoints() { return breakpoints.lines(); }
+    public void setOnBreakpointToggle(IntConsumer listener) { breakpoints.setToggle(listener); }
     public float getTextSize() { return editor.getTextSizePx(); }
     public void setLineNumbers(boolean value) { editor.setLineNumberEnabled(value); }
     public void setHorizontallyScrolling(boolean value) { editor.setWordwrap(!value); }
     public void setTextColor(int value) { editor.getColorScheme().setColor(io.github.rosemoe.sora.widget.schemes.EditorColorScheme.TEXT_NORMAL, value); }
-    public void configureLanguage(boolean cpp, boolean python, boolean dark) {
-        syntax.configure(python ? SyntaxLanguage.PYTHON : cpp ? SyntaxLanguage.CPP : SyntaxLanguage.PLAIN, dark);
+    public void configureLanguage(boolean cpp, boolean python, boolean dark) { configureLanguage(cpp, python, dark, null); }
+    public void configureLanguage(boolean cpp, boolean python, boolean dark, SyntaxThemeDefinition customTheme) {
+        syntax.configure(python ? SyntaxLanguage.PYTHON : cpp ? SyntaxLanguage.CPP : SyntaxLanguage.PLAIN, dark, customTheme);
     }
     public String syntaxState() { return syntax.state(); }
     public void configureIndent(int width, boolean spaces, boolean autoIndent, boolean autoPairs) {
@@ -186,6 +196,6 @@ public final class WorkbenchEditor extends FrameLayout implements EditorSurface,
     @Override public void close() {
         if (closed) return;
         closed = true; changes = null; caretChanged = null; scrolled = null; compositionEnded = null; inputRejected = null;
-        syntaxLoader.shutdownNow(); adapter.close(); editor.release(); syntax.close();
+        breakpoints.close(); syntaxLoader.shutdownNow(); adapter.close(); editor.release(); syntax.close();
     }
 }

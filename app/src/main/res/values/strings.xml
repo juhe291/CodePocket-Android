@@ -1,4 +1,7 @@
 <resources>
+    <string name="breakpoint_set">已设置断点：第 %1$d 行 · 仅本地 Python 终端运行命中</string>
+    <string name="breakpoint_removed">已移除断点：第 %1$d 行</string>
+    <string name="breakpoint_unsupported">断点仅支持本地 Python 交互运行；本次 C++ 运行不使用断点</string>
     <string name="completion_cpp_semantic">C++ 语义 · %1$s</string>
     <string name="semantic_cpp_loading">正在分析 C++，暂用基础词法补全</string>
     <string name="semantic_cpp_empty">没有可用的 C++ 语义候选</string>

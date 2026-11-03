@@ -16,8 +16,8 @@ android {
         applicationId = "com.codepocket.ide"
         minSdk = 24
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.2.1"
+        versionCode = 4
+        versionName = "0.2.2"
 
         val updateRepository = providers.gradleProperty("codepocket.updateRepository").orElse("").get()
         require(updateRepository.isEmpty() || Regex("[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+").matches(updateRepository))

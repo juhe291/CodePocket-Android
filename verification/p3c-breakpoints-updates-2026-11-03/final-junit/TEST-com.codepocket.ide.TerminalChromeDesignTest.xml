@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.TerminalChromeDesignTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:58:27" hostname="JUHE" time="0.765">
+  <properties/>
+  <testcase name="nativePhoneDarkPreview" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.073"/>
+  <testcase name="nativeTabletDarkPreview" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.083"/>
+  <testcase name="largeFontUsesTwoRowsEvenOnWideWindow" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.037"/>
+  <testcase name="tabletCombinesNavigationAndSessionIntoOneRowAndRestoresOnResize" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.048"/>
+  <testcase name="compactModePreservesTopLevelNavigationAndOverflowWithoutSessionRow" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.041"/>
+  <testcase name="nativePhoneLightPreview" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.068"/>
+  <testcase name="nativeTabletLightPreview" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.104"/>
+  <testcase name="closeButtonCancelsSafelyAndThenClosesOnlyTheCurrentSession" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.263"/>
+  <testcase name="phoneKeepsSessionAndCloseActionInASecondWellSizedRow" classname="com.codepocket.ide.TerminalChromeDesignTest" time="0.048"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

@@ -113,7 +113,7 @@ class CompletionTest {
         assertFalse(old.autoSave);assertEquals(TerminalTheme.NORD,old.terminalTheme)
         assertEquals(CompletionArrows.OFF,AppSettings.fromJson("""{"version":8,"completionArrows":"OFF"}""").completionArrows)
         val migrated=org.json.JSONObject(old.toJson())
-        assertEquals(11,migrated.getInt("version"))
+        assertEquals(12,migrated.getInt("version"))
         assertFalse(migrated.getBoolean("formatOnSave"))
         assertEquals(CppBackend.CLOUD.name,migrated.getString("cppBackend"))
         assertEquals(CppBuildScope.CURRENT.name,migrated.getString("cppBuildScope"))

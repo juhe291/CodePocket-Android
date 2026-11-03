@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codepocket.ide.GitPrivatePathRegressionTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-03T12:54:39" hostname="JUHE" time="3.026">
+  <properties/>
+  <testcase name="actualLocalGitStatusAndInitializationKeepTheOriginalSource" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.907"/>
+  <testcase name="pushReceiptLedgerUsesTheSameCanonicalPrivateBoundary" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.037"/>
+  <testcase name="unavailableCloneListStillAllowsTheRealWorkspacePickerAndKeepsItsSentinel" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.414"/>
+  <testcase name="projectPickerCanListCreateAndReopenAManagedCloneUnderTheTrustedAlias" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.042"/>
+  <testcase name="temporaryCredentialsUseTheTrustedNoBackupAliasWithoutCreatingAKey" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.029"/>
+  <testcase name="actualRemoteSnapshotAlsoUsesTheCanonicalRecoveryAndJobRoots" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.443"/>
+  <testcase name="unavailableCredentialStorageShowsAnErrorAndKeepsTheDirtyEditor" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.43"/>
+  <testcase name="localJobsRoundTripTheirStrictRootGuardAndCleanupThroughTheAlias" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.033"/>
+  <testcase name="realInternalProjectHeadingOpensTheWorkspacePickerWithoutCrashing" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.333"/>
+  <testcase name="realSourceControlMoreButtonOpensWithoutTheDeviceVaultConstructorCrash" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.321"/>
+  <testcase name="remoteJobsRoundTripTheirStrictRootGuardAndCleanupThroughTheAlias" classname="com.codepocket.ide.GitPrivatePathRegressionTest" time="0.036"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

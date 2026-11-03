@@ -23,7 +23,7 @@ events_path=Path(sys.argv[4])
 class Events:
  def onState(self,state,sequence):
   with events_path.open("a",encoding="utf-8") as f:f.write(json.dumps([state,sequence])+"\n")
-value=r.run_terminal(args["code"],args.get("input",""),str(Path(sys.argv[2]).parent/"main.py"),str(Path(sys.argv[2]).parent),0,1,2,args.get("interactive",True),Events())
+value=r.run_terminal(args["code"],args.get("input",""),str(Path(sys.argv[2]).parent/"main.py"),str(Path(sys.argv[2]).parent),0,1,2,args.get("interactive",True),Events(),"",args.get("breakpoints"))
 Path(sys.argv[3]).write_text(value,encoding="utf-8")
 '''
 
@@ -133,5 +133,23 @@ class TestTerminalPython(unittest.TestCase):
         self.assertIn("waiting",[x[0] for x in p.states()])
     def test_exit_status_is_preserved(self):
         p=self.launch('raise SystemExit(7)');self.assertEqual(p.finish()["exit_code"],7)
+    def test_breakpoint_enters_real_pdb_on_same_terminal(self):
+        p=self.launch('x = 101\ny = 202\nprint(x + y)',breakpoints=[2])
+        p.wait_text("(Pdb) ",index=1);self.assertIsNone(p.process.poll())
+        p.send("p x\n");p.wait_text("101",index=1)
+        p.send("next\n");p.wait_text("(Pdb) ",index=1)
+        p.send("p y\n");p.wait_text("202",index=1)
+        p.send("continue\n");result=p.finish()
+        self.assertEqual(result["exit_code"],0,{"stderr":p.text(1)})
+        self.assertIn("303",p.text())
+        self.assertFalse(result.get("breakpoint_quit"))
+    def test_quit_breakpoint_reports_explicit_debugger_exit(self):
+        p=self.launch('x = 1\nprint(x)',breakpoints=[2])
+        p.wait_text("(Pdb) ",index=1);p.send("quit\n");result=p.finish()
+        self.assertTrue(result.get("breakpoint_quit"));self.assertIn("已退出断点调试器",result["stderr"])
+    def test_breakpoints_are_ignored_without_an_interactive_terminal(self):
+        p=self.launch('print("plain")',breakpoints=[1],interactive=False)
+        result=p.finish();self.assertEqual(result["stdout"],"plain\n")
+        self.assertNotIn("(Pdb)",p.text(1));self.assertEqual(result["exit_code"],0)
 
 if __name__=="__main__":unittest.main()

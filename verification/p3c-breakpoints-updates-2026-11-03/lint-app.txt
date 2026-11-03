@@ -1,0 +1,224 @@
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\build.gradle.kts:18: Warning: Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details. [OldTargetApi]
+        targetSdk = 34
+        ~~~~~~~~~~~~~~
+
+   Explanation for issues of type "OldTargetApi":
+   When your application runs on a version of Android that is more recent than
+   your targetSdkVersion specifies that it has been tested with, various
+   compatibility modes kick in. This ensures that your application continues
+   to work, but it may look out of place. For example, if the targetSdkVersion
+   is less than 14, your app may get an option button in the UI.
+
+   To fix this issue, set the targetSdkVersion to the highest available value.
+   Then test your app to make sure everything works correctly. You may want to
+   consult the compatibility notes to see what changes apply to each version
+   you are adding support for:
+   https://developer.android.com/reference/android/os/Build.VERSION_CODES.html
+   as well as follow this guide:
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.
+   html
+
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.html
+
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\build.gradle.kts:27: Warning: Missing x86_64 ABI support for ChromeOS [ChromeOsAbiSupport]
+        ndk { abiFilters += listOf("arm64-v8a") }
+                            ~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ChromeOsAbiSupport":
+   To properly support ChromeOS, your Android application should have an x86
+   and/or x86_64 binary as part of the build configuration. To fix the issue,
+   ensure your files are properly optimized for ARM; the binary translator
+   will then ensure compatibility with x86. Alternatively, add an abiSplit for
+   x86 within your build.gradle file and create the required x86
+   dependencies.
+
+   https://developer.android.com/ndk/guides/abis
+
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\AndroidManifest.xml:5: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+        android:allowBackup="false"
+                             ~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\RunSession.kt:53: Warning: Do not place Android context classes in static fields (static reference to LocalCppRunClient which has field app pointing to Context); this is a memory leak [StaticFieldLeak]
+    private var localCppClient:LocalCppRunClient?=null
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "StaticFieldLeak":
+   A static field will leak contexts.
+
+   Non-static inner classes have an implicit reference to their outer class.
+   If that outer class is for example a Fragment or Activity, then this
+   reference means that the long-running handler/loader/task will hold a
+   reference to the activity which prevents it from getting garbage
+   collected.
+
+   Similarly, direct field references to activities and fragments from these
+   longer running instances can cause leaks.
+
+   ViewModel classes should never point to Views or non-application Contexts.
+
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\res\values\strings.xml:27: Warning: The resource R.string.completion_members_pending appears to be unused [UnusedResources]
+    <string name="completion_members_pending">成员语义补全尚未接入（P2）；当前为基础词法补全</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\res\values\strings.xml:28: Warning: The resource R.string.completion_empty appears to be unused [UnusedResources]
+    <string name="completion_empty">没有词法候选；请先输入名称前缀</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\res\values\strings.xml:63: Warning: The resource R.string.project_search_notice appears to be unused [UnusedResources]
+    <string name="project_search_notice">在项目文本中搜索，最多展示 200 行；点击结果定位。</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\res\values\strings.xml:80: Warning: The resource R.string.editor_last_tab appears to be unused [UnusedResources]
+    <string name="editor_last_tab">已保留项目中的最后一个标签</string>
+            ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\res\values\strings.xml:114: Warning: The resource R.string.shell_failure_close appears to be unused [UnusedResources]
+    <string name="shell_failure_close">关闭</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests =true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests =true.
+   ,
+
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\ui\SourceControlPanel.kt:17: Warning: Custom view SourceControlPanel is missing constructor used by tools: (Context) or (Context,AttributeSet) or (Context,AttributeSet,int) [ViewConstructor]
+internal class SourceControlPanel(context:Context,private val palette:IdePalette,
+               ~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ViewConstructor":
+   Some layout tools (such as the Android layout editor) need to find a
+   constructor with one of the following signatures:
+   * View(Context context)
+   * View(Context context, AttributeSet attrs)
+   * View(Context context, AttributeSet attrs, int defStyle)
+
+   If your custom view needs to perform initialization which does not apply
+   when used in a layout editor, you can surround the given code with a check
+   to see if View#isInEditMode() is false, since that method will return false
+   at runtime but true within a user interface editor.
+
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\CompletionPopup.kt:56: Warning: onTouch lambda should call View#performClick when a click is detected [ClickableViewAccessibility]
+        setOnTouchListener{_,event->if(event.actionMasked==android.view.MotionEvent.ACTION_DOWN)userInteracted=true;false}
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ClickableViewAccessibility":
+   If a View that overrides onTouchEvent or uses an OnTouchListener does not
+   also implement performClick and call it when clicks are detected, the View
+   may not handle accessibility actions properly. Logic handling the click
+   actions should ideally be placed in View#performClick as some accessibility
+   services invoke performClick when a click action should occur.
+
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\AppUpdateDialog.kt:74: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        if(current==null){body?.text=installed.label+"\n\n无法识别当前安装版本，请从正式发布页核对。";setAction("查看发布页"){external(repo.releasesPage)};return}
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\AppUpdateDialog.kt:74: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        if(current==null){body?.text=installed.label+"\n\n无法识别当前安装版本，请从正式发布页核对。";setAction("查看发布页"){external(repo.releasesPage)};return}
+                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\AppUpdateDialog.kt:76: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        body?.text=installed.label+"\n\n正在检查正式版本…"
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\AppUpdateDialog.kt:76: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        body?.text=installed.label+"\n\n正在检查正式版本…"
+                                   ~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:812: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            status.text="请先打开 Markdown 文件";return
+                         ~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:1029: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            IdeCommand.SAVE -> saveActive { status.text = "✓ 已保存 $activePath" + (formatSaveWarning?.let { " · $it" } ?: "") }
+                                                          ~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:1029: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            IdeCommand.SAVE -> saveActive { status.text = "✓ 已保存 $activePath" + (formatSaveWarning?.let { " · $it" } ?: "") }
+                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:1827: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            runOnUiThread{if(!isDestroyed){result.onSuccess{status.text="Git 恢复包已导出"}.onFailure{alert("Git 恢复包导出失败：${it.message}")}}}
+                                                                         ~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:2317: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                runOnUiThread { if (!isDestroyed) status.text = "恢复草稿写入失败：${error.message}，请立即导出" }
+                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:2413: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                    status.text = (if (dirty) "已保存上一版，正在保留新编辑" else "✓ 已保存 $path") +
+                                  ^
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:2903: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            text="Aa 0123 你好";typeface=Typeface.MONOSPACE;gravity=Gravity.CENTER
+                  ~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:3471: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                }) { status.text = "✓ 已导出 $exportPath"; exportContent = null; exportPath = null }
+                                   ~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:3616: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            status.text = "${if (response.successful) "✓" else "✕"} ${response.kind.label} (${response.elapsedMs}ms)"
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\MainActivity.kt:3616: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            status.text = "${if (response.successful) "✓" else "✕"} ${response.kind.label} (${response.elapsedMs}ms)"
+                                                                                                                 ~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\SettingsDialog.kt:242: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                    if(report){feedback.setTextColor(p.accentText);feedback.text="主题有效：${definition.name}（${definition.json.length} 字符）"}
+                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\SettingsDialog.kt:246: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                    if(report){feedback.setTextColor(p.error);feedback.text="主题无效：${error.message}"}
+                                                                            ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\SettingsDialog.kt:260: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                feedback.setTextColor(p.accentText);feedback.text="已复制主题 JSON"}
+                                                                   ~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\SettingsDialog.kt:315: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                            text="main.cpp";textSize=12f;setTextColor(samplePalette.muted)
+                                  ~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\SettingsDialog.kt:406: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                        feedback.text="自定义语法主题无效：${outcome.exceptionOrNull()?.message}";feedback.visibility=View.VISIBLE;return@setOnClickListener
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\ui\SourceControlPanel.kt:57: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        scope.text=title.substringBefore("（").substringBefore(" · ")+(state?.branch?.let{" · $it"}?:"")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\ui\StatusBar.kt:48: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        details.text="${layout.language}  ·  Ln ${layout.line}, Col ${layout.column}"
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\ui\StatusBar.kt:48: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        details.text="${layout.language}  ·  Ln ${layout.line}, Col ${layout.column}"
+                                        ~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\ui\StatusBar.kt:48: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        details.text="${layout.language}  ·  Ln ${layout.line}, Col ${layout.column}"
+                                                              ~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\WebAuxiliaryPanel.kt:290: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        if(value.body.length>RENDER_LIMIT){documentScope?.text=value.scope+" · 长文档以纯文本显示";target.text=value.body;restoreScroll();return}
+                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\WebAuxiliaryPanel.kt:300: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                    .onFailure{documentScope?.text=value.scope+" · 预览失败，显示原文";target.text=value.body}
+                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\q1684\Desktop\安卓端编译器\CodePocket-Android\app\src\main\java\com\codepocket\ide\ui\WorkbenchForms.kt:114: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                text="$path:$line";textSize=12f;setTextColor(p.accentText);setSingleLine();ellipsize=android.text.TextUtils.TruncateAt.MIDDLE
+                     ~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 37 warnings

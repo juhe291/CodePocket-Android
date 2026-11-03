@@ -16,7 +16,9 @@ data class EditorViewState(
     )
 }
 
-data class FileSession(val id: String, var path: String, var stdin: String = "", var view: EditorViewState = EditorViewState())
+data class FileSession(val id: String, var path: String, var stdin: String = "", var view: EditorViewState = EditorViewState(),
+    /** 1-based breakpoint lines; UI state only, never file content or undo history. */
+    var breakpoints: List<Int> = emptyList())
 
 /** IDs survive in-app rename/move. Workspace identity is separate from the display path. */
 class EditorSessions(val workspaceId: String, json: String = "[]") {
@@ -29,7 +31,8 @@ class EditorSessions(val workspaceId: String, json: String = "[]") {
                 if (validPath(path)) files[path] = FileSession(item.getString("id"), path,
                     item.optString("stdin").take(20000), EditorViewState(
                         item.optInt("start"), item.optInt("end"), item.optInt("x"), item.optInt("y"),
-                        item.optString("focus", "editor"), item.optInt("inputStart"), item.optInt("inputEnd")))
+                        item.optString("focus", "editor"), item.optInt("inputStart"), item.optInt("inputEnd")),
+                    breakpoints(item.optJSONArray("breakpoints")))
             }
         }
     }
@@ -54,11 +57,23 @@ class EditorSessions(val workspaceId: String, json: String = "[]") {
             put("id", f.id); put("path", f.path); put("stdin", f.stdin)
             put("start", f.view.start); put("end", f.view.end); put("x", f.view.scrollX); put("y", f.view.scrollY)
             put("focus", f.view.focus); put("inputStart", f.view.inputStart); put("inputEnd", f.view.inputEnd)
+            put("breakpoints", JSONArray(f.breakpoints.sorted().take(500)))
         }) }
     }.toString()
     companion object {
         private fun validPath(path: String) = path.isNotBlank() && !path.startsWith('/') && !path.contains('\\') &&
             path.split('/').none { it == "." || it == ".." || it.isEmpty() }
+        /** Bounded, sorted, duplicate-free 1-based lines; malformed entries are ignored, never trusted. */
+        private fun breakpoints(array: JSONArray?): List<Int> {
+            if (array == null) return emptyList()
+            val result = sortedSetOf<Int>()
+            for (i in 0 until array.length()) {
+                val line = array.optInt(i, -1)
+                if (line in 1..2_000_000) result.add(line)
+                if (result.size >= 500) break
+            }
+            return result.toList()
+        }
     }
 }
 
