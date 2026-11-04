@@ -120,6 +120,8 @@ final class SoraInputEditor extends CodeEditor {
             return true; // Unknown future layout internals: keep the previous behavior.
         }
     }
+    /** Native content mutations must wait until the pinned layout's asynchronous width table exists. */
+    boolean contentLayoutReady() { return !contentLayoutUnstable(); }
     private void commitAfterLayout(CharSequence text, boolean indent, boolean pairs, int attempts) {
         postDelayed(() -> {
             if (contentLayoutUnstable() && attempts > 0) commitAfterLayout(text, indent, pairs, attempts - 1);

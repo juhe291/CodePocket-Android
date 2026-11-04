@@ -103,10 +103,11 @@
 按用户要求创建 GitHub Release，提供一键下载资产（此前只有 CI artifact、没有对外的 Release 下载）：
 
 - Release：<https://github.com/juhe291/CodePocket-Android/releases/tag/v0.2.3>（id 433346245，公开、非预发布）。
-- 资产：`CodePocket-0.2.3-arm64-v8a-release.apk`，108,820,832 字节，SHA256 `7f573f08bd3a33f36d1638137d69e53e1da192663749ba179f03f66afb81f045`；GitHub 返回的资产 digest 与本地哈希一致。
+- 资产：`CodePocket-0.2.3-arm64-v8a-release.apk`，108,820,900 字节，SHA256 `89680d5543364f401680fbb98acb4d79b335e8f7f85b13a6a96aea8f6c38bdf5`；GitHub 返回的资产 digest 与本地哈希一致。
 - 直链：<https://github.com/juhe291/CodePocket-Android/releases/download/v0.2.3/CodePocket-0.2.3-arm64-v8a-release.apk>；README 已加“一键下载”。
 - tag `v0.2.3` 指向最终提交（annotated tag），`v0.2.2` 历史 tag 保留；Release 页面即显示对应标签。
 - 应用内更新检测读取本仓库正式 Release：资产名含 `arm64-v8a`、tag 可解析，符合现有有界 `AppUpdateSource` 约束；旧版检查更新将看到 0.2.3。
 - 未上传密钥；Release 资产沿用原 Debug 证书，属于本地/学习分发而非商店生产签名。
+
 
 
