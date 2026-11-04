@@ -99,8 +99,8 @@
 
 - 版本：**0.2.3 (5)**，Release 构建（不可调试）
 - 资产：`CodePocket-0.2.3-arm64-v8a-release.apk`
-- 大小：**108,820,900 字节**
-- SHA-256：`89680d5543364f401680fbb98acb4d79b335e8f7f85b13a6a96aea8f6c38bdf5`（GitHub 资产 digest 与本地一致）
+- 大小：**108,820,636 字节**
+- SHA-256：`251b2888aae6808e77688c0d5bbba3463172684b257328459487b6fd2a195b30`（GitHub 资产 digest 与本地一致）
 - 签名：仓库原有 Debug 证书 `d58e4cd7…`；仅用于本地/学习分发，上架商店需另建发布密钥
 
 </details>

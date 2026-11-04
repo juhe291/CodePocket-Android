@@ -122,18 +122,44 @@ final class SoraInputEditor extends CodeEditor {
     }
     /** Native content mutations must wait until the pinned layout's asynchronous width table exists. */
     boolean contentLayoutReady() { return !contentLayoutUnstable(); }
-    private void commitAfterLayout(CharSequence text, boolean indent, boolean pairs, int attempts) {
+    private static final class Commit {
+        final CharSequence text; final boolean indent, pairs;
+        Commit(CharSequence text, boolean indent, boolean pairs) { this.text = text; this.indent = indent; this.pairs = pairs; }
+    }
+    private java.util.ArrayDeque<Commit> pendingCommits;
+    private int flushAttempts;
+    private java.util.ArrayDeque<Commit> pendingCommits() {
+        if (pendingCommits == null) pendingCommits = new java.util.ArrayDeque<>();
+        return pendingCommits;
+    }
+    /** Sora marks the layout non-busy only after its width table is filled; flush then, in order. */
+    @Override public void setLayoutBusy(boolean busy) {
+        super.setLayoutBusy(busy);
+        if (!busy && pendingCommits != null && !pendingCommits.isEmpty())
+            post(() -> { if (contentLayoutUnstable()) scheduleFlush(); else flushPendingCommits(); });
+    }
+    private void scheduleFlush() {
         postDelayed(() -> {
-            if (contentLayoutUnstable() && attempts > 0) commitAfterLayout(text, indent, pairs, attempts - 1);
-            else commitNow(text, indent, pairs);
+            if (contentLayoutUnstable() && ++flushAttempts < 120) scheduleFlush();
+            else { flushAttempts = 0; flushPendingCommits(); }
         }, 16);
+    }
+    private void flushPendingCommits() {
+        if (contentLayoutUnstable()) return;
+        var queue = pendingCommits();
+        while (!contentLayoutUnstable() && !queue.isEmpty()) {
+            var commit = queue.poll();
+            commitNow(commit.text, commit.indent, commit.pairs);
+        }
     }
     @Override public void commitText(CharSequence text, boolean indent, boolean pairs) {
         if (contentLayoutUnstable()) {
             // Keep the user's real text and order instead of dropping input or touching a half-built layout.
-            commitAfterLayout(text == null ? "" : text.toString(), indent, pairs, 60);
+            pendingCommits().add(new Commit(text == null ? "" : text.toString(), indent, pairs));
+            scheduleFlush();
             return;
         }
+        flushPendingCommits();
         commitNow(text, indent, pairs);
     }
     private void commitNow(CharSequence text, boolean indent, boolean pairs) {
