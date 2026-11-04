@@ -12,8 +12,12 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import io.github.rosemoe.sora.text.ContentReference;
 import io.github.rosemoe.sora.text.TextUtils;
 import io.github.rosemoe.sora.util.IntPair;
+import io.github.rosemoe.sora.util.BlockIntList;
 import io.github.rosemoe.sora.util.ClipDataUtils;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
+import io.github.rosemoe.sora.widget.layout.Layout;
+import io.github.rosemoe.sora.widget.layout.LineBreakLayout;
+import java.lang.reflect.Field;
 import java.util.function.Supplier;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -96,7 +100,25 @@ final class SoraInputEditor extends CodeEditor {
     /** Pinned Sora rebuilds its line table asynchronously; inserting before it exists crashes afterInsert. */
     private boolean contentLayoutUnstable() {
         var layout = getLayout();
-        return (getEditable() && !isEditable()) || layout == null || layout.getRowCount() <= 0;
+        if ((getEditable() && !isEditable()) || layout == null || layout.getRowCount() <= 0) return true;
+        return !lineTableBuilt(layout);
+    }
+    /**
+     * LineBreakLayout submits its width table to a background task after construction. Between
+     * replacing the layout and that task filling the table, rowCount is already correct while
+     * widthMaintainer is still empty; a synchronous insert then crashes in afterInsert.
+     * This reads the pinned Sora 0.23.7 private table without modifying it.
+     */
+    private boolean lineTableBuilt(Layout layout) {
+        if (!(layout instanceof LineBreakLayout)) return true;
+        try {
+            Field field = LineBreakLayout.class.getDeclaredField("widthMaintainer");
+            field.setAccessible(true);
+            if (!(field.get(layout) instanceof BlockIntList table)) return false;
+            return table.size() >= layout.getRowCount();
+        } catch (Throwable ignored) {
+            return true; // Unknown future layout internals: keep the previous behavior.
+        }
     }
     private void commitAfterLayout(CharSequence text, boolean indent, boolean pairs, int attempts) {
         postDelayed(() -> {
