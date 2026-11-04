@@ -2,15 +2,17 @@
 
 Android 上的轻量 C++ / Python 学习 IDE：原生 Kotlin 界面 + Sora 编辑器，真实本地运行、真实终端，打开即用，不依赖 Termux 或账号。
 
-## 下载
+## 下载（一键）
 
-| 版本 | 文件 | 大小 | SHA-256 |
+**[⬇ 下载 CodePocket 0.2.3 APK](https://github.com/juhe291/CodePocket-Android/releases/download/v0.2.3/CodePocket-0.2.3-arm64-v8a-release.apk)** · [Release 页面](https://github.com/juhe291/CodePocket-Android/releases/tag/v0.2.3) · [全部版本](https://github.com/juhe291/CodePocket-Android/releases)
+
+| 版本 | 资产 | 大小 | SHA-256 |
 | --- | --- | --- | --- |
-| 0.2.3 (5) | `dist/CodePocket-0.2.3-release.apk` | 108,820,580 B | `fe2ec8eb89af23aa456d89b5fe5a693e50ababcd624bec6543edfe58dfe2ab32` |
+| 0.2.3 (5) | `CodePocket-0.2.3-arm64-v8a-release.apk` | 108,820,580 B | `fe2ec8eb89af23aa456d89b5fe5a693e50ababcd624bec6543edfe58dfe2ab32` |
 
-- 正式 Release 构建，沿用仓库原有 Debug 证书，可直接覆盖安装旧版（数据保留）。
-- 未发布 GitHub Release；升级前请先导出重要内容。
-- 安装后在 **设置 → 检查更新** 可验证更新链路（根页与“帮助与许可”均有入口）。
+- GitHub Release **v0.2.3** 已发布，APK 为该 Release 的可下载资产；本地同一文件在 `dist/CodePocket-0.2.3-release.apk`（不提交 Git）。
+- 正式 Release 构建，沿用仓库原有 Debug 证书，可直接覆盖安装旧版（数据保留）；release 变体不可调试。
+- 安装后在 **设置 → 检查更新** 会读取这个正式 Release（根页与“帮助与许可”均有入口）。
 
 ## 功能
 

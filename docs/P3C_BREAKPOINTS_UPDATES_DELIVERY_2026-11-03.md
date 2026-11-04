@@ -95,5 +95,17 @@
 - **检查更新按钮**：设置根页新增“应用与更新 → 检查更新”（tag `settings-root-check-updates`，带当前版本说明）；“帮助与许可 → 检查更新”原入口保留。两处都调用同一 `showAppUpdates()`，不新增网络逻辑。
 - **网页地址收起**：`WebAuxiliaryPanel` 标题栏新增折叠/展开按钮（tag `web-address-toggle`），收起时隐藏地址输入行并清焦点，展开恢复原草稿；状态写入 `webAuxiliaryState.addressCollapsed`，随窗口/进程恢复；浏览器模式下保存的地址与导航不受影响。
 - **正式 Release 构建**：`app/build.gradle.kts` 增加 `buildTypes.release.signingConfig = signingConfigs.getByName("debug")`，即沿用仓库原 Debug 证书（d58e4cd7…，不重建密钥），release 变体不可调试；版本升为 0.2.3(5)。构建需 `-Pkotlin.compiler.execution.strategy=in-process`（非 ASCII 工程路径下避免 Kotlin daemon 参数文件乱码）。产物 `dist/CodePocket-0.2.3-release.apk`，108,820,432 字节，SHA256 `70f9ea67f033a5af1b2c14dcb937997d5c861658d17a1ff33c8571011e99dca0`；v2 签名、16 KiB 对齐、920 entries、25 原生库、Python/C++/终端资产齐全；release 包内 Python 51 项、语义 22 项通过。
-- **README**：重写为当前状态/功能/安装/使用/构建/边界结构；整理前原文完整保存为 `docs/HISTORY.md`。
+- **README**：重写为当前状态/功能/安装/使用/构建/边界结构；整理前原文已删除、不再提交历史堆叠。
 - **验证**：App 全量 1193 项 1191 通过/1 既有 Windows 头文件失败/1 旧跳过、Lint 0 error；新增/修改定向（AppUpdateEntryBaseline 3、WebAuxiliaryBaseline 6、WebAuxiliaryIntegration 12、SettingsSurfaceVisual 4、MainRunIntegration 12、TaskTranscript 4、CppSemantic 7）全部通过；Release APK 检查见 `release-*.json/log`。Android 设备验收后置；0.2.3 尚未推送时不以旧 CI 结果冒充本版通过。
+
+## 11. GitHub Release 发布（2026-11-04）
+
+按用户要求创建 GitHub Release，提供一键下载资产（此前只有 CI artifact、没有对外的 Release 下载）：
+
+- Release：<https://github.com/juhe291/CodePocket-Android/releases/tag/v0.2.3>（id 433346245，公开、非预发布）。
+- 资产：`CodePocket-0.2.3-arm64-v8a-release.apk`，108,820,580 字节，SHA256 `fe2ec8eb89af23aa456d89b5fe5a693e50ababcd624bec6543edfe58dfe2ab32`；GitHub 返回的资产 digest 与本地哈希一致。
+- 直链：<https://github.com/juhe291/CodePocket-Android/releases/download/v0.2.3/CodePocket-0.2.3-arm64-v8a-release.apk>；README 已加“一键下载”。
+- tag `v0.2.3` 指向最终提交（annotated tag），`v0.2.2` 历史 tag 保留；Release 页面即显示对应标签。
+- 应用内更新检测读取本仓库正式 Release：资产名含 `arm64-v8a`、tag 可解析，符合现有有界 `AppUpdateSource` 约束；旧版检查更新将看到 0.2.3。
+- 未上传密钥；Release 资产沿用原 Debug 证书，属于本地/学习分发而非商店生产签名。
+
